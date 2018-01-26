@@ -19,18 +19,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-#ifndef SRC_MODEL_LINK_LINK_H_
-#define SRC_MODEL_LINK_LINK_H_
-
+#pragma once
 
 #include "systemc.h"
-
-#include "../../traffic/Flit.h"
-#include "../container/ClassicContainer.h"
-#include "../../utils/GlobalInputClass.h"
-#include "../../utils/GlobalReportClass.h"
 #include <iostream>
 #include <fstream>
+
+#include "model/traffic/Flit.h"
+#include "model/container/FlitContainer.h"
+#include "utils/GlobalInputClass.h"
+#include "utils/GlobalReportClass.h"
 
 
 enum LinkType{
@@ -48,24 +46,6 @@ class Link: public sc_module{
 	LinkType linkType;
 	int linkWidth;
 	int linkDepth;
-	float Cl = 0.0f; // effective Capacity
-
-	// horizontal link:
-	float Vdd;
-	float length;
-	float Cc; // capacitance to ground
-	float Cg, Cglw; // self capacitance
-	float kappaW;// bus ratio
-
-	// vertical link:
-	float C0, Ce, Cn, Cd;
-	int Ne = 2*(linkWidth + linkDepth -2);
-	int Nn = 2*linkWidth*linkDepth - 3*linkWidth - 3*linkDepth -4;
-	int Nd = 2*(linkWidth -1)*(linkDepth -1);
-	float kappaT = ((float)Ne*Ce + (float)Nn*Cn + (float)Nd*Cd) / ((float)Ne*C0); // bus ratio for vertical link
-
-	//float Cl;
-	//float Eload = (Vdd*Vdd*Cl*linkWidth*currentFlit.as);
 
 	// UNCOMMENT FOR RAW DATA ON LINK (@Lennart)
 	//ofstream *rawDataOutput;
@@ -73,7 +53,7 @@ class Link: public sc_module{
 
 public:
 	sc_in<bool> clk;
-	ClassicPortContainer* classicPortContainer;
+	FlitPortContainer* classicPortContainer;
 
 	SC_HAS_PROCESS(Link);
 	Link(sc_module_name nm, Connection* c, int globalId);
@@ -82,10 +62,5 @@ public:
 	void bind(SignalContainer* sigContIn, SignalContainer* sigContOut);
 	void bindOpen(SignalContainer* sigContIn);
 	void passthrough_thread();
-	float calculateEnergyPackets(Flit* previousFlit, Flit* currentFlit);
-	float calculateEnergyStatistics(Flit* currentFlit);
-
 };
 
-
-#endif /* SRC_MODEL_LINK_LINK_H_ */

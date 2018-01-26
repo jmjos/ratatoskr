@@ -19,15 +19,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-//TODO unified global reporting, includeeing database and (better!) cout-solution
-
-#ifndef SRC_GLOBALREPORTCLASS_H_
-#define SRC_GLOBALREPORTCLASS_H_
+#pragma once
 
 #include "systemc.h"
-#include "GlobalInputClass.h"
 #include <map>
 #include <boost/format.hpp>
+
+#include "GlobalInputClass.h"
 
 class GlobalReportClass {
 	GlobalInputClass &global = GlobalInputClass::getInstance();
@@ -72,6 +70,7 @@ private:
 public:
 	//Link state transmission matrixes
 	std::map<int, std::vector<long> > linkTransmissionMatrices;
+	int linkTransmissionsMatrixNumberOfStates;
 
 	//Router state vectors and matrices
 	std::map<int, int> routingCalulcations;
@@ -117,4 +116,3 @@ public:
 	void reportMaxNetworkLatencySystemLevel();
 };
 
-#endif /* SRC_GLOBALREPORTCLASS_H_ */

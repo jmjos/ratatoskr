@@ -20,15 +20,24 @@ There are several ways to compile the project. If you'd just like to use the pro
 
 ### Build Enviroment
 
-- Ubuntu 14.04 & Boost Libs & pugixml
+- Ubuntu 16.04 & Boost Libs & pugixml
 - CentOS 7 & boost-devel.x86_64 & pugixml-devel.x86_64
 - cmake 2.8
 - SystemC 2.3.1 http://www.accellera.org/images/downloads/standards/systemc/systemc-2.3.1a.tar.gz **NOT COMPATIBLE WITH 2.3.2**
 - cmake assumes an installation of systemc to /usr/local/systemc-2.3.1 If not the case, please modify simulator/CMakeLists.txt
 
+### Building with build script
+We provide a build script, which relys on cmake. It is provided run it via:
+```
+> cd simulator
+> ./build
+```
+
+
 ### Building with cmake
 Go into simulator folder. Simply type
 ```
+> cd simulator
 > cmake .
 > make
 ```
@@ -53,7 +62,7 @@ Project Settings:
 ```
 > Dialect: C++0x  
 > Preprocessor: -D SC_INCLUDE_DYNAMIC_PROCESSES  
-> Includes: -I /usr/local/systemc/include   
+> Includes: -I /usr/local/systemc/include   -I ./src
 > Libraries: -l systemc, -L /usr/local/systemc/lib-linux64  
 ```
 

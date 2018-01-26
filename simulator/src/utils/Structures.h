@@ -19,19 +19,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-#ifndef _STRUCTURES_H_
-#define _STRUCTURES_H_
+#pragma once
 
-//includes
 #include "systemc.h"
 #include <vector>
 #include <string>
 #include <sstream>
 #include <map>
+
 #include "Report.h"
 
 #define LOG(x,y) { std::ostringstream oss; oss<<y; Report::getInstance().log(x,oss.str());}
-#define FATAL(x) { LOG(true,x); std::cout<<"Terminating"<<std::endl; exit(EXIT_FAILURE);}
+#define FATAL(x) { LOG(true,x); std::cout<<"Terminating"<<std::endl; Report::getInstance().close(); exit(EXIT_FAILURE);}
+#define FATALCASE(x,y) { if(x){LOG(true,y); std::cout<<"Terminating"<<std::endl; Report::getInstance().close(); exit(EXIT_FAILURE);}}
 
 struct DIR {
 	const static int size = 7;
@@ -132,6 +132,36 @@ struct Vec3D {
 		return ((x == v.x) && (y == v.y) && (z == v.z));
 	}
 
+	int sameDimCount(const Vec3D<T> v) const {
+		int count = 0;
+		if (x == v.x) {
+			count++;
+		}
+		if (y == v.y) {
+			count++;
+		}
+		if (z == v.z) {
+			count++;
+		}
+
+		return count;
+	}
+
+	int diffDimCount(const Vec3D<T> v) const {
+		int count = 0;
+		if (x != v.x) {
+			count++;
+		}
+		if (y != v.y) {
+			count++;
+		}
+		if (z != v.z) {
+			count++;
+		}
+
+		return count;
+	}
+
 	//bool operator<(const Vec3D<T> v) const {
 	//	return (pow(x,2)+pow(y,2)+pow(z,2))<(pow(v.x,2)+pow(v.y,2)+pow(v.z,2));
 	//}
@@ -153,14 +183,20 @@ struct SyntheticPhase {
 
 };
 
+struct Node;
+
 struct NodeType {
 	int id;
 	std::string routerModel;
+	std::string routing;
+	std::string selection;
+	std::vector<Node*> nodes;
 	//buffer model
 	//Allocator model ...
 	int clockSpeed;
 
-	NodeType(int id, std::string model, int clk);
+	NodeType(int id, std::string model, std::string routing,
+			std::string selection, int clk);
 };
 
 struct LayerType {
@@ -177,6 +213,7 @@ struct Connection;
 struct Node {
 	int id;
 	Vec3D<float> pos;
+	int idType;
 	NodeType* type;
 	LayerType* layer;
 
@@ -186,8 +223,12 @@ struct Node {
 	std::map<Connection*, int> conToPos; // get position of connection inside array
 	std::map<DIR::TYPE, int> dirToCon; //maps direction names to connection number
 	std::map<int, DIR::TYPE> conToDir; //maps connection number to direction name
+	std::map<int, Node*> conToNode; //maps connection number to node
 
-	Node(int id, Vec3D<float> pos, NodeType* type, LayerType* layer);
+	float congestion; // crossbar utilization 0-1
+
+	Node(int id, Vec3D<float> pos, int idType, NodeType* type,
+			LayerType* layer);
 
 };
 
@@ -196,7 +237,13 @@ struct Connection {
 	std::vector<Node*> nodes;
 	std::vector<int> vcCount;
 	std::vector<int> bufferDepth;
-	std::vector<std::vector<int>> congestion; // for the lazy folks ...
+
+	std::vector<std::vector<int>> vcBufferUtilization; // for the lazy folks ...
+	std::vector<int> bufferUtilization;
+
+	std::vector<std::vector<float>> vcBufferCongestion; // buffer utilization 0-1
+	std::vector<float> bufferCongestion;
+
 	std::map<Node*, int> nodePos; // get position of node inside the above vectors
 	//connection dependent attributes, e.g.
 	//thickness, calculated capacitance,
@@ -204,26 +251,74 @@ struct Connection {
 	float length;
 	int linkWidth;
 	int linkDepth;
-	float effectiveCapacityCl;
-	float wireCouplingCapacitanceCc;
-	float wireSelfCapacitanceCg;
-	float wireSelfCapacitancePerUnitLengthCg;
-	float tsvarraySelfCapacitanceC0;
-	float tsvarrayNeighbourCapacitanceCd;
-	float tsvarrayDiagonalCapacitanceCn;
-	float tsvarrayEdgeCapacitanceCe;
 
 	Connection(int id, std::vector<Node*> nodes, std::vector<int> vcCount,
 			std::vector<int> bufferDepth, float length, int linkWidth,
-			int linkDepth, float effectiveCapacityCl,
-			float wireCouplingCapacitanceCc, float wireSelfCapacitanceCg,
-			float wireSelfCapacitancePerUnitLengthCg,
-			float tsvarraySelfCapacitanceC0,
-			float tsvarrayNeighbourCapacitanceCd,
-			float tsvarrayDiagonalCapacitanceCn,
-			float tsvarrayEdgeCapacitanceCe);
+			int linkDepth);
 	int getBufferDepthForNode(Node* n);
 	int getVCCountForNode(Node* n);
 };
 
-#endif
+struct DataType {
+	int id;
+	std::string name;
+
+	DataType(int id, std::string name) :
+			id(id), name(name) {
+	}
+
+};
+
+struct DataRequirement {
+	int id;
+	DataType* type;
+	int minCount;
+	int maxCount;
+	int count = 0;
+
+	DataRequirement(int id, DataType* type, int minCount, int maxCount) :
+			id(id), type(type), minCount(minCount), maxCount(maxCount) {
+	}
+};
+
+struct DataDestination {
+	int id;
+	DataType* type;
+	int minCount;
+	int maxCount;
+
+	int minDelay;
+	int maxDelay;
+
+	int minInterval;
+	int maxInterval;
+
+	Node* destination;
+
+	DataDestination(int id, DataType* type, int minCount, int maxCount,
+			int minDelay, int maxDelay, int minInterval, int maxInterval,
+			Node* destination) :
+			id(id), type(type), minCount(minCount), maxCount(maxCount), minDelay(
+					minDelay), maxDelay(maxDelay), minInterval(minInterval), maxInterval(
+					maxInterval), destination(destination) {
+	}
+};
+
+struct Task {
+	int id;
+	Node* node;
+
+	int minRepeat;
+	int maxRepeat;
+
+	std::vector<DataRequirement*> requirements;
+	std::vector<std::pair<float, std::vector<DataDestination*>>> possibilities;
+
+	Task(int id, Node* node, int minRepeat, int maxRepeat,
+			std::vector<DataRequirement*> requirements,
+			std::vector<std::pair<float, std::vector<DataDestination*>>> possibilities) :
+			id(id), node(node), minRepeat(minRepeat), maxRepeat(maxRepeat), requirements(
+					requirements), possibilities(possibilities) {
+	}
+};
+

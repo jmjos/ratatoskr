@@ -1,47 +1,55 @@
 <!--
-//    AdaptNoCSimulator. Simulator for Network on Chip with Support for Task Graph Modelling.
-//    Copyright (C) 2014-2014 Jan Moritz Joseph (joseph(at)jmjoseph.de), Universitaet zu Luebeck
-//
-//    This program is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
-//
-//    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// Copyright (c) 2018 Jan Moritz Joseph
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 -->
 <configuration>
   <general>
-    <simulationTime value="150"/>
-    <outputToFile value="true">reports/report</outputToFile>
+    <simulationTime value="10000"/>
+    <outputToFile value="true">report</outputToFile>
   </general>
   
   <noc>
-  	<nocFile>config/XYZ_4x4x4_16B_4VC.xml</nocFile>
+  	<nocFile>config/working.xml</nocFile>
     <flitsPerPacket value ="10"/>
     <Vdd value="5"/>
   </noc>
   
   <application>
-  	<benchmark>application</benchmark> <!--application, netrace, synthetic-->
+  	<benchmark>synthetic</benchmark> <!--application, netrace, synthetic-->
   	
   	<synthetic>
     	<phase name="warmup">
     		<initalOffset min="0" max="0"/>			<!--benchmark on each node will start between 0 and 5ns -->
-    		<spatialDistribution value="tornado" hotspot="10"/> 	<!--hotspot only affects hotspot mode -->
+    		<spatialDistribution value="bitcomplement" hotspot="10"/> 	<!--hotspot only affects hotspot mode -->
     		<waveCount value="1"/>		
-    		<waveDelay value="50"/>		
-    		<packagesPerWave value="10"/>
+    		<waveDelay value="0"/>		
+    		<packagesPerWave value="100"/>
     	</phase> 
     </synthetic>
     
-    <simulationFile>traffic/example/twoSender.xml</simulationFile>
-    <mappingFile>traffic/example/twoSenderMapping.xml</mappingFile>
+    <dataFile>config/data.xml</dataFile>
+    <mapFile>config/map.xml</mapFile>
+    
+    
+    <simulationFile>traffic/pipelinePerformance_2D/PipelineResetTB.xml</simulationFile>
+    <mappingFile>traffic/pipelinePerformance_2D/PipelineResetTBMapping.xml</mappingFile>
     <netraceFile>traffic/netrace/example.tra.bz2</netraceFile>
     <netraceStartRegion value ="0"/>
     <isUniform value="false"/>
@@ -51,9 +59,9 @@
   <verbose>
   	<processingElements>
   	  <function_calls value = "false"/>
-  	  <send_flit value = "true"/>
+  	  <send_flit value = "false"/>
   	  <send_head_flit value = "true"/>
-  	  <receive_flit value = "true"/>
+  	  <receive_flit value = "false"/>
   	  <receive_tail_flit value = "true"/>
       <throttle value = "false"/>
       <reset value = "true"/>

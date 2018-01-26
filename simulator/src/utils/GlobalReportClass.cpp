@@ -22,6 +22,7 @@
 #include "GlobalReportClass.h"
 
 GlobalReportClass::GlobalReportClass() {
+	this->linkTransmissionsMatrixNumberOfStates = (2 * global.application_numberOfTrafficTypes) + 3;
 }
 
 void GlobalReportClass::makeReport(std::string filename){
@@ -102,13 +103,13 @@ void GlobalReportClass::issueLinkMatrixUpdate(int id,
 			linkTransmissionMatrices.find(id);
 	if (it == linkTransmissionMatrices.end()) {
 		// not found, initialization
-		int numberElements = pow(global.application_numberOfTrafficTypes + 2, 2);
+		int numberElements = pow(linkTransmissionsMatrixNumberOfStates, 2);
 		std::vector<long> matrix(numberElements, 0);
 		linkTransmissionMatrices.insert(std::make_pair(id, matrix));
 	}
 	linkTransmissionMatrices.at(id).at(
 			currentTransmissionState
-					+ (global.application_numberOfTrafficTypes + 2)
+					+ linkTransmissionsMatrixNumberOfStates
 							* lastTransmissionState)++;
 }
 
@@ -116,18 +117,37 @@ void GlobalReportClass::reportLinkMatrix(int id, ostream& stream) {
 	auto transmissionMatrix = linkTransmissionMatrices.at(id);
 	long clockCyclesOfLink = std::accumulate(transmissionMatrix.begin(), transmissionMatrix.end(), 0);
 	stream << boost::format("Transmission matrix of link %i:\n")% id;
-	int colit = 0;
+	int colit = 0, rowit = 0;
+	stream << boost::format("from\\to     IDLE     HEAD     HID");
+	for (int var = 0; var < global.application_numberOfTrafficTypes; ++var) {
+		stream << boost::format("%7iD%6iID") % var %var;
+	}
+	stream << boost::format("\n");
 	for (auto matrixelement : transmissionMatrix) {
 		float field = (float)matrixelement/(float)clockCyclesOfLink;
 		if (colit == 0){
+			if (rowit == 0){
+				stream << boost::format("IDLE");
+			} else if (rowit == 1){
+				stream << boost::format("HEAD");
+			} else if (rowit == 2){
+				stream << boost::format("HID");
+			} else if (rowit%2 == 0){
+				int trafficType = (rowit - 3) / 2;
+				stream << boost::format("%iID") % trafficType;
+			} else if (rowit%2 == 1){
+				int trafficType = (rowit - 3) / 2;
+				stream << boost::format("%iD") % trafficType;
+			}
+			rowit ++;
 			stream << boost::format("\t[%7.4f, ") % field;
-		} else if (colit == global.application_numberOfTrafficTypes + 1) {
+		} else if (colit == linkTransmissionsMatrixNumberOfStates - 1) {
 			stream << boost::format("%7.4f]\n")% field;
 		} else {
 			stream << boost::format("%7.4f,")% field;
 		}
 		colit++;
-		if (colit == global.application_numberOfTrafficTypes + 2){
+		if (colit == linkTransmissionsMatrixNumberOfStates){
 			colit = 0;
 		}
 	}
@@ -141,7 +161,7 @@ void GlobalReportClass::reportLinkMatrices(ostream& stream) {
 }
 
 void GlobalReportClass::reportLinkMatricesCVS(ostream& stream){
-	int numberOfElements = pow(2 + global.application_numberOfTrafficTypes, 2);
+	int numberOfElements = pow(linkTransmissionsMatrixNumberOfStates, 2);
 	stream << boost::format("link_id");
 	for (int var = 0; var < numberOfElements-1; ++var) {
 		stream << boost::format(", %i") % var;

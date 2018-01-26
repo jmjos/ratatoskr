@@ -23,9 +23,9 @@
 #define SRC_MODEL_ROUTER_BUFFER_H_
 
 #include <list>
-#include "../../utils/Structures.h"
-#include "../../utils/Report.h"
-#include "../../traffic/Flit.h"
+#include "utils/Structures.h"
+#include "utils/Report.h"
+#include "model/traffic/Flit.h"
 
 extern int buffer_idcnt;
 

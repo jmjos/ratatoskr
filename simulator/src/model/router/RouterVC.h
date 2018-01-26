@@ -30,55 +30,53 @@
 #ifndef SRC_MODEL_ROUTER_ROUTERVC_H_
 #define SRC_MODEL_ROUTER_ROUTERVC_H_
 
+#include <model/container/FlitContainer.h>
 #include "Router.h"
-#include "../container/ClassicContainer.h"
 #include "Buffer.h"
-#include "../routings/Routing.h"
-#include "../routings/RoutingXYZ.h"
-//#include "../routings/RoutingDyXYZ.h"
-//#include "../routings/RoutingEDXYZ.h"
-//#include "../routings/RoutingESPADA.h"
 
-#include "../selection/Selection.h"
-#include "../selection/SelectionRoundRobin.h"
+#include "routings/Routing.h"
+#include "routings/RoutingXYZ.h"
+#include "routings/RoutingTMR.h"
+#include "routings/RoutingDPR.h"
+#include "routings/RoutingESPADA.h"
+
+#include "selection/Selection.h"
+#include "selection/SelectionRoundRobin.h"
+#include "selection/SelectionDyXYZ.h"
+#include "selection/SelectionEDXYZ.h"
+#include "selection/SelectionAgRA.h"
+#include "selection/SelectionMAFA.h"
 
 
 
 class RouterVC : public Router{
 
 public:
-	sc_vector<ClassicPortContainer> classicPortContainer;
+	sc_vector<FlitPortContainer> classicPortContainer;
 	std::vector<std::vector<BufferFIFO<Flit*>*>*> buffer;
 	std::vector<std::vector<int>*> pkgcnt;
-	//std::map<Packet*, std::set<Channel>> routeTable;
 	std::vector<std::vector<Flit*>*> routedFlits;
-	//std::vector<std::vector<Flit*>*> arbitratedFlits;
-
-	//std::map<Flit*, std::set<Channel>> routerTable;
-	//std::map<int, std::pair<Channel, int>> arbiterTable;
 	std::map<Channel, Packet*> occupyTable;
-	//std::map<Channel, int> tags;
 
 
 	std::vector<std::vector<bool>*> flowControlOut;
 	std::vector<std::vector<int>*> tagOut;
+	std::vector<std::vector<bool>*> emptyOut;
+
 
 	Routing* routing;
 	RoutingInformation* rInfo;
-	std::map<Packet*, RoutingPacketInformation*> rpInfo;
+	std::map<std::pair<Packet*,Channel>, RoutingPacketInformation*> rpInfo;
 
 	Selection* selection;
 
 	int rrDirOff=0;
 
-	std::set<Flit*> arbitratedFlits;
-	std::set<Packet*> routedPackets;
+	std::set<std::pair<Flit*, Channel>> arbitratedFlits;
+	std::set<std::pair<Packet*,Channel>> routedPackets;
 
-	//std::map<Flit*, int>	routeVC
+	int crossbarcount;
 
-	//std::map<Packet*, std::pair<DIR::TYPE, int> occupiedChannel;
-
-	//connected stuff (surrounding and local)
 	sc_in<bool> clk;
 
 	RouterVC(sc_module_name nm, Node* node);
@@ -92,7 +90,10 @@ public:
 	void receive();
 	void route();
 	void arbitrate();
-	void negThread();
+
+	void negThred();
+	void readControl();
+	void writeControl();
 
 };
 

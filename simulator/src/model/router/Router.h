@@ -22,28 +22,17 @@
 #ifndef SRC_MODEL_ROUTER_ROUTER_H_
 #define SRC_MODEL_ROUTER_ROUTER_H_
 
-#include "systemc.h"
 #include <set>
+#include "systemc.h"
+#include "model/NetworkParticipant.h"
+#include "utils/Structures.h"
 
-#include "Buffer.h"
-#include "../../utils/GlobalInputClass.h"
-#include "../../utils/Structures.h"
-#include "../../traffic/Flit.h"
-#include "../../traffic/Packet.h"
-#include "../../utils/GlobalReportClass.h"
-#include "../../utils/Report.h"
-#include "../container/Container.h"
-
-class Router : public sc_module{
+class Router : public NetworkParticipant, public sc_module{
 public:
-	GlobalInputClass& global = GlobalInputClass::getInstance();
-	GlobalReportClass& globalReportClass = GlobalReportClass::getInstance();
-	Report& rep = Report::getInstance();
-
 	int id;
 	int dbid;
 	Node* node;
-	Vec3D<float> pos;
+
 
 	SC_HAS_PROCESS(Router);
 	Router(sc_module_name nm, Node* node);
@@ -52,7 +41,7 @@ public:
 	virtual void initialize()=0;
 	virtual void bind(Connection*, SignalContainer*, SignalContainer*) = 0;
 	virtual void thread()=0;
-	virtual void negThread()=0;
+	virtual void receive()=0;
 
 };
 

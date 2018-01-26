@@ -19,8 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-#ifndef _GLOBALINPUTCLASS_H_
-#define _GLOBALINPUTCLASS_H_
+#pragma once
 
 #include <string>
 #include <set>
@@ -28,33 +27,47 @@
 #include <pugixml.hpp>
 #include <map>
 #include <unistd.h>
+#include <random>
 
 #include "Structures.h"
 
 
 class GlobalInputClass {
-
-
-
-
-	GlobalInputClass() {};
+	GlobalInputClass() {
+		rd = new std::random_device();
+		rand = new std::mt19937_64((*rd)());
+	};
 
 public:
-	std::map<int, Vec3D<float>> idToPos;
-	std::map<Vec3D<float>, int> posToId;
 
+	//std::vector<Node*> router;
+	//std::vector<Node*> pe;
+
+	std::map<int, Vec3D<float>> idToPos;
+	//std::map<Vec3D<float>, int> posToId;
 	std::map<float, int> xPositions;
 	std::map<float, int> yPositions;
 	std::map<float, int> zPositions;
 	std::map<int, Vec3D<int>> idToScPos;
-	std::map<Vec3D<int>, int> scPosToId;
+	//std::map<Vec3D<int>, int> scPosToId;
 
-	std::map<int, int> idToPe;
-	std::map<int, int> peToId;
+	std::map<std::string, NodeType*> typeByName;
+
+	//std::map<int, int> idToPe;
+	//std::map<int, int> peToId;
+	//std::map<int, int> idToRouter;
+	//std::map<int, int> routerToId;
 	std::vector<NodeType*> nodeTypes;
 	std::vector<LayerType*> layerTypes;
 	std::vector<Node*> nodes;
 	std::vector<Connection*> connections;
+	std::vector<Task*> tasks;
+	std::vector<DataType*> dataTypes;
+
+	int droppedCounter = 0;
+
+	std::random_device* rd;  //Will be used to obtain a seed for the random number engine
+	std::mt19937_64* rand; //Standard mersenne_twister_engine seeded with rd()
 
 
 	//General
@@ -69,6 +82,8 @@ public:
 
 	//Application
 	std::string benchmark;
+	std::string data_file;
+	std::string map_file;
 	std::string application_file;
 	std::string application_mapping_file;
 	std::string netraceFile;
@@ -114,18 +129,13 @@ public:
 
 	bool readInputFile(std::string filePath);
 	bool readNoCLayout(std::string filePath);
-
-	int getNodeCount();
-	int getPeCount();
-
-	int getNodeByPos(Vec3D<float>);
-	int getPeById(int);
-	int getIdByPe(int);
+	bool readDataStream(std::string taskFilePath, std::string mappingFilePath);
 
 	static GlobalInputClass& getInstance() {
 		static GlobalInputClass instance;
 		return instance;
 	}
-};
 
-#endif
+	int getRandomIntBetween(int, int);
+	float getRandomFloatBetween(float, float);
+};

@@ -28,14 +28,7 @@
 #include "utils/GlobalInputClass.h"
 #include "utils/GlobalReportClass.h"
 #include "utils/Report.h"
-#include "model/layer/LayerTop.h"
-#include "traffic/netrace/NetracePool.h"
-#include "traffic/synthetic/SyntheticPool.h"
-#include "traffic/tasks/TaskPool.h"
-
-#include "model/link/Link.h"
-#include "model/processingElements/ProcessingElementVC3D.h"
-#include "utils/portsOpenConst.h"
+#include "model/LayerTop.h"
 
 int sc_main(int arg_num, char *arg_vet[]) {
 	GlobalInputClass& global = GlobalInputClass::getInstance();
@@ -55,32 +48,36 @@ int sc_main(int arg_num, char *arg_vet[]) {
 	sc_report_handler::set_verbosity_level(SC_DEBUG);
 	sc_report_handler::set_actions(SC_ID_INSTANCE_EXISTS_, SC_DO_NOTHING); //disable renaming warnings
 
-	global.readInputFile("config/config.xml");
+		if(arg_num == 2){
+			global.readInputFile(arg_vet[1]);
+		}else{
+			global.readInputFile("config/config.xml");
+		}
+
+
 	global.readNoCLayout(global.noc_file);
+	global.readDataStream(global.data_file, global.map_file);
 
 	rep.connect("127.0.0.1", "10000");
 	rep.startRun("name");
 
-	LayerTop *layer = new LayerTop("Layer");
-	TrafficPool *tp;
 
-	if (strcmp(global.benchmark.c_str(), "application") == 0) {
-		tp = new TaskPool("taskhandler", &layer->processingElements,
-				global.application_file, global.application_mapping_file);
-	} else if (strcmp(global.benchmark.c_str(), "netrace") == 0) {
-		tp = new NetracePool("netracePool", &layer->processingElements);
-	} else if (strcmp(global.benchmark.c_str(), "synthetic") == 0) {
-		tp = new SyntheticPool("syntheticPool", &layer->processingElements);
-	} else {
-		std::cout << "Please specify correct benchmark type" << std::endl;
-		return 0;
-	}
+//		rep.startRun(global.inputNoc);
+//		int id = rep.registerElement("run", 0);
+//		rep.reportAttribute(id, "config", global.inputConfig);
+//		rep.reportAttribute(id,"noc", global.inputNoc);
+//		rep.reportAttribute(id,"routing", global.routing);
+//		rep.reportAttribute(id,"selection", global.selection);
+//		rep.reportAttribute(id,"traffic", global.benchmark);
+
+	LayerTop *layer = new LayerTop("Layer");
 
 	std::chrono::high_resolution_clock::time_point t1 =
 			std::chrono::high_resolution_clock::now();
 
 	cout << endl << "Starting Simulation!" << endl;
 	sc_start(global.simulation_time, SC_NS);
+
 
 	GlobalReportClass report = GlobalReportClass::getInstance();
 //
@@ -94,8 +91,8 @@ int sc_main(int arg_num, char *arg_vet[]) {
 	}
 
 
-	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
-			chrono::high_resolution_clock::now() - t1).count();
+	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - t1).count();
+
 	cout << "Execution time: " << duration << " microseconds" << std::endl;
 
 	rep.close();

@@ -21,10 +21,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "Link.h"
 
-Link::Link(sc_module_name nm, Connection* c, int globalId){
+Link::Link(sc_module_name nm, Connection* c, int globalId) {
 	this->id = c->id;
 	this->globalId = globalId;
-	classicPortContainer = new ClassicPortContainer(
+	classicPortContainer = new FlitPortContainer(
 			("link_portCont_" + std::to_string(id)).c_str());
 	if (c->nodes.size() == 1) {
 		this->linkType = HORIZONTAL;
@@ -44,29 +44,6 @@ Link::Link(sc_module_name nm, Connection* c, int globalId){
 	//}
 	//this->rawDataOutput = new ofstream((std::string) nm + ".txt");
 
-	this->Cl = c->effectiveCapacityCl;
-
-	//technology constants
-	this->linkDepth = c->linkDepth;
-	this->linkWidth = c->linkWidth;
-	this->Vdd = global.Vdd;
-	this->length = c->length;
-	this->Cc = c->wireCouplingCapacitanceCc; // capacitance to ground
-	this->Cg = c->wireSelfCapacitanceCg; // self capacitance
-	this->Cglw = c->wireSelfCapacitancePerUnitLengthCg;
-	this->kappaW = (this->Cc / this->Cg * (1 - (1 / this->linkWidth))); // bus ratio
-
-	// vertical link:
-	this->C0 = c->tsvarraySelfCapacitanceC0;
-	this->Ce = c->tsvarrayEdgeCapacitanceCe;
-	this->Cn = c->tsvarrayDiagonalCapacitanceCn;
-	this->Cd = c->tsvarrayNeighbourCapacitanceCd;
-	this->Ne = 2 * (linkWidth + linkDepth - 2);
-	this->Nn = 2 * linkWidth * linkDepth - 3 * linkWidth - 3 * linkDepth - 4;
-	this->Nd = 2 * (linkWidth - 1) * (linkDepth - 1);
-	this->kappaT = ((float) Ne * Ce + (float) Nn * Cn + (float) Nd * Cd)
-			/ ((float) Ne * C0); // bus ratio for vertical link
-
 	SC_METHOD(passthrough_thread);
 	sensitive << clk.pos();
 
@@ -78,45 +55,53 @@ Link::~Link() {
 }
 
 void Link::passthrough_thread() {
-	// Energy Calculations
-//	if (classicPortContainer->portValidIn) {
-//		if (previousFlit == NULL) {
-//			previousFlit = classicPortContainer->portDataIn;
-//		} else {
-//			currentFlit = classicPortContainer->portDataIn;
-//			//report result of:
-//			calculateEnergyPackets(previousFlit, currentFlit);
-//			//report result of:
-//			calculateEnergyStatistics(currentFlit);
-//			previousFlit = currentFlit;
-//			// TODO report link energy
-//		}
-//	}
-
 	// UNCOMMENT FOR RAW DATA ON LINK (@Lennart)
 	//std::string outputToFile;
 
+	int IDLESTATE = 0;
+	int HEADSTATE = 1;
+	int HEADIDLESTATE = 2;
+	int offset = 3; // three fields: idle, head, headidle
+
+
 	if (!classicPortContainer->portValidIn) {
-		currentTransmissionState = 0;
-		//outputToFile = "_;";
+		// this cycle idle
+		if (previousTransmissionState == IDLESTATE){
+			// initally, no flits traverse link
+			//outputToFile = "__;"
+			currentTransmissionState = IDLESTATE;
+		} else if (currentFlit->type == HEAD){
+			// a head flit traversed previously
+			//outputToFile = std::to_string(currentFlit->trafficTypeId) + "_;";
+			currentTransmissionState = HEADIDLESTATE;
+		} else {
+			// a flit already traversed the link
+			//outputToFile = std::to_string(currentFlit->trafficTypeId) + "_;";
+			currentTransmissionState = (2 * currentFlit->trafficTypeId) + offset + 1;
+		}
 	} else {
+		// this cycle active
 		currentFlit = classicPortContainer->portDataIn;
 		if (currentFlit->type == HEAD) {
-			//outputToFile = "H;";
-			currentTransmissionState = 1;
+			//received head flit
+			//outputToFile = "HD;";
+			currentTransmissionState = HEADSTATE;
 		} else {
-			int offset = 2; // two fields: idle and head
-			//outputToFile = std::to_string(currentFlit->trafficTypeId) + ";";
-			currentTransmissionState = currentFlit->trafficTypeId + offset;
+			// received data flit
+			//outputToFile = std::to_string(currentFlit->trafficTypeId) + "D;";
+			currentTransmissionState = (2 * currentFlit->trafficTypeId) + offset;
 		}
 	}
+
 
 	// UNCOMMENT FOR RAW DATA ON LINK (@Lennart)
 	//rawDataOutput->write(outputToFile.c_str(), 2);
 	//rawDataOutput->flush();
-	report.issueLinkMatrixUpdate(globalId, currentTransmissionState, previousTransmissionState);
+	report.issueLinkMatrixUpdate(globalId, currentTransmissionState,
+			previousTransmissionState);
 
 	previousTransmissionState = currentTransmissionState;
+	previousFlit = currentFlit;
 
 	classicPortContainer->portValidOut = classicPortContainer->portValidIn;
 	classicPortContainer->portFlowControlOut =
@@ -135,23 +120,3 @@ void Link::bindOpen(SignalContainer* sigContIn) {
 	classicPortContainer->bindOpen(sigContIn);
 }
 
-float Link::calculateEnergyPackets(Flit* previousFlit, Flit* currentFlit) {
-	return 0.0f;
-}
-
-//TODO implement energy model
-float Link::calculateEnergyStatistics(Flit* currentFlit) {
-	if (linkType == HORIZONTAL) {
-		float Eload = (Vdd * Vdd * Cg * linkWidth * currentFlit->as) / 2;
-		float E = (Vdd * Vdd * Cglw * linkWidth) / 2;
-		E *= (kappaW * currentFlit ->ac + currentFlit->as);
-		E += Eload;
-	} else {
-		// E = 1/2 Vdd^2 C0 Ne (kw Tc + Ts) + Eload
-		float Eload = 0.0f;
-		float E = (Vdd * Vdd * C0 * Ne) / 2;
-		E *= (kappaT * currentFlit->ac + currentFlit->as);
-		E += Eload;
-	}
-	return 0.0f;
-}

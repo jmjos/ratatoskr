@@ -1,3 +1,5 @@
+#!/bin/python
+
 #Copyright 2018 Jan Moritz Joseph
 #
 #Permission is hereby granted, free of charge, to any person obtaining a
@@ -25,13 +27,13 @@
 
 filename = "mesh.xml"
 z = 2
-x = [3, 2]
-y = [3, 2]
+x = [5, 3]
+y = [5, 3]
 bufferDepth = [16,16]
 vcs = [4,4]
 
-verticalNode1 = [0, 2,   6,  8]
-verticalNode2 = [9, 10, 11, 12]
+verticalNode1 = [0, 2, 4, 10, 12, 14, 20, 22, 24]
+verticalNode2 = range(25,34)
 
 verbose = False
 
@@ -40,17 +42,17 @@ def format(value):
 
 def makeConnection(file, id, srcNode, dstNode, bufferDepth, vcs):
     file.write("\t\t<con id=\""+str(id)+"\">\n")
-    file.write("\t\t\t<length value = \"900\"/>\n")
-    file.write("\t\t\t<width value = \"3\"/>\n")
-    file.write("\t\t\t<depth value = \"1\"/>\n")
-    file.write("\t\t\t<effectiveCapacityCl value = \"1.0\"/>\n")
-    file.write("\t\t\t<wireCouplingCapacitanceCc value = \"1.0\"/>\n")
-    file.write("\t\t\t<wireSelfCapacitanceCg value = \"1.0\"/>\n")
-    file.write("\t\t\t<wireSelfCapacitancePerUnitLengthCg value = \"1.0\"/>\n")
-    file.write("\t\t\t<tsvarraySelfCapacitanceC0 value = \"1.0\"/>\n")
-    file.write("\t\t\t<tsvarrayNeighbourCapacitanceCd value = \"1.0\"/>\n")
-    file.write("\t\t\t<tsvarrayDiagonalCapacitanceCn value = \"1.0\"/>\n")
-    file.write("\t\t\t<tsvarrayEdgeCapacitanceCe value = \"1.0\"/>\n")
+    #file.write("\t\t\t<length value = \"900\"/>\n")
+    #file.write("\t\t\t<width value = \"3\"/>\n")
+    #file.write("\t\t\t<depth value = \"1\"/>\n")
+    #file.write("\t\t\t<effectiveCapacityCl value = \"1.0\"/>\n")
+    #file.write("\t\t\t<wireCouplingCapacitanceCc value = \"1.0\"/>\n")
+    #file.write("\t\t\t<wireSelfCapacitanceCg value = \"1.0\"/>\n")
+    #file.write("\t\t\t<wireSelfCapacitancePerUnitLengthCg value = \"1.0\"/>\n")
+    #file.write("\t\t\t<tsvarraySelfCapacitanceC0 value = \"1.0\"/>\n")
+    #file.write("\t\t\t<tsvarrayNeighbourCapacitanceCd value = \"1.0\"/>\n")
+    #file.write("\t\t\t<tsvarrayDiagonalCapacitanceCn value = \"1.0\"/>\n")
+    #file.write("\t\t\t<tsvarrayEdgeCapacitanceCe value = \"1.0\"/>\n")
     file.write("\t\t\t<ports>\n")
     file.write("\t\t\t\t<port id =\"0\">\n")
     file.write("\t\t\t\t\t<node value=\""+str(srcNode)+"\"/>\n")
@@ -67,7 +69,7 @@ def makeConnection(file, id, srcNode, dstNode, bufferDepth, vcs):
 
 
 assert(len(x) == z and len(y) == z and len(bufferDepth) == z and len(vcs) == z), "Dimensions do not agree."
-
+assert(len(verticalNode1) == len(verticalNode2)), "Dimensions of vertical connections do not agree."
 
 file = open(filename, "w")
 
@@ -76,7 +78,7 @@ file.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
 file.write("<network-on-chip xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"layer.xsd\">\n")
 file.write("\t<nodeTypes>\n")
 file.write("\t\t<nodeType id=\"0\">\n")
-file.write("\t\t\t<routerModel value=\"DyXYZ\"/>\n")
+file.write("\t\t\t<routerModel value=\"XYZ\"/>\n")
 file.write("\t\t\t<clockSpeed value=\"2\"/>\n")
 file.write("\t\t</nodeType>\n")
 file.write("\t</nodeTypes>\n\n\n")
@@ -126,17 +128,17 @@ for layer in range(z):
             if verbose:
                 print(str(num)+": Connecting "+str(node1)+" locally")
             file.write("\t\t<con id=\""+str(num)+"\">\n")
-            file.write("\t\t\t<length value = \"0\"/>\n")
-            file.write("\t\t\t<width value = \"3\"/>\n")
-            file.write("\t\t\t<depth value = \"1\"/>\n")
-            file.write("\t\t\t<effectiveCapacityCl value = \"1.0\"/>\n")
-            file.write("\t\t\t<wireCouplingCapacitanceCc value = \"1.0\"/>\n")
-            file.write("\t\t\t<wireSelfCapacitanceCg value = \"1.0\"/>\n")
-            file.write("\t\t\t<wireSelfCapacitancePerUnitLengthCg value = \"1.0\"/>\n")
-            file.write("\t\t\t<tsvarraySelfCapacitanceC0 value = \"1.0\"/>\n")
-            file.write("\t\t\t<tsvarrayNeighbourCapacitanceCd value = \"1.0\"/>\n")
-            file.write("\t\t\t<tsvarrayDiagonalCapacitanceCn value = \"1.0\"/>\n")
-            file.write("\t\t\t<tsvarrayEdgeCapacitanceCe value = \"1.0\"/>\n")
+            #file.write("\t\t\t<length value = \"0\"/>\n")
+            #file.write("\t\t\t<width value = \"3\"/>\n")
+            #file.write("\t\t\t<depth value = \"1\"/>\n")
+            #file.write("\t\t\t<effectiveCapacityCl value = \"1.0\"/>\n")
+            #file.write("\t\t\t<wireCouplingCapacitanceCc value = \"1.0\"/>\n")
+            #file.write("\t\t\t<wireSelfCapacitanceCg value = \"1.0\"/>\n")
+            #file.write("\t\t\t<wireSelfCapacitancePerUnitLengthCg value = \"1.0\"/>\n")
+            #file.write("\t\t\t<tsvarraySelfCapacitanceC0 value = \"1.0\"/>\n")
+            #file.write("\t\t\t<tsvarrayNeighbourCapacitanceCd value = \"1.0\"/>\n")
+            #file.write("\t\t\t<tsvarrayDiagonalCapacitanceCn value = \"1.0\"/>\n")
+            #file.write("\t\t\t<tsvarrayEdgeCapacitanceCe value = \"1.0\"/>\n")
             file.write("\t\t\t<ports>\n")
             file.write("\t\t\t\t<port id =\"0\">\n")
             file.write("\t\t\t\t\t<node value=\""+str(node1)+"\"/>\n")

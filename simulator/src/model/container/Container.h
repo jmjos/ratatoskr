@@ -19,11 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-#ifndef SRC_MODEL_CONTAINER_CONTAINER_H_
-#define SRC_MODEL_CONTAINER_CONTAINER_H_
+#pragma once
 
 #include "systemc.h"
-#include "../../utils/portsOpenConst.h"
+
+#include "utils/portsOpenConst.h"
 
 class SignalContainer : public sc_module{
 public:
@@ -39,6 +39,3 @@ public:
 	virtual void bind(SignalContainer*, SignalContainer*)=0;
 };
 
-
-
-#endif /* SRC_MODEL_CONTAINER_CONTAINER_H_ */

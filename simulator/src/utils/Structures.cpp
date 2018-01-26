@@ -31,8 +31,8 @@ SyntheticPhase::SyntheticPhase(std::string nm, std::string sd, int max, int min,
 
 }
 
-NodeType::NodeType(int id, std::string model, int clk) :
-		id(id), routerModel(model), clockSpeed(clk) {
+NodeType::NodeType(int id, std::string model,std::string routing, std::string selection, int clk) :
+		id(id), routerModel(model), routing(routing), selection(selection), clockSpeed(clk) {
 
 }
 
@@ -41,27 +41,15 @@ LayerType::LayerType(int id, int technology) :
 
 }
 
-Node::Node(int id, Vec3D<float> pos, NodeType* type, LayerType* layer) :
-		id(id), pos(pos), type(type), layer(layer) {
+Node::Node(int id, Vec3D<float> pos, int idType, NodeType* type, LayerType* layer) :
+		id(id), pos(pos), idType(idType), type(type), layer(layer) {
 }
 
 Connection::Connection(int id, std::vector<Node*> nodes,
 		std::vector<int> vcCount, std::vector<int> bufferDepth, float length,
-		int linkWidth, int linkDepth, float effectiveCapacityCl,
-		float wireCouplingCapacitanceCc, float wireSelfCapacitanceCg,
-		float wireSelfCapacitancePerUnitLengthCg,
-		float tsvarraySelfCapacitanceC0, float tsvarrayNeighbourCapacitanceCd,
-		float tsvarrayDiagonalCapacitanceCn, float tsvarrayEdgeCapacitanceCe) :
+		int linkWidth, int linkDepth) :
 		id(id), nodes(nodes), vcCount(vcCount), bufferDepth(bufferDepth), length(
-				length), linkWidth(linkWidth), linkDepth(linkDepth), effectiveCapacityCl(
-				effectiveCapacityCl), wireCouplingCapacitanceCc(
-				wireCouplingCapacitanceCc), wireSelfCapacitanceCg(
-				wireSelfCapacitanceCg), wireSelfCapacitancePerUnitLengthCg(
-				wireSelfCapacitancePerUnitLengthCg), tsvarraySelfCapacitanceC0(
-				tsvarraySelfCapacitanceC0), tsvarrayNeighbourCapacitanceCd(
-				tsvarrayNeighbourCapacitanceCd), tsvarrayDiagonalCapacitanceCn(
-				tsvarrayDiagonalCapacitanceCn), tsvarrayEdgeCapacitanceCe(
-				tsvarrayEdgeCapacitanceCe) {
+				length), linkWidth(linkWidth), linkDepth(linkDepth){
 }
 
 int Connection::getBufferDepthForNode(Node* n) {
