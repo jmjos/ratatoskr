@@ -24,12 +24,6 @@
 const std::vector<DIR::TYPE> DIR::XYZ = { DIR::Local, DIR::East, DIR::West,
 		DIR::North, DIR::South, DIR::Up, DIR::Down };
 
-SyntheticPhase::SyntheticPhase(std::string nm, std::string sd, int max, int min,
-		int wc, int ppw, int wd, int hs) :
-		name(nm), spatialDistribution(sd), maxOffset(max), minOffset(min), waveCount(
-				wc), pkgPerWave(ppw), waveDelay(wd), hotspot(hs) {
-
-}
 
 NodeType::NodeType(int id, std::string model,std::string routing, std::string selection, int clk) :
 		id(id), routerModel(model), routing(routing), selection(selection), clockSpeed(clk) {

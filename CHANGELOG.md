@@ -30,3 +30,14 @@ All notable changes to this project will be documented in this file.
 - calculation of data amounts still faulty. 
 - router matrixes missing
 - implementation of agra, esparda, mafa missing
+
+## [1.1.1] - 2018-01-23
+
+### Features
+- Sythetic traffic patterns fully implemented
+- Fixes for the task model
+- implementations of arga, esparda, mafa
+
+- ### Known Issues
+- calculation of data amounts still faulty. 
+- router matrixes missing

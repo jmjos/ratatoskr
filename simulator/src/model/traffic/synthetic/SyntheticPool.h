@@ -33,10 +33,9 @@
 class SyntheticPool: public TrafficPool{
 private:
 	std::map<int,int> uniform();
-//	std::map<int,int> transpose();
-//	std::map<int,int> bitreverse();
-//	std::map<int,int> tornado();
-//	std::map<int,int> hotspot(int);
+	std::map<int,int> transpose();
+	std::map<int,int> tornado();
+	std::map<int,int> hotspot(int);
 	std::map<int,int> bitcomplement();
 
 public:

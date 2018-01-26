@@ -242,12 +242,17 @@ std::map<Channel, float> getChannelWithTraversedCongestion(Node* curr, Node* dst
 }
 
 int MeshHelper::getHopDistance(Node* n1, Node* n2){
-	Vec3D<int> n1Pos = GlobalInputClass::getInstance().idToScPos.at(n1->id);
-	Vec3D<int> n2Pos = GlobalInputClass::getInstance().idToScPos.at(n2->id);
+	std::vector<float>* xPos = &GlobalInputClass::getInstance().xPositions;
+	std::vector<float>* yPos = &GlobalInputClass::getInstance().yPositions;
+	std::vector<float>* zPos = &GlobalInputClass::getInstance().zPositions;
 
-	return (abs(n1Pos.x-n2Pos.x)+
-			abs(n1Pos.y-n2Pos.y)+
-			abs(n1Pos.z-n2Pos.z));
+	int xDist = std::distance(std::find(xPos->begin(), xPos->end(), n1->pos.x), std::find(xPos->begin(), xPos->end(), n2->pos.x));
+	int yDist = std::distance(std::find(yPos->begin(), yPos->end(), n1->pos.y), std::find(yPos->begin(), yPos->end(), n2->pos.y));
+	int zDist = std::distance(std::find(zPos->begin(), zPos->end(), n1->pos.z), std::find(zPos->begin(), zPos->end(), n2->pos.z));
+
+	return (abs(xDist)+
+			abs(yDist)+
+			abs(zDist));
 }
 
 

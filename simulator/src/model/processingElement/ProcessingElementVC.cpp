@@ -19,23 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
-//-----------------------------------------------------------------------------
-//    AdaptNoCSimulator. Simulator for Network on Chip with Support for Task Graph Modelling.
-//    Copyright (C) 2014-2014 Jan Moritz Joseph (joseph(at)jmjoseph.de), Universitaet zu Luebeck
-//
-//    This program is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
-//
-//    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-//-----------------------------------------------------------------------------
 
 #include "ProcessingElementVC.h"
 
@@ -66,11 +49,28 @@ void ProcessingElementVC::thread() {
 	for (;;) {
 		int timeStamp = sc_time_stamp().value() / 1000;
 
-//		for (auto const& tw : destWait) {
-//			destWait.at(tw.first) -= timeStamp-lastTimeStamp;
-//		}
+		std::vector<DataDestination*> removeList;
 
-		std::set<DataDestination*> clearedDestinations;
+		for (auto const& tw : destWait) {
+			DataDestination* dest = tw.first;
+			Task* task = destToTask.at(dest);
+			if (taskTerminationTime.count(task) && taskTerminationTime.at(task) < timeStamp) {
+				removeList.push_back(dest);
+			}
+		}
+
+		for (DataDestination* dest : removeList) {
+			Task* task = destToTask.at(dest);
+			destToTask.erase(dest);
+			taskToDest.erase(task);
+			taskRepeatLeft.erase(task);
+			taskStartTime.erase(task);
+			taskTerminationTime.erase(task);
+			countLeft.erase(dest);
+			destWait.erase(dest);
+
+		}
+
 
 		for (auto const& tw : destWait) {
 			DataDestination* dest = tw.first;
@@ -144,6 +144,16 @@ void ProcessingElementVC::execute(Task* task) {
 		}
 	}
 
+	if(!taskStartTime.count(task)){
+		taskStartTime[task] = global.getRandomIntBetween(task->minStart, task->maxStart);
+	}
+
+	if(!taskTerminationTime.count(task) && task->minDuration != -1){
+		taskTerminationTime[task] = taskStartTime[task] + global.getRandomIntBetween(task->minDuration, task->maxDuration);
+	}
+
+
+
 	if (task->requirements.empty()) {
 		startSending(task);
 	} else {
@@ -192,7 +202,15 @@ void ProcessingElementVC::startSending(Task* task) {
 				taskToDest[task].insert(dest);
 
 				countLeft[dest] = global.getRandomIntBetween(dest->minCount, dest->maxCount);
-				destWait[dest] = (sc_time_stamp().value() / 1000) + global.getRandomIntBetween(dest->minDelay, dest->maxDelay);
+
+				int delayTime = (sc_time_stamp().value() / 1000) + global.getRandomIntBetween(dest->minDelay, dest->maxDelay);
+
+				if(taskStartTime.count(task) && taskStartTime.at(task) > delayTime){
+					destWait[dest] = taskStartTime.at(task);
+				}else{
+					destWait[dest] = delayTime;
+				}
+
 				event.notify(SC_ZERO_TIME);
 			}
 

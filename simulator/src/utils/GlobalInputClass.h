@@ -40,23 +40,12 @@ class GlobalInputClass {
 
 public:
 
-	//std::vector<Node*> router;
-	//std::vector<Node*> pe;
-
-	std::map<int, Vec3D<float>> idToPos;
-	//std::map<Vec3D<float>, int> posToId;
-	std::map<float, int> xPositions;
-	std::map<float, int> yPositions;
-	std::map<float, int> zPositions;
-	std::map<int, Vec3D<int>> idToScPos;
-	//std::map<Vec3D<int>, int> scPosToId;
+	std::map<Vec3D<float>, std::set<Node*>> posToId;
+	std::vector<float> xPositions;
+	std::vector<float> yPositions;
+	std::vector<float> zPositions;
 
 	std::map<std::string, NodeType*> typeByName;
-
-	//std::map<int, int> idToPe;
-	//std::map<int, int> peToId;
-	//std::map<int, int> idToRouter;
-	//std::map<int, int> routerToId;
 	std::vector<NodeType*> nodeTypes;
 	std::vector<LayerType*> layerTypes;
 	std::vector<Node*> nodes;
@@ -66,8 +55,8 @@ public:
 
 	int droppedCounter = 0;
 
-	std::random_device* rd;  //Will be used to obtain a seed for the random number engine
-	std::mt19937_64* rand; //Standard mersenne_twister_engine seeded with rd()
+	std::random_device* rd;
+	std::mt19937_64* rand;
 
 
 	//General
@@ -91,7 +80,7 @@ public:
 	bool application_is_uniform = false;
 	int application_numberOfTrafficTypes;
 
-	std::vector<SyntheticPhase> syntheticPhase;
+	std::vector<SyntheticPhase*> syntheticPhase;
 
 	/// VERBOSE ///
 	//processing elements
@@ -138,4 +127,16 @@ public:
 
 	int getRandomIntBetween(int, int);
 	float getRandomFloatBetween(float, float);
+
+	void readAttributeIfExists(pugi::xml_node, const char*, const char*, int&);
+	void readAttributeIfExists(pugi::xml_node, const char*, int&);
+
+	std::string readRequiredStringAttribute(pugi::xml_node, const char*, const char*);
+	std::string readRequiredStringAttribute(pugi::xml_node, const char*);
+
+	int readRequiredIntAttribute(pugi::xml_node, const char*, const char*);
+	int readRequiredIntAttribute(pugi::xml_node, const char*);
+
+	float readRequiredFloatAttribute(pugi::xml_node, const char*, const char*);
+	float readRequiredFloatAttribute(pugi::xml_node, const char*);
 };

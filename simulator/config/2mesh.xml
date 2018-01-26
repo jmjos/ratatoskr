@@ -3,7 +3,7 @@
 	<nodeTypes>
 		<nodeType id="0">
 			<routerModel value="XYZ"/>
-			<clockSpeed value="1"/>
+			<clockSpeed value="2"/>
 		</nodeType>
 	</nodeTypes>
 

@@ -147,6 +147,7 @@ struct Vec3D {
 		return count;
 	}
 
+
 	int diffDimCount(const Vec3D<T> v) const {
 		int count = 0;
 		if (x != v.x) {
@@ -158,7 +159,6 @@ struct Vec3D {
 		if (z != v.z) {
 			count++;
 		}
-
 		return count;
 	}
 
@@ -170,17 +170,6 @@ struct Vec3D {
 		output << "(" << v.x << ", " << v.y << ", " << v.z << ")";
 		return output;
 	}
-};
-
-struct SyntheticPhase {
-	std::string name, spatialDistribution;
-	int maxOffset, minOffset;
-	int waveCount, pkgPerWave, waveDelay;
-	int hotspot;
-
-	SyntheticPhase(std::string nm, std::string sd, int max, int min, int wc,
-			int ppw, int wd, int hs);
-
 };
 
 struct Node;
@@ -259,6 +248,29 @@ struct Connection {
 	int getVCCountForNode(Node* n);
 };
 
+struct SyntheticPhase {
+	std::string name;
+	std::string distribution;
+	int minStart = 0;
+	int maxStart = 0;
+	int minDuration = -1;
+	int maxDuration = -1;
+	int minRepeat = -1;
+	int maxRepeat = -1;
+	int minCount = -1;
+	int maxCount = -1;
+	int minDelay = 0;
+	int maxDelay = 0;
+	int minInterval;
+	int maxInterval;
+	int hotspot = -1;
+
+	SyntheticPhase(std::string name, std::string distribution, int minInterval, int maxInterval): name(name), distribution(distribution), minInterval(minInterval), maxInterval(maxInterval){
+
+	}
+};
+
+
 struct DataType {
 	int id;
 	std::string name;
@@ -272,35 +284,32 @@ struct DataType {
 struct DataRequirement {
 	int id;
 	DataType* type;
-	int minCount;
-	int maxCount;
-	int count = 0;
+	//Node* src = 0;			//requires the data to be from this node (optional)
 
-	DataRequirement(int id, DataType* type, int minCount, int maxCount) :
-			id(id), type(type), minCount(minCount), maxCount(maxCount) {
+	int minCount = -1;		//required amount of DataType to fulfill requirement (to fire)
+	int maxCount = -1;
+
+	DataRequirement(int id, DataType* type) : id(id), type(type) {
 	}
 };
 
 struct DataDestination {
 	int id;
 	DataType* type;
-	int minCount;
-	int maxCount;
-
-	int minDelay;
-	int maxDelay;
-
-	int minInterval;
-	int maxInterval;
-
 	Node* destination;
 
-	DataDestination(int id, DataType* type, int minCount, int maxCount,
-			int minDelay, int maxDelay, int minInterval, int maxInterval,
-			Node* destination) :
-			id(id), type(type), minCount(minCount), maxCount(maxCount), minDelay(
-					minDelay), maxDelay(maxDelay), minInterval(minInterval), maxInterval(
-					maxInterval), destination(destination) {
+	int minCount = -1;		//generated amount of packets per fire
+	int maxCount = -1;
+
+	int minDelay = 0;		//delay between fire and first generated packet
+	int maxDelay = 0;
+
+	int minInterval;		//delay between each sent packet
+	int maxInterval;
+
+	DataDestination(int id, DataType* type, Node* destination, int minInterval, int maxInterval) :
+			id(id), type(type), destination(destination), minInterval(minInterval), maxInterval(maxInterval) {
+
 	}
 };
 
@@ -308,17 +317,18 @@ struct Task {
 	int id;
 	Node* node;
 
-	int minRepeat;
-	int maxRepeat;
+	int minStart = 0;		// simulation time in ns at which the task starts
+	int maxStart = 0;
+	int minDuration = -1;	// maximal task duration in ns
+	int maxDuration = -1;
+	int minRepeat = -1;		// maximal task execution count
+	int maxRepeat = -1;		// task terminates at whatever comes first, maxRepeates or duration
 
 	std::vector<DataRequirement*> requirements;
 	std::vector<std::pair<float, std::vector<DataDestination*>>> possibilities;
 
-	Task(int id, Node* node, int minRepeat, int maxRepeat,
-			std::vector<DataRequirement*> requirements,
-			std::vector<std::pair<float, std::vector<DataDestination*>>> possibilities) :
-			id(id), node(node), minRepeat(minRepeat), maxRepeat(maxRepeat), requirements(
-					requirements), possibilities(possibilities) {
+	Task(int id, Node* node) :
+			id(id), node(node) {
 	}
 };
 

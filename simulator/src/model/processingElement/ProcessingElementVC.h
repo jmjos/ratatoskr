@@ -52,6 +52,8 @@ public:
 	std::map<Task*, std::set<DataDestination*>> taskToDest;
 
 	std::map<Task*, int> taskRepeatLeft;
+	std::map<Task*, int> taskStartTime;
+	std::map<Task*, int> taskTerminationTime;
 
 	std::map<DataDestination*, int> countLeft;
 	//std::map<DataDestination*, int> interval;

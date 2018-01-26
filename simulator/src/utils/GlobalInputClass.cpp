@@ -53,13 +53,26 @@ bool GlobalInputClass::readInputFile(std::string filePath) {
 	application_numberOfTrafficTypes = app_node.child("numberOfTrafficTypes").attribute("value").as_int();
 
 	for (pugi::xml_node phase_node : app_node.child("synthetic").children("phase")) {
-		syntheticPhase.push_back(
-				{ phase_node.attribute("name").as_string(), phase_node.child("spatialDistribution").attribute("value").as_string(), phase_node.child(
-						"initalOffset").attribute("max").as_int(), phase_node.child("initalOffset").attribute("min").as_int(), phase_node.child(
-						"waveCount").attribute("value").as_int(), phase_node.child("packagesPerWave").attribute("value").as_int(), phase_node.child(
-						"waveDelay").attribute("value").as_int(),
-						phase_node.child("spatialDistribution").attribute("hotspot") ?
-								phase_node.child("spatialDistribution").attribute("hotspot").as_int() : -1 });
+		std::string name = readRequiredStringAttribute(phase_node, "name");
+		std::string distribution = readRequiredStringAttribute(phase_node, "distribution", "value");
+		int minInterval = readRequiredIntAttribute(phase_node, "interval", "min");
+		int maxInterval = readRequiredIntAttribute(phase_node, "interval", "max");
+		SyntheticPhase* sp = new SyntheticPhase(name, distribution, minInterval, maxInterval);
+
+		readAttributeIfExists(phase_node, "start", "min", sp->minStart);
+		readAttributeIfExists(phase_node, "start", "max", sp->maxStart);
+		readAttributeIfExists(phase_node, "duration", "min", sp->minDuration);
+		readAttributeIfExists(phase_node, "duration", "max", sp->maxDuration);
+		readAttributeIfExists(phase_node, "repeat", "min", sp->minRepeat);
+		readAttributeIfExists(phase_node, "repeat", "max", sp->maxRepeat);
+		readAttributeIfExists(phase_node, "count", "min", sp->minCount);
+		readAttributeIfExists(phase_node, "count", "max", sp->maxCount);
+		readAttributeIfExists(phase_node, "delay", "min", sp->minDelay);
+		readAttributeIfExists(phase_node, "delay", "max", sp->maxDelay);
+		readAttributeIfExists(phase_node, "hotspot", "value", sp->hotspot);
+
+
+		syntheticPhase.push_back(sp);
 	}
 
 	//---------------------------------------------------------------------------
@@ -138,22 +151,35 @@ bool GlobalInputClass::readNoCLayout(std::string filePath) {
 
 	/// Read Nodes ///
 	nodes.resize(noc_node.child("nodes").select_nodes("node").size());
-	for (pugi::xml_node node : noc_node.child("nodes").children("node")) {
-		int id = node.attribute("id").as_int();
+	for (pugi::xml_node xmlnode : noc_node.child("nodes").children("node")) {
+		int id = xmlnode.attribute("id").as_int();
 		std::string name = "node_" + std::to_string(id);
-		float x = node.child("xPos").attribute("value").as_float();
-		float y = node.child("yPos").attribute("value").as_float();
-		float z = node.child("zPos").attribute("value").as_float();
-		int idType = node.child("idType").attribute("value").as_int();
-		NodeType* nodeType = nodeTypes.at(node.child("nodeType").attribute("value").as_int());
-		LayerType* layerType = layerTypes.at(node.child("layerType").attribute("value").as_int());
+		float x = xmlnode.child("xPos").attribute("value").as_float();
+		float y = xmlnode.child("yPos").attribute("value").as_float();
+		float z = xmlnode.child("zPos").attribute("value").as_float();
+		int idType = xmlnode.child("idType").attribute("value").as_int();
+		NodeType* nodeType = nodeTypes.at(xmlnode.child("nodeType").attribute("value").as_int());
+		LayerType* layerType = layerTypes.at(xmlnode.child("layerType").attribute("value").as_int());
 
-		nodes.at(id) = new Node(id, Vec3D<float>(x, y, z), idType, nodeType, layerType);
-		idToPos.insert(std::pair<int, Vec3D<float>>(id, Vec3D<float>(x, y, z)));
-//		posToId.insert(std::pair<Vec3D<float>, int>(Vec3D<float>(x, y, z), id));
+		Node* node = new Node(id, Vec3D<float>(x, y, z), idType, nodeType, layerType);
+		nodes.at(id) = node;
+		nodeType->nodes.at(idType) = node;
 
-		nodeType->nodes.at(idType) = nodes.at(id);
+		posToId[node->pos].insert(node);
+		xPositions.push_back( node->pos.x);
+		yPositions.push_back( node->pos.y);
+		zPositions.push_back(node->pos.z);
 	}
+
+	sort( xPositions.begin(), xPositions.end() );
+	xPositions.erase( unique( xPositions.begin(), xPositions.end() ), xPositions.end() );
+
+	sort( yPositions.begin(), yPositions.end() );
+	yPositions.erase( unique( yPositions.begin(), yPositions.end() ), yPositions.end() );
+
+	sort( zPositions.begin(), zPositions.end() );
+	zPositions.erase( unique( zPositions.begin(), zPositions.end() ),zPositions.end() );
+
 
 	/// Read Connections ///
 	connections.resize(noc_node.child("connections").select_nodes("con").size());
@@ -254,25 +280,6 @@ bool GlobalInputClass::readNoCLayout(std::string filePath) {
 		}
 	}
 
-	for (Node* node : nodes) {
-		xPositions.insert( { node->pos.x, 0 });
-		yPositions.insert( { node->pos.y, 0 });
-		zPositions.insert( { node->pos.z, 0 });
-	}
-
-	for (Node* node : nodes) {
-		int x = std::distance(xPositions.begin(), xPositions.find(node->pos.x));
-		int y = std::distance(yPositions.begin(), yPositions.find(node->pos.y));
-		int z = std::distance(zPositions.begin(), zPositions.find(node->pos.z));
-
-		xPositions[node->pos.x] = x;
-		yPositions[node->pos.y] = y;
-		zPositions[node->pos.z] = z;
-
-		idToScPos.insert(std::pair<int, Vec3D<int>>(node->id, Vec3D<int>(x, y, z)));
-//		scPosToId.insert(std::pair<Vec3D<int>, int>(Vec3D<int>(x, y, z), node->id));
-	}
-
 	for(Connection* c: connections){
 			c->vcBufferUtilization.resize(c->nodes.size());
 			c->bufferUtilization.resize(c->nodes.size());
@@ -284,19 +291,6 @@ bool GlobalInputClass::readNoCLayout(std::string filePath) {
 
 	 		}
 	 	}
-////	sort router and pe by ascending position
-//	sort( router.begin( ), router.end( ), [ ]( const Node* lnode, const Node* rnode ){
-//	   return rnode->pos < lnode->pos;
-//	});
-//
-//	sort( pe.begin( ), pe.end( ), [ ]( const Node* lnode, const Node* rnode ){
-//	   return lnode->pos < rnode->pos;
-//	});
-//
-////	for(Node* n: router){
-////		std::cout<<n->pos.x<<n->pos.y<<n->pos.z<<endl;
-////	}
-
 
 
 	return true;
@@ -314,8 +308,8 @@ bool GlobalInputClass::readDataStream(std::string taskFilePath, std::string mapp
 	std::map<int, Node*> bindings;
 
 	for (pugi::xml_node bind_node : map_node.children("bind")) {
-		int task = bind_node.child("task").attribute("value").as_int();
-		Node* node= nodes.at(bind_node.child("node").attribute("value").as_int());
+		int task = readRequiredIntAttribute(bind_node, "task", "value");
+		Node* node= nodes.at(readRequiredIntAttribute(bind_node, "node", "value"));
 		bindings[task] = node;
 	}
 
@@ -329,8 +323,8 @@ bool GlobalInputClass::readDataStream(std::string taskFilePath, std::string mapp
 	/// Read Types ///
 	dataTypes.resize(data_node.child("dataTypes").select_nodes("dataType").size());
 	for (pugi::xml_node type_node : data_node.child("dataTypes").children("dataType")) {
-		int id = type_node.attribute("id").as_int();
-		std::string name = type_node.child("name").attribute("value").as_string();
+		int id = readRequiredIntAttribute(type_node, "id");
+		std::string name = readRequiredStringAttribute(type_node, "name", "value");
 		dataTypes.at(id) = new DataType(id, name);
 	}
 
@@ -338,47 +332,57 @@ bool GlobalInputClass::readDataStream(std::string taskFilePath, std::string mapp
 	tasks.resize(data_node.child("tasks").select_nodes("task").size());
 	for (pugi::xml_node task_node : data_node.child("tasks").children("task")) {
 		int id = task_node.attribute("id").as_int();
-		int minRepeat = task_node.child("repeat").attribute("min").as_int();
-		int maxRepeat = task_node.child("repeat").attribute("max").as_int();
+		Task* task = new Task(id, bindings.at(id));
+		readAttributeIfExists(task_node, "start", "min", task->minStart);
+		readAttributeIfExists(task_node, "start", "max", task->maxStart);
+		readAttributeIfExists(task_node, "duration", "min", task->minDuration);
+		readAttributeIfExists(task_node, "duration", "max", task->maxDuration);
+		readAttributeIfExists(task_node, "repeat", "min", task->minRepeat);
+		readAttributeIfExists(task_node, "repeat", "max", task->maxRepeat);
 
 		// Read Requirements
 		std::vector<DataRequirement*> requirements;
 		requirements.resize(task_node.child("requires").select_nodes("requirement").size());
 		for (pugi::xml_node requirement_node : task_node.child("requires").children("requirement")) {
-			int id = requirement_node.attribute("id").as_int();
-			DataType* type = dataTypes.at(requirement_node.child("type").attribute("value").as_int());
-			int minCount = requirement_node.child("count").attribute("min").as_int();
-			int maxCount = requirement_node.child("count").attribute("max").as_int();
-			requirements.at(id) = new DataRequirement(id, type, minCount, maxCount);
+			int id = readRequiredIntAttribute(requirement_node, "id");
+			DataType* type = dataTypes.at(readRequiredIntAttribute(requirement_node, "type", "value"));
+			DataRequirement* req = new DataRequirement(id, type);
+			readAttributeIfExists(requirement_node, "count", "min", req->minCount);
+			readAttributeIfExists(requirement_node, "count", "max", req->maxCount);
+			requirements.at(id) = req;
 		}
+		task->requirements = requirements;
 
 		// Read Destinations
 		std::vector<std::pair<float, std::vector<DataDestination*>>> possibilities;
 		possibilities.resize(task_node.child("generates").select_nodes("possibility").size());
 		for (pugi::xml_node generate_node : task_node.child("generates").children("possibility")) {
-					int id = generate_node.attribute("id").as_int();
-					float probability = generate_node.child("probability").attribute("value").as_float();
+			int id = readRequiredIntAttribute(generate_node, "id");
+			float probability = readRequiredFloatAttribute(generate_node, "probability", "value");
 
-					std::vector<DataDestination*> destinations;
-					destinations.resize(generate_node.child("destinations").select_nodes("destination").size());
-					for (pugi::xml_node destination_node : generate_node.child("destinations").children("destination")) {
-						int id = destination_node.attribute("id").as_int();
-						DataType* type = dataTypes.at(destination_node.child("type").attribute("value").as_int());
-						int minCount = destination_node.child("count").attribute("min").as_int();
-						int maxCount = destination_node.child("count").attribute("max").as_int();
-						int minDelay = destination_node.child("delay").attribute("min").as_int();
-						int maxDelay = destination_node.child("delay").attribute("max").as_int();
-						int minInterval = destination_node.child("interval").attribute("min").as_int();
-						int maxInterval = destination_node.child("interval").attribute("max").as_int();
-						Node* node = bindings.at(destination_node.child("task").attribute("value").as_int());
+			std::vector<DataDestination*> destinations;
+			destinations.resize(generate_node.child("destinations").select_nodes("destination").size());
+			for (pugi::xml_node destination_node : generate_node.child("destinations").children("destination")) {
+				int id = readRequiredIntAttribute(destination_node, "id");
+				DataType* type = dataTypes.at(readRequiredIntAttribute(destination_node, "type", "value"));
+				Node* node = bindings.at(readRequiredIntAttribute(destination_node, "task", "value"));
+				int minInterval = readRequiredIntAttribute(destination_node, "interval", "min");
+				int maxInterval = readRequiredIntAttribute(destination_node, "interval", "max");
+				DataDestination* dataDestination = new DataDestination(id, type, node, minInterval, maxInterval);
 
-						destinations.at(id) = new DataDestination(id, type, minCount, maxCount, minDelay, maxDelay, minInterval, maxInterval, node);
-					}
+				readAttributeIfExists(destination_node, "count", "min", dataDestination->minCount);
+				readAttributeIfExists(destination_node, "count", "max", dataDestination->maxCount);
+				readAttributeIfExists(destination_node, "delay", "min", dataDestination->minDelay);
+				readAttributeIfExists(destination_node, "delay", "max", dataDestination->maxDelay);
 
-					possibilities.at(id) = {probability, destinations};
-				}
+				destinations.at(id) = dataDestination;
+			}
 
-		tasks.at(id) = new Task(id, bindings.at(id), minRepeat, maxRepeat, requirements, possibilities);
+			possibilities.at(id) = {probability, destinations};
+		}
+		task->possibilities = possibilities;
+
+		tasks.at(id) = task;
 
 	}
 
@@ -398,4 +402,49 @@ int GlobalInputClass::getRandomIntBetween(int min, int max){
 float GlobalInputClass::getRandomFloatBetween(float min, float max){
 	std::uniform_real_distribution<float> dis(min, max);
 	return dis(*rand);
+}
+
+
+void GlobalInputClass::readAttributeIfExists(pugi::xml_node node, const char* child, const char* attribute, int& var){
+	readAttributeIfExists(node.child(child), attribute, var);
+}
+
+void GlobalInputClass::readAttributeIfExists(pugi::xml_node node, const char* attribute, int& var){
+	if(!node.attribute(attribute).empty()){
+		var = node.attribute(attribute).as_int();
+	}
+}
+
+int GlobalInputClass::readRequiredIntAttribute(pugi::xml_node node, const char* child, const char* attribute){
+	return readRequiredIntAttribute(node.child(child), attribute);
+}
+
+int GlobalInputClass::readRequiredIntAttribute(pugi::xml_node node, const char* attribute){
+	if(node.attribute(attribute).empty()){
+		FATAL("Can not read node:" << node.path() << " " << attribute);
+	}
+	return node.attribute(attribute).as_int();
+}
+
+float GlobalInputClass::readRequiredFloatAttribute(pugi::xml_node node, const char* child, const char* attribute){
+	return readRequiredFloatAttribute(node.child(child), attribute);
+}
+
+float GlobalInputClass::readRequiredFloatAttribute(pugi::xml_node node, const char* attribute){
+	if(node.attribute(attribute).empty()){
+		FATAL("Can not read node:" << node.path() << " " << attribute);
+	}
+	return node.attribute(attribute).as_float();
+}
+
+
+std::string GlobalInputClass::readRequiredStringAttribute(pugi::xml_node node, const char* child, const char* attribute){
+	return readRequiredStringAttribute(node.child(child), attribute);
+}
+
+std::string GlobalInputClass::readRequiredStringAttribute(pugi::xml_node node, const char* attribute){
+	if(node.attribute(attribute).empty()){
+		FATAL("Can not read node:" << node.path() << " " << attribute);
+	}
+	return node.attribute(attribute).as_string();
 }
