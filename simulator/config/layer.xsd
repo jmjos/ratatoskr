@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:element name="network-on-chip">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="layer">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="name">
+								<xs:complexType>
+									<xs:attribute name="value" type="xs:string"></xs:attribute>
+								</xs:complexType>
+							</xs:element>
+
+							<xs:element name="technology">
+								<xs:complexType>
+									<xs:attribute name="value" type="xs:string"></xs:attribute>
+								</xs:complexType>
+							</xs:element>
+
+							<xs:element name="topology">
+								<xs:complexType>
+									<xs:attribute name="value" type="xs:string"></xs:attribute>
+								</xs:complexType>
+							</xs:element>
+
+							<xs:element name="x_nodes">
+								<xs:complexType>
+									<xs:attribute name="value" type="xs:integer"></xs:attribute>
+								</xs:complexType>
+							</xs:element>
+
+							<xs:element name="y_nodes">
+								<xs:complexType>
+									<xs:attribute name="value" type="xs:integer"></xs:attribute>
+								</xs:complexType>
+							</xs:element>
+
+
+							<xs:element name="router">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="bufferDepth">
+											<xs:complexType>
+												<xs:attribute name="value" type="xs:integer"></xs:attribute>
+											</xs:complexType>
+										</xs:element>
+
+										<xs:element name="clockSpeed">
+											<xs:complexType>
+												<xs:attribute name="value" type="xs:integer"></xs:attribute>
+											</xs:complexType>
+										</xs:element>
+
+										<xs:element name="routerModel">
+											<xs:complexType>
+												<xs:attribute name="value" type="xs:string"></xs:attribute>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+
+							<xs:element name="processingElements">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="clockSpeed">
+											<xs:complexType>
+												<xs:attribute name="value" type="xs:integer"></xs:attribute>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+
+							<xs:element name="connections">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="upwardConnections" type="connectionList"></xs:element>
+										<xs:element name="downwardConnections" type="connectionList"></xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:simpleType name="connectionList">
+		<xs:list itemType="xs:integer"></xs:list>
+	</xs:simpleType>
+
+</xs:schema>

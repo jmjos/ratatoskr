@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ApplicationGraph.xsd">
+
+	<task name="start_1" id="0" execution_count="1" trigger_and="false">
+
+		<outport name="end 1" id="1" probability="1.0" trafficType="1" as="1" ac="1">
+			<distribution>POLYNOMIAL</distribution>
+			<parameters>
+				<coefficient>3</coefficient>
+				<exponent>0</exponent>
+			</parameters>
+		</outport>
+
+		<parameters delay="1">
+			<source>
+				<distribution>POLYNOMIAL</distribution>
+				<parameters>
+					<coefficient>100</coefficient>
+					<exponent>0</exponent>
+				</parameters>
+			</source>
+		</parameters>
+	</task>
+
+	<task name="end" id="1" execution_count="1" trigger_and="false">
+		<inport id="0" data_volume="3" />
+		<parameters delay="100" />
+	</task>
+
+	<task name="start_2" id="2" execution_count="1" trigger_and="false">
+		<outport name="end" id="3" probability="1.0" trafficType="1" as="1" ac="1">
+			<distribution>POLYNOMIAL</distribution>
+			<parameters>
+				<coefficient>3</coefficient>
+				<exponent>0</exponent>
+			</parameters>
+		</outport>
+
+		<parameters delay="300">
+			<source>
+				<distribution>POLYNOMIAL</distribution>
+				<parameters>
+					<coefficient>100</coefficient>
+					<exponent>0</exponent>
+				</parameters>
+			</source>
+		</parameters>
+	</task>
+
+	<task name="end_2" id="3" execution_count="1" trigger_and="false">
+		<inport id="2" data_volume="3" />
+		<parameters delay="100" />
+	</task>
+
+
+</application>

@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="ApplicationGraph.xsd">
+
+
+  <task name="demux" id="0" execution_count="1" trigger_and="false">
+
+    <outport name="VLD" id="1" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>1</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+
+<!-- -->
+    <outport name="CAD" id ="12" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>1</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+
+    <parameters delay="1">
+      <source>
+        <distribution>POLYNOMIAL</distribution>
+        <parameters>
+          <coefficient>1</coefficient>
+          <exponent>0</exponent>
+        </parameters>
+      </source>
+    </parameters>
+  </task>
+
+
+
+  <task name ="VLD" id ="1" execution_count="1" trigger_and="false">
+    <inport id="0" data_volume="1"/>
+
+    <outport name="run-lentgh decoder" id="2" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>70</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+
+    <parameters delay="1"/>
+  </task>
+
+
+  <task name="run-legnth_decoder" id="2" execution_count="1" trigger_and="false">
+    <inport id="1" data_volume="70"/>
+
+    <outport name ="inverse_scan" id ="3" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>362</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+
+    <parameters delay="1"/>
+
+  </task>
+
+
+  <task name="inverse_scan" id ="3" execution_count="1" trigger_and="false">
+    <inport id ="2" data_volume="362"/>
+
+    <outport name ="AC_DC_predicition" id="4" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>362</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+    <parameters delay ="1"/>
+  </task>
+
+  <task name ="AC_DC_predicition" id ="4" execution_count="1" trigger_and="false">
+    <inport id ="3" data_volume="362"/>
+
+    <outport name="iQuant" id="6" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>362</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+
+    <parameters delay="1"/>
+
+  </task>
+
+
+  <task name ="MB_Stripe_memory" id ="5" execution_count="1" trigger_and="false">
+    <inport id="4" data_volume="1"/>
+    <parameters delay="1"/>
+  </task>
+
+
+  <task name ="iQuant" id ="6" execution_count="1" trigger_and="false">
+    <inport id ="4" data_volume="362"/>
+
+    <outport name="iDTC" id="7" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>357</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+
+    <parameters delay="1"/>
+
+  </task>
+
+  <task name ="iDTC" id ="7" execution_count="1" trigger_and="true">
+    <inport id ="6" data_volume="357"/>
+    <inport id="15" data_volume="16"/>
+
+    <outport name="up_sump" id="8" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>353</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+
+    <parameters delay="1"/>
+
+  </task>
+
+  <task name ="up_sump" id ="8" execution_count="1" trigger_and="false">
+    <inport id ="7" data_volume="353"/>
+    <outport name="VOP_reconstruciotn" id="9" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>1</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+
+    <parameters delay="1"/>
+
+  </task>
+
+  <task name ="VOP_reconstruciotn" id ="9" execution_count="1" trigger_and="false">
+    <inport id ="8" data_volume="1"/>
+    <outport name="padding" id="10" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>313</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+
+    <parameters delay="1"/>
+
+  </task>
+
+  <task name ="padding" id ="10" execution_count="1" trigger_and="true">
+    <inport id ="9" data_volume="313"/>
+    <inport id="15" data_volume="16"/>
+    <outport name="reference_VOP_memory" id="11" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>313</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+
+    <parameters delay="1"/>
+
+  </task>
+
+
+
+  <task name ="reference_VOP_memory" id ="11" execution_count="1" trigger_and="false">
+    <inport id ="10" data_volume="313"/>
+<!--
+    <outport name="padding" id="10" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>94</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+
+    <outport name="VOP_recon" id ="9" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>500</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+    -->
+    <parameters delay="1"/>
+
+  </task>
+
+
+  <!-- UPPER PART:  shape decoder  -->
+  <task name="CAD" id ="12" execution_count="1" trigger_and="false">
+    <inport id="0" data_volume="1"/>
+    <inport id="13" data_volume ="157"/>
+    <outport name ="current_bab_mem" id="17" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>16</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+    <parameters delay="1"/>
+  </task>
+
+  
+  <task name="context_calculation" id ="13" execution_count="1" trigger_and="false">
+    <inport id="17" data_volume="16"/>
+    <inport id="14" data_volume ="1"/>
+    <outport name ="CAD" id="12" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>157</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+    <parameters delay="1"/>
+  </task>
+
+  <task name="down_samp" id ="14" execution_count="1" trigger_and="false">
+    <inport id="15" data_volume="16"/>
+    <outport name ="context_calc" id="13" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>1</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+    <parameters delay="1"/>
+  </task>
+  
+ 
+  <task name="reference_BAB_mem" id ="15" execution_count="1" trigger_and="false">
+    <inport id="16" data_volume="16"/>
+    <outport name ="iDTC" id="7" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>16</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+
+    <outport name ="padding" id="10" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>16</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+    <outport name ="down_samp" id="14" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>16</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+
+
+    <parameters delay="1"/>
+  </task>
+
+
+  <task name="up_samp" id ="16" execution_count="1" trigger_and="false">
+    <inport id="17" data_volume="16"/>
+    <outport name ="reference_BAB_Mem" id="15" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>16</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+    <parameters delay="1"/>
+  </task>
+
+  <task name="current_bab_mem" id ="17" execution_count="1" trigger_and="false">
+    <inport id="12" data_volume="16"/>
+    <outport name ="context_eval" id="13" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>16</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+    <outport name ="um_samp" id="16" probability="1.0" trafficType="1" as="1" ac="1">
+      <distribution>POLYNOMIAL</distribution>
+      <parameters>
+        <coefficient>16</coefficient>
+        <exponent>0</exponent>
+      </parameters>
+    </outport>
+    <parameters delay="1"/>
+  </task>
+
+
+</application>
+
+
+
