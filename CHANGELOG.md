@@ -41,3 +41,8 @@ All notable changes to this project will be documented in this file.
 - ### Known Issues
 - calculation of data amounts still faulty. 
 - router matrixes missing
+
+## [1.1.2] - 2018-01-29
+
+### Features 
+- Removed Netrace for licensing
