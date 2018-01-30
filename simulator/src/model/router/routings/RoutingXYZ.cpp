@@ -29,7 +29,7 @@ RoutingXYZ::~RoutingXYZ() {
 }
 
 void RoutingXYZ::checkValid() {
-	assert(node->connectedNodes.size() <= 6);
+	assert(node->connectedNodes.size() <= 7);
 	assert(node->connections.size() <= node->connectedNodes.size() + 1);
 	assert(node->dirToCon.size() == node->connections.size());
 

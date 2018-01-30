@@ -1,0 +1,6 @@
+# temporary files of simulator
+link*.txt
+log.txt
+report.txt
+*.csv
+simulator/sim

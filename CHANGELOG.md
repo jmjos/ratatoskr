@@ -38,7 +38,7 @@ All notable changes to this project will be documented in this file.
 - Fixes for the task model
 - implementations of arga, esparda, mafa
 
-- ### Known Issues
+### Known Issues
 - calculation of data amounts still faulty. 
 - router matrixes missing
 
@@ -46,3 +46,8 @@ All notable changes to this project will be documented in this file.
 
 ### Features 
 - Removed Netrace for licensing
+
+## [1.1.3] - 2018-01-30
+
+### Improvements
+- Removed Bug in XYZ routing preventing more than 2x2x2 topologies

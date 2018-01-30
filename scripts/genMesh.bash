@@ -1,5 +1,26 @@
 #!/bin/bash
 
+
+#Copyright 2018 Jan Moritz Joseph
+#
+#Permission is hereby granted, free of charge, to any person obtaining a
+#copy of this software and associated documentation files (the "Software"),
+#to deal in the Software without restriction, including without limitation
+#the rights to use, copy, modify, merge, publish, distribute, sublicense,
+#and/or sell copies of the Software, and to permit persons to whom the
+#Software is furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included
+#in all copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+#EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+#MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+#IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+#CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+#TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+#SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 ### Parameter List ###
 file=$1
 x=$2
@@ -93,15 +114,7 @@ while [ $i -lt $z ]; do
 					echo -e '\t\t\t<length value="900"/>' >> $file
                     echo -e '\t\t\t<width value="3"/>' >> $file
                     echo -e '\t\t\t<depth value="1"/>' >> $file
-                    echo -e '\t\t\t<effectiveCapacityCl value="1.0"/>' >> $file
-                    echo -e '\t\t\t<wireCouplingCapacitanceCc value="1.0"/>' >> $file
-                    echo -e '\t\t\t<wireSelfCapacitanceCg value="1.0"/>' >> $file
-                    echo -e '\t\t\t<wireSelfCapacitancePerUnitLengthCg value="1.0"/>' >> $file
-                    echo -e '\t\t\t<tsvarraySelfCapacitanceC0 value="1.0"/>' >> $file
-                    echo -e '\t\t\t<tsvarrayNeighbourCapacitanceCd value="1.0"/>' >> $file
-                    echo -e '\t\t\t<tsvarrayDiagonalCapacitanceCn value="1.0"/>' >> $file
-                    echo -e '\t\t\t<tsvarrayEdgeCapacitanceCe value="1.0"/>' >> $file
-					echo -e '\t\t\t<interface value="0"/>' >> $file
+                    echo -e '\t\t\t<interface value="0"/>' >> $file
 					echo -e '\t\t\t<ports>' >> $file
 					echo -e '\t\t\t\t<port id="0">' >> $file
 					echo -e '\t\t\t\t\t<node value="'$node1'"/>' >> $file
