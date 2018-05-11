@@ -51,3 +51,12 @@ All notable changes to this project will be documented in this file.
 
 ### Improvements
 - Removed Bug in XYZ routing preventing more than 2x2x2 topologies
+
+## [1.1.4] - 2018-05-11
+
+### Features
+- Traffic patterns for face recognition 3D VSoC. Includes task graph and (manual) mapping. Parameters include grade of parallelization
+- GUI for network topology
+
+### Improvements
+- Bug in uniform random traffic pattern: Distribution in PEs changed.

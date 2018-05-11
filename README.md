@@ -104,7 +104,7 @@ Details on the configuration can be found in the wiki.
 If you wish to contribute, please contact me at my univeristy email address jan.joseph@ovgu.de. We offer student development jobs for students from Magdeburg.
 
 ## Credits
-A special thanks to my student Sven Wrieden for his amazing help with the project. 
+A special thanks to my students Sven Wrieden and Imad Hajjar for their amazing help with the project. 
 
 ## License
 

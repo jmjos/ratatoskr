@@ -1,0 +1,106 @@
+<!--
+//    AdaptNoCSimulator. Simulator for Network on Chip with Support for Task Graph Modelling.
+//    Copyright (C) 2014-2014 Jan Moritz Joseph (joseph(at)jmjoseph.de), Universitaet zu Luebeck
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<configuration>
+  <general>
+    <simulationTime value="2220"/>
+    <outputToFile value="true">report</outputToFile>
+  </general>
+  
+  <noc>
+    <nocFile>config/3x4x4_XYZ_16B_4VC.xml</nocFile>
+    <flitsPerPacket value ="10"/>
+    <Vdd value="5"/>
+  </noc>
+  
+  <application>
+  	<benchmark>task</benchmark> <!--task, netrace, synthetic-->
+  	
+  	<synthetic>
+    	<phase name="warmup">
+    		<distribution value="tornado"/> 
+    		<start min="100" max="200"/>			<!--benchmark on each node will start between 0 and 5ns -->
+    		<duration min="500" max="500"/>			
+    		<repeat min="1" max="1"/>
+    		<delay min="0" max="0"/> 
+    		<interval min="100" max="100"/>
+    		<count min="-1" max="-1"/>
+    		<hotspot value = "0"/> <!-- affects only hotspot mode -->
+    	</phase> 
+    	
+    	   <phase name="warmup">
+    		<distribution value="uniform"/> 
+    		<start min="1000" max="1000"/>			<!--benchmark on each node will start between 0 and 5ns -->
+    		<duration min="500" max="500"/>			
+    		<repeat min="1" max="1"/>
+    		<delay min="0" max="0"/> 
+    		<interval min="100" max="100"/>
+    		<count min="-1" max="-1"/>
+    		<hotspot value = "0"/> <!-- affects only hotspot mode -->
+    	</phase> 
+    </synthetic>
+    
+    <dataFile>config/memory/data.xml</dataFile>
+    <mapFile>config/memory/map.xml</mapFile>
+    
+    
+    <simulationFile>traffic/pipelinePerformance_2D/PipelineResetTB.xml</simulationFile>
+    <mappingFile>traffic/pipelinePerformance_2D/PipelineResetTBMapping.xml</mappingFile>
+    <netraceFile>traffic/netrace/example.tra.bz2</netraceFile>
+    <netraceStartRegion value ="0"/>
+    <isUniform value="false"/>
+    <numberOfTrafficTypes value="5"/>
+  </application>
+
+  <verbose>
+  	<processingElements>
+  	  <function_calls value = "false"/>
+  	  <send_flit value = "false"/>
+  	  <send_head_flit value = "true"/>
+  	  <receive_flit value = "false"/>
+  	  <receive_tail_flit value = "true"/>
+      <throttle value = "false"/>
+      <reset value = "true"/>
+    </processingElements>
+    
+    <router>
+      <function_calls value = "false"/>
+  	  <send_flit value = "false"/>
+  	  <send_head_flit value = "false"/>
+  	  <receive_flit value = "false"/>
+  	  <receive_head_flit value = "false"/>
+      <assign_channel value = "false"/>
+      <throttle value = "false"/>
+      <buffer_overflow value = "true"/>
+      <reset value = "true"/>
+    </router>
+    
+  	<netrace>
+      <inject value = "true"/>
+  	  <eject value = "true"/>
+  	  <router_receive value = "true"/>
+  	</netrace>
+   
+    <tasks>
+      <function_calls value="true"/>
+      <xml_parse value="false"/>
+      <data_receive value="true"/>
+      <data_send value="true"/>
+      <source_execute value="false"/>
+    </tasks>
+  </verbose>
+</configuration>

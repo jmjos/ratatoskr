@@ -1,16 +1,16 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Copyright (C) 2018 joseph
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,13 +22,14 @@
 
 #include "ProcessingElementVC.h"
 
-ProcessingElementVC::ProcessingElementVC(sc_module_name nm, Node* node, TrafficPool* tp) :
+ProcessingElementVC::ProcessingElementVC(sc_module_name nm, Node *node,
+		TrafficPool *tp) :
 		ProcessingElement(nm, node, tp) {
-	this->packetPortContainer = new PacketPortContainer(("NI_PACKET_CONTAINER" + std::to_string(id)).c_str());
+	this->packetPortContainer = new PacketPortContainer(
+			("NI_PACKET_CONTAINER" + std::to_string(id)).c_str());
 }
 
 ProcessingElementVC::~ProcessingElementVC() {
-
 }
 
 void ProcessingElementVC::initialize() {
@@ -36,7 +37,8 @@ void ProcessingElementVC::initialize() {
 	packetPortContainer->portValidOut.write(false);
 	packetPortContainer->portFlowControlOut.write(true);
 
-	//sc_spawn(sc_bind(&SyntheticPool::sendThread, this, con.first, con.second,initDelay,sp.waveCount,sp.waveDelay,sp.pkgPerWave, sp.name));
+	// sc_spawn(sc_bind(&SyntheticPool::sendThread, this, con.first,
+	// con.second,initDelay,sp.waveCount,sp.waveDelay,sp.pkgPerWave, sp.name));
 
 	SC_THREAD(thread);
 
@@ -45,22 +47,24 @@ void ProcessingElementVC::initialize() {
 }
 
 void ProcessingElementVC::thread() {
-	int lastTimeStamp = 0;
+	// int lastTimeStamp = 0;
+
 	for (;;) {
 		int timeStamp = sc_time_stamp().value() / 1000;
 
-		std::vector<DataDestination*> removeList;
+		std::vector<DataDestination *> removeList;
 
-		for (auto const& tw : destWait) {
-			DataDestination* dest = tw.first;
-			Task* task = destToTask.at(dest);
-			if (taskTerminationTime.count(task) && taskTerminationTime.at(task) < timeStamp) {
+		for (auto const &tw : destWait) {
+			DataDestination *dest = tw.first;
+			Task *task = destToTask.at(dest);
+			if (taskTerminationTime.count(task)
+					&& taskTerminationTime.at(task) < timeStamp) {
 				removeList.push_back(dest);
 			}
 		}
 
-		for (DataDestination* dest : removeList) {
-			Task* task = destToTask.at(dest);
+		for (DataDestination *dest : removeList) {
+			Task *task = destToTask.at(dest);
 			destToTask.erase(dest);
 			taskToDest.erase(task);
 			taskRepeatLeft.erase(task);
@@ -68,15 +72,14 @@ void ProcessingElementVC::thread() {
 			taskTerminationTime.erase(task);
 			countLeft.erase(dest);
 			destWait.erase(dest);
-
 		}
 
-
-		for (auto const& tw : destWait) {
-			DataDestination* dest = tw.first;
+		for (auto const &tw : destWait) {
+			DataDestination *dest = tw.first;
 
 			if (destWait.at(dest) <= timeStamp) {
-				Packet* p = new Packet(this->node, dest->destination, 1, sc_time_stamp().to_double(), 3, 0, 0);
+				Packet *p = new Packet(this->node, dest->destination, 1,
+						sc_time_stamp().to_double(), dest->type->id, 0, 0);
 				p->dataType = dest->type;
 
 				packetPortContainer->portValidOut = true;
@@ -89,19 +92,20 @@ void ProcessingElementVC::thread() {
 					countLeft.erase(dest);
 					destWait.erase(dest);
 
-					Task* task = destToTask.at(dest);
+					Task *task = destToTask.at(dest);
 					destToTask.erase(dest);
 					taskToDest.at(task).erase(dest);
 
-					if(taskToDest.at(task).empty()) {
+					if (taskToDest.at(task).empty()) {
 						taskToDest.erase(task);
 						execute(task);
 					}
 
 				} else {
-					destWait.at(dest) = global.getRandomIntBetween(dest->minInterval, dest->maxInterval)+timeStamp;
+					destWait.at(dest) =
+					global.getRandomIntBetween(dest->minInterval, dest->maxInterval) +
+					timeStamp;
 				}
-
 				break;
 			}
 		}
@@ -110,13 +114,28 @@ void ProcessingElementVC::thread() {
 		packetPortContainer->portValidOut = false;
 
 		int nextCall = -1;
-		for (auto const& tw : destWait) {
+		for (auto const &tw : destWait) {
 			if (nextCall > tw.second || nextCall == -1) {
-				nextCall = tw.second;
+				// for all synthetic phases, we want to apply uniform_batch_mode experiment, that means all tasks need to send data once in one interval
+				// with some random offset in each interval.
+				for (SyntheticPhase* sp : global.syntheticPhase) {
+					if (sp->distribution == "uniform") {
+						nextCall =
+								(timeStamp / sp->maxInterval) * sp->maxInterval
+										+ sp->maxInterval
+										+ global.getRandomIntBetween(0,
+												sp->maxInterval
+														- (2
+																* this->node->type->clockSpeed));
+					} else {
+						// this is the original code, kept like this to accommodate for other types of experiments.
+						nextCall = tw.second;
+					}
+				}
 			}
 		}
 
-		if (nextCall == 0) { //limit packet rate
+		if (nextCall == 0) { // limit packet rate
 			nextCall = 1;
 		}
 
@@ -124,59 +143,61 @@ void ProcessingElementVC::thread() {
 			event.notify(nextCall - timeStamp, SC_NS);
 		}
 
-		lastTimeStamp = timeStamp;
+		// lastTimeStamp = timeStamp;
 		wait(event);
 	}
 }
 
-void ProcessingElementVC::execute(Task* task) {
+void ProcessingElementVC::execute(Task *task) {
+	if (!taskRepeatLeft.count(task)) {
+		taskRepeatLeft[task] = global.getRandomIntBetween(task->minRepeat,
+				task->maxRepeat);
+	} else {
+		if (taskRepeatLeft.at(task) > 0) {
+			taskRepeatLeft.at(task)--;}
 
-	if(!taskRepeatLeft.count(task)){
-		taskRepeatLeft[task] = global.getRandomIntBetween(task->minRepeat, task->maxRepeat);
-	}else{
-		if(taskRepeatLeft.at(task)>0){
-			taskRepeatLeft.at(task)--;
-		}
-
-		if(!taskRepeatLeft.at(task)){
+		if (!taskRepeatLeft.at(task)) {
 			taskRepeatLeft.erase(task);
 			return;
 		}
 	}
 
-	if(!taskStartTime.count(task)){
-		taskStartTime[task] = global.getRandomIntBetween(task->minStart, task->maxStart);
+	if (!taskStartTime.count(task)) {
+		taskStartTime[task] = global.getRandomIntBetween(task->minStart,
+				task->maxStart);
 	}
 
-	if(!taskTerminationTime.count(task) && task->minDuration != -1){
-		taskTerminationTime[task] = taskStartTime[task] + global.getRandomIntBetween(task->minDuration, task->maxDuration);
+	if (!taskTerminationTime.count(task) && task->minDuration != -1) {
+		taskTerminationTime[task] = taskStartTime[task]
+				+ global.getRandomIntBetween(task->minDuration,
+						task->maxDuration);
 	}
-
-
 
 	if (task->requirements.empty()) {
 		startSending(task);
 	} else {
-		for (DataRequirement* r : task->requirements) {
+		for (DataRequirement *r : task->requirements) {
 			neededFor[r->type].insert(task);
-			neededAmount[std::make_pair(task, r->type)] = global.getRandomIntBetween(r->minCount, r->maxCount);
+			neededAmount[std::make_pair(task, r->type)] =
+					global.getRandomIntBetween(r->minCount, r->maxCount);
 			needs[task].insert(r->type);
 		}
 	}
-
 }
 
-void ProcessingElementVC::bind(Connection* con, SignalContainer* sigContIn, SignalContainer* sigContOut) {
+void ProcessingElementVC::bind(Connection *con, SignalContainer *sigContIn,
+		SignalContainer *sigContOut) {
 	packetPortContainer->bind(sigContIn, sigContOut);
 }
 
 void ProcessingElementVC::receive() {
-	LOG(global.verbose_pe_function_calls, "PE" << node->idType <<"(Node"<<node->id<< ")\t- receive_data_process()");
+	LOG(global.verbose_pe_function_calls,
+			"PE" << node->idType << "(Node" << node->id << ")\t- receive_data_process()");
 
-	if (packetPortContainer->portValidIn.read()) {
-		Packet* received_packet = packetPortContainer->portDataIn.read();
+	if (packetPortContainer->portValidIn.posedge()) {
+		Packet *received_packet = packetPortContainer->portDataIn.read();
 		if (received_packet) {
-			DataType* type = received_packet->dataType;
+			DataType *type = received_packet->dataType;
 
 			if (receivedData.count(type)) {
 				receivedData.at(type)++;}
@@ -189,61 +210,61 @@ void ProcessingElementVC::receive() {
 	}
 }
 
-void ProcessingElementVC::startSending(Task* task) {
+void ProcessingElementVC::startSending(Task *task) {
 	float rn = global.getRandomFloatBetween(0, 1);
 
-	int p = 0;
-	for (int i = 0; i < task->possibilities.size(); i++) {
+	for (unsigned int i = 0; i < task->possibilities.size(); i++) {
 		if (task->possibilities.at(i).first > rn) {
-			std::vector<DataDestination*>* destVec = &(task->possibilities.at(i).second);
+			std::vector<DataDestination *> *destVec = &(task->possibilities.at(
+					i).second);
 
-			for (DataDestination* dest : *destVec) {
+			for (DataDestination *dest : *destVec) {
 				destToTask[dest] = task;
 				taskToDest[task].insert(dest);
 
-				countLeft[dest] = global.getRandomIntBetween(dest->minCount, dest->maxCount);
+				countLeft[dest] = global.getRandomIntBetween(dest->minCount,
+						dest->maxCount);
 
-				int delayTime = (sc_time_stamp().value() / 1000) + global.getRandomIntBetween(dest->minDelay, dest->maxDelay);
+				int delayTime = (sc_time_stamp().value() / 1000)
+						+ global.getRandomIntBetween(dest->minDelay,
+								dest->maxDelay);
 
-				if(taskStartTime.count(task) && taskStartTime.at(task) > delayTime){
+				if (taskStartTime.count(task)
+						&& taskStartTime.at(task) > delayTime) {
 					destWait[dest] = taskStartTime.at(task);
-				}else{
+				} else {
 					destWait[dest] = delayTime;
 				}
-
 				event.notify(SC_ZERO_TIME);
 			}
-
-
 			break;
 		} else {
-			rn -= task->possibilities.at(0).first;
+			rn -= task->possibilities.at(i).first;
 		}
-
 	}
 }
 
 void ProcessingElementVC::checkNeed() {
-	for (auto const& data : receivedData) {
-		DataType* type = data.first;
-
-		std::vector<std::pair<Task*, DataType*>> removeList;
+	for (auto const &data : receivedData) {
+		DataType *type = data.first;
+		std::vector<std::pair<Task *, DataType *>> removeList;
 
 		if (neededFor.count(type)) {
-			for (Task* t : neededFor.at(type)) {
-				std::pair<Task*, DataType*> pair = std::make_pair(t, type);
-
+			for (Task *t : neededFor.at(type)) {
+				std::pair<Task *, DataType *> pair = std::make_pair(t, type);
 				neededAmount.at(pair) -= receivedData.at(type);
-				receivedData.at(type) = 0;
-
+				// This line was commented out because if a task requires several packets from several data types,
+				// it says that the task is finished receiving the required packets while in fact, it still needs some packets.
+				// receivedData.at(type) = 0;
 				if (neededAmount.at(pair) <= 0) {
 					removeList.push_back(pair);
-					receivedData.at(type) = -neededAmount.at(pair);
+					// This line is also commented out for the same reason mentioned above.
+					// receivedData.at(type) = -neededAmount.at(pair);
 				}
 			}
 		}
 
-		for (std::pair<Task*, DataType*> p : removeList) {
+		for (std::pair<Task *, DataType *> p : removeList) {
 			neededFor.erase(p.second);
 			neededAmount.erase(p);
 			needs.at(p.first).erase(p.second);
@@ -253,6 +274,4 @@ void ProcessingElementVC::checkNeed() {
 			}
 		}
 	}
-
 }
-
