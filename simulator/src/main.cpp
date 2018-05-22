@@ -84,16 +84,21 @@ int sc_main(int arg_num, char *arg_vet[]) {
 //	std::ostream & objOstream = std::cout;
 //	report.reportLinkMatrix(8, objOstream);
 
-	if (global.outputToFile){
-		cout << "Generating report of the simulation run into file " << global.outputFileName << " ... ";
-		report.makeReport(global.outputFileName);
+	if (global.outputToFile) {
+		cout << "Generating report of the simulation run into file "
+				<< global.outputFileName << " ... ";
+		report.reportComplete(global.outputFileName);
 		cout << " done." << endl;
 	}
+	report.reportPerformance(cout);
 
+	auto duration = std::chrono::duration_cast<std::chrono::seconds>(
+			std::chrono::high_resolution_clock::now() - t1).count();
 
-	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - t1).count();
+	auto durationmin = std::chrono::duration_cast<std::chrono::minutes>(
+				std::chrono::high_resolution_clock::now() - t1).count();
 
-	cout << "Execution time: " << duration << " microseconds" << std::endl;
+	cout << "Execution time: " << durationmin << " minutes and " << duration << " seconds" << std::endl;
 
 	rep.close();
 	return 0;

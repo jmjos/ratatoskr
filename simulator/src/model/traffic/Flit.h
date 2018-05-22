@@ -19,8 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-#ifndef SRC_TRAFFIC_FLIT_H_
-#define SRC_TRAFFIC_FLIT_H_
+#pragma once
 
 #include "systemc.h"
 #include <string>
@@ -44,11 +43,13 @@ public:
 	int seq_nb;
 	FlitType type;
 	Packet* packet;
+	Flit* headFlit;
 	int trafficTypeId;
-	float as, ac;
+	double injectionTime;
+	double creationTime;
 
 	Flit(FlitType type, int seq_nb, Packet* p);
-	Flit(FlitType type, int seq_nb, Packet* p, float as, float ac, int TrafficTypeId);
+	Flit(FlitType type, int seq_nb, Packet* p, int trafficTypeId, double creationTime);
 	~Flit();
 
 	friend ostream & operator <<(ostream & os, const Flit& flit);
@@ -56,4 +57,3 @@ public:
 	friend void sc_trace(sc_trace_file*& tf, const Flit& flit, std::string nm);
 };
 
-#endif

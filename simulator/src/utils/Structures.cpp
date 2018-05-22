@@ -25,8 +25,8 @@ const std::vector<DIR::TYPE> DIR::XYZ = { DIR::Local, DIR::East, DIR::West,
 		DIR::North, DIR::South, DIR::Up, DIR::Down };
 
 
-NodeType::NodeType(int id, std::string model,std::string routing, std::string selection, int clk) :
-		id(id), routerModel(model), routing(routing), selection(selection), clockSpeed(clk) {
+NodeType::NodeType(int id, std::string model,std::string routing, std::string selection, int clk, std::string arbiterType) :
+		id(id), routerModel(model), routing(routing), selection(selection), clockSpeed(clk), arbiterType(arbiterType) {
 
 }
 

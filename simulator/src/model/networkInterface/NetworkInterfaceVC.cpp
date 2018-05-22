@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2018 joseph
+// Copyright (C) 2018 Jan Moritz Joseph
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -40,13 +40,16 @@ NetworkInterfaceVC::NetworkInterfaceVC(sc_module_name nm, Node* node) :
 
 void NetworkInterfaceVC::receivePacket() {
 	LOG(global.verbose_pe_function_calls,
-			"PE" << id <<"(Router"<<node->id<< ")t- receive()");
+			"NI" << id <<"(Router"<<node->id<< ")t- receive()");
 
-	if (packetPortContainer->portValidIn.read()) {
+
+
+	if (packetPortContainer->portValidIn.posedge()) {
 
 		Packet* p = packetPortContainer->portDataIn.read();
 		p->toTransmit.resize(global.flitsPerPacket);
 
+		Flit* headFlit;
 		for (int i = 0; i < global.flitsPerPacket; i++) {
 			FlitType type;
 			if (i % global.flitsPerPacket == 0) {
@@ -57,7 +60,11 @@ void NetworkInterfaceVC::receivePacket() {
 				type = FlitType::BODY;
 			}
 			Flit* current_flit = new Flit(type, i % global.flitsPerPacket, p,
-					p->ac, p->as, p->trafficTypeId);
+					p->trafficTypeId, sc_time_stamp().to_double());
+			if (type == FlitType::HEAD) {
+				headFlit = current_flit;
+			}
+			current_flit->headFlit = headFlit;
 			p->toTransmit.at(global.flitsPerPacket - i - 1) = current_flit;
 		}
 		packet_send_queue.push(p);
@@ -96,7 +103,7 @@ void NetworkInterfaceVC::bind(Connection* con, SignalContainer* sigContIn,
 
 void NetworkInterfaceVC::thread() {
 	LOG(global.verbose_pe_function_calls,
-			"PE" << node->idType <<"(Node"<<node->id<< ")\t- send_data_process()");
+			"NI" << node->idType <<"(Node"<<node->id<< ")\t- send_data_process()");
 
 	if (clk.posedge()) {
 		if (!packet_send_queue.empty()) {
@@ -106,6 +113,7 @@ void NetworkInterfaceVC::thread() {
 				Packet* p = packet_send_queue.front();
 
 				Flit* current_flit = p->toTransmit.back();
+				current_flit->injectionTime = sc_time_stamp().to_double();
 				p->toTransmit.pop_back();
 				p->inTransmit.push_back(current_flit);
 
@@ -124,10 +132,10 @@ void NetworkInterfaceVC::thread() {
 						(global.verbose_pe_send_head_flit
 								&& current_flit->type == HEAD)
 								|| global.verbose_pe_send_flit,
-						"PE" << node->idType <<"(Node"<<node->id<< ")\t- Send Flit " << *current_flit);
+						"NI" << node->idType <<"(Node"<<node->id<< ")\t- Send Flit " << *current_flit);
 			} else {
 				LOG(global.verbose_pe_throttle,
-						"PE" << node->idType <<"(Node"<<node->id<< ")\t- Waiting for Router!");
+						"NI" << node->idType <<"(Node"<<node->id<< ")\t- Waiting for Router!");
 			}
 
 		}
@@ -153,14 +161,29 @@ void NetworkInterfaceVC::thread() {
 
 void NetworkInterfaceVC::receiveFlit() {
 	LOG(global.verbose_pe_function_calls,
-			"PE" << node->idType <<"(Node"<<node->id<< ")\t- receive_data_process()");
+			"NI" << node->idType <<"(Node"<<node->id<< ")\t- receive_data_process()");
 
 	//to debug: simply print the received flit
-	if (flitPortContainer->portValidIn.read()) {
+	if (flitPortContainer->portValidIn.posedge()) {
 
 		//if no flit was send: ABP or with NULL-check?
 		Flit* received_flit = flitPortContainer->portDataIn.read();
 		Packet* p = received_flit->packet;
+
+		// generate packet statistics. in case of synthetic traffic only for run phase
+		if ((float)global.synthetic_start_measurement_time
+				<= (sc_time_stamp().to_double() / (float) 1000)) {
+			report.latencyFlit.sample(
+					sc_time_stamp().to_double() - received_flit->injectionTime);
+			if (received_flit->type == TAIL) {
+				report.latencyPacket.sample(
+						sc_time_stamp().to_double()
+								- received_flit->headFlit->creationTime);
+				report.latencyNetwork.sample(
+						sc_time_stamp().to_double()
+								- received_flit->headFlit->injectionTime);
+			}
+		}
 
 		std::vector<Flit*>::iterator position = std::find(p->inTransmit.begin(),
 				p->inTransmit.end(), received_flit);
@@ -175,12 +198,12 @@ void NetworkInterfaceVC::receiveFlit() {
 				(global.verbose_pe_receive_tail_flit
 						&& received_flit->type == TAIL)
 						|| global.verbose_pe_receive_flit,
-				"PE" << node->idType <<"(Node"<<node->id<< ")\t- Receive Flit " << *received_flit);
+				"NI" << node->idType <<"(Node"<<node->id<< ")\t- Receive Flit " << *received_flit);
 
 		LOG(
 				received_flit->type == TAIL
 						&& (!p->toTransmit.empty() || !p->inTransmit.empty()),
-				"PE" << node->idType <<"(Node"<<node->id<< ")\t- Reiceived Tail Flit, but still missing flits! " << *received_flit);
+				"NI" << node->idType <<"(Node"<<node->id<< ")\t- Received Tail Flit, but still missing flits! " << *received_flit);
 
 		//if a complete packet is recieved, notify tasks
 		if (p->toTransmit.empty() && p->inTransmit.empty()) {

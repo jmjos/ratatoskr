@@ -107,11 +107,11 @@ struct Vec3D {
 
 	Vec3D() {
 	}
-	;
+
 	Vec3D(T x, T y, T z) :
 			x(x), y(y), z(z) {
 	}
-	;
+
 
 	bool operator<(Vec3D<T> v) const {
 		return fabs(x) < fabs(v.x)
@@ -126,6 +126,23 @@ struct Vec3D {
 
 	Vec3D<T> operator -(const Vec3D<T> v) const {
 		return Vec3D<T>(x - v.x, y - v.y, z - v.z);
+	}
+
+	float norm() const{
+		return ((x*x)+(y*y)+(z*z));
+	}
+
+	float distance (const Vec3D<T> v) const {
+		float disx = fabs(x-v.x);
+		float disy = fabs(y-v.y);
+		float disz = fabs(z-v.z);
+		return sqrt((disx*disx)+(disy*disy)+(disz*disz));
+	}
+
+	float sameDimDistance (const Vec3D<T> v) const {
+			float disx = fabs(x-v.x);
+			float disy = fabs(y-v.y);
+			return sqrt((disx*disx)+(disy*disy));
 	}
 
 	bool operator ==(const Vec3D<T> v) const {
@@ -143,7 +160,6 @@ struct Vec3D {
 		if (z == v.z) {
 			count++;
 		}
-
 		return count;
 	}
 
@@ -183,9 +199,11 @@ struct NodeType {
 	//buffer model
 	//Allocator model ...
 	int clockSpeed;
+	std::string arbiterType;
+
 
 	NodeType(int id, std::string model, std::string routing,
-			std::string selection, int clk);
+			std::string selection, int clk, std::string arbiterType);
 };
 
 struct LayerType {

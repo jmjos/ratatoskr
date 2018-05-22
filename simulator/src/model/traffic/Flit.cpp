@@ -24,40 +24,32 @@
 
 int Flit::idcnt = 0;
 
-Flit::Flit(FlitType type, int seq_nb, Packet* p){
+Flit::Flit(FlitType type, int seq_nb, Packet* p) {
 	this->id = idcnt++;
 	this->dbid = rep.registerElement("Flit", id);
 	this->type = type;
 	this->seq_nb = seq_nb;
 	this->packet = p;
-	this->ac = 0;
-	this->as = 0;
 	this->trafficTypeId = 0;
+	this->creationTime = 0;
+	this->injectionTime = 0;
 
 	rep.reportAttribute(dbid, "flit_packet", std::to_string(p->id));
 	rep.reportAttribute(dbid, "flit_type", std::to_string(type));
 	rep.reportAttribute(dbid, "flit_seq", std::to_string(seq_nb));
 }
 
-Flit::Flit(FlitType type, int seq_nb, Packet* p, float as, float ac, int trafficTypeId){
-	this->id = idcnt++;
-	this->dbid = rep.registerElement("Flit", id);
-	this->type = type;
-	this->seq_nb = seq_nb;
-	this->packet = p;
-	this->ac = ac;
-	this->as = as;
+Flit::Flit(FlitType type, int seq_nb, Packet* p, int trafficTypeId,
+		double creationTime) :
+		Flit(type, seq_nb, p) {
+	this->creationTime = creationTime;
 	this->trafficTypeId = trafficTypeId;
-	rep.reportAttribute(dbid, "flit_packet", std::to_string(p->id));
-	rep.reportAttribute(dbid, "flit_type", std::to_string(type));
-	rep.reportAttribute(dbid, "flit_seq", std::to_string(seq_nb));
 }
 
-
-Flit::~Flit(){
+Flit::~Flit() {
 }
 
-ostream & operator <<(ostream & os, const Flit & flit){
+ostream & operator <<(ostream & os, const Flit & flit) {
 	os << "[";
 	switch (flit.type) {
 	case HEAD:
@@ -70,12 +62,13 @@ ostream & operator <<(ostream & os, const Flit & flit){
 		os << "T";
 		break;
 	}
-	os << "_"<< flit.id << ": " << flit.packet->src->idType << "-->" << flit.packet->dst->idType << "]";
+	os << "_" << flit.id << ": " << flit.packet->src->idType << "-->"
+			<< flit.packet->dst->idType << "]";
 
 	return os;
 }
 
-void sc_trace(sc_trace_file*& tf, const Flit& flit, std::string nm){
+void sc_trace(sc_trace_file*& tf, const Flit& flit, std::string nm) {
 	sc_trace(tf, flit.type, nm + ".type");
 	sc_trace(tf, flit.seq_nb, nm + ".seq_nb");
 	sc_trace(tf, flit.id, nm + ".id");

@@ -21,81 +21,115 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "GlobalReportClass.h"
 
-GlobalReportClass::GlobalReportClass() {
-	this->linkTransmissionsMatrixNumberOfStates = (2 * global.application_numberOfTrafficTypes) + 3;
+GlobalReportClass::GlobalReportClass() :
+		latencyNetwork("network latency"), latencyFlit("flit latency"), latencyPacket(
+				"packet latency ") {
+	this->linkTransmissionsMatrixNumberOfStates = (2
+			* global.application_numberOfTrafficTypes) + 3;
 }
 
-void GlobalReportClass::makeReport(std::string filename){
+void GlobalReportClass::reportComplete(std::string filename) {
 	ofstream myfile;
-	  myfile.open (filename + ".txt");
-	  // Writing general simulation data:
-	  myfile << boost::format("Report file of this simulation run. \n\n");
-	  myfile << "----------------------------------------------------" << endl;
-	  myfile << "General Information:" << endl;
-	  myfile << "----------------------------------------------------" << endl;
+	myfile.open(filename + ".txt");
+	// Writing general simulation data:
+	myfile << boost::format("Report file of this simulation run. \n\n");
+	myfile << "----------------------------------------------------" << endl;
+	myfile << "General Information:" << endl;
+	myfile << "----------------------------------------------------" << endl;\
+	reportPerformance(myfile);
 
+	// Writing router routing calculations
+	myfile << "----------------------------------------------------" << endl;
+	myfile << "Router Matrixes:" << endl;
+	myfile << "----------------------------------------------------" << endl;
+	myfile << "Routing calculations:\n";
+	reportRoutingCalculations(myfile);
 
-	  // Writing router routing calculations
-	  myfile << "----------------------------------------------------" << endl;
-	  myfile << "Router Matrixes:" << endl;
-	  myfile << "----------------------------------------------------" << endl;
-	  myfile << "Routing calculations:\n";
-	  reportRoutingCalculations(myfile);
+	// Writing link matrixes
+	myfile << "----------------------------------------------------" << endl;
+	myfile << "Link Matrixes:" << endl;
+	myfile << "----------------------------------------------------" << endl;
+	reportLinkMatrices(myfile);
+	myfile.close();
 
-	  // Writing link matrixes
-	  myfile << "----------------------------------------------------" << endl;
-	  myfile << "Link Matrixes:" << endl;
-	  myfile << "----------------------------------------------------" << endl;
-	  reportLinkMatrices(myfile);
-	  myfile.close();
+	//generate csv for link matrices
+	std::string csvFilename = filename + "Links.csv";
+	ofstream csvfile;
+	csvfile.open(csvFilename);
+	reportLinkMatricesCSV(csvfile);
+	csvfile.close();
 
-	  //generate csv
-	  std::string csvFilename = filename+ "Links.csv";
-	  ofstream csvfile;
-	  csvfile.open(csvFilename);
-	  reportLinkMatricesCVS(csvfile);
-	  csvfile.close();
+	//generate csv for performance statistics
+	csvFilename = filename + "Performance.csv";
+	csvfile.open(csvFilename);
+	reportPerformanceCSV(csvfile);
+	csvfile.close();
+
 }
 
-void GlobalReportClass::issueRoutingCalculation(int id){
+void GlobalReportClass::reportPerformance(ostream& stream) {
+	float avgFlitLat = latencyFlit.average() / (float) 1000;
+	float avgPacketLat = latencyPacket.average() / (float) 1000;
+	float avgNetworkLat = latencyNetwork.average() / (float) 1000;
+	stream << boost::format("Average flit latency: %3.2f ns.\n") % avgFlitLat;
+	stream
+			<< boost::format("Average packet latency: %3.2f ns.\n")
+					% avgPacketLat;
+	stream
+			<< boost::format("Average network latency: %3.2f ns.\n")
+					% avgNetworkLat;
+}
+
+void GlobalReportClass::reportPerformanceCSV(ostream& stream) {
+	float avgFlitLat = latencyFlit.average() / (float) 1000;
+	float avgPacketLat = latencyPacket.average() / (float) 1000;
+	float avgNetworkLat = latencyNetwork.average() / (float) 1000;
+	stream << boost::format("avgFlitLat, %2.3f\n")%avgFlitLat;
+	stream << boost::format("avgPacketLat, %2.3f\n")%avgPacketLat;
+	stream << boost::format("avgNetworkLat, %2.3f\n")%avgNetworkLat;
+}
+
+void GlobalReportClass::issueRoutingCalculation(int id) {
 	std::map<int, int>::iterator it = routingCalulcations.find(id);
 	if (it != routingCalulcations.end())
 		it->second++;
 	else
 		routingCalulcations.insert(std::make_pair(id, 1));
 }
-void GlobalReportClass::reportRoutingCalculations(ostream& stream){
-	for (auto it: routingCalulcations){
-		stream << boost::format("\tRouter id: %i had %i calculations \n")% it.first % it.second;
+void GlobalReportClass::reportRoutingCalculations(ostream& stream) {
+	for (auto it : routingCalulcations) {
+		stream
+				<< boost::format("\tRouter id: %i had %i calculations \n")
+						% it.first % it.second;
 	}
 
 }
 
-void GlobalReportClass::issueReset(int id) {
-	std::map<int, int>::iterator it = numberOfResets.find(id);
-	if (it != numberOfResets.end())
-		it->second++;
-	else
-		numberOfResets.insert(std::make_pair(id, 1));
-}
-
-void GlobalReportClass::reportReset() {
-	int totalResets = 0;
-	for (auto element : numberOfResets) {
-		std::cout << "Router " << element.first << " had " << element.second
-				<< " resets." << std::endl;
-		totalResets += element.second;
-	}
-	std::cout << "Complete number of Resets: " << totalResets << endl;
-}
-
-void GlobalReportClass::reportResetTotal() {
-	int totalResets = 0;
-	for (auto element : numberOfResets) {
-		totalResets += element.second;
-	}
-	std::cout << "Complete number of Resets: " << totalResets << endl;
-}
+//void GlobalReportClass::issueReset(int id) {
+//	std::map<int, int>::iterator it = numberOfResets.find(id);
+//	if (it != numberOfResets.end())
+//		it->second++;
+//	else
+//		numberOfResets.insert(std::make_pair(id, 1));
+//}
+//
+//void GlobalReportClass::reportReset() {
+//	int totalResets = 0;
+//	for (auto element : numberOfResets) {
+//		std::cout << "Router " << element.first << " had " << element.second
+//				<< " resets." << std::endl;
+//		totalResets += element.second;
+//	}
+//	std::cout << "Complete number of Resets: " << totalResets << endl;
+//}
+//
+//void GlobalReportClass::reportResetTotal() {
+//	int totalResets = 0;
+//	for (auto element : numberOfResets) {
+//		totalResets += element.second;
+//	}
+//	std::cout << "Complete number of Resets: " << totalResets << endl;
+//}
 
 void GlobalReportClass::issueLinkMatrixUpdate(int id,
 		int currentTransmissionState, int lastTransmissionState) {
@@ -110,44 +144,44 @@ void GlobalReportClass::issueLinkMatrixUpdate(int id,
 	linkTransmissionMatrices.at(id).at(
 			currentTransmissionState
 					+ linkTransmissionsMatrixNumberOfStates
-							* lastTransmissionState)++;
-}
+							* lastTransmissionState)++;}
 
 void GlobalReportClass::reportLinkMatrix(int id, ostream& stream) {
 	auto transmissionMatrix = linkTransmissionMatrices.at(id);
-	long clockCyclesOfLink = std::accumulate(transmissionMatrix.begin(), transmissionMatrix.end(), 0);
-	stream << boost::format("Transmission matrix of link %i:\n")% id;
+	long clockCyclesOfLink = std::accumulate(transmissionMatrix.begin(),
+			transmissionMatrix.end(), 0);
+	stream << boost::format("Transmission matrix of link %i:\n") % id;
 	int colit = 0, rowit = 0;
 	stream << boost::format("from\\to     IDLE     HEAD     HID");
 	for (int var = 0; var < global.application_numberOfTrafficTypes; ++var) {
-		stream << boost::format("%7iD%6iID") % var %var;
+		stream << boost::format("%7iD%6iID") % var % var;
 	}
 	stream << boost::format("\n");
 	for (auto matrixelement : transmissionMatrix) {
-		float field = (float)matrixelement/(float)clockCyclesOfLink;
-		if (colit == 0){
-			if (rowit == 0){
+		float field = (float) matrixelement / (float) clockCyclesOfLink;
+		if (colit == 0) {
+			if (rowit == 0) {
 				stream << boost::format("IDLE");
-			} else if (rowit == 1){
+			} else if (rowit == 1) {
 				stream << boost::format("HEAD");
-			} else if (rowit == 2){
+			} else if (rowit == 2) {
 				stream << boost::format("HID");
-			} else if (rowit%2 == 0){
+			} else if (rowit % 2 == 0) {
 				int trafficType = (rowit - 3) / 2;
 				stream << boost::format("%iID") % trafficType;
-			} else if (rowit%2 == 1){
+			} else if (rowit % 2 == 1) {
 				int trafficType = (rowit - 3) / 2;
 				stream << boost::format("%iD") % trafficType;
 			}
-			rowit ++;
+			rowit++;
 			stream << boost::format("\t[%7.4f, ") % field;
 		} else if (colit == linkTransmissionsMatrixNumberOfStates - 1) {
-			stream << boost::format("%7.4f]\n")% field;
+			stream << boost::format("%7.4f]\n") % field;
 		} else {
-			stream << boost::format("%7.4f,")% field;
+			stream << boost::format("%7.4f,") % field;
 		}
 		colit++;
-		if (colit == linkTransmissionsMatrixNumberOfStates){
+		if (colit == linkTransmissionsMatrixNumberOfStates) {
 			colit = 0;
 		}
 	}
@@ -160,20 +194,20 @@ void GlobalReportClass::reportLinkMatrices(ostream& stream) {
 	}
 }
 
-void GlobalReportClass::reportLinkMatricesCVS(ostream& stream){
+void GlobalReportClass::reportLinkMatricesCSV(ostream& stream) {
 	int numberOfElements = pow(linkTransmissionsMatrixNumberOfStates, 2);
 	stream << boost::format("link_id");
-	for (int var = 0; var < numberOfElements-1; ++var) {
+	for (int var = 0; var < numberOfElements - 1; ++var) {
 		stream << boost::format(", %i") % var;
 	}
 	stream << boost::format(", %i\n") % (numberOfElements - 1);
-	for (auto matrix : linkTransmissionMatrices){
+	for (auto matrix : linkTransmissionMatrices) {
 		stream << boost::format("%i, ") % matrix.first;
-		for (auto it = matrix.second.begin(); it != matrix.second.end(); it++){
+		for (auto it = matrix.second.begin(); it != matrix.second.end(); it++) {
 			int value = matrix.second.at(it - matrix.second.begin());
-			if (std::next(it) == matrix.second.end()){
+			if (std::next(it) == matrix.second.end()) {
 				stream << boost::format("%i\n") % value;
-			} else{
+			} else {
 				stream << boost::format("%i, ") % value;
 			}
 		}

@@ -27,13 +27,15 @@
 
 #include "utils/Structures.h"
 #include "model/router/Router.h"
-
+#include "utils/GlobalReportClass.h"
 
 class NetworkInterface : public NetworkParticipant, public sc_module{
 public:
 	int id;
 	int dbid;
 	Node* node;
+
+	Report& rep = Report::getInstance();
 
 	SC_HAS_PROCESS(NetworkInterface);
 	NetworkInterface(sc_module_name nm, Node* node);

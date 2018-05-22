@@ -60,3 +60,13 @@ All notable changes to this project will be documented in this file.
 
 ### Improvements
 - Bug in uniform random traffic pattern: Distribution in PEs changed.
+
+## [1.1.5] - 2018-05-22
+
+### Features 
+- Traffic statistics with minimum, maximum, and average latencies of flits, packets, and network
+- Extended network report
+- New router arbiter
+
+### Improvements
+- Bug fix in router arbiter to fix network stalls

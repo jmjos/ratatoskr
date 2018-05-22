@@ -67,6 +67,7 @@ public:
 	//NOC
 	std::string noc_file;
 	int flitsPerPacket = 0;
+	float routingVerticalThreshold = 1.0f;
 	float Vdd= 1.0f;
 
 	//Application
@@ -81,6 +82,7 @@ public:
 	int application_numberOfTrafficTypes;
 
 	std::vector<SyntheticPhase*> syntheticPhase;
+	int synthetic_start_measurement_time = -1;
 
 	/// VERBOSE ///
 	//processing elements
