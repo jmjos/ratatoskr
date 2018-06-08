@@ -29,14 +29,13 @@
 #include "SyntheticPacket.h"
 #include "model/traffic/TrafficPool.h"
 
-
-class SyntheticPool: public TrafficPool{
+class SyntheticPool: public TrafficPool {
 private:
-	std::map<int,int> uniform();
-	std::map<int,int> transpose();
-	std::map<int,int> tornado();
-	std::map<int,int> hotspot(int);
-	std::map<int,int> bitcomplement();
+	std::map<int, int> uniform();
+	std::map<int, int> transpose();
+	std::map<int, int> tornado();
+	std::map<int, int> hotspot(int);
+	std::map<int, int> bitcomplement();
 
 public:
 	SyntheticPool();
@@ -44,6 +43,7 @@ public:
 
 	void clear(Task*);
 	void start();
+	void shuffle_execute_tasks(std::vector<Task*> &tasks, int phaseId);
 };
 
 #endif /* SRC_TRAFFIC_SYNTHETIC_SYNTHETICPOOL_H_ */

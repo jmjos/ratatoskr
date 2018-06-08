@@ -112,7 +112,6 @@ struct Vec3D {
 			x(x), y(y), z(z) {
 	}
 
-
 	bool operator<(Vec3D<T> v) const {
 		return fabs(x) < fabs(v.x)
 				|| (fabs(x) == fabs(v.x)
@@ -128,21 +127,21 @@ struct Vec3D {
 		return Vec3D<T>(x - v.x, y - v.y, z - v.z);
 	}
 
-	float norm() const{
-		return ((x*x)+(y*y)+(z*z));
+	float norm() const {
+		return ((x * x) + (y * y) + (z * z));
 	}
 
-	float distance (const Vec3D<T> v) const {
-		float disx = fabs(x-v.x);
-		float disy = fabs(y-v.y);
-		float disz = fabs(z-v.z);
-		return sqrt((disx*disx)+(disy*disy)+(disz*disz));
+	float distance(const Vec3D<T> v) const {
+		float disx = fabs(x - v.x);
+		float disy = fabs(y - v.y);
+		float disz = fabs(z - v.z);
+		return sqrt((disx * disx) + (disy * disy) + (disz * disz));
 	}
 
-	float sameDimDistance (const Vec3D<T> v) const {
-			float disx = fabs(x-v.x);
-			float disy = fabs(y-v.y);
-			return sqrt((disx*disx)+(disy*disy));
+	float sameDimDistance(const Vec3D<T> v) const {
+		float disx = fabs(x - v.x);
+		float disy = fabs(y - v.y);
+		return sqrt((disx * disx) + (disy * disy));
 	}
 
 	bool operator ==(const Vec3D<T> v) const {
@@ -162,7 +161,6 @@ struct Vec3D {
 		}
 		return count;
 	}
-
 
 	int diffDimCount(const Vec3D<T> v) const {
 		int count = 0;
@@ -200,7 +198,6 @@ struct NodeType {
 	//Allocator model ...
 	int clockSpeed;
 	std::string arbiterType;
-
 
 	NodeType(int id, std::string model, std::string routing,
 			std::string selection, int clk, std::string arbiterType);
@@ -283,11 +280,13 @@ struct SyntheticPhase {
 	int maxInterval;
 	int hotspot = -1;
 
-	SyntheticPhase(std::string name, std::string distribution, int minInterval, int maxInterval): name(name), distribution(distribution), minInterval(minInterval), maxInterval(maxInterval){
+	SyntheticPhase(std::string name, std::string distribution, int minInterval,
+			int maxInterval) :
+			name(name), distribution(distribution), minInterval(minInterval), maxInterval(
+					maxInterval) {
 
 	}
 };
-
 
 struct DataType {
 	int id;
@@ -304,10 +303,11 @@ struct DataRequirement {
 	DataType* type;
 	//Node* src = 0;			//requires the data to be from this node (optional)
 
-	int minCount = -1;		//required amount of DataType to fulfill requirement (to fire)
+	int minCount = -1;//required amount of DataType to fulfill requirement (to fire)
 	int maxCount = -1;
 
-	DataRequirement(int id, DataType* type) : id(id), type(type) {
+	DataRequirement(int id, DataType* type) :
+			id(id), type(type) {
 	}
 };
 
@@ -325,8 +325,10 @@ struct DataDestination {
 	int minInterval;		//delay between each sent packet
 	int maxInterval;
 
-	DataDestination(int id, DataType* type, Node* destination, int minInterval, int maxInterval) :
-			id(id), type(type), destination(destination), minInterval(minInterval), maxInterval(maxInterval) {
+	DataDestination(int id, DataType* type, Node* destination, int minInterval,
+			int maxInterval) :
+			id(id), type(type), destination(destination), minInterval(
+					minInterval), maxInterval(maxInterval) {
 
 	}
 };
@@ -340,7 +342,8 @@ struct Task {
 	int minDuration = -1;	// maximal task duration in ns
 	int maxDuration = -1;
 	int minRepeat = -1;		// maximal task execution count
-	int maxRepeat = -1;		// task terminates at whatever comes first, maxRepeates or duration
+	int maxRepeat = -1;	// task terminates at whatever comes first, maxRepeates or duration
+	SyntheticPhase* currentSP = 0;
 
 	std::vector<DataRequirement*> requirements;
 	std::vector<std::pair<float, std::vector<DataDestination*>>> possibilities;

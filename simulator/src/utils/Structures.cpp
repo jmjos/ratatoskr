@@ -24,9 +24,10 @@
 const std::vector<DIR::TYPE> DIR::XYZ = { DIR::Local, DIR::East, DIR::West,
 		DIR::North, DIR::South, DIR::Up, DIR::Down };
 
-
-NodeType::NodeType(int id, std::string model,std::string routing, std::string selection, int clk, std::string arbiterType) :
-		id(id), routerModel(model), routing(routing), selection(selection), clockSpeed(clk), arbiterType(arbiterType) {
+NodeType::NodeType(int id, std::string model, std::string routing,
+		std::string selection, int clk, std::string arbiterType) :
+		id(id), routerModel(model), routing(routing), selection(selection), clockSpeed(
+				clk), arbiterType(arbiterType) {
 
 }
 
@@ -35,7 +36,8 @@ LayerType::LayerType(int id, int technology) :
 
 }
 
-Node::Node(int id, Vec3D<float> pos, int idType, NodeType* type, LayerType* layer) :
+Node::Node(int id, Vec3D<float> pos, int idType, NodeType* type,
+		LayerType* layer) :
 		id(id), pos(pos), idType(idType), type(type), layer(layer) {
 }
 
@@ -43,7 +45,7 @@ Connection::Connection(int id, std::vector<Node*> nodes,
 		std::vector<int> vcCount, std::vector<int> bufferDepth, float length,
 		int linkWidth, int linkDepth) :
 		id(id), nodes(nodes), vcCount(vcCount), bufferDepth(bufferDepth), length(
-				length), linkWidth(linkWidth), linkDepth(linkDepth){
+				length), linkWidth(linkWidth), linkDepth(linkDepth) {
 }
 
 int Connection::getBufferDepthForNode(Node* n) {

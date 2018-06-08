@@ -70,3 +70,15 @@ All notable changes to this project will be documented in this file.
 
 ### Improvements
 - Bug fix in router arbiter to fix network stalls
+
+## [1.1.6] - 2018-06-08
+
+### Features
+- corrented urand traffic pattern; packets from each processing element send per block (set via interval)
+- Start and duration now determine length of synthetic run
+- repeat determines the number of packets send per 
+- Setting -1 for repeat of for length sets this very value to infinity
+- Multiphase support for synthetic traffic patterns
+
+### Known Issues
+- min value in sythetic phase is equal to max values

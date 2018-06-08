@@ -116,25 +116,49 @@ void ProcessingElementVC::thread() {
 		int nextCall = -1;
 		for (auto const &tw : destWait) {
 			if (nextCall > tw.second || nextCall == -1) {
-				// for all synthetic phases, we want to apply uniform_batch_mode experiment, that means all tasks need to send data once in one interval
-				// with some random offset in each interval.
-				for (SyntheticPhase* sp : global.syntheticPhase) {
-					if (sp->distribution == "uniform") {
+				/* we want to apply uniform_batch_mode experiment, that means all tasks need to send data once in one interval
+				 with some random offset in each interval.
+				 */
+
+				/* TODO:
+				 * Attention: we are alwas taking the the minStart and minInterval to calculate the nextCall.
+				 * In the future, we may add randomness to the process, by selecting a number between minStart and maxStart,
+				 * and the same thing for minInterval and maxInterval.
+				 */
+				Task* task = destToTask.at(tw.first);
+				SyntheticPhase* sp = task->currentSP;
+				if (timeStamp < sp->minStart) {
+					nextCall =
+							sp->minStart
+									+ global.getRandomIntBetween(0,
+											sp->minInterval
+													- (2
+															* this->node->type->clockSpeed));
+
+				} else {
+					if (timeStamp < sp->minStart + sp->minInterval)
 						nextCall =
-								(timeStamp / sp->maxInterval) * sp->maxInterval
-										+ sp->maxInterval
+								sp->minStart + sp->minInterval
 										+ global.getRandomIntBetween(0,
-												sp->maxInterval
+												sp->minInterval
 														- (2
 																* this->node->type->clockSpeed));
-					} else {
-						// this is the original code, kept like this to accommodate for other types of experiments.
-						nextCall = tw.second;
+					else {
+						int numIntervalsPassed = (timeStamp - sp->minStart)
+								/ sp->minInterval;
+						int intervalBeginning = sp->minStart
+								+ (numIntervalsPassed * sp->minInterval);
+						nextCall =
+								intervalBeginning + sp->minInterval
+										+ global.getRandomIntBetween(0,
+												sp->minInterval
+														- (2
+																* this->node->type->clockSpeed));
+
 					}
 				}
 			}
 		}
-
 		if (nextCall == 0) { // limit packet rate
 			nextCall = 1;
 		}
@@ -253,9 +277,10 @@ void ProcessingElementVC::checkNeed() {
 			for (Task *t : neededFor.at(type)) {
 				std::pair<Task *, DataType *> pair = std::make_pair(t, type);
 				neededAmount.at(pair) -= receivedData.at(type);
-				// This line was commented out because if a task requires several packets from several data types,
-				// it says that the task is finished receiving the required packets while in fact, it still needs some packets.
-				// receivedData.at(type) = 0;
+				/* This line was commented out because if a task requires several packets from several data types,
+				 it says that the task is finished receiving the required packets while in fact, it still needs some packets.
+				 receivedData.at(type) = 0;
+				 */
 				if (neededAmount.at(pair) <= 0) {
 					removeList.push_back(pair);
 					// This line is also commented out for the same reason mentioned above.
