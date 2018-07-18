@@ -3,7 +3,7 @@
 mkdir build
 cd build
 cmake ..
-make 
+make -j
 cp sim ..
 cd ..
 rm -rf build

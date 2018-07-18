@@ -82,3 +82,15 @@ All notable changes to this project will be documented in this file.
 
 ### Known Issues
 - min value in sythetic phase is equal to max values
+
+## [1.1.7] - 2018-07-18
+
+### Improvments
+- bug fixed in router; flow control corrected.
+- bug fixed in synthetic traffic generation
+- clean up
+
+### Features
+- VC arbitration in port level
+- Code build
+

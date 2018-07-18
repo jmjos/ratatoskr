@@ -116,46 +116,53 @@ void ProcessingElementVC::thread() {
 		int nextCall = -1;
 		for (auto const &tw : destWait) {
 			if (nextCall > tw.second || nextCall == -1) {
-				/* we want to apply uniform_batch_mode experiment, that means all tasks need to send data once in one interval
-				 with some random offset in each interval.
+				/* In synthetic mode, we want to apply uniform_batch_mode experiment,
+				 * that means all tasks need to send data once in one interval
+				 * with some random offset in each interval.
 				 */
 
 				/* TODO:
-				 * Attention: we are alwas taking the the minStart and minInterval to calculate the nextCall.
-				 * In the future, we may add randomness to the process, by selecting a number between minStart and maxStart,
+				 * Attention: we are always taking the the minStart and minInterval to calculate the nextCall.
+				 * In the future, we may add randomness to the process,
+				 * by selecting a number between minStart and maxStart,
 				 * and the same thing for minInterval and maxInterval.
 				 */
-				Task* task = destToTask.at(tw.first);
-				SyntheticPhase* sp = task->currentSP;
-				if (timeStamp < sp->minStart) {
-					nextCall =
-							sp->minStart
-									+ global.getRandomIntBetween(0,
-											sp->minInterval
-													- (2
-															* this->node->type->clockSpeed));
-
-				} else {
-					if (timeStamp < sp->minStart + sp->minInterval)
+				if (global.benchmark == "synthetic") {
+					Task* task = destToTask.at(tw.first);
+					SyntheticPhase* sp = task->currentSP;
+					if (timeStamp < sp->minStart) {
 						nextCall =
-								sp->minStart + sp->minInterval
-										+ global.getRandomIntBetween(0,
-												sp->minInterval
-														- (2
-																* this->node->type->clockSpeed));
-					else {
-						int numIntervalsPassed = (timeStamp - sp->minStart)
-								/ sp->minInterval;
-						int intervalBeginning = sp->minStart
-								+ (numIntervalsPassed * sp->minInterval);
-						nextCall =
-								intervalBeginning + sp->minInterval
+								sp->minStart
 										+ global.getRandomIntBetween(0,
 												sp->minInterval
 														- (2
 																* this->node->type->clockSpeed));
 
+					} else {
+						if (timeStamp < sp->minStart + sp->minInterval)
+							nextCall =
+									sp->minStart + sp->minInterval
+											+ global.getRandomIntBetween(0,
+													sp->minInterval
+															- (2
+																	* this->node->type->clockSpeed));
+						else {
+							int numIntervalsPassed = (timeStamp - sp->minStart)
+									/ sp->minInterval;
+							int intervalBeginning = sp->minStart
+									+ (numIntervalsPassed * sp->minInterval);
+							nextCall =
+									intervalBeginning + sp->minInterval
+											+ global.getRandomIntBetween(0,
+													sp->minInterval
+															- (2
+																	* this->node->type->clockSpeed));
+
+						}
 					}
+
+				} else { // if not synthetic, then execute the original behavior
+					nextCall = tw.second;
 				}
 			}
 		}

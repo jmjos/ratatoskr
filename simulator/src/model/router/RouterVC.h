@@ -42,6 +42,7 @@
 
 #include "selection/Selection.h"
 #include "selection/SelectionRoundRobin.h"
+#include "selection/SelectionOutputRoundRobin.h"
 #include "selection/SelectionDyXYZ.h"
 #include "selection/SelectionEDXYZ.h"
 #include "selection/SelectionAgRA.h"

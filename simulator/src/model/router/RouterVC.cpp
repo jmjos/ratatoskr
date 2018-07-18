@@ -23,6 +23,7 @@
 
 RouterVC::RouterVC(sc_module_name nm, Node* node) :
 		Router(nm, node) {
+
 	int conCount = node->connections.size();
 	crossbarcount = 0;
 	rInfo = new RoutingInformation(node);
@@ -42,7 +43,9 @@ RouterVC::RouterVC(sc_module_name nm, Node* node) :
 		pkgcnt.at(dir) = new std::vector<int>(vcCount, 0);
 		routedFlits.at(dir) = new std::vector<Flit*>(vcCount);
 		for (int vc = 0; vc < vcCount; vc++) {
-			BufferFIFO<Flit*>* buf = new BufferFIFO<Flit*>(node->connections.at(dir)->getBufferDepthForNode(node));
+			//TODO HACK routedFlit is an additional buffer, which must be substracted here.
+			BufferFIFO<Flit*>* buf = new BufferFIFO<Flit*>(
+					node->connections.at(dir)->getBufferDepthForNode(node) - 1);
 			buffer.at(dir)->at(vc) = buf;
 			rep.reportAttribute(buf->dbid, "node", std::to_string(node->id));
 			rep.reportAttribute(buf->dbid, "dir", std::to_string(dir));
@@ -67,6 +70,8 @@ RouterVC::RouterVC(sc_module_name nm, Node* node) :
 
 	if (node->type->selection == "RoundRobin") {
 		selection = new SelectionRoundRobin(node);
+	} else if (node->type->selection == "OutputRoundRobin") {
+		selection = new SelectionOutputRoundRobin(node);
 	} else if (node->type->selection == "DyXYZ") {
 		selection = new SelectionDyXYZ(node);
 	} else if (node->type->selection == "EDXYZ") {
@@ -74,9 +79,10 @@ RouterVC::RouterVC(sc_module_name nm, Node* node) :
 	} else if (node->type->selection == "AgRA") {
 		//	selection = new SelectionAgRA(node);
 	} else if (node->type->selection == "MAFA") {
-//		selection = new SelectionMAFA(node);
+		// selection = new SelectionMAFA(node);
 	} else {
-		FATAL("Router" << id << "\t- Unknown selection: " << node->type->selection);
+		FATAL(
+				"Router" << id << "\t- Unknown selection: " << node->type->selection);
 	}
 
 }
@@ -97,7 +103,8 @@ void RouterVC::initialize() {
 	SC_METHOD(receive);
 	for (int con = 0; con < node->connections.size(); con++) {
 		classicPortContainer.at(con).portValidOut.write(false);
-		classicPortContainer.at(con).portFlowControlOut.write(flowControlOut.at(con));
+		classicPortContainer.at(con).portFlowControlOut.write(
+				flowControlOut.at(con));
 		classicPortContainer.at(con).portTagOut.write(tagOut.at(con));
 		classicPortContainer.at(con).portEmptyOut.write(emptyOut.at(con));
 		sensitive << classicPortContainer.at(con).portValidIn.pos();
@@ -110,7 +117,8 @@ void RouterVC::checkValid() {
 
 }
 
-void RouterVC::bind(Connection* con, SignalContainer* sigContIn, SignalContainer* sigContOut) {
+void RouterVC::bind(Connection* con, SignalContainer* sigContIn,
+		SignalContainer* sigContOut) {
 	classicPortContainer.at(node->conToPos.at(con)).bind(sigContIn, sigContOut);
 }
 
@@ -145,15 +153,20 @@ void RouterVC::thread() {
 
 			for (int vc = 0; vc < buffer.at(dir)->size(); vc++) {
 				int occupiedSlots = buffer.at(dir)->at(vc)->occupied();
-				c->vcBufferUtilization.at(c->nodePos.at(node)).at(vc) = occupiedSlots;
-				c->vcBufferCongestion.at(c->nodePos.at(node)).at(vc) = (float) occupiedSlots / (float) bufferDepth;
+				c->vcBufferUtilization.at(c->nodePos.at(node)).at(vc) =
+						occupiedSlots;
+				c->vcBufferCongestion.at(c->nodePos.at(node)).at(vc) =
+						(float) occupiedSlots / (float) bufferDepth;
 				c->bufferUtilization.at(c->nodePos.at(node)) += occupiedSlots;
-				c->bufferCongestion.at(c->nodePos.at(node)) += (float) occupiedSlots / (float) bufferDepth;
+				c->bufferCongestion.at(c->nodePos.at(node)) +=
+						(float) occupiedSlots / (float) bufferDepth;
 			}
-			c->bufferCongestion.at(c->nodePos.at(node)) /= buffer.at(dir)->size();
+			c->bufferCongestion.at(c->nodePos.at(node)) /=
+					buffer.at(dir)->size();
 		}
 
-		node->congestion = (float)crossbarcount / (float) node->connections.size();
+		node->congestion = (float) crossbarcount
+				/ (float) node->connections.size();
 		routing->endCycle(rInfo);
 		writeControl();
 
@@ -163,9 +176,11 @@ void RouterVC::thread() {
 
 void RouterVC::readControl() {
 	for (int i = 0; i < node->connections.size(); i++) {
-		std::vector<bool>* fc = classicPortContainer.at(i).portFlowControlIn.read();
+		std::vector<bool>* fc =
+				classicPortContainer.at(i).portFlowControlIn.read();
 		std::vector<int>* tag = classicPortContainer.at(i).portTagIn.read();
-		std::vector<bool>* empty = classicPortContainer.at(i).portEmptyIn.read();
+		std::vector<bool>* empty =
+				classicPortContainer.at(i).portEmptyIn.read();
 
 		for (int vc = 0; vc < fc->size(); vc++) {
 			rInfo->flowIn[Channel(i, vc)] = fc->at(vc);
@@ -178,11 +193,15 @@ void RouterVC::readControl() {
 void RouterVC::writeControl() {
 	for (int dir = 0; dir < node->connections.size(); dir++) {
 		for (int vc = 0; vc < buffer.at(dir)->size(); vc++) {
-			flowControlOut.at(dir)->at(vc) = buffer.at(dir)->at(vc)->free() >= 4;
+			//TODO HACK this needs to be 2 due to signal propagation speed to upstream router. Please note, this should be fixed as it may be not safe for all cases. 4 is too large, 3 might be okay
+			// the value should be dynamic, i.e. counter in upstream router
+			flowControlOut.at(dir)->at(vc) = buffer.at(dir)->at(vc)->free()
+					>= 2;
 			tagOut.at(dir)->at(vc) = rInfo->tagOut.at(Channel(dir, vc));
 			emptyOut.at(dir)->at(vc) = buffer.at(dir)->at(vc)->empty();
 		}
-		classicPortContainer.at(dir).portFlowControlOut.write(flowControlOut.at(dir));
+		classicPortContainer.at(dir).portFlowControlOut.write(
+				flowControlOut.at(dir));
 		classicPortContainer.at(dir).portTagOut.write(tagOut.at(dir));
 		classicPortContainer.at(dir).portEmptyOut.write(emptyOut.at(dir));
 	}
@@ -198,7 +217,9 @@ void RouterVC::receive() {
 			BufferFIFO<Flit*>* buf = buffer.at(dirIn)->at(vcIn);
 
 			if (flit->type == HEAD) {
-				LOG((global.verbose_router_receive_head_flit) || global.verbose_router_receive_flit,
+				LOG(
+						(global.verbose_router_receive_head_flit)
+								|| global.verbose_router_receive_flit,
 						"Router" << id << "[" << DIR::toString(node->conToDir[dirIn])<<vcIn<< "]\t- Receive Flit " << *flit);
 				pkgcnt.at(dirIn)->at(vcIn)++;rInfo
 				->tagOut.at(Channel(dirIn, vcIn)) = flit->packet->pkgclass;
@@ -210,7 +231,8 @@ void RouterVC::receive() {
 				LOG(global.verbose_router_buffer_overflow,
 						"Router" << id << "[" << DIR::toString(node->conToDir[dirIn]) << vcIn << "]\t- Buffer Overflow " << *flit);
 			} else {
-				rep.reportEvent(buf->dbid, "buffer_enqueue_flit", std::to_string(flit->id));
+				rep.reportEvent(buf->dbid, "buffer_enqueue_flit",
+						std::to_string(flit->id));
 				if (flit->type == HEAD) {
 					Channel c = Channel(dirIn, vcIn);
 
@@ -218,7 +240,8 @@ void RouterVC::receive() {
 						FATAL("packet cycle!");
 					}
 
-					rpInfo[ { flit->packet, c }] = new RoutingPacketInformation(flit->packet);
+					rpInfo[ { flit->packet, c }] = new RoutingPacketInformation(
+							flit->packet);
 					rpInfo[ { flit->packet, c }]->inputChannel = c;
 				}
 			}
@@ -227,22 +250,30 @@ void RouterVC::receive() {
 }
 
 void RouterVC::route() {
+
 	for (int dirIn = 0; dirIn < node->connections.size(); dirIn++) {
 		for (int vcIn = 0; vcIn < buffer.at(dirIn)->size(); vcIn++) {
 			BufferFIFO<Flit*>* buf = buffer.at(dirIn)->at(vcIn);
 			Flit* flit = buf->front();
 			Channel c = Channel(dirIn, vcIn);
 
+			if (sc_time_stamp() == sc_time(120, SC_NS) && this->node->id == 2
+					&& flit)
+				cout << "flit output @ " << sc_time_stamp() << "   " << flit->id
+						<< " seq nb" << flit->seq_nb << endl;
+
 			if (flit && !routedPackets.count( { flit->packet, c })) {
 				//rep.reportEvent(buf->dbid, "buffer_front_flit", std::to_string(flit->id));
 
 				if (flit->type == HEAD) {
-					RoutingPacketInformation* rpi = rpInfo.at( { flit->packet, c });
+					RoutingPacketInformation* rpi = rpInfo.at(
+							{ flit->packet, c });
 					routing->route(rInfo, rpi);
 
 					if (rpi->routedChannel.empty()) {
 						rpi->dropFlag = true;
-						rep.reportEvent(dbid, "router_routefail", std::to_string(flit->id));
+						rep.reportEvent(dbid, "router_routefail",
+								std::to_string(flit->id));
 						//FATAL("Router" << id << "[" << DIR::toString(node->conToDir[dirIn]) << dirIn<<"]\t- Failed Routing! " << *flit);
 					}
 
@@ -250,7 +281,8 @@ void RouterVC::route() {
 
 					if (rpi->selectedChannel.empty()) {
 						rpi->dropFlag = true;
-						rep.reportEvent(dbid, "router_selectfail", std::to_string(flit->id));
+						rep.reportEvent(dbid, "router_selectfail",
+								std::to_string(flit->id));
 						//FATAL("Router" << id << "[" << DIR::toString(node->conToDir[dirIn]) << dirIn<<"]\t- Failed Selection! " << *flit);
 					}
 
@@ -265,15 +297,16 @@ void RouterVC::route() {
 					LOG(true,
 							"Router" << id << "[" << DIR::toString(node->conToDir[dirIn]) << vcIn << "]\t- Received Body/Tail Flit before Head Flit! " << *flit);
 					buf->dequeue();
-					rep.reportEvent(buf->dbid, "buffer_dequeue_flit", std::to_string(flit->id));
+					rep.reportEvent(buf->dbid, "buffer_dequeue_flit",
+							std::to_string(flit->id));
 
 					continue;
 				}
 			}
 			if (flit && !routedFlits.at(dirIn)->at(vcIn)) {
-
 				routedFlits.at(dirIn)->at(vcIn) = buf->dequeue();
-				rep.reportEvent(buf->dbid, "buffer_dequeue_flit", std::to_string(flit->id));
+				rep.reportEvent(buf->dbid, "buffer_dequeue_flit",
+						std::to_string(flit->id));
 			}
 		}
 	}
@@ -282,7 +315,8 @@ void RouterVC::route() {
 
 void RouterVC::arbitrate() {
 	std::set<int> arbiterDirs;
-	for (unsigned int dirIn = rrDirOff, i = 0; i < buffer.size(); dirIn = (dirIn + 1) % buffer.size(), i++) {
+	for (unsigned int dirIn = rrDirOff, i = 0; i < buffer.size();
+			dirIn = (dirIn + 1) % buffer.size(), i++) {
 		for (unsigned int vcIn = 0; vcIn < buffer.at(dirIn)->size(); vcIn++) {
 			Flit* flit = routedFlits.at(dirIn)->at(vcIn);
 			Channel c = Channel(dirIn, vcIn);
@@ -295,29 +329,35 @@ void RouterVC::arbitrate() {
 					routing->makeDecision(rInfo, rpi);
 
 					if (rpInfo.at( { flit->packet, c })->dropFlag) {
-						rep.reportEvent(dbid, "router_decisfail", std::to_string(flit->id));
+						rep.reportEvent(dbid, "router_decisfail",
+								std::to_string(flit->id));
 					}
 
 					if (rpi->rerouteFlag) {
 						rpi->rerouteFlag = false;
-						LOG(true, "Router" << id << "[" << DIR::toString(node->conToDir[dirIn]) << vcIn<<"]\t- Reroute! " << *flit);
+						LOG(true,
+								"Router" << id << "[" << DIR::toString(node->conToDir[dirIn]) << vcIn<<"]\t- Reroute! " << *flit);
 						routing->route(rInfo, rpi);
 						selection->select(rInfo, rpi);
 
 						if (rpi->selectedChannel.empty()) {
 							rpi->dropFlag = true;
-							rep.reportEvent(dbid, "router_select2fail", std::to_string(flit->id));
+							rep.reportEvent(dbid, "router_select2fail",
+									std::to_string(flit->id));
 							//FATAL("Router" << id << "[" << DIR::toString(node->conToDir[dirIn]) << dirIn<<"]\t- Failed Selection! " << *flit);
-							LOG(true, "Router" << id << "[" << DIR::toString(node->conToDir[dirIn]) << vcIn<<"]\t- Reroute Fail! " << *flit);
+							LOG(true,
+									"Router" << id << "[" << DIR::toString(node->conToDir[dirIn]) << vcIn<<"]\t- Reroute Fail! " << *flit);
 
 						} else {
-							LOG(true, "Router" << id << "[" << DIR::toString(node->conToDir[dirIn]) << vcIn<<"]\t- Reroute Success! " << *flit);
+							LOG(true,
+									"Router" << id << "[" << DIR::toString(node->conToDir[dirIn]) << vcIn<<"]\t- Reroute Success! " << *flit);
 							continue;
 						}
 
 					} else if (rpi->delayFlag) {
 						rpi->delayFlag = false;
-						FATAL("Router" << id << "[" << DIR::toString(node->conToDir[dirIn]) << dirIn<<"]\t- Delay! " << *flit);
+						FATAL(
+								"Router" << id << "[" << DIR::toString(node->conToDir[dirIn]) << dirIn<<"]\t- Delay! " << *flit);
 						LOG(global.verbose_router_throttle,
 								"Router" << id << "[" << DIR::toString(node->conToDir[dirIn]) << dirIn<<"]\t- Delay! " << *flit);
 						continue;
@@ -327,7 +367,8 @@ void RouterVC::arbitrate() {
 				if (rpi->dropFlag) {
 
 					if (flit->type == TAIL) {
-						rep.reportEvent(dbid, "pkg_dropped", std::to_string(flit->packet->dbid));
+						rep.reportEvent(dbid, "pkg_dropped",
+								std::to_string(flit->packet->dbid));
 						routedPackets.erase( { flit->packet, c });
 						rpInfo.erase( { flit->packet, c });
 						pkgcnt.at(dirIn)->at(vcIn)--;delete
@@ -343,13 +384,16 @@ flit						->packet;
 				}
 
 				if (rpi->outputChannel.dir == -1) {
-					rep.reportEvent(dbid, "router_routefail", std::to_string(flit->id));
-					FATAL("Router" << id << "[" << DIR::toString(node->conToDir[dirIn]) << dirIn<<"]\t- Failed Decision! " << *flit);
+					rep.reportEvent(dbid, "router_routefail",
+							std::to_string(flit->id));
+					FATAL(
+							"Router" << id << "[" << DIR::toString(node->conToDir[dirIn]) << dirIn<<"]\t- Failed Decision! " << *flit);
 				}
 
 				Channel out = rpi->outputChannel;
 
-				if (!classicPortContainer.at(out.dir).portFlowControlIn.read()->at(out.vc)) {
+				if (!classicPortContainer.at(out.dir).portFlowControlIn.read()->at(
+						out.vc)) {
 					LOG(global.verbose_router_throttle,
 							"Router" << id << "[" << DIR::toString(node->conToDir[dirIn]) << dirIn<<"]\t- Flow Control! " << *flit);
 					//rep.reportEvent(dbid, "router_flow", std::to_string(flit->id));
@@ -410,7 +454,9 @@ void RouterVC::send() {
 rpi			;
 		}
 
-		LOG((global.verbose_router_send_head_flit && flit->type == HEAD) || global.verbose_router_send_flit,
+		LOG(
+				(global.verbose_router_send_head_flit && flit->type == HEAD)
+						|| global.verbose_router_send_flit,
 				"Router" << id << "[" << DIR::toString(node->conToDir[out.dir]) << out.vc<<"]\t- send flit " << *flit);
 		//rep.reportEvent(dbid, "router_send_flit", std::to_string(flit->id));
 	}

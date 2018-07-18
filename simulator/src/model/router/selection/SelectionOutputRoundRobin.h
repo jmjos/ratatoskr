@@ -23,17 +23,17 @@
 
 #include "Selection.h"
 
-struct SelectionRoundRobin: public Selection {
-	std::vector<int> rrVC;
+struct SelectionOutputRoundRobin: public Selection {
+	int rrVC = 0;
 
-	SelectionRoundRobin(Node* node) :
-			Selection(node), rrVC(node->connections.size(), 0) {
-
+	SelectionOutputRoundRobin(Node* node) :
+			Selection(node) {
 	}
 
-	~SelectionRoundRobin() {
+	~SelectionOutputRoundRobin() {
 	}
 	//void checkValid()=0;
 	void select(RoutingInformation* ri, RoutingPacketInformation* rpi);
 };
+
 
