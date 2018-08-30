@@ -56,7 +56,7 @@ WHERE_CONFIG_IS and WHERE_NETWORK_IS represent the path of the config.xml and ne
 To run it without being logged in use:
 ```
 > nohup python run_server.py &
-´´´
+```
 
 # Verfication
 
