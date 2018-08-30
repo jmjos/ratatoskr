@@ -63,6 +63,7 @@ public:
 	int simulation_time = 0;
 	bool outputToFile = false;
 	std::string outputFileName = "";
+	std::string arbiterType;
 
 	//NOC
 	std::string noc_file;

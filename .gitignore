@@ -4,3 +4,4 @@ log.txt
 report.txt
 *.csv
 simulator/sim
+virtualenv/

@@ -22,8 +22,7 @@
 
 #include "ProcessingElementVC.h"
 
-ProcessingElementVC::ProcessingElementVC(sc_module_name nm, Node *node,
-		TrafficPool *tp) :
+ProcessingElementVC::ProcessingElementVC(sc_module_name nm, Node *node, TrafficPool *tp) :
 		ProcessingElement(nm, node, tp) {
 	this->packetPortContainer = new PacketPortContainer(
 			("NI_PACKET_CONTAINER" + std::to_string(id)).c_str());
@@ -57,8 +56,7 @@ void ProcessingElementVC::thread() {
 		for (auto const &tw : destWait) {
 			DataDestination *dest = tw.first;
 			Task *task = destToTask.at(dest);
-			if (taskTerminationTime.count(task)
-					&& taskTerminationTime.at(task) < timeStamp) {
+			if (taskTerminationTime.count(task) && taskTerminationTime.at(task) < timeStamp) {
 				removeList.push_back(dest);
 			}
 		}
@@ -131,32 +129,22 @@ void ProcessingElementVC::thread() {
 					Task* task = destToTask.at(tw.first);
 					SyntheticPhase* sp = task->currentSP;
 					if (timeStamp < sp->minStart) {
-						nextCall =
-								sp->minStart
-										+ global.getRandomIntBetween(0,
-												sp->minInterval
-														- (2
-																* this->node->type->clockSpeed));
+						nextCall = sp->minStart
+								+ global.getRandomIntBetween(0,
+										sp->minInterval - (2 * this->node->type->clockSpeed));
 
 					} else {
 						if (timeStamp < sp->minStart + sp->minInterval)
-							nextCall =
-									sp->minStart + sp->minInterval
-											+ global.getRandomIntBetween(0,
-													sp->minInterval
-															- (2
-																	* this->node->type->clockSpeed));
+							nextCall = sp->minStart + sp->minInterval
+									+ global.getRandomIntBetween(0,
+											sp->minInterval - (2 * this->node->type->clockSpeed));
 						else {
-							int numIntervalsPassed = (timeStamp - sp->minStart)
-									/ sp->minInterval;
+							int numIntervalsPassed = (timeStamp - sp->minStart) / sp->minInterval;
 							int intervalBeginning = sp->minStart
 									+ (numIntervalsPassed * sp->minInterval);
-							nextCall =
-									intervalBeginning + sp->minInterval
-											+ global.getRandomIntBetween(0,
-													sp->minInterval
-															- (2
-																	* this->node->type->clockSpeed));
+							nextCall = intervalBeginning + sp->minInterval
+									+ global.getRandomIntBetween(0,
+											sp->minInterval - (2 * this->node->type->clockSpeed));
 
 						}
 					}
@@ -181,8 +169,7 @@ void ProcessingElementVC::thread() {
 
 void ProcessingElementVC::execute(Task *task) {
 	if (!taskRepeatLeft.count(task)) {
-		taskRepeatLeft[task] = global.getRandomIntBetween(task->minRepeat,
-				task->maxRepeat);
+		taskRepeatLeft[task] = global.getRandomIntBetween(task->minRepeat, task->maxRepeat);
 	} else {
 		if (taskRepeatLeft.at(task) > 0) {
 			taskRepeatLeft.at(task)--;}
@@ -194,14 +181,12 @@ void ProcessingElementVC::execute(Task *task) {
 	}
 
 	if (!taskStartTime.count(task)) {
-		taskStartTime[task] = global.getRandomIntBetween(task->minStart,
-				task->maxStart);
+		taskStartTime[task] = global.getRandomIntBetween(task->minStart, task->maxStart);
 	}
 
 	if (!taskTerminationTime.count(task) && task->minDuration != -1) {
 		taskTerminationTime[task] = taskStartTime[task]
-				+ global.getRandomIntBetween(task->minDuration,
-						task->maxDuration);
+				+ global.getRandomIntBetween(task->minDuration, task->maxDuration);
 	}
 
 	if (task->requirements.empty()) {
@@ -209,8 +194,8 @@ void ProcessingElementVC::execute(Task *task) {
 	} else {
 		for (DataRequirement *r : task->requirements) {
 			neededFor[r->type].insert(task);
-			neededAmount[std::make_pair(task, r->type)] =
-					global.getRandomIntBetween(r->minCount, r->maxCount);
+			neededAmount[std::make_pair(task, r->type)] = global.getRandomIntBetween(r->minCount,
+					r->maxCount);
 			needs[task].insert(r->type);
 		}
 	}
@@ -246,22 +231,18 @@ void ProcessingElementVC::startSending(Task *task) {
 
 	for (unsigned int i = 0; i < task->possibilities.size(); i++) {
 		if (task->possibilities.at(i).first > rn) {
-			std::vector<DataDestination *> *destVec = &(task->possibilities.at(
-					i).second);
+			std::vector<DataDestination *> *destVec = &(task->possibilities.at(i).second);
 
 			for (DataDestination *dest : *destVec) {
 				destToTask[dest] = task;
 				taskToDest[task].insert(dest);
 
-				countLeft[dest] = global.getRandomIntBetween(dest->minCount,
-						dest->maxCount);
+				countLeft[dest] = global.getRandomIntBetween(dest->minCount, dest->maxCount);
 
 				int delayTime = (sc_time_stamp().value() / 1000)
-						+ global.getRandomIntBetween(dest->minDelay,
-								dest->maxDelay);
+						+ global.getRandomIntBetween(dest->minDelay, dest->maxDelay);
 
-				if (taskStartTime.count(task)
-						&& taskStartTime.at(task) > delayTime) {
+				if (taskStartTime.count(task) && taskStartTime.at(task) > delayTime) {
 					destWait[dest] = taskStartTime.at(task);
 				} else {
 					destWait[dest] = delayTime;

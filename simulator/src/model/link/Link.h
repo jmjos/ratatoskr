@@ -48,7 +48,7 @@ class Link: public sc_module{
 	int linkDepth;
 
 	// UNCOMMENT FOR RAW DATA ON LINK (@Lennart)
-	//ofstream *rawDataOutput;
+	// ofstream *rawDataOutput;
   
 
 public:

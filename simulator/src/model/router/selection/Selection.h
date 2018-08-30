@@ -32,8 +32,6 @@
 #include "model/router/helper/MeshHelper.h"
 #include "model/router/routings/Routing.h"
 
-
-
 struct Selection {
 	GlobalInputClass& global = GlobalInputClass::getInstance();
 	Report& rep = Report::getInstance();
@@ -41,7 +39,7 @@ struct Selection {
 	int dbid;
 	Node* node;
 
-	Selection(Node* node){
+	Selection(Node* node) {
 		this->node = node;
 		this->dbid = rep.registerElement("Selection", node->id);
 	}
@@ -53,5 +51,4 @@ struct Selection {
 	//virtual void checkValid()=0;
 	virtual void select(RoutingInformation*, RoutingPacketInformation*)=0;
 };
-
 

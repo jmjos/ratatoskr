@@ -22,7 +22,7 @@
   </general>
   
   <noc>
-  	<nocFile>config/working.xml</nocFile>
+  	<nocFile>config/network.xml</nocFile>
     <flitsPerPacket value ="10"/>
     <Vdd value="5"/>
   </noc>

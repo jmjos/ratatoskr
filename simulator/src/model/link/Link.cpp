@@ -42,7 +42,7 @@ Link::Link(sc_module_name nm, Connection* c, int globalId) {
 //	if (id == 70 || id == 67) {
 //		cout << "check file with name" << nm << endl;
 //	}
-//	this->rawDataOutput = new ofstream((std::string) nm + ".txt");
+// this->rawDataOutput = new ofstream((std::string) nm + ".txt");
 
 	SC_THREAD(passthrough_thread);
 	sensitive << clk.pos();
@@ -50,7 +50,7 @@ Link::Link(sc_module_name nm, Connection* c, int globalId) {
 	return;
 }
 Link::~Link() {
-//	rawDataOutput->close();
+	// rawDataOutput->close();
 }
 
 void Link::passthrough_thread() {
@@ -66,7 +66,6 @@ void Link::passthrough_thread() {
 		int offset = 3; // three fields: idle, head, headidle
 
 		if (!classicPortContainer->portValidIn.read()) {
-
 			// this cycle idle
 			if (previousTransmissionState == IDLESTATE) {
 				// initally, no flits traverse link
@@ -100,7 +99,7 @@ void Link::passthrough_thread() {
 			}
 		}
 
-//		rawDataOutput->write(outputToFile.c_str(), 2);
+//		rawDataOutput->write(outputToFile.c_str(), 3);
 //		rawDataOutput->flush();
 		report.issueLinkMatrixUpdate(globalId, currentTransmissionState,
 				previousTransmissionState);

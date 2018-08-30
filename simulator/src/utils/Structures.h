@@ -51,17 +51,17 @@ struct DIR {
 		case Local:
 			return "Local";
 		case East:
-			return " East";
+			return "East";
 		case West:
-			return " West";
+			return "West";
 		case North:
 			return "North";
 		case South:
 			return "South";
 		case Up:
-			return "   Up";
+			return "Up";
 		case Down:
-			return " Down";
+			return "Down";
 		default:
 			return "Unknown Direction!!!";
 		}
@@ -115,8 +115,7 @@ struct Vec3D {
 	bool operator<(Vec3D<T> v) const {
 		return fabs(x) < fabs(v.x)
 				|| (fabs(x) == fabs(v.x)
-						&& (fabs(y) < fabs(v.y)
-								|| (fabs(y) == fabs(v.y) && fabs(z) < fabs(v.z))));
+						&& (fabs(y) < fabs(v.y) || (fabs(y) == fabs(v.y) && fabs(z) < fabs(v.z))));
 	}
 
 	Vec3D<T> operator +(const Vec3D<T> v) const {
@@ -199,8 +198,8 @@ struct NodeType {
 	int clockSpeed;
 	std::string arbiterType;
 
-	NodeType(int id, std::string model, std::string routing,
-			std::string selection, int clk, std::string arbiterType);
+	NodeType(int id, std::string model, std::string routing, std::string selection, int clk,
+			std::string arbiterType);
 };
 
 struct LayerType {
@@ -231,8 +230,7 @@ struct Node {
 
 	float congestion; // crossbar utilization 0-1
 
-	Node(int id, Vec3D<float> pos, int idType, NodeType* type,
-			LayerType* layer);
+	Node(int id, Vec3D<float> pos, int idType, NodeType* type, LayerType* layer);
 
 };
 
@@ -257,8 +255,7 @@ struct Connection {
 	int linkDepth;
 
 	Connection(int id, std::vector<Node*> nodes, std::vector<int> vcCount,
-			std::vector<int> bufferDepth, float length, int linkWidth,
-			int linkDepth);
+			std::vector<int> bufferDepth, float length, int linkWidth, int linkDepth);
 	int getBufferDepthForNode(Node* n);
 	int getVCCountForNode(Node* n);
 };
@@ -280,8 +277,7 @@ struct SyntheticPhase {
 	int maxInterval;
 	int hotspot = -1;
 
-	SyntheticPhase(std::string name, std::string distribution, int minInterval,
-			int maxInterval) :
+	SyntheticPhase(std::string name, std::string distribution, int minInterval, int maxInterval) :
 			name(name), distribution(distribution), minInterval(minInterval), maxInterval(
 					maxInterval) {
 
@@ -303,7 +299,7 @@ struct DataRequirement {
 	DataType* type;
 	//Node* src = 0;			//requires the data to be from this node (optional)
 
-	int minCount = -1;//required amount of DataType to fulfill requirement (to fire)
+	int minCount = -1;	//required amount of DataType to fulfill requirement (to fire)
 	int maxCount = -1;
 
 	DataRequirement(int id, DataType* type) :
@@ -325,10 +321,9 @@ struct DataDestination {
 	int minInterval;		//delay between each sent packet
 	int maxInterval;
 
-	DataDestination(int id, DataType* type, Node* destination, int minInterval,
-			int maxInterval) :
-			id(id), type(type), destination(destination), minInterval(
-					minInterval), maxInterval(maxInterval) {
+	DataDestination(int id, DataType* type, Node* destination, int minInterval, int maxInterval) :
+			id(id), type(type), destination(destination), minInterval(minInterval), maxInterval(
+					maxInterval) {
 
 	}
 };

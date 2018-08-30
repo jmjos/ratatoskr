@@ -44,7 +44,8 @@ struct RoutingInformation {
 	std::set<Channel> allChannel;
 	std::set<Channel> allChannelWithoutLocal;
 	std::vector<int> vcCount;
-	std::map<Channel, Packet*> occupyTable;
+	std::map<Channel, Packet*> occupyTable; // this structure of the occupy table is used with rrVC arbiter.
+	std::map<Channel, Channel> fairOccupyTable; // this structure is used with fairArbiter.
 
 	std::map<Channel, int> congestion;
 	std::map<Channel, int> tagOut;
@@ -52,31 +53,31 @@ struct RoutingInformation {
 	std::map<Channel, bool> flowIn;
 	std::map<Channel, bool> emptyIn;
 
-	RoutingInformation(Node* node){
+	RoutingInformation(Node* node) {
 		this->node = node;
 		vcCount.resize(node->connections.size());
 		for (Connection* c : node->connections) {
 
-			if(c->nodes.size()==1){
+			if (c->nodes.size() == 1) {
 				vcCount.at(node->conToPos.at(c)) = c->vcCount.at(0);
-			}else{
-				for(int i = 0; i<c->vcCount.size();i++){
-					if(i!=c->nodePos.at(node)){
+			} else {
+				for (int i = 0; i < c->vcCount.size(); i++) {
+					if (i != c->nodePos.at(node)) {
 						vcCount.at(node->conToPos.at(c)) = c->vcCount.at(i);
 						break;
 					}
 				}
 			}
 
-
-			for (int vc = 0; vc < vcCount.at(node->conToPos.at(c)) ; vc++) {
+			for (int vc = 0; vc < vcCount.at(node->conToPos.at(c)); vc++) {
 				allChannel.insert(Channel(node->conToPos.at(c), vc));
-				if(c->nodes.size()!=1){
+				if (c->nodes.size() != 1) {
 					allChannelWithoutLocal.insert(Channel(node->conToPos.at(c), vc));
 				}
 			}
 		}
-	};
+	}
+	;
 };
 
 struct RoutingPacketInformation {
@@ -95,10 +96,11 @@ struct RoutingPacketInformation {
 	bool unableFlag = 0;
 	bool dropFlag = 0;
 
-	RoutingPacketInformation(Packet* packet){
+	RoutingPacketInformation(Packet* packet) {
 		this->packet = packet;
-		outputChannel = Channel(-1,-1);
-	};
+		outputChannel = Channel(-1, -1);
+	}
+	;
 };
 
 struct Routing {
@@ -108,7 +110,7 @@ struct Routing {
 	int dbid;
 	Node* node;
 
-	Routing(Node* node){
+	Routing(Node* node) {
 		this->node = node;
 		this->dbid = rep.registerElement("Routing", node->id);
 	}

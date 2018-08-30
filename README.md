@@ -99,6 +99,18 @@ Run the simulator using ./sim.
 
 Details on the configuration can be found in the wiki. 
 
+## Model
+
+### Router
+
+The router model is:
+- input buffered router with VCs
+- variable number of VCs and buffer depths
+- round robin arbitration over VCs (rrVC) or fair arbitration over used VCs (fair)
+- routing functions implemented in routing; different deterministic and adaptive routings are given
+- selection function implemented in selection
+
+To run the uniform random simulation please go to <a href="https://github.com/jmjos/ratatoskr/tree/master/scripts/urand">README.md</a>
 
 ## Contributing
 If you wish to contribute, please contact me at my univeristy email address jan.joseph@ovgu.de. We offer student development jobs for students from Magdeburg.

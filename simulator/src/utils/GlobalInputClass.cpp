@@ -188,6 +188,9 @@ bool GlobalInputClass::readNoCLayout(std::string filePath) {
 						("nodes/node/nodeType[@value='" + std::to_string(id)
 								+ "']").c_str()).size());
 		typeByName[model] = nodeTypes.at(id);
+
+		if(model == "RouterVC")
+			this->arbiterType = arbiterType;
 	}
 
 	/// Read Layer ///

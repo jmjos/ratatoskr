@@ -94,3 +94,12 @@ All notable changes to this project will be documented in this file.
 - VC arbitration in port level
 - Code build
 
+## [1.1.8] - 2018-08-30
+
+### Features
+- adding a 'fair' arbiter (round robin over flits from active ports). See Bamberg, Patmos 2018, "Coding-aware Link Energy Estimation for 2d and 3D Networks-on-chip with Virtual Channels" 
+- code formatting 
+- urand scripts to generate plots for router saturation
+
+### Known Issues
+- only one VC for NetworkInterface

@@ -84,9 +84,9 @@ void GlobalReportClass::reportPerformanceCSV(ostream& stream) {
 	float avgFlitLat = latencyFlit.average() / (float) 1000;
 	float avgPacketLat = latencyPacket.average() / (float) 1000;
 	float avgNetworkLat = latencyNetwork.average() / (float) 1000;
-	stream << boost::format("avgFlitLat, %2.3f\n")%avgFlitLat;
-	stream << boost::format("avgPacketLat, %2.3f\n")%avgPacketLat;
-	stream << boost::format("avgNetworkLat, %2.3f\n")%avgNetworkLat;
+	stream << boost::format("avgFlitLat, %2.3f\n") % avgFlitLat;
+	stream << boost::format("avgPacketLat, %2.3f\n") % avgPacketLat;
+	stream << boost::format("avgNetworkLat, %2.3f\n") % avgNetworkLat;
 }
 
 void GlobalReportClass::issueRoutingCalculation(int id) {
@@ -141,6 +141,7 @@ void GlobalReportClass::issueLinkMatrixUpdate(int id,
 		std::vector<long> matrix(numberElements, 0);
 		linkTransmissionMatrices.insert(std::make_pair(id, matrix));
 	}
+
 	linkTransmissionMatrices.at(id).at(
 			currentTransmissionState
 					+ linkTransmissionsMatrixNumberOfStates
@@ -176,7 +177,7 @@ void GlobalReportClass::reportLinkMatrix(int id, ostream& stream) {
 			rowit++;
 			stream << boost::format("\t[%7.4f, ") % field;
 		} else if (colit == linkTransmissionsMatrixNumberOfStates - 1) {
-			stream << boost::format("%7.4f]\n") % field;
+			stream << boost::format("%7.4f ]\n") % field;
 		} else {
 			stream << boost::format("%7.4f,") % field;
 		}

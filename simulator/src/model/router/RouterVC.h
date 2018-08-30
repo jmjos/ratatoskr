@@ -24,9 +24,6 @@
 // - virtual channel
 // - round robin arbiter
 // - flow control
-
-
-
 #ifndef SRC_MODEL_ROUTER_ROUTERVC_H_
 #define SRC_MODEL_ROUTER_ROUTERVC_H_
 
@@ -48,9 +45,16 @@
 #include "selection/SelectionAgRA.h"
 #include "selection/SelectionMAFA.h"
 
+class RouterVC: public Router {
 
+private:
+	std::map<int, int> currentVCs; // for each direction, what is the current vc that sent a flit
 
-class RouterVC : public Router{
+	void arbitrateFlit(Channel in, Channel out, std::set<int>& arbitratedDirs);
+	bool isDownStreamRouterReady(Channel in, Channel out);
+	int getNextAvailableVC(int dir);
+	std::vector<int> getVCsFromOccupytable(int dir);
+
 
 public:
 	sc_vector<FlitPortContainer> classicPortContainer;
@@ -59,22 +63,20 @@ public:
 	std::vector<std::vector<Flit*>*> routedFlits;
 	std::map<Channel, Packet*> occupyTable;
 
-
 	std::vector<std::vector<bool>*> flowControlOut;
 	std::vector<std::vector<int>*> tagOut;
 	std::vector<std::vector<bool>*> emptyOut;
 
-
 	Routing* routing;
 	RoutingInformation* rInfo;
-	std::map<std::pair<Packet*,Channel>, RoutingPacketInformation*> rpInfo;
+	std::map<std::pair<Packet*, Channel>, RoutingPacketInformation*> rpInfo;
 
 	Selection* selection;
 
-	int rrDirOff=0;
+	int rrDirOff = 0;
 
 	std::set<std::pair<Flit*, Channel>> arbitratedFlits;
-	std::set<std::pair<Packet*,Channel>> routedPackets;
+	std::set<std::pair<Packet*, Channel>> routedPackets;
 
 	int crossbarcount;
 
@@ -91,14 +93,12 @@ public:
 	void receive();
 	void route();
 	void arbitrate();
+	void arbitrateFair();
 
 	void negThred();
 	void readControl();
 	void writeControl();
 
 };
-
-
-
 
 #endif /* SRC_MODEL_ROUTER_RouterVC_H_ */
