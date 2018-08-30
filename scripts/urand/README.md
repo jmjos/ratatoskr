@@ -64,4 +64,4 @@ After the simulation is done you should see rawResults.pkl file. This file conta
 
 Also, to make sure the simulator runs the urand simulation correctly, you should get a latency graph similar to the following one.
 
-<img src="https://github.com/jmjos/ratatoskr/raw/master/docs/misc/result.png">
+<img src="https://raw.githubusercontent.com/jmjos/ratatoskr/master/docs/misc/result.png">
