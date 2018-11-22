@@ -56,54 +56,51 @@ Link::~Link() {
 
 void Link::passthrough_thread() {
 
-    while (true) {
+==== BASE ====
+	while (true) {
+		wait();
+		wait(0, SC_NS);
+		std::string outputToFile;
 
-        wait();
-        wait(0, SC_NS);
-        std::string outputToFile;
+		int IDLESTATE = 0;
+		int HEADSTATE = 1;
+		int HEADIDLESTATE = 2;
+		int offset = 3; // three fields: idle, head, headidle
 
-        int IDLESTATE = 0;
-        int HEADSTATE = 1;
-        int HEADIDLESTATE = 2;
-        int offset = 3; // three fields: idle, head, headidle
-
-        if (!classicPortContainer->portValidIn.read()) {
-            // this cycle idle
-            if (previousTransmissionState == IDLESTATE) {
-                // initally, no flits traverse link
-                outputToFile = "__;";
-                currentTransmissionState = IDLESTATE;
-            } else if (currentFlit->type == HEAD) {
-                // a head flit traversed previously
-                outputToFile = std::to_string(currentFlit->trafficTypeId)
-                               + "_;";
-                currentTransmissionState = HEADIDLESTATE;
-            } else {
-                // a flit already traversed the link
-                outputToFile = std::to_string(currentFlit->trafficTypeId)
-                               + "_;";
-                if(currentFlit->type != HEAD && currentFlit->type != BODY && currentFlit->type != TAIL)
-                    continue;
-                currentTransmissionState = (2 * currentFlit->trafficTypeId)
-                                           + offset + 1;
-            }
-        } else {
-            // this cycle active
-            currentFlit = classicPortContainer->portDataIn.read();
-            if (currentFlit->type == HEAD) {
-                //received head flit
-                outputToFile = "HD;";
-                currentTransmissionState = HEADSTATE;
-            } else {
-                // received data flit
-                outputToFile = std::to_string(currentFlit->trafficTypeId)
-                               + "D;";
-                if(currentFlit->type != HEAD && currentFlit->type != BODY && currentFlit->type != TAIL)
-                    continue;
-                currentTransmissionState = (2 * currentFlit->trafficTypeId)
-                                           + offset;
-            }
-        }
+		if (!classicPortContainer->portValidIn.read()) {
+			// this cycle idle
+			if (previousTransmissionState == IDLESTATE) {
+				// initally, no flits traverse link
+				outputToFile = "__;";
+				currentTransmissionState = IDLESTATE;
+			} else if (currentFlit->type == HEAD) {
+				// a head flit traversed previously
+				outputToFile = std::to_string(currentFlit->trafficTypeId)
+						+ "_;";
+				currentTransmissionState = HEADIDLESTATE;
+			} else {
+				// a flit already traversed the link
+				outputToFile = std::to_string(currentFlit->trafficTypeId)
+						+ "_;";
+				currentTransmissionState = (2 * currentFlit->trafficTypeId)
+						+ offset + 1;
+			}
+		} else {
+			// this cycle active
+			currentFlit = classicPortContainer->portDataIn;
+			if (currentFlit->type == HEAD) {
+				//received head flit
+				outputToFile = "HD;";
+				currentTransmissionState = HEADSTATE;
+			} else {
+				// received data flit
+				outputToFile = std::to_string(currentFlit->trafficTypeId)
+						+ "D;";
+				currentTransmissionState = (2 * currentFlit->trafficTypeId)
+						+ offset;
+			}
+		}
+==== BASE ====
 
 //		rawDataOutput->write(outputToFile.c_str(), 3);
 //		rawDataOutput->flush();

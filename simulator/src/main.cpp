@@ -36,31 +36,30 @@ int sc_main(int arg_num, char *arg_vet[]) {
 	srand(time(nullptr));
 	sleep(1); //wait for the systemC branding :/
 
-    cout << "\nA-3D-NoC Simulator Copyright(C) 2014-2018" << endl;
-    cout << "   Jan Moritz Joseph (jan.joseph@ovgu.de) " << endl;
-    cout << "This program comes with ABSOLUTELY NO WARRANTY;" << endl;
-    cout << "This is free software, and you are welcome to redistribute it"
-         << endl;
-    cout << "under certain conditions. For details see README file." << endl
-         << endl;
-    cout << "Welcome to the A-3D-NoC Simulator!" << endl;
+	cout << "\nA-3D-NoC Simulator Copyright(C) 2014-2018" << endl;
+	cout << "   Jan Moritz Joseph (jan.joseph@ovgu.de) " << endl;
+	cout << "This program comes with ABSOLUTELY NO WARRANTY;" << endl;
+	cout << "This is free software, and you are welcome to redistribute it"
+			<< endl;
+	cout << "under certain conditions. For details see README file." << endl
+			<< endl;
+	cout << "Welcome to the A-3D-NoC Simulator!" << endl;
 
-    sc_report_handler::set_verbosity_level(SC_DEBUG);
-    sc_report_handler::set_actions(SC_ID_INSTANCE_EXISTS_, SC_DO_NOTHING); //disable renaming warnings
+	sc_report_handler::set_verbosity_level(SC_DEBUG);
+	sc_report_handler::set_actions(SC_ID_INSTANCE_EXISTS_, SC_DO_NOTHING); //disable renaming warnings
 
-    if (arg_num == 2) {
-        global.readInputFile(arg_vet[1]);
-    } else {
-        global.readInputFile("config/config.xml");
-    }
+	if (arg_num == 2) {
+		global.readInputFile(arg_vet[1]);
+	} else {
+		global.readInputFile("config/config.xml");
+	}
 
-    global.readNoCLayout(global.noc_file);
+	global.readNoCLayout(global.noc_file);
+	global.readDataStream(global.data_file, global.map_file);
 
-    if (!global.data_file.empty() && !global.map_file.empty())
-        global.readDataStream(global.data_file, global.map_file);
-
-    rep.connect("127.0.0.1", "10000");
-    rep.startRun("name");
+	rep.connect("127.0.0.1", "10000");
+	rep.startRun("name");
+==== BASE ====
 
 //	rep.startRun(global.inputNoc);
 //	int id = rep.registerElement("run", 0);
