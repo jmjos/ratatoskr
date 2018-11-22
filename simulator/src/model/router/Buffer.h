@@ -32,10 +32,10 @@ extern int buffer_idcnt;
 template<class T>
 class Buffer {
 protected:
-	int depth; //max elements of type T
 	std::list<T> *list;
 
 public:
+	int depth; //max elements of type T
 	Report& rep = Report::getInstance();
 	int id;
 	int dbid;
@@ -56,6 +56,7 @@ public:
 	virtual bool enqueue(T)=0;
 	virtual T dequeue()=0;
 	virtual T front()=0;
+	virtual T back()=0;
 
 	bool empty() {
 		return list->empty();
@@ -105,6 +106,12 @@ public:
 		}
 		return 0;
 	}
+	T back() {
+		if (!Buffer<T>::empty()) {
+			return Buffer<T>::list->back();
+		}
+		return 0;
+	}
 };
 
 template<typename T>
@@ -136,6 +143,12 @@ public:
 	T front() {
 		if (!Buffer<T>::empty()) {
 			return Buffer<T>::list->back();
+		}
+		return 0;
+	}
+	T back() {
+		if (!Buffer<T>::empty()) {
+			return Buffer<T>::list->front();
 		}
 		return 0;
 	}

@@ -86,7 +86,7 @@ All notable changes to this project will be documented in this file.
 ## [1.1.7] - 2018-07-18
 
 ### Improvments
-- bug fixed in router; flow control corrected.
+- bug fixed in router; flow control corrected
 - bug fixed in synthetic traffic generation
 - clean up
 
@@ -103,3 +103,16 @@ All notable changes to this project will be documented in this file.
 
 ### Known Issues
 - only one VC for NetworkInterface
+
+## [1.1.9] - 2018-11-22
+
+### Features
+- a new selection, which selects the first free VC
+- handling asynchronous speed (each layer can have its one clock delay)
+- a new routing HeterogeneousXYZ
+- each VC can have its one buffer depth
+- enhancing the usage of the inner data structures used by routers
+- enhancing the urand script and the plotting scripts
+
+### Known Issues
+- segmentation faults might happen randomly

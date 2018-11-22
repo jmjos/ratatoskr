@@ -15,27 +15,33 @@ Contains the instructions to install a python virtual environment with the neces
 ## config.ini:
 Contains the general configuration for the simulation. This is the file that controls the configuration of the entire simulation. While config.xml contains the configuration for individual simulations.
 
-## library folder:
+## config folder:
 - config.xml: this is a general template which will be used to generate a special config file for each simulation.
-- networks/network.xml: this is the file that contains the topolgy of the network you want to use.
+- network.xml: this is the file that contains the topolgy of the network you want to use.
 
 ## requirments.txt:
 Contains the names of the required python libraries. This file will be used as a source to pip command when executing the Makefile.
 
-## run_server.py:
-The python script that you execute to run the simulation.
-
 ## source_me.sh:
 When sourced, it will activate the python virtual library.
+
+## run_simulation.py:
+The python script that you execute to run the simulation.
+
+## combine_hists.py:
+Python helper scrpit to combine VC and Buffer usage. It's imported and called by run_simulation.py, so the user doesn't have to run it (but her/she can).
+
+## generate_plots.py:
+Python script to generate the plots of VC and Buffer usage. This script has to be called after the simulation is done.
 
 
 # Instructions to run the simulation:
 
 ## 1- Copy the configuration files. In your terminal run the following commands:
 ```
-> cp WHERE_CONFIG_IS library/
+> cp WHERE_CONFIG_IS config/
 
-> cp WHERE_NETWORK_IS library/networks/
+> cp WHERE_NETWORK_IS config/
 ```
 WHERE_CONFIG_IS and WHERE_NETWORK_IS represent the path of the config.xml and network.xml respectively.
 
@@ -48,20 +54,19 @@ WHERE_CONFIG_IS and WHERE_NETWORK_IS represent the path of the config.xml and ne
 > make
 > source source_me.sh
 ```
-## 4- Finally, run the python script:
+## 4- Run the simulation:
 ```
-> python run_server.py
+> python run_simulation.py
 ```
-
-To run it without being logged in use:
+## 5- Finally, generate the plots:
 ```
-> nohup python run_server.py &
+> python generate_plots.py
 ```
 
 # Verfication
 
 After the simulation is done you should see rawResults.pkl file. This file contains the latencies (the result of the simulation) and the general configuration that produced these results (basically, the config.ini file).
 
-Also, to make sure the simulator runs the urand simulation correctly, you should get a latency graph similar to the following one.
+Also, to make sure the simulator runs the urand simulation correctly, you should get a latencie graph similar to the following one.
 
-<img src="https://raw.githubusercontent.com/jmjos/ratatoskr/master/docs/misc/result.png">
+<img src="https://github.com/jmjos/ratatoskr/raw/master/docs/misc/result.png">

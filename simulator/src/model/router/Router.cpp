@@ -22,14 +22,14 @@
 #include "Router.h"
 
 Router::Router(sc_module_name nm, Node* node) {
-	this->id = node->id;
+	this->id = node->id % (global.nodes.size() / 2);
 	this->node = node;
-	this->dbid = rep.registerElement("Router", id);
+	this->dbid = rep.registerElement("Router", this->id);
 
 	rep.reportAttribute(dbid, "pos_x", std::to_string(node->pos.x));
 	rep.reportAttribute(dbid, "pos_y", std::to_string(node->pos.y));
 	rep.reportAttribute(dbid, "pos_z", std::to_string(node->pos.z));
-	rep.reportAttribute(dbid, "clock", std::to_string(node->type->clockSpeed));
+	rep.reportAttribute(dbid, "clock", std::to_string(node->type->clockDelay));
 	rep.reportAttribute(dbid, "type", node->type->routerModel);
 }
 

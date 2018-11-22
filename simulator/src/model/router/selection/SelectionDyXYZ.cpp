@@ -37,7 +37,7 @@ void SelectionDyXYZ::select(RoutingInformation* ri, RoutingPacketInformation* rp
 		}
 
 		if(!channel.size()){
-			FATAL("Unable to select! R: "<<ri->node->id<<*rpi->packet);
+			FATAL("Unable to select! R: " << ri->node->id << *rpi->packet);
 
 
 		}

@@ -34,9 +34,14 @@
 
 class GlobalInputClass {
 	GlobalInputClass() {
+		application_numberOfTrafficTypes = 0;
 		rd = new std::random_device();
 		rand = new std::mt19937_64((*rd)());
 	};
+
+private:
+	std::vector<std::string> split(const std::string &str, const std::string &delim);
+	std::vector<int> strs_to_ints(const std::vector<std::string> &strings);
 
 public:
 
@@ -45,7 +50,7 @@ public:
 	std::vector<float> yPositions;
 	std::vector<float> zPositions;
 
-	std::map<std::string, NodeType*> typeByName;
+	std::map<int, NodeType*> typeById;
 	std::vector<NodeType*> nodeTypes;
 	std::vector<LayerType*> layerTypes;
 	std::vector<Node*> nodes;
@@ -70,6 +75,7 @@ public:
 	int flitsPerPacket = 0;
 	float routingVerticalThreshold = 1.0f;
 	float Vdd= 1.0f;
+    std::string bufferDepthType = "";
 
 	//Application
 	std::string benchmark;
@@ -142,4 +148,5 @@ public:
 
 	float readRequiredFloatAttribute(pugi::xml_node, const char*, const char*);
 	float readRequiredFloatAttribute(pugi::xml_node, const char*);
+
 };

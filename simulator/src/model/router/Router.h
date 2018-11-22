@@ -38,10 +38,11 @@ public:
 	Router(sc_module_name nm, Node* node);
 	virtual ~Router();
 
-	virtual void initialize()=0;
+	virtual void initialize() = 0;
 	virtual void bind(Connection*, SignalContainer*, SignalContainer*) = 0;
-	virtual void thread()=0;
-	virtual void receive()=0;
+	virtual void thread() = 0;
+	virtual void receive() = 0;
+	virtual void updateUsageStats() = 0;
 
 };
 

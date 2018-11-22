@@ -22,8 +22,8 @@
 #include "SyntheticPool.h"
 
 SyntheticPool::SyntheticPool() {
-	cout << endl;
-	cout << "Synthetic Testrun" << endl;
+    cout << endl;
+    cout << "Synthetic Testrun" << endl;
 }
 
 SyntheticPool::~SyntheticPool() {
@@ -31,202 +31,205 @@ SyntheticPool::~SyntheticPool() {
 }
 
 void SyntheticPool::start() {
-	int datatypeid = 0;
-	int datadestid = 0;
-	int taskid = 0;
-	std::vector<Task*> tasks;
-	int phaseId = 0;
 
-	for (SyntheticPhase* sp : global.syntheticPhase) {
-		LOG(true,
-				"SyntheticPool\t Initialize phase \"" << sp->name <<"\" with \"" << sp->distribution << "\" distribution");
+    int taskId = 0;
+    std::vector<Task *> tasks;
+    int phaseId = 0;
 
-		std::map<int, int> srcToDst;
+    int maxClockDelay = 1;
+    for (auto const &nodeType: global.nodeTypes) {
+        if (nodeType->clockDelay > maxClockDelay)
+            maxClockDelay = nodeType->clockDelay;
+    }
 
-		if (sp->distribution == "uniform") {
-			DataType* datatype = new DataType(datatypeid,
-					std::to_string(datatypeid));
+    for (SyntheticPhase *sp : global.syntheticPhase) {
 
-			datatypeid++;
+        int dataTypeId = 0;
+        int dataDestId = 0;
 
-			std::vector<std::pair<float, std::vector<DataDestination*>>> possibilities;
-			for (unsigned int i = 0; i < processingElements.size(); i++) {
-				for (unsigned int j = 0; j < processingElements.size(); j++) {
-					std::vector<DataDestination*> dests;
-					DataDestination* dest = new DataDestination(datadestid,
-							datatype, processingElements.at(j)->node,
-							sp->minInterval, sp->maxInterval);
-					dest->minCount = sp->minCount;
-					dest->maxCount = sp->maxCount;
-					dest->minDelay = sp->minDelay;
-					dest->maxDelay = sp->maxDelay;
-					dests.push_back(dest);
+        LOG(true,
+            "SyntheticPool\t Initialize phase \"" << sp->name << "\" with \"" << sp->distribution << "\" distribution");
 
-					datadestid++;
-					possibilities.push_back(
-							std::make_pair(1.f / processingElements.size(),
-									dests));
-				}
+        std::map<int, int> srcToDst;
 
-				Task* task = new Task(taskid, processingElements.at(i)->node);
-				task->minStart = sp->minStart;
-				task->maxStart = sp->maxStart;
-				task->minDuration = sp->minDuration;
-				task->maxDuration = sp->maxDuration;
-				if (sp->minRepeat == -1 && sp->maxRepeat == -1) {
-					task->minRepeat = std::ceil(
-							(float) sp->minDuration / (float) sp->minInterval);
-					task->maxRepeat = std::ceil(
-							(float) sp->maxDuration / (float) sp->maxInterval);
-				} else {
-					task->minRepeat = sp->minRepeat;
-					task->maxRepeat = sp->maxRepeat;
-				}
+        if (sp->distribution == "uniform") {
+            DataType *dataType = new DataType(dataTypeId, std::to_string(dataTypeId));
+            dataTypeId++;
 
-				task->possibilities = possibilities;
-				task->currentSP = sp;
-				tasks.push_back(task);
-				// processingElements.at(i)->execute(task);
-				taskid++;
+            for (unsigned int i = 0; i < processingElements.size(); i++) {
+                Task *task = new Task(taskId, processingElements.at(i)->node);
+                task->minStart = sp->minStart;
+                task->maxStart = sp->maxStart;
+                task->minDuration = sp->minDuration;
+                task->maxDuration = sp->maxDuration;
+                task->currentSP = sp;
 
-			}
-			shuffle_execute_tasks(tasks, phaseId);
-			phaseId++;
-		} else {
-			if (sp->distribution == "bitcomplement") {
-				srcToDst = bitcomplement();
-			} else if (sp->distribution == "tornado") {
-				srcToDst = tornado();
-			} else if (sp->distribution == "transpose") {
-				srcToDst = transpose();
-			} else if (sp->distribution == "hotspot") {
-				srcToDst = hotspot(sp->hotspot);
-			} else {
-				FATAL("Distribution is not implemented");
-			}
-		}
+                int minInterval = std::floor((float) maxClockDelay / (float) sp->injectionRate);
+                int maxInterval = std::floor((float) maxClockDelay / (float) sp->injectionRate);
+                if (sp->minRepeat == -1 && sp->maxRepeat == -1) {
+                    task->minRepeat = std::floor((float) (task->minDuration - task->minStart) / (float) minInterval);
+                    task->maxRepeat = std::floor((float) (task->maxDuration - task->minStart) / (float) maxInterval);
+                } else {
+                    task->minRepeat = sp->minRepeat;
+                    task->maxRepeat = sp->maxRepeat;
+                }
 
-		for (std::pair<const int, int> con : srcToDst) {
-			DataType* datatype = new DataType(datatypeid,
-					std::to_string(datatypeid));
-			datatypeid++;
+                std::vector<std::pair<float, std::vector<DataDestination *>>> possibilities;
+                for (unsigned int j = 0; j < processingElements.size(); j++) {
+                    if (i != j) { // a PE should not send data to itself.
+                        Node *n = processingElements.at(j)->node;
+                        int minInterval = std::floor((float) maxClockDelay / (float) sp->injectionRate);
+                        int maxInterval = std::floor((float) maxClockDelay / (float) sp->injectionRate);
 
-			std::vector<DataDestination*> dests;
-			DataDestination* dest = new DataDestination(datadestid, datatype,
-					processingElements.at(con.second)->node, sp->minInterval,
-					sp->maxInterval);
-			dest->minCount = sp->minCount;
-			dest->maxCount = sp->maxCount;
-			dest->minDelay = sp->minDelay;
-			dest->maxDelay = sp->maxDelay;
-			dests.push_back(dest);
-			datadestid++;
+                        std::vector<DataDestination *> dests;
+                        DataDestination *dest = new DataDestination(dataDestId, dataType, n, minInterval, maxInterval);
+                        dest->minCount = sp->minCount;
+                        dest->maxCount = sp->maxCount;
+                        dest->minDelay = sp->minDelay;
+                        dest->maxDelay = sp->maxDelay;
+                        dests.push_back(dest);
+                        possibilities.push_back(std::make_pair(1.f / (processingElements.size() - 1), dests));
 
-			std::vector<std::pair<float, std::vector<DataDestination*>>> possibilities;
-			possibilities.push_back(std::make_pair(1, dests));
+                        dataDestId++;
+                    }
+                }
+                task->possibilities = possibilities;
+                tasks.push_back(task);
+                taskId++;
+                //processingElements.at(i)->execute(task);
+            }
+            shuffle_execute_tasks(tasks, phaseId);
+            phaseId++;
+        } else {
+            if (sp->distribution == "bitcomplement") {
+                srcToDst = bitcomplement();
+            } else if (sp->distribution == "tornado") {
+                srcToDst = tornado();
+            } else if (sp->distribution == "transpose") {
+                srcToDst = transpose();
+            } else if (sp->distribution == "hotspot") {
+                srcToDst = hotspot(sp->hotspot);
+            } else {
+                FATAL("Distribution is not implemented");
+            }
+        }
 
-			Task* task = new Task(taskid,
-					processingElements.at(con.first)->node);
-			task->minStart = sp->minStart;
-			task->maxStart = sp->maxStart;
-			task->minDuration = sp->minDuration;
-			task->maxDuration = sp->maxDuration;
-			task->minRepeat = sp->minRepeat;
-			task->maxRepeat = sp->maxRepeat;
-			task->possibilities = possibilities;
-
-			processingElements.at(con.first)->execute(task);
-			taskid++;
-		}
-	}
+//		for (std::pair<const int, int> con : srcToDst) {
+//			DataType* dataType = new DataType(dataTypeId, std::to_string(dataTypeId));
+//			dataTypeId++;
+//
+//			std::vector<DataDestination*> dests;
+//			DataDestination* dest = new DataDestination(dataDestId, dataType, processingElements.at(con.second)->node, sp->minInterval, sp->maxInterval);
+//			dest->minCount = sp->minCount;
+//			dest->maxCount = sp->maxCount;
+//			dest->minDelay = sp->minDelay;
+//			dest->maxDelay = sp->maxDelay;
+//			dests.push_back(dest);
+//			dataDestId++;
+//
+//			std::vector<std::pair<float, std::vector<DataDestination*>>> possibilities;
+//			possibilities.push_back(std::make_pair(1, dests));
+//
+//			Task* task = new Task(taskId, processingElements.at(con.first)->node);
+//			task->minStart = sp->minStart;
+//			task->maxStart = sp->maxStart;
+//			task->minDuration = sp->minDuration;
+//			task->maxDuration = sp->maxDuration;
+//			task->minRepeat = sp->minRepeat;
+//			task->maxRepeat = sp->maxRepeat;
+//			task->possibilities = possibilities;
+//
+//			processingElements.at(con.first)->execute(task);
+//			taskId++;
+//		}
+    }
 }
 
-void SyntheticPool::clear(Task*) {
+void SyntheticPool::clear(Task *) {
 
 }
 
 std::map<int, int> SyntheticPool::bitcomplement() {
-	std::map<int, int> srcToDst;
+    std::map<int, int> srcToDst;
 
-	int nodes = processingElements.size();
+    int nodes = processingElements.size();
 
-	for (int i = 0; i < nodes; i++) {
-		srcToDst[i] = nodes - i - 1;
-	}
+    for (int i = 0; i < nodes; i++) {
+        srcToDst[i] = nodes - i - 1;
+    }
 
-	return srcToDst;
+    return srcToDst;
 }
 
 std::map<int, int> SyntheticPool::transpose() {
-	std::map<int, int> srcToDst;
-	int nodes = processingElements.size();
+    std::map<int, int> srcToDst;
+    int nodes = processingElements.size();
 
-	for (int i = 0; i < nodes; i++) {
-		srcToDst[i] = (i << int(ceil(log2(nodes) / 2))) % (nodes - 1);
-	}
+    for (int i = 0; i < nodes; i++) {
+        srcToDst[i] = (i << int(ceil(log2(nodes) / 2))) % (nodes - 1);
+    }
 
-	return srcToDst;
+    return srcToDst;
 }
 
 std::map<int, int> SyntheticPool::tornado() {
-	std::map<int, int> srcToDst;
+    std::map<int, int> srcToDst;
 
-	std::vector<float>* xPos = &global.xPositions;
-	std::vector<float>* yPos = &global.yPositions;
-	std::vector<float>* zPos = &global.zPositions;
+    std::vector<float> *xPos = &global.xPositions;
+    std::vector<float> *yPos = &global.yPositions;
+    std::vector<float> *zPos = &global.zPositions;
 
-	int nodes = processingElements.size();
-	for (int i = 0; i < nodes; i++) {
-		Vec3D<float> srcPos = processingElements.at(i)->node->pos;
-		Vec3D<float> dstPos;
-		dstPos.x = xPos->at(
-				((std::find(xPos->begin(), xPos->end(), srcPos.x)
-						- xPos->begin()) + (xPos->size() >> 1)) % xPos->size());
-		dstPos.y = yPos->at(
-				((std::find(yPos->begin(), yPos->end(), srcPos.y)
-						- yPos->begin()) + (yPos->size() >> 1)) % yPos->size());
-		dstPos.z = zPos->at(
-				((std::find(zPos->begin(), zPos->end(), srcPos.z)
-						- zPos->begin()) + (zPos->size() >> 1)) % zPos->size());
+    int nodes = processingElements.size();
+    for (int i = 0; i < nodes; i++) {
+        Vec3D<float> srcPos = processingElements.at(i)->node->pos;
+        Vec3D<float> dstPos;
+        dstPos.x = xPos->at(((std::find(xPos->begin(), xPos->end(), srcPos.x) - xPos->begin()) + (xPos->size() >> 1)) %
+                            xPos->size());
+        dstPos.y = yPos->at(((std::find(yPos->begin(), yPos->end(), srcPos.y) - yPos->begin()) + (yPos->size() >> 1)) %
+                            yPos->size());
+        dstPos.z = zPos->at(((std::find(zPos->begin(), zPos->end(), srcPos.z) - zPos->begin()) + (zPos->size() >> 1)) %
+                            zPos->size());
 
-		Node* dstNode = 0;
-		for (Node* node : global.posToId.at(dstPos)) {
-			if (node->type->routerModel == "ProcessingElement") {
-				dstNode = node;
-			}
-		}
-		if (dstNode) {
-			srcToDst[i] = dstNode->idType;
-		}
+        Node *dstNode = 0;
+        for (Node *node : global.posToId.at(dstPos)) {
+            if (node->type->routerModel == "ProcessingElement") {
+                dstNode = node;
+            }
+        }
+        if (dstNode) {
+            srcToDst[i] = dstNode->idType;
+        }
 
-	}
+    }
 
-	return srcToDst;
+    return srcToDst;
 }
 
 std::map<int, int> SyntheticPool::hotspot(int hotspot) {
-	int nodes = processingElements.size();
+    int nodes = processingElements.size();
 
-	if (hotspot == -1) {
-		hotspot = global.getRandomIntBetween(0, nodes - 1);
-	}
+    if (hotspot == -1) {
+        hotspot = global.getRandomIntBetween(0, nodes - 1);
+    }
 
-	LOG(true, "\t\t Hotspot: " << hotspot);
+    LOG(true, "\t\t Hotspot: " << hotspot);
 
-	std::map<int, int> srcToDst;
-	for (int i = 0; i < nodes; i++) {
-		srcToDst[i] = hotspot;
-	}
-	return srcToDst;
+    std::map<int, int> srcToDst;
+    for (int i = 0; i < nodes; i++) {
+        srcToDst[i] = hotspot;
+    }
+    return srcToDst;
 }
 
-void SyntheticPool::shuffle_execute_tasks(std::vector<Task*> &tasks,
-		int phaseId) {
-	// Execute the tasks in random order
-	int begin = phaseId * processingElements.size();
-	std::random_shuffle(tasks.begin() + begin, tasks.end());
-	for (unsigned int k = 0; k < processingElements.size(); k++) {
-		processingElements.at(k)->execute(
-				tasks.at(k + phaseId * processingElements.size()));
-	}
+void SyntheticPool::shuffle_execute_tasks(std::vector<Task *> &tasks, int phaseId) {
+    // Execute the tasks in random order
+    int offset = phaseId * processingElements.size();
+    std::vector<Task *>::iterator start = tasks.begin() + offset;
+    std::vector<Task *>::iterator end = tasks.end();
+    std::vector<Task *> phaseTasks(start, end);
+
+    std::random_shuffle(phaseTasks.begin(), phaseTasks.end());
+    for (Task *task : phaseTasks) {
+        processingElements.at(task->node->id % processingElements.size())->execute(task);
+    }
 }

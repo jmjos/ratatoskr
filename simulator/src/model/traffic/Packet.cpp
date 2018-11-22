@@ -31,7 +31,7 @@ Packet::Packet(Node* src, Node* dst, int size, int generationTime, int trafficTy
 	this->dst = dst;
 	this->size = size;
 	this->generationTime = generationTime;
-	this->dbid = rep.registerElement("Packet", id);
+	this->dbid = rep.registerElement("Packet", this->id);
 	this->pkgclass = -1;
 	this->numhops  = 0;
 	this->as = as;
@@ -55,6 +55,6 @@ Packet::~Packet() {
 }
 
 std::ostream& operator << (std::ostream& os, const Packet& p) {
-		os << "ID: " << p.id << ", SRC: " << p.src->id << ", DST: " << p.dst->id << ", Size: " << p.size << ", Generated at: "<<p.generationTime << std::endl;
+		os << "ID: " << p.id << ", SRC: " << p.src->id << ", DST: " << p.dst->id << ", Size: " << p.size << ", Generated at: "<< p.generationTime << std::endl;
 		return os;
 	}

@@ -26,6 +26,7 @@
 
 #include "utils/Structures.h"
 
+
 class Packet;
 
 enum FlitType{

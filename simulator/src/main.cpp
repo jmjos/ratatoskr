@@ -68,36 +68,36 @@ int sc_main(int arg_num, char *arg_vet[]) {
 //	rep.reportAttribute(id, "selection", global.selection);
 //	rep.reportAttribute(id, "traffic", global.benchmark);
 
-	LayerTop *layer = new LayerTop("Layer");
+    LayerTop *layer = new LayerTop("Layer");
 
-	std::chrono::high_resolution_clock::time_point t1 =
-			std::chrono::high_resolution_clock::now();
+    std::chrono::high_resolution_clock::time_point t1 =
+            std::chrono::high_resolution_clock::now();
 
-	cout << endl << "Starting Simulation!" << endl;
-	sc_start(global.simulation_time, SC_NS);
+    cout << endl << "Starting Simulation!" << endl;
+    sc_start(global.simulation_time, SC_NS);
 
-	GlobalReportClass report = GlobalReportClass::getInstance();
+    GlobalReportClass report = GlobalReportClass::getInstance();
 
 //	std::ostream & objOstream = std::cout;
 //	report.reportLinkMatrix(8, objOstream);
 
-	if (global.outputToFile) {
-		cout << "Generating report of the simulation run into file "
-				<< global.outputFileName << " ... ";
-		report.reportComplete(global.outputFileName);
-		cout << " done." << endl;
-	}
-	report.reportPerformance(cout);
+    if (global.outputToFile) {
+        cout << "Generating report of the simulation run into file "
+             << global.outputFileName << " ... ";
+        report.reportComplete(global.outputFileName);
+        cout << " done." << endl;
+    }
+    report.reportPerformance(cout);
 
-	auto duration = std::chrono::duration_cast<std::chrono::seconds>(
-			std::chrono::high_resolution_clock::now() - t1).count();
+    auto duration = std::chrono::duration_cast<std::chrono::seconds>(
+            std::chrono::high_resolution_clock::now() - t1).count();
 
-	auto durationmin = std::chrono::duration_cast<std::chrono::minutes>(
-			std::chrono::high_resolution_clock::now() - t1).count();
+    auto durationmin = std::chrono::duration_cast<std::chrono::minutes>(
+            std::chrono::high_resolution_clock::now() - t1).count();
 
-	cout << "Execution time: " << durationmin << " minutes and " << duration
-			<< " seconds" << std::endl;
+    cout << "Execution time: " << durationmin << " minutes and " << duration
+         << " seconds" << std::endl;
 
-	rep.close();
-	return 0;
+    rep.close();
+    return 0;
 }

@@ -29,96 +29,134 @@
 #include "Statistics.h"
 
 class GlobalReportClass {
-	GlobalInputClass &global = GlobalInputClass::getInstance();
+    GlobalInputClass &global = GlobalInputClass::getInstance();
 private:
 
-	// s = STATIC (Watt)
-	// d = DYNAMIC (Joule)
+    // s = STATIC (Watt)
+    // d = DYNAMIC (Joule)
 
-	double total_power_s; 				//unused
+    double total_power_s;                //unused
 
-	//Buffer Consumption (power per event is determined by a LUT of buffer depth and flit size)
-	double buffer_router_push_pwr_d;	// per flit pushed on buffer
-	double buffer_router_pop_pwr_d;	// per flit popped of buffer (not for lookup)
-	double buffer_router_front_pwr_d;// per flit data received from buffer (only count if flit exists)
-	double buffer_router_pwr_s;			// leakage per router cycle per buffer
+    //Buffer consumption (power per event is determined by a LUT of buffer depth and flit size)
+    double buffer_router_push_pwr_d;    // per flit pushed on buffer
+    double buffer_router_pop_pwr_d;    // per flit popped of buffer (not for lookup)
+    double buffer_router_front_pwr_d;// per flit data received from buffer (only count if flit exists)
+    double buffer_router_pwr_s;            // leakage per router cycle per buffer
 
-	//Power Consumption of routing Algorithm (determined by routing algorithm)
-	double routing_pwr_d; 				//per routing function called
-	double routing_pwr_s; 				//Leakage per Router Cycle
+    //Power consumption of routing Algorithm (determined by routing algorithm)
+    double routing_pwr_d;                //per routing function called
+    double routing_pwr_s;                //Leakage per Router Cycle
 
-	//Routing function gives vector of possible directions/VCs
-	//Selection function selects direction/VC
-	//Power Consumption of selection Function (determined by selection function)
-	//double selection_pwr_d;				//per selection function called
-	//double selection_pwr_s; 			//Leakage per Router Cycle
-	// not implemented!
+    //Routing function gives vector of possible directions/VCs
+    //Selection function selects direction/VC
+    //Power Consumption of selection Function (determined by selection function)
+    //double selection_pwr_d;				//per selection function called
+    //double selection_pwr_s; 			//Leakage per Router Cycle
+    // not implemented!
 
-	//Power Consumption of Crossbar (determined by IOs (5) and Flit size)
-	double crossbar_pwr_d; 				// per sent flit
-	double crossbar_pwr_s;				// Leakage per Router Cycle
+    //Power consumption of Crossbar (determined by IOs (5) and Flit size)
+    double crossbar_pwr_d;                // per sent flit
+    double crossbar_pwr_s;                // Leakage per Router Cycle
 
-	//Power consumtion of data links (determined by router to router distance)
-	double link_r2r_pwr_d;				// per sent flit
-	double link_r2r_pwr_s;				// unused
+    //Power consumption of data links (determined by router to router distance)
+    double link_r2r_pwr_d;                // per sent flit
+    double link_r2r_pwr_s;                // unused
 
-	//Power Consumtion of Network Interface (determined by flit size)
-	double ni_pwr_d;					// per local flit sent or received
-	double ni_pwr_s;					// Leakage per Router Cycle
+    //Power consumption of Network Interface (determined by flit size)
+    double ni_pwr_d;                    // per local flit sent or received
+    double ni_pwr_s;                    // Leakage per Router Cycle
 
-	GlobalReportClass();
+    const int MAX_BUFFER_DEPTH = 50; // Used to create the buffer axes in the histogram of buffer usage
+    const std::vector<int> INNER_ROUTERS = {5, 6, 9, 10, 21, 22, 25, 26, 37, 38, 41, 42}; // Generate VC and buffer histograms for only these routers
+
+    GlobalReportClass();
+
 public:
 
-	Statistics latencyNetwork;
-	Statistics latencyFlit;
-	Statistics latencyPacket;
+    Statistics latencyNetwork;
+    Statistics latencyFlit;
+    Statistics latencyPacket;
 
-	//Link state transmission matrixes
-	std::map<int, std::vector<long> > linkTransmissionMatrices;
-	int linkTransmissionsMatrixNumberOfStates;
+    //Link state transmission matrixes
+    std::map<int, std::vector<long> > linkTransmissionMatrices;
+    int linkTransmissionsMatrixNumberOfStates;
 
-	//Router state vectors and matrices
-	std::map<int, int> routingCalulcations;
+    //Router state vectors and matrices
+    std::map<int, int> routingCalulcations;
 
-	//number of resets
-	std::map<int, int> numberOfResets;
-	std::map<int, int> numberOfAccelerations;
+    //number of resets
+    std::map<int, int> numberOfResets;
+    std::map<int, int> numberOfAccelerations;
 
-	double averageNetworkLatencySystemLevel = -1;
-	int averageNetworkLatencySystemLevelInstances = 0;
-	double maxNetworkLatency = 0;
+    double averageNetworkLatencySystemLevel = -1;
+    int averageNetworkLatencySystemLevelInstances = 0;
+    double maxNetworkLatency = 0;
 
-	static GlobalReportClass& getInstance() {
-		static GlobalReportClass instance;
-		return instance;
-	}
+    /* 1st dimension is all routers.
+     * 2nd dimension is all ports (directions) of a router.
+     * 3rd dimension is all possible number of active VCs/average of buffer utilization.
+     */
+    std::vector<std::vector<std::vector<long>>> VCsUsageHist;
+    std::vector<std::vector<std::vector<long>>> bufferUsageHist;
 
-	void reportComplete(std::string filename);
-	void reportPerformance(ostream& stream);
-	void reportPerformanceCSV(ostream& stream);
+    std::vector<std::vector<std::vector<std::vector<long>>>> bufferUsagePerVCHist;
 
-	//old: can be deleted
+    static GlobalReportClass &getInstance() {
+        static GlobalReportClass instance;
+        return instance;
+    }
+
+    void reportComplete(std::string filename);
+
+    void reportPerformance(ostream &stream);
+
+    void reportPerformanceCSV(ostream &stream);
+
+    //old: can be deleted
 //	void issueReset(int id);
 //	void reportReset();
 //	void reportResetTotal();
-	void issueAcceleration(int id);
-	void reportAccelerations();
-	void reportAccelerationsTotal();
+    void issueAcceleration(int id);
 
-	// Link state transmission matrixes
-	void issueLinkMatrixUpdate(int id, int currentTransmissionState,
-			int lastTransmissionState);
-	void reportLinkMatrix(int id, ostream& stream);
-	void reportLinkMatrices(ostream& stream);
-	void reportLinkMatricesCSV(ostream& stream);
+    void reportAccelerations();
 
-	// Router status vectors and matrices
-	void issueRoutingCalculation(int id);
-	void reportRoutingCalculations(ostream& stream);
+    void reportAccelerationsTotal();
 
-	void updateAverageNetworkLatencySystemLevel(double newLatency);
-	void reportAverageNetworkLatencySystemLevel();
-	void updateMaxNetworkLatencySystemLevel(double newLatency);
-	void reportMaxNetworkLatencySystemLevel();
+    // Link state transmission matrixes
+    void issueLinkMatrixUpdate(int id, int currentTransmissionState,
+                               int lastTransmissionState);
+
+    void reportLinkMatrix(int id, ostream &stream);
+
+    void reportLinkMatrices(ostream &stream);
+
+    void reportLinkMatricesCSV(ostream &stream);
+
+    // Router status vectors and matrices
+    void issueRoutingCalculation(int id);
+
+    void reportRoutingCalculations(ostream &stream);
+
+    void updateAverageNetworkLatencySystemLevel(double newLatency);
+
+    void reportAverageNetworkLatencySystemLevel();
+
+    void updateMaxNetworkLatencySystemLevel(double newLatency);
+
+    void reportMaxNetworkLatencySystemLevel();
+
+    void updateUsageHist(std::vector<std::vector<std::vector<long>>> &histVec,
+                         int routerId, int dir, int value, int thirdDimensionSize);
+
+    void reportUsageHist(std::vector<std::vector<std::vector<long>>> &histVec,
+                         std::string &csvFileName, int routerId);
+
+    void updateBuffUsagePerVCHist(std::vector<std::vector<std::vector<std::vector<long>>>> &histVec,
+                                  int routerId, int dir, int vc, int bufferOccupation, int numVCs);
+
+    void reportBuffUsageHist(std::vector<std::vector<std::vector<std::vector<long>>>> &histVec,
+                             std::string &csvFileName, int routerId, int dir);
+
+    void reportAllRoutersUsageHist();
 };
 

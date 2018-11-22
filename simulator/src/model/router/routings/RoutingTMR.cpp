@@ -55,7 +55,7 @@ void RoutingTMR::route(RoutingInformation* ri, RoutingPacketInformation* rpi) {
 		}
 	}
 	if(channel.empty()){
-		FATAL("Unable to route! R:"<<ri->node->id<<*rpi->packet);
+		FATAL("Unable to route! R:" << ri->node->id << *rpi->packet);
 	}
 
 	rpi->routedChannel = channel;
@@ -68,7 +68,7 @@ void RoutingTMR::makeDecision(RoutingInformation* ri, RoutingPacketInformation* 
 	//cout<<node->id<<" "<<rpi->channelRating.at(*rpi->availableChannel.begin())<<" "<<rpi->packet->dst<<endl;
 		}
 	else
-		FATAL("Router"<<ri->node->id<<"["<<DIR::toString(ri->node->conToDir.at(rpi->inputChannel.dir))<<rpi->inputChannel.vc<<"] - Unable to make decision! "<<*rpi->packet);
+		FATAL("Router" << ri->node->id << "[" << DIR::toString(ri->node->conToDir.at(rpi->inputChannel.dir)) << rpi->inputChannel.vc << "] - Unable to make decision! " << *rpi->packet);
 }
 
 void RoutingTMR::beginCycle(RoutingInformation* ri){

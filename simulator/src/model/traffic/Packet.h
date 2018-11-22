@@ -49,8 +49,9 @@ struct Packet {
 	DataType* dataType = 0;
 
 	int numhops;
-		std::vector<int> traversedRouter;
-		std::set<int> routerIDs;
+	std::vector<int> traversedRouter;
+	std::set<int> routerIDs;
+
 
 	std::vector<Flit*> toTransmit;
 	std::vector<Flit*> inTransmit;

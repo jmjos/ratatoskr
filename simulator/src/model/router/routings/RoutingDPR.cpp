@@ -82,7 +82,7 @@ void RoutingDPR::route(RoutingInformation* ri, RoutingPacketInformation* rpi) {
 	}
 
 	if(channel.empty()){
-		FATAL("Unable to route! R:"<<ri->node->id<<*rpi->packet);
+		FATAL("Unable to route! R:" << ri->node->id << *rpi->packet);
 	}
 
 	rpi->routedChannel= channel;
@@ -96,7 +96,7 @@ void RoutingDPR::makeDecision(RoutingInformation* ri, RoutingPacketInformation* 
 		}
 	else{
 
-		FATAL("Router"<<ri->node->id<<"["<<DIR::toString(ri->node->conToDir.at(rpi->inputChannel.dir))<<rpi->inputChannel.vc<<"] - Unable to make decision! "<<*rpi->packet);
+		FATAL("Router" << ri->node->id << "[" << DIR::toString(ri->node->conToDir.at(rpi->inputChannel.dir)) << rpi->inputChannel.vc << "] - Unable to make decision! " << *rpi->packet);
 	}
 
 }

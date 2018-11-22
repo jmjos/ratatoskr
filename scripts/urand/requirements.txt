@@ -2,4 +2,5 @@ numpy
 scipy
 matplotlib
 joblib
+pandas
 #multiprocessing

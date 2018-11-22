@@ -21,75 +21,74 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "RoutingXYZ.h"
 
-RoutingXYZ::RoutingXYZ(Node* node) :
-		Routing(node) {
+RoutingXYZ::RoutingXYZ(Node *node) :
+        Routing(node) {
 }
 
 RoutingXYZ::~RoutingXYZ() {
 }
 
 void RoutingXYZ::checkValid() {
-	assert(node->connectedNodes.size() <= 7);
-	assert(node->connections.size() <= node->connectedNodes.size() + 1);
-	assert(node->dirToCon.size() == node->connections.size());
+    assert(node->connectedNodes.size() <= 7);
+    assert(node->connections.size() <= node->connectedNodes.size() + 1);
+    assert(node->dirToCon.size() == node->connections.size());
 
-	int i = 0;
-	for (std::pair<DIR::TYPE, int> pair : node->dirToCon) {
-		assert(std::find(DIR::XYZ.begin(), DIR::XYZ.end(), pair.first) != DIR::XYZ.end());
-		i++;
-	}
-	assert(node->connections.size() == i);
+    int i = 0;
+    for (std::pair<DIR::TYPE, int> pair : node->dirToCon) {
+        assert(std::find(DIR::XYZ.begin(), DIR::XYZ.end(), pair.first) != DIR::XYZ.end());
+        i++;
+    }
+    assert(node->connections.size() == i);
 }
 
-void RoutingXYZ::route(RoutingInformation* ri, RoutingPacketInformation* rpi) {
-	//rep.reportEvent(dbid, "routing_route_packet", std::to_string(rpi->packet->id));
+void RoutingXYZ::route(RoutingInformation *ri, RoutingPacketInformation *rpi) {
 
-	std::set<Channel> channel;
-	std::map<Channel, float> channelRating;
+    std::set<Channel> channel;
+    std::map<Channel, float> channelRating;
 
-	Vec3D<float> dstPos = rpi->packet->dst->pos;
-	if (dstPos == node->pos) {
-		channel= {Channel(node->dirToCon.at(DIR::Local), 0)};
-	} else if (dstPos.x < node->pos.x) {
-		channel = Helper::getChannelWithDir( { node->dirToCon.at(DIR::West) },
-				ri->allChannelWithoutLocal);
-	} else if (dstPos.x > node->pos.x) {
-		channel = Helper::getChannelWithDir( { node->dirToCon.at(DIR::East) },
-				ri->allChannelWithoutLocal);
-	} else if (dstPos.y < node->pos.y) {
-		channel = Helper::getChannelWithDir( { node->dirToCon.at(DIR::South) },
-				ri->allChannelWithoutLocal);
-	} else if (dstPos.y > node->pos.y) {
-		channel = Helper::getChannelWithDir( { node->dirToCon.at(DIR::North) },
-				ri->allChannelWithoutLocal);
-	} else if (dstPos.z < node->pos.z) {
-		channel = Helper::getChannelWithDir( { node->dirToCon.at(DIR::Down) },
-				ri->allChannelWithoutLocal);
-	} else if (dstPos.z > node->pos.z) {
-		channel = Helper::getChannelWithDir( { node->dirToCon.at(DIR::Up) },
-				ri->allChannelWithoutLocal);
-	}
+    Vec3D<float> dstPos = rpi->packet->dst->pos;
+    if (dstPos == node->pos) {
+        channel = {Channel(node->dirToCon.at(DIR::Local), 0)};
+    } else if (dstPos.x < node->pos.x) {
+        channel = Helper::getChannelWithDir({node->dirToCon.at(DIR::West)},
+                                            ri->allChannelWithoutLocal);
+    } else if (dstPos.x > node->pos.x) {
+        channel = Helper::getChannelWithDir({node->dirToCon.at(DIR::East)},
+                                            ri->allChannelWithoutLocal);
+    } else if (dstPos.y < node->pos.y) {
+        channel = Helper::getChannelWithDir({node->dirToCon.at(DIR::South)},
+                                            ri->allChannelWithoutLocal);
+    } else if (dstPos.y > node->pos.y) {
+        channel = Helper::getChannelWithDir({node->dirToCon.at(DIR::North)},
+                                            ri->allChannelWithoutLocal);
+    } else if (dstPos.z < node->pos.z) {
+        channel = Helper::getChannelWithDir({node->dirToCon.at(DIR::Down)},
+                                            ri->allChannelWithoutLocal);
+    } else if (dstPos.z > node->pos.z) {
+        channel = Helper::getChannelWithDir({node->dirToCon.at(DIR::Up)},
+                                            ri->allChannelWithoutLocal);
+    }
 
-	for (Channel c : channel) {
-		channelRating[c] = 1;
-	}
+    for (Channel c : channel) {
+        channelRating[c] = 1;
+    }
 
-	rpi->routedChannel = channel;
-	rpi->routedChannelRating = channelRating;
+    rpi->routedChannel = channel;
+    rpi->routedChannelRating = channelRating;
 }
 
-void RoutingXYZ::makeDecision(RoutingInformation* ri, RoutingPacketInformation* rpi) {
-	if (rpi->recentSelectedChannel.size()) {
-		rpi->outputChannel = *rpi->recentSelectedChannel.begin();
-	} else {
-		FATAL(
-				"Router"<<ri->node->id<<"["<<DIR::toString(ri->node->conToDir.at(rpi->inputChannel.dir))<<rpi->inputChannel.vc<<"] - Unable to make decision! "<<*rpi->packet);
-	}
+void RoutingXYZ::makeDecision(RoutingInformation *ri, RoutingPacketInformation *rpi) {
+    if (rpi->recentSelectedChannel.size()) {
+        rpi->outputChannel = *rpi->recentSelectedChannel.begin();
+    } else {
+        FATAL("Router" << ri->node->id << "[" << DIR::toString(ri->node->conToDir.at(rpi->inputChannel.dir))
+                       << rpi->inputChannel.vc << "] - Unable to make decision! " << *rpi->packet);
+    }
 }
 
-void RoutingXYZ::beginCycle(RoutingInformation* ri) {
+void RoutingXYZ::beginCycle(RoutingInformation *ri) {
 }
 
-void RoutingXYZ::endCycle(RoutingInformation* ri) {
+void RoutingXYZ::endCycle(RoutingInformation *ri) {
 }
 

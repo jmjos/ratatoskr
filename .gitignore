@@ -1,7 +1,13 @@
-# temporary files of simulator
-link*.txt
-log.txt
-report.txt
-*.csv
-simulator/sim
-virtualenv/
+simulator/sim.cbp
+simulator/somefile
+simulator/report.txt
+simulator/log.txt
+simulator/CMakeCache.txt
+simulator/Makefile
+simulator/report_Performance.csv
+simulator/report_Links.csv
+simulator/cmake_install.cmake
+simulator/VCUsage/
+simulator/BuffUsage/
+simulator/.idea/
+simulator/CMakeFiles/

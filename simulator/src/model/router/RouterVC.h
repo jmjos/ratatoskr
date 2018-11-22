@@ -33,6 +33,7 @@
 
 #include "routings/Routing.h"
 #include "routings/RoutingXYZ.h"
+#include "routings/RoutingHeteroXYZ.h"
 #include "routings/RoutingTMR.h"
 #include "routings/RoutingDPR.h"
 #include "routings/RoutingESPADA.h"
@@ -40,6 +41,7 @@
 #include "selection/Selection.h"
 #include "selection/SelectionRoundRobin.h"
 #include "selection/SelectionOutputRoundRobin.h"
+#include "selection/Selection1stFreeVC.h"
 #include "selection/SelectionDyXYZ.h"
 #include "selection/SelectionEDXYZ.h"
 #include "selection/SelectionAgRA.h"
@@ -51,17 +53,19 @@ private:
 	std::map<int, int> currentVCs; // for each direction, what is the current vc that sent a flit
 
 	void arbitrateFlit(Channel in, Channel out, std::set<int>& arbitratedDirs);
-	bool isDownStreamRouterReady(Channel in, Channel out);
+	bool isDownStreamRouterReady(const Channel& in, const Channel& out);
 	int getNextAvailableVC(int dir);
 	std::vector<int> getVCsFromOccupytable(int dir);
+	bool handleHeadFlitSpecialCases(RoutingPacketInformation* rpi, const Flit* flit, const Channel& in);
+	bool handleBodyFlitWithDropFlag(RoutingPacketInformation* rpi, const Flit* flit, const Channel& in);
+	void checkFailedDecision(RoutingPacketInformation* rpi, const Flit* flit, const Channel& in);
 
-
+//	sc_trace_file *tf;
 public:
 	sc_vector<FlitPortContainer> classicPortContainer;
 	std::vector<std::vector<BufferFIFO<Flit*>*>*> buffer;
 	std::vector<std::vector<int>*> pkgcnt;
 	std::vector<std::vector<Flit*>*> routedFlits;
-	std::map<Channel, Packet*> occupyTable;
 
 	std::vector<std::vector<bool>*> flowControlOut;
 	std::vector<std::vector<int>*> tagOut;
@@ -75,12 +79,14 @@ public:
 
 	int rrDirOff = 0;
 
-	std::set<std::pair<Flit*, Channel>> arbitratedFlits;
+	std::set<std::tuple<Flit*, Channel, Channel>> arbitratedFlits; //flit, in, out
 	std::set<std::pair<Packet*, Channel>> routedPackets;
 
 	int crossbarcount;
 
 	sc_in<bool> clk;
+
+	std::vector<Flit*> lastReceivedFlits;
 
 	RouterVC(sc_module_name nm, Node* node);
 	~RouterVC();
@@ -91,9 +97,12 @@ public:
 	void send();
 	void thread();
 	void receive();
+	void updateUsageStats();
 	void route();
+	void allocateVC();
 	void arbitrate();
 	void arbitrateFair();
+
 
 	void negThred();
 	void readControl();

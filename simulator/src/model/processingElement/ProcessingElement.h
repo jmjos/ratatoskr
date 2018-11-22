@@ -45,7 +45,7 @@ public:
 
 	virtual void initialize() = 0;
 	virtual void bind(Connection*, SignalContainer*, SignalContainer*) = 0;
-	virtual void receive() =0;
+	virtual void receive() = 0;
 	virtual void execute(Task*) = 0;
 	virtual void thread() = 0;
 

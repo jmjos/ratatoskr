@@ -70,6 +70,27 @@ struct DIR {
 	static std::string toString(int a) {
 		return toString(toDir(a));
 	}
+
+	static int getOppositeDir(int d) {
+		switch (d) {
+		case 0:
+			return 0;
+		case 1:
+			return 2;
+		case 2:
+			return 1;
+		case 3:
+			return 4;
+		case 4:
+			return 3;
+		case 5:
+			return 6;
+		case 6:
+			return 5;
+		default:
+			return 0;
+		}
+	}
 };
 
 struct Channel {
@@ -113,9 +134,7 @@ struct Vec3D {
 	}
 
 	bool operator<(Vec3D<T> v) const {
-		return fabs(x) < fabs(v.x)
-				|| (fabs(x) == fabs(v.x)
-						&& (fabs(y) < fabs(v.y) || (fabs(y) == fabs(v.y) && fabs(z) < fabs(v.z))));
+		return fabs(x) < fabs(v.x) || (fabs(x) == fabs(v.x) && (fabs(y) < fabs(v.y) || (fabs(y) == fabs(v.y) && fabs(z) < fabs(v.z))));
 	}
 
 	Vec3D<T> operator +(const Vec3D<T> v) const {
@@ -195,11 +214,10 @@ struct NodeType {
 	std::vector<Node*> nodes;
 	//buffer model
 	//Allocator model ...
-	int clockSpeed;
+	int clockDelay;
 	std::string arbiterType;
 
-	NodeType(int id, std::string model, std::string routing, std::string selection, int clk,
-			std::string arbiterType);
+	NodeType(int id, std::string model, std::string routing, std::string selection, int clk, std::string arbiterType);
 };
 
 struct LayerType {
@@ -212,6 +230,37 @@ struct LayerType {
 };
 
 struct Connection;
+
+struct SyntheticPhase {
+	std::string name;
+	std::string distribution;
+	int minStart = 0;
+	int maxStart = 0;
+	int minDuration = -1;
+	int maxDuration = -1;
+	int minRepeat = -1;
+	int maxRepeat = -1;
+	int minCount = -1;
+	int maxCount = -1;
+	int minDelay = 0;
+	int maxDelay = 0;
+//	int minInterval;
+//	int maxInterval;
+	int hotspot = -1;
+	float injectionRate = 0.0;
+
+//	SyntheticPhase(std::string name, std::string distribution, int minInterval, int maxInterval, float injectionRate) :
+//			name(name),
+//			distribution(distribution),
+//			minInterval(minInterval),
+//			maxInterval(maxInterval),
+//			injectionRate(injectionRate)
+//	{
+//	}
+	SyntheticPhase(std::string name, std::string distribution, float injectionRate) :
+			name(name), distribution(distribution), injectionRate(injectionRate) {
+	}
+};
 
 struct Node {
 	int id;
@@ -239,6 +288,7 @@ struct Connection {
 	std::vector<Node*> nodes;
 	std::vector<int> vcCount;
 	std::vector<int> bufferDepth;
+	std::vector<std::vector<int>> buffersDepths;
 
 	std::vector<std::vector<int>> vcBufferUtilization; // for the lazy folks ...
 	std::vector<int> bufferUtilization;
@@ -254,34 +304,10 @@ struct Connection {
 	int linkWidth;
 	int linkDepth;
 
-	Connection(int id, std::vector<Node*> nodes, std::vector<int> vcCount,
-			std::vector<int> bufferDepth, float length, int linkWidth, int linkDepth);
+	Connection(int id, std::vector<Node*> nodes, std::vector<int> vcCount, std::vector<int> bufferDepth, float length, int linkWidth, int linkDepth);
 	int getBufferDepthForNode(Node* n);
+	int getBufferDepthForNodeAndVC(Node* n, int vc);
 	int getVCCountForNode(Node* n);
-};
-
-struct SyntheticPhase {
-	std::string name;
-	std::string distribution;
-	int minStart = 0;
-	int maxStart = 0;
-	int minDuration = -1;
-	int maxDuration = -1;
-	int minRepeat = -1;
-	int maxRepeat = -1;
-	int minCount = -1;
-	int maxCount = -1;
-	int minDelay = 0;
-	int maxDelay = 0;
-	int minInterval;
-	int maxInterval;
-	int hotspot = -1;
-
-	SyntheticPhase(std::string name, std::string distribution, int minInterval, int maxInterval) :
-			name(name), distribution(distribution), minInterval(minInterval), maxInterval(
-					maxInterval) {
-
-	}
 };
 
 struct DataType {
@@ -322,9 +348,7 @@ struct DataDestination {
 	int maxInterval;
 
 	DataDestination(int id, DataType* type, Node* destination, int minInterval, int maxInterval) :
-			id(id), type(type), destination(destination), minInterval(minInterval), maxInterval(
-					maxInterval) {
-
+			id(id), type(type), destination(destination), minInterval(minInterval), maxInterval(maxInterval) {
 	}
 };
 
@@ -338,10 +362,11 @@ struct Task {
 	int maxDuration = -1;
 	int minRepeat = -1;		// maximal task execution count
 	int maxRepeat = -1;	// task terminates at whatever comes first, maxRepeates or duration
-	SyntheticPhase* currentSP = 0;
 
 	std::vector<DataRequirement*> requirements;
 	std::vector<std::pair<float, std::vector<DataDestination*>>> possibilities;
+
+	SyntheticPhase* currentSP = 0;
 
 	Task(int id, Node* node) :
 			id(id), node(node) {

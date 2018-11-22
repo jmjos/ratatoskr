@@ -26,31 +26,53 @@ const std::vector<DIR::TYPE> DIR::XYZ = { DIR::Local, DIR::East, DIR::West,
 
 NodeType::NodeType(int id, std::string model, std::string routing,
 		std::string selection, int clk, std::string arbiterType) :
-		id(id), routerModel(model), routing(routing), selection(selection), clockSpeed(
-				clk), arbiterType(arbiterType) {
-
+		id(id),
+		routerModel(model),
+		routing(routing),
+		selection(selection),
+		clockDelay(clk),
+		arbiterType(arbiterType)
+{
 }
 
 LayerType::LayerType(int id, int technology) :
-		id(id), technology(technology) {
+		id(id),
+		technology(technology)
+{
 
 }
 
-Node::Node(int id, Vec3D<float> pos, int idType, NodeType* type,
-		LayerType* layer) :
-		id(id), pos(pos), idType(idType), type(type), layer(layer) {
+Node::Node(int id, Vec3D<float> pos, int idType, NodeType* type, LayerType* layer) :
+		id(id),
+		pos(pos),
+		idType(idType),
+		type(type),
+		layer(layer),
+		congestion(0.0)
+{
 }
 
 Connection::Connection(int id, std::vector<Node*> nodes,
 		std::vector<int> vcCount, std::vector<int> bufferDepth, float length,
 		int linkWidth, int linkDepth) :
-		id(id), nodes(nodes), vcCount(vcCount), bufferDepth(bufferDepth), length(
-				length), linkWidth(linkWidth), linkDepth(linkDepth) {
+		id(id),
+		nodes(nodes),
+		vcCount(vcCount),
+		bufferDepth(bufferDepth),
+		length(length),
+		linkWidth(linkWidth),
+		linkDepth(linkDepth)
+{
 }
 
 int Connection::getBufferDepthForNode(Node* n) {
 	assert(nodePos.count(n) && "Node not found inside connection! (buffer)");
 	return bufferDepth.at(nodePos.at(n));
+}
+
+int Connection::getBufferDepthForNodeAndVC(Node* n, int vc) {
+    assert(nodePos.count(n) && "Node not found inside connection! (buffer)");
+	return buffersDepths.at(nodePos.at(n)).at(vc);
 }
 
 int Connection::getVCCountForNode(Node* n) {
