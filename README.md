@@ -22,15 +22,15 @@ Jan Moritz Joseph, Sven Wrieden, Christopher Blochwitz, Alberto Garc&iacute;a-Or
 
 ## Installation
 
-There are several ways to compile the project. If you'd just like to use the project, please use the camke method.
+There are several ways to compile the project. If you'd just like to use the project, please use the cmake method.
 
 ### Build Enviroment
 
-- Ubuntu 16.04 & Boost Libs & pugixml
+- Ubuntu 18.04 & Boost Libs & pugixml
 - CentOS 7 & boost-devel.x86_64 & pugixml-devel.x86_64
-- cmake 2.8
-- SystemC 2.3.1 http://www.accellera.org/images/downloads/standards/systemc/systemc-2.3.1a.tar.gz **NOT COMPATIBLE WITH 2.3.2**
-- cmake assumes an installation of systemc to /usr/local/systemc-2.3.1 If not the case, please modify simulator/CMakeLists.txt
+- cmake 3.10.2
+- SystemC 2.3.3 www.accellera.org/images/downloads/standards/systemc/systemc-2.3.3.gz
+- cmake assumes an installation of systemc to /usr/local/systemc-2.3.3 If not the case, please modify simulator/CMakeLists.txt
 
 ### Building with build script
 We provide a build script, which relys on cmake. It is provided run it via:
@@ -79,12 +79,12 @@ Open a workspace at the location "workspace"-folder. Then, create an new C++ pro
 ### Running the Software
 
 Linking the shared libs globally via 
-> sudo ln -s /usr/local/systemc-2.3.1/lib-linux64/libsystemc-2.3.1.so /usr/lib/libsystemc-2.3.0.so
+> sudo ln -s /usr/local/systemc-2.3.3/lib-linux64/libsystemc-2.3.3.so /usr/lib/libsystemc-2.3.3.so
 
 or locally via 
-> export LD_LIBRARY_PATH=/usr/local/systemc-2.3.0/lib-linux64:$LD_LIBRARY_PATH
+> export LD_LIBRARY_PATH=/usr/local/systemc-2.3.3/lib-linux64:$LD_LIBRARY_PATH
 
-or create a .conf file containing your SystemC library path (/usr/local/systemc-2.3.1/lib-linux64) inside
+or create a .conf file containing your SystemC library path (/usr/local/systemc-2.3.3/lib-linux64) inside
 /etc/ld.so.conf.d/
 
 
@@ -109,10 +109,11 @@ Details on the configuration can be found in the wiki.
 
 The router model is:
 - input buffered router with VCs
-- variable number of VCs and buffer depths
+- variable number of VCs and buffer depths for each VC
 - round robin arbitration over VCs (rrVC) or fair arbitration over used VCs (fair)
 - routing functions implemented in routing; different deterministic and adaptive routings are given
-- selection function implemented in selection
+- selection functions implemented in selection
+- supports synchronous and asynchronous clock speeds of layers
 
 To run the uniform random simulation please go to <a href="https://github.com/jmjos/ratatoskr/tree/master/scripts/urand">README.md</a>
 
