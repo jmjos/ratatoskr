@@ -841,14 +841,16 @@
 			<ports>
 				<port id="0">
 					<node value="0" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="48" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -870,14 +872,16 @@
 			<ports>
 				<port id="0">
 					<node value="0" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="1" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -899,14 +903,16 @@
 			<ports>
 				<port id="0">
 					<node value="0" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="4" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -928,14 +934,16 @@
 			<ports>
 				<port id="0">
 					<node value="0" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="16" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -957,14 +965,16 @@
 			<ports>
 				<port id="0">
 					<node value="1" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="49" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -986,14 +996,16 @@
 			<ports>
 				<port id="0">
 					<node value="1" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="2" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1015,14 +1027,16 @@
 			<ports>
 				<port id="0">
 					<node value="1" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="5" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1044,14 +1058,16 @@
 			<ports>
 				<port id="0">
 					<node value="1" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="17" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1073,14 +1089,16 @@
 			<ports>
 				<port id="0">
 					<node value="2" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="50" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1102,14 +1120,16 @@
 			<ports>
 				<port id="0">
 					<node value="2" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="3" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1131,14 +1151,16 @@
 			<ports>
 				<port id="0">
 					<node value="2" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="6" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1160,14 +1182,16 @@
 			<ports>
 				<port id="0">
 					<node value="2" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="18" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1189,14 +1213,16 @@
 			<ports>
 				<port id="0">
 					<node value="3" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="51" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1218,14 +1244,16 @@
 			<ports>
 				<port id="0">
 					<node value="3" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="7" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1247,14 +1275,16 @@
 			<ports>
 				<port id="0">
 					<node value="3" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="19" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1276,14 +1306,16 @@
 			<ports>
 				<port id="0">
 					<node value="4" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="52" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1305,14 +1337,16 @@
 			<ports>
 				<port id="0">
 					<node value="4" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="5" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1334,14 +1368,16 @@
 			<ports>
 				<port id="0">
 					<node value="4" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="8" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1363,14 +1399,16 @@
 			<ports>
 				<port id="0">
 					<node value="4" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="20" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1392,14 +1430,16 @@
 			<ports>
 				<port id="0">
 					<node value="5" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="53" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1421,14 +1461,16 @@
 			<ports>
 				<port id="0">
 					<node value="5" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="6" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1450,14 +1492,16 @@
 			<ports>
 				<port id="0">
 					<node value="5" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="9" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1479,14 +1523,16 @@
 			<ports>
 				<port id="0">
 					<node value="5" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="21" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1508,14 +1554,16 @@
 			<ports>
 				<port id="0">
 					<node value="6" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="54" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1537,14 +1585,16 @@
 			<ports>
 				<port id="0">
 					<node value="6" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="7" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1566,14 +1616,16 @@
 			<ports>
 				<port id="0">
 					<node value="6" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="10" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1595,14 +1647,16 @@
 			<ports>
 				<port id="0">
 					<node value="6" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="22" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1624,14 +1678,16 @@
 			<ports>
 				<port id="0">
 					<node value="7" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="55" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1653,14 +1709,16 @@
 			<ports>
 				<port id="0">
 					<node value="7" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="11" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1682,14 +1740,16 @@
 			<ports>
 				<port id="0">
 					<node value="7" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="23" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1711,14 +1771,16 @@
 			<ports>
 				<port id="0">
 					<node value="8" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="56" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1740,14 +1802,16 @@
 			<ports>
 				<port id="0">
 					<node value="8" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="9" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1769,14 +1833,16 @@
 			<ports>
 				<port id="0">
 					<node value="8" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="12" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1798,14 +1864,16 @@
 			<ports>
 				<port id="0">
 					<node value="8" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="24" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1827,14 +1895,16 @@
 			<ports>
 				<port id="0">
 					<node value="9" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="57" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1856,14 +1926,16 @@
 			<ports>
 				<port id="0">
 					<node value="9" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="10" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1885,14 +1957,16 @@
 			<ports>
 				<port id="0">
 					<node value="9" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="13" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1914,14 +1988,16 @@
 			<ports>
 				<port id="0">
 					<node value="9" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="25" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1943,14 +2019,16 @@
 			<ports>
 				<port id="0">
 					<node value="10" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="58" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1972,14 +2050,16 @@
 			<ports>
 				<port id="0">
 					<node value="10" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="11" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2001,14 +2081,16 @@
 			<ports>
 				<port id="0">
 					<node value="10" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="14" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2030,14 +2112,16 @@
 			<ports>
 				<port id="0">
 					<node value="10" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="26" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2059,14 +2143,16 @@
 			<ports>
 				<port id="0">
 					<node value="11" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="59" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2088,14 +2174,16 @@
 			<ports>
 				<port id="0">
 					<node value="11" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="15" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2117,14 +2205,16 @@
 			<ports>
 				<port id="0">
 					<node value="11" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="27" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2146,14 +2236,16 @@
 			<ports>
 				<port id="0">
 					<node value="12" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="60" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2175,14 +2267,16 @@
 			<ports>
 				<port id="0">
 					<node value="12" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="13" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2204,14 +2298,16 @@
 			<ports>
 				<port id="0">
 					<node value="12" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="28" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2233,14 +2329,16 @@
 			<ports>
 				<port id="0">
 					<node value="13" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="61" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2262,14 +2360,16 @@
 			<ports>
 				<port id="0">
 					<node value="13" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="14" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2291,14 +2391,16 @@
 			<ports>
 				<port id="0">
 					<node value="13" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="29" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2320,14 +2422,16 @@
 			<ports>
 				<port id="0">
 					<node value="14" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="62" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2349,14 +2453,16 @@
 			<ports>
 				<port id="0">
 					<node value="14" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="15" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2378,14 +2484,16 @@
 			<ports>
 				<port id="0">
 					<node value="14" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="30" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2407,14 +2515,16 @@
 			<ports>
 				<port id="0">
 					<node value="15" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="63" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2436,14 +2546,16 @@
 			<ports>
 				<port id="0">
 					<node value="15" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="31" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2465,14 +2577,16 @@
 			<ports>
 				<port id="0">
 					<node value="16" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="64" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2494,14 +2608,16 @@
 			<ports>
 				<port id="0">
 					<node value="16" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="17" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2523,14 +2639,16 @@
 			<ports>
 				<port id="0">
 					<node value="16" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="20" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2552,14 +2670,16 @@
 			<ports>
 				<port id="0">
 					<node value="16" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="32" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2581,14 +2701,16 @@
 			<ports>
 				<port id="0">
 					<node value="17" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="65" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2610,14 +2732,16 @@
 			<ports>
 				<port id="0">
 					<node value="17" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="18" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2639,14 +2763,16 @@
 			<ports>
 				<port id="0">
 					<node value="17" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="21" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2668,14 +2794,16 @@
 			<ports>
 				<port id="0">
 					<node value="17" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="33" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2697,14 +2825,16 @@
 			<ports>
 				<port id="0">
 					<node value="18" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="66" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2726,14 +2856,16 @@
 			<ports>
 				<port id="0">
 					<node value="18" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="19" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2755,14 +2887,16 @@
 			<ports>
 				<port id="0">
 					<node value="18" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="22" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2784,14 +2918,16 @@
 			<ports>
 				<port id="0">
 					<node value="18" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="34" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2813,14 +2949,16 @@
 			<ports>
 				<port id="0">
 					<node value="19" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="67" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2842,14 +2980,16 @@
 			<ports>
 				<port id="0">
 					<node value="19" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="23" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2871,14 +3011,16 @@
 			<ports>
 				<port id="0">
 					<node value="19" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="35" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2900,14 +3042,16 @@
 			<ports>
 				<port id="0">
 					<node value="20" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="68" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2929,14 +3073,16 @@
 			<ports>
 				<port id="0">
 					<node value="20" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="21" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2958,14 +3104,16 @@
 			<ports>
 				<port id="0">
 					<node value="20" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="24" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2987,14 +3135,16 @@
 			<ports>
 				<port id="0">
 					<node value="20" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="36" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3016,14 +3166,16 @@
 			<ports>
 				<port id="0">
 					<node value="21" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="69" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3045,14 +3197,16 @@
 			<ports>
 				<port id="0">
 					<node value="21" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="22" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3074,14 +3228,16 @@
 			<ports>
 				<port id="0">
 					<node value="21" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="25" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3103,14 +3259,16 @@
 			<ports>
 				<port id="0">
 					<node value="21" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="37" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3132,14 +3290,16 @@
 			<ports>
 				<port id="0">
 					<node value="22" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="70" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3161,14 +3321,16 @@
 			<ports>
 				<port id="0">
 					<node value="22" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="23" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3190,14 +3352,16 @@
 			<ports>
 				<port id="0">
 					<node value="22" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="26" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3219,14 +3383,16 @@
 			<ports>
 				<port id="0">
 					<node value="22" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="38" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3248,14 +3414,16 @@
 			<ports>
 				<port id="0">
 					<node value="23" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="71" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3277,14 +3445,16 @@
 			<ports>
 				<port id="0">
 					<node value="23" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="27" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3306,14 +3476,16 @@
 			<ports>
 				<port id="0">
 					<node value="23" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="39" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3335,14 +3507,16 @@
 			<ports>
 				<port id="0">
 					<node value="24" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="72" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3364,14 +3538,16 @@
 			<ports>
 				<port id="0">
 					<node value="24" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="25" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3393,14 +3569,16 @@
 			<ports>
 				<port id="0">
 					<node value="24" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="28" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3422,14 +3600,16 @@
 			<ports>
 				<port id="0">
 					<node value="24" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="40" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3451,14 +3631,16 @@
 			<ports>
 				<port id="0">
 					<node value="25" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="73" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3480,14 +3662,16 @@
 			<ports>
 				<port id="0">
 					<node value="25" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="26" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3509,14 +3693,16 @@
 			<ports>
 				<port id="0">
 					<node value="25" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="29" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3538,14 +3724,16 @@
 			<ports>
 				<port id="0">
 					<node value="25" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="41" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3567,14 +3755,16 @@
 			<ports>
 				<port id="0">
 					<node value="26" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="74" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3596,14 +3786,16 @@
 			<ports>
 				<port id="0">
 					<node value="26" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="27" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3625,14 +3817,16 @@
 			<ports>
 				<port id="0">
 					<node value="26" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="30" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3654,14 +3848,16 @@
 			<ports>
 				<port id="0">
 					<node value="26" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="42" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3683,14 +3879,16 @@
 			<ports>
 				<port id="0">
 					<node value="27" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="75" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3712,14 +3910,16 @@
 			<ports>
 				<port id="0">
 					<node value="27" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="31" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3741,14 +3941,16 @@
 			<ports>
 				<port id="0">
 					<node value="27" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="43" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3770,14 +3972,16 @@
 			<ports>
 				<port id="0">
 					<node value="28" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="76" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3799,14 +4003,16 @@
 			<ports>
 				<port id="0">
 					<node value="28" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="29" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3828,14 +4034,16 @@
 			<ports>
 				<port id="0">
 					<node value="28" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="44" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3857,14 +4065,16 @@
 			<ports>
 				<port id="0">
 					<node value="29" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="77" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3886,14 +4096,16 @@
 			<ports>
 				<port id="0">
 					<node value="29" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="30" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3915,14 +4127,16 @@
 			<ports>
 				<port id="0">
 					<node value="29" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="45" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3944,14 +4158,16 @@
 			<ports>
 				<port id="0">
 					<node value="30" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="78" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3973,14 +4189,16 @@
 			<ports>
 				<port id="0">
 					<node value="30" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="31" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4002,14 +4220,16 @@
 			<ports>
 				<port id="0">
 					<node value="30" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="46" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4031,14 +4251,16 @@
 			<ports>
 				<port id="0">
 					<node value="31" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="79" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4060,14 +4282,16 @@
 			<ports>
 				<port id="0">
 					<node value="31" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="47" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4089,14 +4313,16 @@
 			<ports>
 				<port id="0">
 					<node value="32" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="80" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4118,14 +4344,16 @@
 			<ports>
 				<port id="0">
 					<node value="32" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="33" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4147,14 +4375,16 @@
 			<ports>
 				<port id="0">
 					<node value="32" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="36" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4176,14 +4406,16 @@
 			<ports>
 				<port id="0">
 					<node value="33" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="81" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4205,14 +4437,16 @@
 			<ports>
 				<port id="0">
 					<node value="33" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="34" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4234,14 +4468,16 @@
 			<ports>
 				<port id="0">
 					<node value="33" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="37" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4263,14 +4499,16 @@
 			<ports>
 				<port id="0">
 					<node value="34" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="82" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4292,14 +4530,16 @@
 			<ports>
 				<port id="0">
 					<node value="34" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="35" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4321,14 +4561,16 @@
 			<ports>
 				<port id="0">
 					<node value="34" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="38" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4350,14 +4592,16 @@
 			<ports>
 				<port id="0">
 					<node value="35" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="83" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4379,14 +4623,16 @@
 			<ports>
 				<port id="0">
 					<node value="35" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="39" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4408,14 +4654,16 @@
 			<ports>
 				<port id="0">
 					<node value="36" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="84" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4437,14 +4685,16 @@
 			<ports>
 				<port id="0">
 					<node value="36" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="37" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4466,14 +4716,16 @@
 			<ports>
 				<port id="0">
 					<node value="36" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="40" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4495,14 +4747,16 @@
 			<ports>
 				<port id="0">
 					<node value="37" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="85" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4524,14 +4778,16 @@
 			<ports>
 				<port id="0">
 					<node value="37" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="38" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4553,14 +4809,16 @@
 			<ports>
 				<port id="0">
 					<node value="37" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="41" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4582,14 +4840,16 @@
 			<ports>
 				<port id="0">
 					<node value="38" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="86" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4611,14 +4871,16 @@
 			<ports>
 				<port id="0">
 					<node value="38" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="39" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4640,14 +4902,16 @@
 			<ports>
 				<port id="0">
 					<node value="38" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="42" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4669,14 +4933,16 @@
 			<ports>
 				<port id="0">
 					<node value="39" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="87" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4698,14 +4964,16 @@
 			<ports>
 				<port id="0">
 					<node value="39" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="43" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4727,14 +4995,16 @@
 			<ports>
 				<port id="0">
 					<node value="40" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="88" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4756,14 +5026,16 @@
 			<ports>
 				<port id="0">
 					<node value="40" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="41" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4785,14 +5057,16 @@
 			<ports>
 				<port id="0">
 					<node value="40" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="44" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4814,14 +5088,16 @@
 			<ports>
 				<port id="0">
 					<node value="41" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="89" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4843,14 +5119,16 @@
 			<ports>
 				<port id="0">
 					<node value="41" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="42" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4872,14 +5150,16 @@
 			<ports>
 				<port id="0">
 					<node value="41" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="45" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4901,14 +5181,16 @@
 			<ports>
 				<port id="0">
 					<node value="42" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="90" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4930,14 +5212,16 @@
 			<ports>
 				<port id="0">
 					<node value="42" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="43" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4959,14 +5243,16 @@
 			<ports>
 				<port id="0">
 					<node value="42" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="46" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4988,14 +5274,16 @@
 			<ports>
 				<port id="0">
 					<node value="43" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="91" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5017,14 +5305,16 @@
 			<ports>
 				<port id="0">
 					<node value="43" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="47" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5046,14 +5336,16 @@
 			<ports>
 				<port id="0">
 					<node value="44" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="92" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5075,14 +5367,16 @@
 			<ports>
 				<port id="0">
 					<node value="44" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="45" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5104,14 +5398,16 @@
 			<ports>
 				<port id="0">
 					<node value="45" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="93" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5133,14 +5429,16 @@
 			<ports>
 				<port id="0">
 					<node value="45" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="46" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5162,14 +5460,16 @@
 			<ports>
 				<port id="0">
 					<node value="46" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="94" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5191,14 +5491,16 @@
 			<ports>
 				<port id="0">
 					<node value="46" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="47" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5220,14 +5522,16 @@
 			<ports>
 				<port id="0">
 					<node value="47" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="95" />
-					<bufferDepth value="32" />
-					<buffersDepths value="10, 15, 20, 25"/>
+==== BASE ====
+					<bufferDepth value="10" />
+==== BASE ====
 					<vcCount value="4" />
 				</port>
 			</ports>
