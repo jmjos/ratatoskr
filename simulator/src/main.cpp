@@ -33,7 +33,7 @@
 int sc_main(int arg_num, char *arg_vet[]) {
 	GlobalInputClass& global = GlobalInputClass::getInstance();
 	Report& rep = Report::getInstance();
-	srand(time(NULL));
+	srand(time(nullptr));
 	sleep(1); //wait for the systemC branding :/
 
 	cout << "\nA-3D-NoC Simulator Copyright(C) 2014-2018" << endl;
