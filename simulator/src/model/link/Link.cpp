@@ -36,8 +36,8 @@ Link::Link(sc_module_name nm, Connection* c, int globalId) {
 			this->linkType = VERTICAL;
 		}
 	}
-	this->currentFlit = NULL;
-	this->previousFlit = NULL;
+	this->currentFlit = nullptr;
+	this->previousFlit = nullptr;
 
 //	if (id == 70 || id == 67) {
 //		cout << "check file with name" << nm << endl;
