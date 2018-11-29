@@ -19,8 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-#ifndef REPORT_H_
-#define REPORT_H_
+#pragma once
 
 #include <iostream>
 #include <cstring>
@@ -37,6 +36,8 @@
 #include "systemc.h"
 
 #define MAX_BUFFER_SIZE 1000	//Max Buffer Size in Bytes
+#define LOG(x, y) { std::ostringstream oss; oss<<y; Report::getInstance().log(x,oss.str());}
+#define FATAL(x) { LOG(true,x); std::cout<<"Terminating"<<std::endl; Report::getInstance().close(); exit(EXIT_FAILURE);}
 
 enum Logtype {
 	COUT = 1<<0,
@@ -73,5 +74,3 @@ public:
 	void log(bool qualifier, std::string message, int type = COUT | DB);
 	void close();
 };
-
-#endif /* REPORT_H_ */

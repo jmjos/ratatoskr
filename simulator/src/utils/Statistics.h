@@ -37,7 +37,6 @@ private:
 
 public:
 	Statistics(std::string name);
-	virtual ~Statistics();
 	float average();
 	float min();
 	float max();

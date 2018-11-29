@@ -40,6 +40,9 @@ LayerTop::LayerTop(sc_module_name nm) {
     }
 
     int size = 0;
+
+    for (auto it:global.nodes){
+    }
     std::map<int, NodeType *>::iterator it;
     for (it = global.typeById.begin(); it != global.typeById.end(); ++it) {
         if (it->second->routerModel == "ProcessingElement")

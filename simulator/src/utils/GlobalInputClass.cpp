@@ -150,7 +150,7 @@ bool GlobalInputClass::readNoCLayout(std::string filePath) {
 		std::string arbiterType = node.child("arbiterType").attribute("value").as_string();
 
 		nodeTypes.at(id) = new NodeType(id, model, routing, selection, clk, arbiterType);
-		nodeTypes.at(id)->nodes.resize(noc_node.select_nodes(("nodes/node/nodeType[@value='" + std::to_string(id) + "']").c_str()).size());
+		//nodeTypes.at(id)->nodes.resize(noc_node.select_nodes(("nodes/node/nodeType[@value='" + std::to_string(id) + "']").c_str()).size()); TODO restructure
 		typeById[id] = nodeTypes.at(id);
 
 		if (model == "RouterVC")
@@ -180,7 +180,7 @@ bool GlobalInputClass::readNoCLayout(std::string filePath) {
 
 		Node* node = new Node(id, Vec3D<float>(x, y, z), idType, nodeType, layerType);
 		nodes.at(id) = node;
-		nodeType->nodes.at(idType) = node;
+		//nodeType->nodes.at(idType) = node; TODO restructure
 		posToId[node->pos].insert(node);
 		xPositions.push_back(node->pos.x);
 		yPositions.push_back(node->pos.y);

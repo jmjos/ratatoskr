@@ -29,9 +29,6 @@ Statistics::Statistics(std::string name) {
 	this->name = name;
 }
 
-Statistics::~Statistics() {
-}
-
 float Statistics::average() {
 	return (sampleSum / (float) sampleSize);
 }
