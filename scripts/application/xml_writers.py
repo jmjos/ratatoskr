@@ -85,7 +85,7 @@ class DataWriter(Writer):
 
         return task_node
 
-    def add_generates_node(seld, parent_node):
+    def add_generates_node(self, parent_node):
         """
         Adding a generates node
 
