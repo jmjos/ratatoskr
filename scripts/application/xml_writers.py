@@ -5,18 +5,17 @@ from xml.dom import minidom
 
 class Writer:
     """ A base class for DataWriter and MapWriter """
-    def __init__(self, output_file, root_node_name):
-        self.output_file = output_file
+    def __init__(self, root_node_name):
         root_node = ET.Element(root_node_name)
         root_node.set('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')
         self.root_node = root_node
 
-    def write_file(self):
+    def write_file(self, output_file):
         """ Write the xml file on disk """
         rough_string = ET.tostring(self.root_node, 'utf-8')
         reparsed = minidom.parseString(rough_string)
         data = reparsed.toprettyxml(indent="  ")
-        of = open(self.output_file, 'w')
+        of = open(output_file, 'w')
         of.write(data)
         of.close()
 ###############################################################################
