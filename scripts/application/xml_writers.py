@@ -185,10 +185,11 @@ class DataWriter:
         d_task_node.set('value', str(dist_task))
 
     def write_file(self):
-        of = open(self.output_file, 'w')
+        """ Write the data.xml file on disk """
         rough_string = ET.tostring(self.root_node, 'utf-8')
         reparsed = minidom.parseString(rough_string)
         data = reparsed.toprettyxml(indent="  ")
+        of = open(self.output_file, 'w')
         of.write(data)
         of.close()
 ###############################################################################
@@ -219,9 +220,10 @@ class MapWriter:
             node_node.set('value', str(n_id))
 
     def write_file(self):
-        of = open(self.output_file, 'w')
+        """ Write the map.xml file on disk """
         rough_string = ET.tostring(self.root_node, 'utf-8')
         reparsed = minidom.parseString(rough_string)
         data = reparsed.toprettyxml(indent="  ")
+        of = open(self.output_file, 'w')
         of.write(data)
         of.close()
