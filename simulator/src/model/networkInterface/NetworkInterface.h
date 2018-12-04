@@ -27,7 +27,7 @@
 
 #include "utils/Structures.h"
 #include "model/router/Router.h"
-#include "utils/GlobalReportClass.h"
+#include "utils/GlobalReport.h"
 
 class NetworkInterface : public NetworkParticipant, public sc_module{
 public:

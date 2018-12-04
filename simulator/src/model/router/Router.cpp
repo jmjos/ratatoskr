@@ -22,7 +22,7 @@
 #include "Router.h"
 
 Router::Router(sc_module_name nm, Node* node) {
-	this->id = node->id % (global.nodes.size() / 2);
+	this->id = node->id % (globalResources.nodes.size() / 2);
 	this->node = node;
 	this->dbid = rep.registerElement("Router", this->id);
 

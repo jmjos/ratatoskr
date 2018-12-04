@@ -81,9 +81,9 @@
 //		newconnected = nextnewconnected;
 //	}
 //
-//	if(connected.size()!= global.nodes.size()){
+//	if(connected.size()!= globalResources.nodes.size()){
 //		rep.reportEvent(dbid, "invalid_topology", std::to_string(node->id));
-//		//remove(global.inputNoc.c_str());
+//		//remove(globalResources.inputNoc.c_str());
 //		FATAL("Not Fully Connected!");
 //	}else{
 //		//FATAL("Fully Connected!")
@@ -100,7 +100,7 @@
 //
 //
 //	Vec3D<float> pos = ri->node->pos;
-//	Vec3D<float> dstPos = global.nodes.at(global.getIdByPe(rpi->packet->dst))->pos;
+//	Vec3D<float> dstPos = globalResources.nodes.at(globalResources.getIdByPe(rpi->packet->dst))->pos;
 //
 //	if (pos == dstPos) {
 //		channel= {Channel(node->dirToCon.at(DIR::Local), 0)};

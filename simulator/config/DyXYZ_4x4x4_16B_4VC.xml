@@ -3,7 +3,7 @@
 	xsi:noNamespaceSchemaLocation="layer.xsd">
 	<nodeTypes>
 		<nodeType id="0">
-			<routerModel value="XYZ" />
+			<model value="XYZ" />
 			<clockSpeed value="2" />
 		</nodeType>
 	</nodeTypes>

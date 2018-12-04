@@ -29,11 +29,11 @@
 #ifndef SRC_MODEL_ROUTINGS_ROUTING_H_
 #define SRC_MODEL_ROUTINGS_ROUTING_H_
 
-#include "utils/GlobalInputClass.h"
+#include "utils/GlobalResources.h"
 #include "utils/Structures.h"
 #include "model/traffic/Flit.h"
 #include "model/traffic/Packet.h"
-#include "utils/GlobalReportClass.h"
+#include "utils/GlobalReport.h"
 #include "utils/Report.h"
 #include "model/container/Container.h"
 #include "model/router/helper/Helper.h"
@@ -106,7 +106,7 @@ struct RoutingPacketInformation {
 };
 
 struct Routing {
-    GlobalInputClass &global = GlobalInputClass::getInstance();
+    GlobalResources &globalResources = GlobalResources::getInstance();
     Report &rep = Report::getInstance();
 
     int dbid;

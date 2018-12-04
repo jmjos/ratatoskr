@@ -2,7 +2,7 @@
 <network-on-chip xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="layer.xsd">
 	<nodeTypes>
 		<nodeType id="0">
-			<routerModel value="XYZ"/>
+			<model value="XYZ"/>
 			<clockSpeed value="2"/>
 		</nodeType>
 	</nodeTypes>

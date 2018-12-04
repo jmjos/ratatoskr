@@ -27,8 +27,8 @@
 
 #include "model/traffic/Flit.h"
 #include "model/container/FlitContainer.h"
-#include "utils/GlobalInputClass.h"
-#include "utils/GlobalReportClass.h"
+#include "utils/GlobalResources.h"
+#include "utils/GlobalReport.h"
 
 
 enum LinkType{
@@ -36,9 +36,9 @@ enum LinkType{
 };
 
 class Link: public sc_module{
-	GlobalInputClass& global = GlobalInputClass::getInstance();
-	GlobalReportClass& report = GlobalReportClass::getInstance();
-	int id, globalId;
+	GlobalResources& globalResources = GlobalResources::getInstance();
+	GlobalReport& report = GlobalReport::getInstance();
+	int id, globalResourcesId;
 	Flit* previousFlit;
 	Flit* currentFlit;
 	int previousTransmissionState = 0;
@@ -56,7 +56,7 @@ public:
 	FlitPortContainer* classicPortContainer;
 
 	SC_HAS_PROCESS(Link);
-	Link(sc_module_name nm, Connection* c, int globalId);
+	Link(sc_module_name nm, Connection* c, int globalResourcesId);
 	~Link();
 
 	void bind(SignalContainer* sigContIn, SignalContainer* sigContOut);

@@ -24,7 +24,7 @@
 
 
 #include "utils/Structures.h"
-#include "utils/GlobalInputClass.h"
+#include "utils/GlobalResources.h"
 #include "utils/Report.h"
 #include "Packet.h"
 #include "model/processingElement/ProcessingElement.h"
@@ -34,7 +34,7 @@
 
 class TrafficPool{
 public:
-	GlobalInputClass& global = GlobalInputClass::getInstance();
+	GlobalResources& globalResources = GlobalResources::getInstance();
 	Report& rep = Report::getInstance();
 	int dbid;
 

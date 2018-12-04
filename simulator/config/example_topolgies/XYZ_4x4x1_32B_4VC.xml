@@ -2,14 +2,14 @@
 <network-on-chip xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<nodeTypes>
 		<nodeType id="0">
-			<routerModel value="RouterVC" />
+			<model value="RouterVC" />
 			<routing value="XYZ" />
 			<selection value="RoundRobin" />
 			<clockSpeed value="1" />
 			<arbiterType value="fair" /> <!-- rrVC, fair -->
 		</nodeType>
 		<nodeType id="1">
-			<routerModel value="ProcessingElement" />
+			<model value="ProcessingElement" />
 			<clockSpeed value="1" />
 		</nodeType>
 	</nodeTypes>

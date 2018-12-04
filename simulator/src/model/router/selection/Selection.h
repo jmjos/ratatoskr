@@ -21,9 +21,9 @@
  ******************************************************************************/
 #pragma once
 
-#include "utils/GlobalInputClass.h"
+#include "utils/GlobalResources.h"
 #include "utils/Structures.h"
-#include "utils/GlobalReportClass.h"
+#include "utils/GlobalReport.h"
 #include "utils/Report.h"
 #include "model/traffic/Flit.h"
 #include "model/traffic/Packet.h"
@@ -33,7 +33,7 @@
 #include "model/router/routings/Routing.h"
 
 struct Selection {
-	GlobalInputClass& global = GlobalInputClass::getInstance();
+	GlobalResources& globalResources = GlobalResources::getInstance();
 	Report& rep = Report::getInstance();
 
 	int dbid;

@@ -48,7 +48,7 @@
 //		std::set<Channel> channel = rpi->routedChannel;
 //
 //		if (!channel.empty()) {
-//			channel = MESH::getMinimalChannel(node, global.nodes.at(rpi->packet->dst), channel);
+//			channel = MESH::getMinimalChannel(node, globalResources.nodes.at(rpi->packet->dst), channel);
 //			//FATALCASE(channel.empty(), "Unable to select1! R:"<<ri->node->id<<*rpi->packet);
 //
 //			channel = MESH::getChannelWithRating(0.5, 1, channel, rpi->routedChannelRating);
@@ -57,8 +57,8 @@
 //			channel = MESH::getChannelWithHighestRating(channel, rpi->routedChannelRating);
 //			//FATALCASE(channel.empty(), "Unable to select3! R:"<<ri->node->id<<*rpi->packet);
 //
-//			Vec3D<int> currPos = global.idToScPos.at(ri->node->id);
-//			Vec3D<int> dstPos = global.idToScPos.at(rpi->packet->dst);
+//			Vec3D<int> currPos = globalResources.idToScPos.at(ri->node->id);
+//			Vec3D<int> dstPos = globalResources.idToScPos.at(rpi->packet->dst);
 //
 //			Vec3D<int> currClusterPos(currPos.x % 2, currPos.x % 2, currPos.x % 2);
 //			Vec3D<int> dstClusterPos(dstPos.x % 2, dstPos.x % 2, dstPos.x % 2);
@@ -79,7 +79,7 @@
 //				channel = MESH::getChannelWithLeastCongestion(node, 10, channel);
 //			} else if (diffClusterDim == 1) {
 //				for (Channel c : channel) {
-//					float congestion = MESH::getLeastMinimalCongestionToNode(ri->node, global.nodes.at(rpi->packet->dst), c, 0, 2, 0, 1, 0.5);
+//					float congestion = MESH::getLeastMinimalCongestionToNode(ri->node, globalResources.nodes.at(rpi->packet->dst), c, 0, 2, 0, 1, 0.5);
 //
 //					if (congestion <= minCongestion) {
 //						//LOG(true, congestion);
@@ -104,7 +104,7 @@
 //					DIR::TYPE dir = node->conToDir.at(c.dir);
 //					if(nextNode->dirToCon.count(dir)){
 //					Node* nextNextNode = nextNode->conToNode.at(nextNode->dirToCon.at(dir));
-//					Vec3D<int> nextNextPos = global.idToScPos.at(nextNextNode->id);
+//					Vec3D<int> nextNextPos = globalResources.idToScPos.at(nextNextNode->id);
 //					Vec3D<int> nextClusterPos(nextNextPos.x % 2, nextNextPos.y % 2, nextNextPos.z % 2);
 //
 //					float clusterCongestion = 0;
@@ -114,8 +114,8 @@
 //						for (int y = 0; y < 2; y++) {
 //							for (int z = 0; z < 2; z++) {
 //								Vec3D<int> pos(nextClusterPos.x + x, nextClusterPos.y + y, nextClusterPos.z + z);
-//								if (global.scPosToId.count(pos)) {
-//									clusterCongestion += global.nodes.at(global.scPosToId.at(pos))->congestion;
+//								if (globalResources.scPosToId.count(pos)) {
+//									clusterCongestion += globalResources.nodes.at(globalResources.scPosToId.at(pos))->congestion;
 //									nodesInCluster++;
 //								}
 //

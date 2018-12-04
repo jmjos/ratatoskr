@@ -23,7 +23,7 @@
 #define SRC_TRAFFIC_SYNTHETIC_SYNTHETICPOOL_H_
 
 #include "systemc.h"
-#include "utils/GlobalInputClass.h"
+#include "utils/GlobalResources.h"
 #include "utils/Report.h"
 #include "utils/Structures.h"
 #include "SyntheticPacket.h"

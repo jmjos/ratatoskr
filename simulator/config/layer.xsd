@@ -53,7 +53,7 @@
 											</xs:complexType>
 										</xs:element>
 
-										<xs:element name="routerModel">
+										<xs:element name="model">
 											<xs:complexType>
 												<xs:attribute name="value" type="xs:string"></xs:attribute>
 											</xs:complexType>

@@ -29,7 +29,7 @@
 #include "model/traffic/Flit.h"
 #include <model/container/FlitContainer.h>
 #include <model/container/PacketContainer.h>
-#include <utils/GlobalReportClass.h>
+#include <utils/GlobalReport.h>
 
 #include "NetworkInterface.h"
 
@@ -47,7 +47,7 @@ public:
 	FlitPortContainer* flitPortContainer;
 	PacketPortContainer* packetPortContainer;
 
-	GlobalReportClass& report = GlobalReportClass::getInstance();
+	GlobalReport& report = GlobalReport::getInstance();
 
 
 	SC_HAS_PROCESS(NetworkInterfaceVC);

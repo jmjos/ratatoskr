@@ -25,7 +25,7 @@
 NetworkInterfaceVC::NetworkInterfaceVC(sc_module_name nm, Node* node) :
 		NetworkInterface(nm, node) {
 	try {
-		this->id = node->id % (global.nodes.size() / 2);
+		this->id = node->id % (globalResources.nodes.size() / 2);
 		this->dbid = rep.registerElement("ProcessingElement", this->id);
 		this->node = node;
 		this->flowControlOut = new std::vector<bool>(1, true);
@@ -43,31 +43,31 @@ NetworkInterfaceVC::NetworkInterfaceVC(sc_module_name nm, Node* node) :
 }
 
 void NetworkInterfaceVC::receivePacket() {
-	LOG(global.verbose_pe_function_calls,
+	LOG(globalResources.verbose_pe_function_calls,
 		"NI" << this->id << "(Node" << node->id << ")t- receive()");
 
 	if (packetPortContainer->portValidIn.posedge()) {
 
 		Packet* p = packetPortContainer->portDataIn.read();
-		p->toTransmit.resize(global.flitsPerPacket);
+		p->toTransmit.resize(globalResources.flitsPerPacket);
 
 		Flit* headFlit;
-		for (int i = 0; i < global.flitsPerPacket; i++) {
+		for (int i = 0; i < globalResources.flitsPerPacket; i++) {
 			FlitType type;
-			if (i % global.flitsPerPacket == 0) {
+			if (i % globalResources.flitsPerPacket == 0) {
 				type = FlitType::HEAD;
-			} else if (i % global.flitsPerPacket == global.flitsPerPacket - 1) {
+			} else if (i % globalResources.flitsPerPacket == globalResources.flitsPerPacket - 1) {
 				type = FlitType::TAIL;
 			} else {
 				type = FlitType::BODY;
 			}
-			Flit* current_flit = new Flit(type, i % global.flitsPerPacket, p, p->trafficTypeId,
+			Flit* current_flit = new Flit(type, i % globalResources.flitsPerPacket, p, p->trafficTypeId,
 					sc_time_stamp().to_double());
 			if (type == FlitType::HEAD) {
 				headFlit = current_flit;
 			}
 			current_flit->headFlit = headFlit;
-			p->toTransmit.at(global.flitsPerPacket - i - 1) = current_flit;
+			p->toTransmit.at(globalResources.flitsPerPacket - i - 1) = current_flit;
 		}
 		packet_send_queue.push(p);
 	}
@@ -105,7 +105,7 @@ void NetworkInterfaceVC::bind(Connection* con, SignalContainer* sigContIn,
 }
 
 void NetworkInterfaceVC::thread() {
-	LOG(global.verbose_pe_function_calls,
+	LOG(globalResources.verbose_pe_function_calls,
 			"NI" << this->id << "(Node" << node->id << ")\t- send_data_process()");
 
 	if (clk.posedge()) {
@@ -130,11 +130,11 @@ void NetworkInterfaceVC::thread() {
 				flitPortContainer->portDataOut.write(current_flit);
 				flitPortContainer->portVcOut.write(0);
 
-				LOG((global.verbose_pe_send_head_flit && current_flit->type == HEAD)
-					 || global.verbose_pe_send_flit,
+				LOG((globalResources.verbose_pe_send_head_flit && current_flit->type == HEAD)
+					 || globalResources.verbose_pe_send_flit,
 					 "NI" << this->id << "(Node"<< node->id << ")\t- Send Flit " << *current_flit);
 			} else {
-				LOG(global.verbose_pe_throttle,
+				LOG(globalResources.verbose_pe_throttle,
 					"NI" << this->id << "(Node" << node->id << ")\t- Waiting for Router!");
 			}
 
@@ -160,7 +160,7 @@ void NetworkInterfaceVC::thread() {
 }
 
 void NetworkInterfaceVC::receiveFlit() {
-	LOG(global.verbose_pe_function_calls,
+	LOG(globalResources.verbose_pe_function_calls,
 		"NI" << this->id << "(Node" << node->id << ")\t- receive_data_process()");
 
 	//to debug: simply print the received flit
@@ -171,7 +171,7 @@ void NetworkInterfaceVC::receiveFlit() {
 		Packet* p = received_flit->packet;
 
 		// generate packet statistics. in case of synthetic traffic only for run phase
-		if ((float) global.synthetic_start_measurement_time
+		if ((float) globalResources.synthetic_start_measurement_time
 				<= (sc_time_stamp().to_double() / (float) 1000)) {
 			report.latencyFlit.sample(sc_time_stamp().to_double() - received_flit->injectionTime);
 			if (received_flit->type == TAIL) {
@@ -190,7 +190,7 @@ void NetworkInterfaceVC::receiveFlit() {
 		p->transmitted.push_back(received_flit);
 		rep.reportEvent(dbid, "pe_receive_flit", std::to_string(received_flit->id));
 
-		LOG((global.verbose_pe_receive_tail_flit && received_flit->type == TAIL) || global.verbose_pe_receive_flit,
+		LOG((globalResources.verbose_pe_receive_tail_flit && received_flit->type == TAIL) || globalResources.verbose_pe_receive_flit,
 			"NI" << this->id << "(Node" << node->id << ")\t- Receive Flit " << *received_flit);
 
 
@@ -204,7 +204,7 @@ void NetworkInterfaceVC::receiveFlit() {
 //				if (np && np->dst != id) {
 //					cout << "RECIEVED WRONG FLIT" << endl;
 //				}
-//				if (np && global.verbose_netrace_router_receive) {
+//				if (np && globalResources.verbose_netrace_router_receive) {
 //					cout << "PE " << id << " recieved a packet @ " << sc_time_stamp() << ":";
 //					Netrace netrace;
 //					netrace.nt_print_packet(np->netracePacket);

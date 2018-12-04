@@ -8,11 +8,11 @@
 #ifndef __HELPER_GENERIC_H_
 #define __HELPER_GENERIC_H_
 
-#include "utils/GlobalInputClass.h"
+#include "utils/GlobalResources.h"
 #include "utils/Structures.h"
 #include "model/traffic/Flit.h"
 #include "model/traffic/Packet.h"
-#include "utils/GlobalReportClass.h"
+#include "utils/GlobalReport.h"
 #include "utils/Report.h"
 #include "model/container/Container.h"
 

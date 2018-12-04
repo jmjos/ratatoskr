@@ -22,7 +22,7 @@
 #include "ProcessingElement.h"
 
 ProcessingElement::ProcessingElement(sc_module_name nm, Node* node, TrafficPool* tp) {
-	this->id = node->id % (global.nodes.size() / 2);
+	this->id = node->id % (globalResources.nodes.size() / 2);
 	this->node = node;
 	this->dbid = rep.registerElement("NetworkInterface", this->id);
 	this->trafficPool = tp;

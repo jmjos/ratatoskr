@@ -242,9 +242,9 @@ std::map<Channel, float> getChannelWithTraversedCongestion(Node* curr, Node* dst
 }
 
 int MeshHelper::getHopDistance(Node* n1, Node* n2){
-	std::vector<float>* xPos = &GlobalInputClass::getInstance().xPositions;
-	std::vector<float>* yPos = &GlobalInputClass::getInstance().yPositions;
-	std::vector<float>* zPos = &GlobalInputClass::getInstance().zPositions;
+	std::vector<float>* xPos = &GlobalResources::getInstance().xPositions;
+	std::vector<float>* yPos = &GlobalResources::getInstance().yPositions;
+	std::vector<float>* zPos = &GlobalResources::getInstance().zPositions;
 
 	int xDist = std::distance(std::find(xPos->begin(), xPos->end(), n1->pos.x), std::find(xPos->begin(), xPos->end(), n2->pos.x));
 	int yDist = std::distance(std::find(yPos->begin(), yPos->end(), n1->pos.y), std::find(yPos->begin(), yPos->end(), n2->pos.y));

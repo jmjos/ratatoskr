@@ -99,7 +99,7 @@ void ProcessingElementVC::thread() {
 
                 } else {
                     destWait.at(dest) =
-                            global.getRandomIntBetween(dest->minInterval, dest->maxInterval) +
+                            globalResources.getRandomIntBetween(dest->minInterval, dest->maxInterval) +
                             timeStamp;
                 }
                 break;
@@ -123,7 +123,7 @@ void ProcessingElementVC::thread() {
                  * by selecting a number between minStart and maxStart,
                  * and the same thing for minInterval and maxInterval.
                  */
-                if (global.benchmark == "synthetic") {
+                if (globalResources.benchmark == "synthetic") {
                     /* Between sender and receiver, we use the clock speed and the interval of the slower PE
                     *  to do the next call calculations.
                     *  We have tried using:
@@ -157,15 +157,15 @@ void ProcessingElementVC::thread() {
                      }*/
 
                     if (timeStamp < task->minStart) {
-                        nextCall = task->minStart + global.getRandomIntBetween(0, minInterval - 1);
+                        nextCall = task->minStart + globalResources.getRandomIntBetween(0, minInterval - 1);
 
                     } else {
                         /*   if (timeStamp < task->minStart + minInterval)
-                               nextCall = task->minStart + minInterval + global.getRandomIntBetween(0, minInterval - 1);
+                               nextCall = task->minStart + minInterval + globalResources.getRandomIntBetween(0, minInterval - 1);
                            else {*/
                         int numIntervalsPassed = (timeStamp - task->minStart) / minInterval;
                         int intervalBeginning = task->minStart + (numIntervalsPassed * minInterval);
-                        nextCall = intervalBeginning + minInterval + global.getRandomIntBetween(0, minInterval - 1);
+                        nextCall = intervalBeginning + minInterval + globalResources.getRandomIntBetween(0, minInterval - 1);
 //                        }
                     }
 //                    nextCall *= clockDelay;
@@ -191,7 +191,7 @@ void ProcessingElementVC::thread() {
 
 void ProcessingElementVC::execute(Task *task) {
     if (!taskRepeatLeft.count(task)) {
-        taskRepeatLeft[task] = global.getRandomIntBetween(task->minRepeat, task->maxRepeat);
+        taskRepeatLeft[task] = globalResources.getRandomIntBetween(task->minRepeat, task->maxRepeat);
     } else {
         if (taskRepeatLeft.at(task) > 0) {
             taskRepeatLeft.at(task)--;
@@ -204,12 +204,12 @@ void ProcessingElementVC::execute(Task *task) {
     }
 
     if (!taskStartTime.count(task)) {
-        taskStartTime[task] = global.getRandomIntBetween(task->minStart, task->maxStart);
+        taskStartTime[task] = globalResources.getRandomIntBetween(task->minStart, task->maxStart);
     }
 
     if (!taskTerminationTime.count(task) && task->minDuration != -1) {
         taskTerminationTime[task] =
-                taskStartTime[task] + global.getRandomIntBetween(task->minDuration, task->maxDuration);
+                taskStartTime[task] + globalResources.getRandomIntBetween(task->minDuration, task->maxDuration);
     }
 
     if (task->requirements.empty()) {
@@ -217,7 +217,7 @@ void ProcessingElementVC::execute(Task *task) {
     } else {
         for (DataRequirement *r : task->requirements) {
             neededFor[r->type].insert(task);
-            neededAmount[std::make_pair(task, r->type)] = global.getRandomIntBetween(r->minCount, r->maxCount);
+            neededAmount[std::make_pair(task, r->type)] = globalResources.getRandomIntBetween(r->minCount, r->maxCount);
             needs[task].insert(r->type);
         }
     }
@@ -228,7 +228,7 @@ void ProcessingElementVC::bind(Connection *con, SignalContainer *sigContIn, Sign
 }
 
 void ProcessingElementVC::receive() {
-    LOG(global.verbose_pe_function_calls, "PE" << this->id << "(Node" << node->id << ")\t- receive_data_process()");
+    LOG(globalResources.verbose_pe_function_calls, "PE" << this->id << "(Node" << node->id << ")\t- receive_data_process()");
 
     if (packetPortContainer->portValidIn.posedge()) {
         Packet *received_packet = packetPortContainer->portDataIn.read();
@@ -247,7 +247,7 @@ void ProcessingElementVC::receive() {
 }
 
 void ProcessingElementVC::startSending(Task *task) {
-    float rn = global.getRandomFloatBetween(0, 1);
+    float rn = globalResources.getRandomFloatBetween(0, 1);
 
     for (unsigned int i = 0; i < task->possibilities.size(); i++) {
         if (task->possibilities.at(i).first > rn) {
@@ -256,10 +256,10 @@ void ProcessingElementVC::startSending(Task *task) {
                 destToTask[dest] = task;
                 taskToDest[task].insert(dest);
 
-                countLeft[dest] = global.getRandomIntBetween(dest->minCount, dest->maxCount);
+                countLeft[dest] = globalResources.getRandomIntBetween(dest->minCount, dest->maxCount);
 
                 int delayTime =
-                        (sc_time_stamp().value() / 1000) + global.getRandomIntBetween(dest->minDelay, dest->maxDelay);
+                        (sc_time_stamp().value() / 1000) + globalResources.getRandomIntBetween(dest->minDelay, dest->maxDelay);
 
                 if (taskStartTime.count(task) && taskStartTime.at(task) > delayTime) {
                     destWait[dest] = taskStartTime.at(task);

@@ -37,12 +37,12 @@ void SyntheticPool::start() {
     int phaseId = 0;
 
     int maxClockDelay = 1;
-    for (auto const &nodeType: global.nodeTypes) {
+    for (auto const &nodeType: globalResources.nodeTypes) {
         if (nodeType->clockDelay > maxClockDelay)
             maxClockDelay = nodeType->clockDelay;
     }
 
-    for (SyntheticPhase *sp : global.syntheticPhase) {
+    for (SyntheticPhase *sp : globalResources.syntheticPhase) {
 
         int dataTypeId = 0;
         int dataDestId = 0;
@@ -175,9 +175,9 @@ std::map<int, int> SyntheticPool::transpose() {
 std::map<int, int> SyntheticPool::tornado() {
     std::map<int, int> srcToDst;
 
-    std::vector<float> *xPos = &global.xPositions;
-    std::vector<float> *yPos = &global.yPositions;
-    std::vector<float> *zPos = &global.zPositions;
+    std::vector<float> *xPos = &globalResources.xPositions;
+    std::vector<float> *yPos = &globalResources.yPositions;
+    std::vector<float> *zPos = &globalResources.zPositions;
 
     int nodes = processingElements.size();
     for (int i = 0; i < nodes; i++) {
@@ -191,7 +191,7 @@ std::map<int, int> SyntheticPool::tornado() {
                             zPos->size());
 
         Node *dstNode = 0;
-        for (Node *node : global.posToId.at(dstPos)) {
+        for (Node *node : globalResources.posToId.at(dstPos)) {
             if (node->type->routerModel == "ProcessingElement") {
                 dstNode = node;
             }
@@ -209,7 +209,7 @@ std::map<int, int> SyntheticPool::hotspot(int hotspot) {
     int nodes = processingElements.size();
 
     if (hotspot == -1) {
-        hotspot = global.getRandomIntBetween(0, nodes - 1);
+        hotspot = globalResources.getRandomIntBetween(0, nodes - 1);
     }
 
     LOG(true, "\t\t Hotspot: " << hotspot);

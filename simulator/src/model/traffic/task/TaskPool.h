@@ -25,7 +25,7 @@
 
 
 #include <model/traffic/task/TaskPacket.h>
-#include "utils/GlobalInputClass.h"
+#include "utils/GlobalResources.h"
 #include "utils/Report.h"
 #include "utils/Structures.h"
 #include "model/traffic/TrafficPool.h"

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <network-on-chip xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-<bufferDepthType value="single" /> <!-- single, perVC-->
+<bufferDepthType value="perVC" /> <!-- single, perVC-->
 	<nodeTypes>
 		<nodeType id="0">
-			<routerModel value="RouterVC" />
+			<model value="RouterVC" />
 			<routing value="XYZ" />
 			<!--<selection value="RoundRobin" />-->
 			<selection value="1stFreeVC" />
@@ -11,46 +11,34 @@
 			<arbiterType value="fair" /> <!-- rrVC, fair -->
 		</nodeType>
         <nodeType id="1">
-			<routerModel value="RouterVC" />
+			<model value="RouterVC" />
 			<routing value="XYZ" />
 			<!--<selection value="RoundRobin" />-->
 			<selection value="1stFreeVC" />
-			<clockDelay value="5" />
+			<clockDelay value="2" />
 			<arbiterType value="fair" /> <!-- rrVC, fair -->
 		</nodeType>
         <nodeType id="2">
-			<routerModel value="RouterVC" />
+			<model value="RouterVC" />
 			<routing value="XYZ" />
 			<!--<selection value="RoundRobin" />-->
 			<selection value="1stFreeVC" />
-			<clockDelay value="5" />
+			<clockDelay value="4" />
 			<arbiterType value="fair" /> <!-- rrVC, fair -->
 		</nodeType>
 		<nodeType id="3">
-			<routerModel value="ProcessingElement" />
+			<model value="ProcessingElement" />
 			<clockDelay value="1" />
 		</nodeType>
        <nodeType id="4">
-			<routerModel value="ProcessingElement" />
-			<clockDelay value="5" />
+			<model value="ProcessingElement" />
+			<clockDelay value="2" />
 		</nodeType>
        <nodeType id="5">
-			<routerModel value="ProcessingElement" />
-			<clockDelay value="5" />
+			<model value="ProcessingElement" />
+			<clockDelay value="4" />
 		</nodeType>
 	</nodeTypes>
-
-	<layerTypes>
-		<layerType id="0">
-			<technology value="130" />
-		</layerType>
-		<layerType id="1">
-			<technology value="130" />
-		</layerType>
-		<layerType id="2">
-			<technology value="130" />
-		</layerType>
-	</layerTypes>
 
 	<nodes>
 		<node id="0">

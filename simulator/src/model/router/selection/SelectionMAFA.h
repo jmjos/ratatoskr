@@ -63,11 +63,11 @@
 //			for(float i=0.95; i>0; i-=0.1) {
 //
 //				channel = MESH::getChannelWithRating(i, 1, rpi->routedChannel, rpi->routedChannelRating);
-//				if(MESH::getMinimalChannel(ri->node, global.nodes.at(rpi->packet->dst), channel).empty()){
+//				if(MESH::getMinimalChannel(ri->node, globalResources.nodes.at(rpi->packet->dst), channel).empty()){
 //					continue;
 //				}
 //
-//				std::map<Channel, ChannelInfo> info = MESH::getChannelInfo(node, global.nodes.at(rpi->packet->dst), channel, 2, 0.5);
+//				std::map<Channel, ChannelInfo> info = MESH::getChannelInfo(node, globalResources.nodes.at(rpi->packet->dst), channel, 2, 0.5);
 //
 //				float minCong = 100;
 //				int maxDiffDim = 0;
@@ -76,7 +76,7 @@
 //				bool otherExists = false;
 //
 //				channel.clear();
-//				Node* dst = global.nodes.at(rpi->packet->dst);
+//				Node* dst = globalResources.nodes.at(rpi->packet->dst);
 //				for(std::pair<Channel, ChannelInfo> p: info) {
 //
 //					Node* next = ri->node->conToNode.at(p.first.dir);

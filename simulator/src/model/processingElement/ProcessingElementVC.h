@@ -29,7 +29,7 @@
 #include "model/router/Router.h"
 #include "model/traffic/Flit.h"
 #include "model/traffic/TrafficPool.h"
-#include "utils/GlobalInputClass.h"
+#include "utils/GlobalResources.h"
 #include "utils/Report.h"
 #include "utils/Structures.h"
 #include <model/container/PacketContainer.h>

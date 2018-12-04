@@ -24,15 +24,15 @@
 #include "systemc.h"
 #include <set>
 
-#include "utils/GlobalInputClass.h"
-#include "utils/GlobalReportClass.h"
+#include "utils/GlobalResources.h"
+#include "utils/GlobalReport.h"
 #include "utils/Report.h"
 #include "model/container/Container.h"
 
 class NetworkParticipant {
 public:
-	GlobalInputClass& global = GlobalInputClass::getInstance();
-	GlobalReportClass& globalReportClass = GlobalReportClass::getInstance();
+	GlobalResources& globalResources = GlobalResources::getInstance();
+	GlobalReport& globalResourcesReportClass = GlobalReport::getInstance();
 	Report& rep = Report::getInstance();
 
 

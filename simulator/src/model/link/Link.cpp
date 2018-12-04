@@ -21,27 +21,25 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "Link.h"
 
-Link::Link(sc_module_name nm, Connection* c, int globalId) {
+Link::Link(sc_module_name nm, Connection *c, int globalResourcesId) {
 
-	this->id = c->id;
-	this->globalId = globalId;
-	classicPortContainer = new FlitPortContainer(
-			("link_portCont_" + std::to_string(id)).c_str());
-	if (c->nodes.size() == 1) {
-		this->linkType = HORIZONTAL;
-	} else {
-		if (c->nodes.at(0)->pos.z == c->nodes.at(1)->pos.z) {
-			this->linkType = HORIZONTAL;
-		} else {
-			this->linkType = VERTICAL;
-		}
-	}
-	this->currentFlit = nullptr;
-	this->previousFlit = nullptr;
+    this->id = c->id;
+    this->globalResourcesId = globalResourcesId;
+    classicPortContainer = new FlitPortContainer(
+            ("link_portCont_" + std::to_string(this->id)).c_str());
+    if (c->nodes.size() == 1) {
+        this->linkType = HORIZONTAL;
+    } else {
+        if (c->nodes.at(0)->pos.z == c->nodes.at(1)->pos.z) {
+            this->linkType = HORIZONTAL;
+        } else {
+            this->linkType = VERTICAL;
+        }
+    }
+    this->currentFlit = nullptr;
+    this->previousFlit = nullptr;
 
-//	if (id == 70 || id == 67) {
-//		cout << "check file with name" << nm << endl;
-//	}
+
 // this->rawDataOutput = new ofstream((std::string) nm + ".txt");
 
     SC_THREAD(passthrough_thread);
@@ -107,7 +105,7 @@ void Link::passthrough_thread() {
 
 //		rawDataOutput->write(outputToFile.c_str(), 3);
 //		rawDataOutput->flush();
-            report.issueLinkMatrixUpdate(globalId, currentTransmissionState,
+            report.issueLinkMatrixUpdate(globalResourcesId, currentTransmissionState,
                                          previousTransmissionState);
 
         previousTransmissionState = currentTransmissionState;

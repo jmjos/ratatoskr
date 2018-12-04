@@ -31,7 +31,7 @@ TaskPool::~TaskPool() {
 }
 
 void TaskPool::start() {
-	for(Task* task: global.tasks) {
+	for(Task* task: globalResources.tasks) {
 		processingElements.at(task->node->id % processingElements.size())->execute(task);
 	}
 }

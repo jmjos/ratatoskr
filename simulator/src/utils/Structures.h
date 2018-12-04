@@ -182,14 +182,14 @@ struct Vec3D {
 
 struct NodeType {
     int id;
-    std::string routerModel;
+    std::string model;
     std::string routing;
     std::string selection;
     int clockDelay;
     std::string arbiterType;
     // std::vector<Node*> nodes; TODO restructure
 
-    NodeType(int id, std::string routerModel, std::string routing, std::string selection, int clkDelay,
+    NodeType(int id, std::string model, std::string routing, std::string selection, int clkDelay,
              std::string arbiterType);
 };
 
@@ -201,7 +201,7 @@ struct NodeType {
 struct Node {
     int id;
     Vec3D<float> pos;
-    const NodeType &type;
+    std::shared_ptr<NodeType> type;
     float congestion; // crossbar utilization 0-1
     std::vector<int> connectedNodes;
     std::vector<int> connections;
@@ -215,7 +215,7 @@ struct Node {
      std::map<Node *, std::vector<int>> connectionsToNode; //get connection by connected node
      std::map<Connection *, int> conToPos; // get position of connection inside array
      */
-    Node(int id, Vec3D<float> pos, const NodeType &type); //, LayerType* layer); TODO restructure
+    Node(int id, Vec3D<float> pos, std::shared_ptr<NodeType> type); //, LayerType* layer); TODO restructure
 };
 
 struct Connection {
@@ -296,6 +296,8 @@ struct Task {
     int maxDuration;
     int minRepeat;      // maximal task execution count
     int maxRepeat;      // task terminates at whatever comes first, maxRepeates or duration
+
+    Task(int id, int nodeID);
 
     Task(int id, int nodeID, std::vector<int> requirements, std::vector<int> possibilities);
 };

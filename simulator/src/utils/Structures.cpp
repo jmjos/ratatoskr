@@ -45,7 +45,7 @@ bool Channel::operator<(const Channel &c) const {
 NodeType::NodeType(int id, std::string model, std::string routing,
                    std::string selection, int clk, std::string arbiterType) :
         id(id),
-        routerModel(model),
+        model(model),
         routing(routing),
         selection(selection),
         clockDelay(clk),
@@ -58,7 +58,7 @@ NodeType::NodeType(int id, std::string model, std::string routing,
 
 }*/
 
-Node::Node(int id, Vec3D<float> pos, const NodeType &type) :
+Node::Node(int id, Vec3D<float> pos, std::shared_ptr<NodeType> type) :
         id(id),
         pos(pos),
         type(type),
@@ -122,6 +122,12 @@ DataSendPossibility::DataSendPossibility(int id, float probability, std::vector<
         dataDestinations(dataDestinations) {
 }
 
+Task::Task(int id, int nodeID) :
+        id(id),
+        node(nodeID) {
+
+}
+
 Task::Task(int id, int node, std::vector<int> requirements, std::vector<int> possibilities) :
         id(id),
         node(node),
@@ -152,5 +158,4 @@ SyntheticPhase::SyntheticPhase(int id, std::string name, std::string distributio
         minDelay(0),
         maxDelay(0),
         hotspot(-1) {
-
 }

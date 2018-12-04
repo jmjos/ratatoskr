@@ -24,19 +24,18 @@
 #include <fstream>
 #include <string>
 #include <chrono>
-
-#include "utils/GlobalInputClass.h"
-#include "utils/GlobalReportClass.h"
+#include "utils/GlobalResources.h"
+#include "utils/GlobalReport.h"
 #include "utils/Report.h"
-#include "model/LayerTop.h"
+#include "model/NoC.h"
 
 int sc_main(int arg_num, char *arg_vet[]) {
-	GlobalInputClass& global = GlobalInputClass::getInstance();
-	Report& rep = Report::getInstance();
-	srand(time(nullptr));
-	sleep(1); //wait for the systemC branding :/
+    GlobalResources& globalResourcesResources = GlobalResources::getInstance();
+    Report &rep = Report::getInstance();
+    srand(time(nullptr));
+    sleep(1); //wait for the systemC branding :/
 
-    cout << "\nA-3D-NoC Simulator Copyright(C) 2014-2018" << endl;
+    cout << "\nA-3D-NoC Simulator Copyright(C) 2014-2019" << endl;
     cout << "   Jan Moritz Joseph (jan.joseph@ovgu.de) " << endl;
     cout << "This program comes with ABSOLUTELY NO WARRANTY;" << endl;
     cout << "This is free software, and you are welcome to redistribute it"
@@ -49,42 +48,44 @@ int sc_main(int arg_num, char *arg_vet[]) {
     sc_report_handler::set_actions(SC_ID_INSTANCE_EXISTS_, SC_DO_NOTHING); //disable renaming warnings
 
     if (arg_num == 2) {
-        global.readInputFile(arg_vet[1]);
+        globalResourcesResources.readConfigFile(arg_vet[1]);
     } else {
-        global.readInputFile("config/config.xml");
+        globalResourcesResources.readConfigFile("config/config.xml");
     }
 
-    global.readNoCLayout(global.noc_file);
+    globalResourcesResources.readNoCLayout(globalResourcesResources.noc_file);
 
-	rep.connect("127.0.0.1", "10000");
-	rep.startRun("name");
+    if (!globalResourcesResources.data_file.empty() && !globalResourcesResources.map_file.empty())
+        globalResourcesResources.readDataStream(globalResourcesResources.data_file, globalResourcesResources.map_file);
 
+    rep.connect("127.0.0.1", "10000");
+    rep.startRun("name");
 
-//	rep.startRun(global.inputNoc);
+//	rep.startRun(globalResources.inputNoc);
 //	int id = rep.registerElement("run", 0);
-//	rep.reportAttribute(id, "config", global.inputConfig);
-//	rep.reportAttribute(id, "noc", global.inputNoc);
-//	rep.reportAttribute(id, "routing", global.routing);
-//	rep.reportAttribute(id, "selection", global.selection);
-//	rep.reportAttribute(id, "traffic", global.benchmark);
+//	rep.reportAttribute(id, "config", globalResources.inputConfig);
+//	rep.reportAttribute(id, "noc", globalResources.inputNoc);
+//	rep.reportAttribute(id, "routing", globalResources.routing);
+//	rep.reportAttribute(id, "selection", globalResources.selection);
+//	rep.reportAttribute(id, "traffic", globalResources.benchmark);
 
-    LayerTop *layer = new LayerTop("Layer");
+    std::unique_ptr<NoC> noc = std::make_unique<NoC>("Layer");
 
     std::chrono::high_resolution_clock::time_point t1 =
             std::chrono::high_resolution_clock::now();
 
     cout << endl << "Starting Simulation!" << endl;
-    sc_start(global.simulation_time, SC_NS);
+    sc_start(globalResourcesResources.simulation_time, SC_NS);
 
-    GlobalReportClass report = GlobalReportClass::getInstance();
+    GlobalReport report = GlobalReport::getInstance();
 
 //	std::ostream & objOstream = std::cout;
 //	report.reportLinkMatrix(8, objOstream);
 
-    if (global.outputToFile) {
+    if (globalResourcesResources.outputToFile) {
         cout << "Generating report of the simulation run into file "
-             << global.outputFileName << " ... ";
-        report.reportComplete(global.outputFileName);
+             << globalResourcesResources.outputFileName << " ... ";
+        report.reportComplete(globalResourcesResources.outputFileName);
         cout << " done." << endl;
     }
     report.reportPerformance(cout);

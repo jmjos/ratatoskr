@@ -52,7 +52,7 @@ Flit::~Flit() {
 }
 
 ostream &operator<<(ostream &os, const Flit &flit) {
-    int processingElementsSize = GlobalInputClass::getInstance().nodes.size() / 2;
+    int processingElementsSize = GlobalResources::getInstance().nodes.size() / 2;
     os << "[";
     switch (flit.type) {
         case HEAD:

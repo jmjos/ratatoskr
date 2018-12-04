@@ -44,9 +44,9 @@ RouterVC::RouterVC(sc_module_name nm, Node *node) :
         routedFlits.at(dir) = new std::vector<Flit *>(vcCount);
         for (int vc = 0; vc < vcCount; vc++) {
             BufferFIFO<Flit *> *buf;
-            if (global.bufferDepthType == "single")
+            if (globalResources.bufferDepthType == "single")
                 buf = new BufferFIFO<Flit *>(node->connections.at(dir)->getBufferDepthForNode(node));
-            else if (global.bufferDepthType == "perVC")
+            else if (globalResources.bufferDepthType == "perVC")
                 buf = new BufferFIFO<Flit *>(node->connections.at(dir)->getBufferDepthForNodeAndVC(node, vc));
             else FATAL("The type of buffer depth is not defined!");
             buffer.at(dir)->at(vc) = buf;
@@ -143,9 +143,9 @@ void RouterVC::thread() {
         // #4 send
         send();
         // #3 arbitrate
-        if (global.arbiterType == "rrVC")
+        if (globalResources.arbiterType == "rrVC")
             arbitrate();
-        else if (global.arbiterType == "fair")
+        else if (globalResources.arbiterType == "fair")
             arbitrateFair();
         else FATAL("Unknown arbiter type!");
         // #2 receive & route
@@ -234,7 +234,7 @@ void RouterVC::receive() {
 
                     if (rpInfo.count({flit->packet, c})) FATAL("packet duplication!");
                     LOG(
-                            (global.verbose_router_receive_head_flit) || global.verbose_router_receive_flit,
+                            (globalResources.verbose_router_receive_head_flit) || globalResources.verbose_router_receive_flit,
                             "Router" << this->id << "[" << DIR::toString(node->conToDir[dirIn]) << vcIn
                                      << "]\t- Receive Flit " << *flit);
                     pkgcnt.at(dirIn)->at(vcIn)++;
@@ -243,7 +243,7 @@ void RouterVC::receive() {
                 }
                 // rep.reportEvent(dbid, "router_receive_flit", std::to_string(flit->id));
                 if (!buf->enqueue(flit)) {
-                    LOG(global.verbose_router_buffer_overflow,
+                    LOG(globalResources.verbose_router_buffer_overflow,
                         "Router" << this->id << "[" << DIR::toString(node->conToDir[dirIn]) << vcIn
                                  << "]\t- Buffer Overflow " << *flit);
                 } else {
@@ -272,14 +272,14 @@ void RouterVC::updateUsageStats() {
             buf = buffer.at(dirIn)->at(vcIn);
             if (!buf->empty()) {
                 numberActiveVCs++;
-                globalReportClass.updateBuffUsagePerVCHist(globalReportClass.bufferUsagePerVCHist, this->id, dirIn,
+                globalResourcesReportClass.updateBuffUsagePerVCHist(globalResourcesReportClass.bufferUsagePerVCHist, this->id, dirIn,
                                                            vcIn, buf->occupied(), numVCs);
             }
         }
         /* this 1 is added to create a column for numberOfActiveVCs=0.
            yes it's an extra column but it allow us to use the same function to update both buffer stats and VC stats.
         */
-        globalReportClass.updateUsageHist(globalReportClass.VCsUsageHist, this->id, node->conToDir[dirIn],
+        globalResourcesReportClass.updateUsageHist(globalResourcesReportClass.VCsUsageHist, this->id, node->conToDir[dirIn],
                                           numberActiveVCs, numVCs + 1);
     }
 }
@@ -390,7 +390,7 @@ bool RouterVC::handleBodyFlitWithDropFlag(RoutingPacketInformation *rpi, const F
             pkgcnt.at(in.dir)->at(in.vc)--;
             delete flit->packet;
             delete rpi;
-            global.droppedCounter++;
+            globalResources.droppedCounter++;
         }
 
         routedFlits.at(in.dir)->at(in.vc) = 0;
@@ -445,7 +445,7 @@ void RouterVC::arbitrate() {
                 if (!arbiterDirs.count(out.dir)) {
                     if (flit->type == HEAD && !rInfo->occupyTable.count(out)) {
                         rInfo->occupyTable[out] = flit->packet;
-                        LOG(global.verbose_router_assign_channel,
+                        LOG(globalResources.verbose_router_assign_channel,
                             "Router" << this->id << "[" << DIR::toString(node->conToDir[out.dir]) << out.vc
                                      << "]\t- Assign to " << *flit);
                     }
@@ -516,7 +516,7 @@ bool RouterVC::isDownStreamRouterReady(const Channel &in, const Channel &out) {
         BufferFIFO<Flit *> *buf = buffer.at(in.dir)->at(in.vc);
         Flit *flit = buf->front();
         //Flit *flit = routedFlits.at(in.dir)->at(in.vc);
-        LOG(global.verbose_router_throttle,
+        LOG(globalResources.verbose_router_throttle,
             "Router" << this->id << "[" << DIR::toString(node->conToDir[in.dir]) << in.dir << "]\t- Flow Control! "
                      << *flit);
     }
@@ -606,9 +606,9 @@ void RouterVC::send() {
 
         if (flit->type == TAIL) {
             routedPackets.erase({flit->packet, in});
-            if (global.arbiterType == "rrVC")
+            if (globalResources.arbiterType == "rrVC")
                 rInfo->occupyTable.erase(out);
-            else if (global.arbiterType == "fair")
+            else if (globalResources.arbiterType == "fair")
                 rInfo->fairOccupyTable.erase(out);
             else FATAL("Unknown arbiter type!");
 
@@ -622,7 +622,7 @@ void RouterVC::send() {
                 delete rpi;
         }
         LOG(
-                (global.verbose_router_send_head_flit && flit->type == HEAD) || global.verbose_router_send_flit,
+                (globalResources.verbose_router_send_head_flit && flit->type == HEAD) || globalResources.verbose_router_send_flit,
                 "Router" << this->id << "[" << DIR::toString(node->conToDir[out.dir]) << out.vc << "]\t- Send Flit "
                          << *flit);
     }
