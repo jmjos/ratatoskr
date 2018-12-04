@@ -3,13 +3,27 @@ from xml.dom import minidom
 ###############################################################################
 
 
-class DataWriter:
-    """ The class which is responsible of writing the tasks/data file """
-    def __init__(self, output_file):
+class Writer:
+    """ A base class for DataWriter and MapWriter """
+    def __init__(self, output_file, root_node_name):
         self.output_file = output_file
-        root_node = ET.Element('data')
+        root_node = ET.Element(root_node_name)
         root_node.set('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')
         self.root_node = root_node
+
+    def write_file(self):
+        """ Write the xml file on disk """
+        rough_string = ET.tostring(self.root_node, 'utf-8')
+        reparsed = minidom.parseString(rough_string)
+        data = reparsed.toprettyxml(indent="  ")
+        of = open(self.output_file, 'w')
+        of.write(data)
+        of.close()
+###############################################################################
+
+
+class DataWriter(Writer):
+    """ The class which is responsible of writing the tasks/data file """
 
     def add_dataTypes_node(self, data_types):
         """
@@ -183,25 +197,11 @@ class DataWriter:
 
         d_task_node = ET.SubElement(destination_node, 'task')
         d_task_node.set('value', str(dist_task))
-
-    def write_file(self):
-        """ Write the data.xml file on disk """
-        rough_string = ET.tostring(self.root_node, 'utf-8')
-        reparsed = minidom.parseString(rough_string)
-        data = reparsed.toprettyxml(indent="  ")
-        of = open(self.output_file, 'w')
-        of.write(data)
-        of.close()
 ###############################################################################
 
 
-class MapWriter:
+class MapWriter(Writer):
     """ The class which is responsible of writing the map file """
-    def __init__(self, output_file):
-        self.output_file = output_file
-        root_node = ET.Element('map')
-        root_node.set('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance')
-        self.root_node = root_node
 
     def add_bindings(self, tasks, nodes):
         """
@@ -218,12 +218,3 @@ class MapWriter:
 
             node_node = ET.SubElement(bind_node, 'node')
             node_node.set('value', str(n_id))
-
-    def write_file(self):
-        """ Write the map.xml file on disk """
-        rough_string = ET.tostring(self.root_node, 'utf-8')
-        reparsed = minidom.parseString(rough_string)
-        data = reparsed.toprettyxml(indent="  ")
-        of = open(self.output_file, 'w')
-        of.write(data)
-        of.close()
