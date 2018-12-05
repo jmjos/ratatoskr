@@ -72,7 +72,7 @@ void GlobalReportClass::reportComplete(std::string filename) {
     myfile.close();
 
     // Generate csv for link matrices
-    std::string csvFilename = filename + "_Links.csv";
+    /*std::string csvFilename = filename + "_Links.csv";
     ofstream csvfile;
     csvfile.open(csvFilename);
     reportLinkMatricesCSV(csvfile);
@@ -84,7 +84,7 @@ void GlobalReportClass::reportComplete(std::string filename) {
     reportPerformanceCSV(csvfile);
     csvfile.close();
 
-    reportAllRoutersUsageHist();
+    reportAllRoutersUsageHist();*/
 }
 
 void GlobalReportClass::reportPerformance(ostream &stream) {
