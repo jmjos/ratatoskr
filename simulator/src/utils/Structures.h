@@ -210,8 +210,6 @@ struct Node {
 
     /* int idType; TODO restructure
      LayerType* layer;
-     std::vector<Node *> connectedNodes;
-     std::vector<Connection *> connections;
      std::map<Node *, std::vector<int>> connectionsToNode; //get connection by connected node
      std::map<Connection *, int> conToPos; // get position of connection inside array
      */
@@ -278,17 +276,17 @@ struct DataDestination {
 struct DataSendPossibility {
     int id;
     float probability;
-    std::vector<int> dataDestinations;
+    std::vector<DataDestination> dataDestinations;
 
-    DataSendPossibility(int id, float probability, std::vector<int> dataDestinations);
+    DataSendPossibility(int id, float probability, std::vector<DataDestination> dataDestinations);
 };
 
 struct Task {
     int id;
     int node;
-    std::vector<int> requirements;
+    std::vector<DataRequirement> requirements;
     // std::vector<std::pair<float, std::vector<DataDestination*>>> possibilities;
-    std::vector<int> possibilities;
+    std::vector<DataSendPossibility> possibilities;
     int syntheticPhase;
     int minStart;       // simulation time in ns at which the task starts
     int maxStart;
@@ -299,7 +297,7 @@ struct Task {
 
     Task(int id, int nodeID);
 
-    Task(int id, int nodeID, std::vector<int> requirements, std::vector<int> possibilities);
+    Task(int id, int nodeID, std::vector<DataRequirement> requirements, std::vector<DataSendPossibility> possibilities);
 };
 
 struct SyntheticPhase {

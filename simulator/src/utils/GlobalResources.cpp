@@ -100,7 +100,7 @@ std::vector<std::string> GlobalResources::string_split(const std::string &str, c
     auto end = str.find(delim);
     while (end != std::string::npos) {
         strings.push_back(str.substr(start, end - start));
-        start = end + 1;
+        start = static_cast<unsigned int>(end + 1);
         end = str.find(delim, start);
     }
     strings.push_back(str.substr(start, end));
@@ -109,18 +109,18 @@ std::vector<std::string> GlobalResources::string_split(const std::string &str, c
 
 std::vector<int> GlobalResources::strs_to_ints(const std::vector<std::string> &strings) {
     std::vector<int> ints;
-    for (auto it = strings.begin(); it != strings.end(); ++it) {
-        ints.push_back(std::stoi(*it));
+    for (auto &str: strings) {
+        ints.push_back(std::stoi(str));
     }
     return ints;
 }
 
-bool GlobalResources::readConfigFile(std::string filePath) {
+void GlobalResources::readConfigFile(const std::string &configPath) {
     pugi::xml_document doc;
 
-    std::cout << "Reading simulator config: " << filePath << endl;
-    pugi::xml_parse_result result = doc.load_file(filePath.c_str());
-    assert(result && "Failed to read simulator file!");
+    std::cout << "Reading simulator config: " << configPath << endl;
+    pugi::xml_parse_result result = doc.load_file(configPath.c_str());
+    assert(result && "Failed to read simulator config file!");
 
     //GENERAL
     pugi::xml_node gen_node = doc.child("configuration").child("general");
@@ -168,117 +168,61 @@ bool GlobalResources::readConfigFile(std::string filePath) {
         readAttributeIfExists(phase_node, "hotspot", "value", sp.hotspot);
 
         //set first start time after warmup to start of measurement
-        if (benchmark.compare("synthetic") == 0 && name.compare("warmup") != 0 &&
+        if (benchmark == "synthetic" && name != "warmup" &&
             synthetic_start_measurement_time == -1) {
             synthetic_start_measurement_time = sp.minStart;
         }
         syntheticPhases.push_back(sp);
     }
-
-    //---------------------------------------------------------------------------
-
-    initGlobalReport(doc);
-
-    return true;
 }
 
-bool GlobalResources::readNoCLayout(std::string filePath) {
-    std::cout << "Reading NoC layout: " << filePath << endl;
+void GlobalResources::readNoCLayout(const std::string &nocPath) {
+    std::cout << "Reading NoC layout: " << nocPath << endl;
     pugi::xml_document doc;
-    pugi::xml_parse_result result = doc.load_file(filePath.c_str());
+    pugi::xml_parse_result result = doc.load_file(nocPath.c_str());
     assert(result && "Failed to read NoC file!");
 
     pugi::xml_node noc_node = doc.child("network-on-chip");
-
     bufferDepthType = noc_node.child("bufferDepthType").attribute("value").as_string();
     if (!bufferDepthType.empty() && (bufferDepthType != "single" && bufferDepthType != "perVC")) {
         FATAL("The value of bufferDepthType in your network file should be either 'single' or 'perVC'!");
     }
 
-    /// Read NodeTypes ///
     readNodeTypes(noc_node);
-
-    /// Read Nodes ///
     readNodes(noc_node);
-
-    /// Read Connections ///
     readConnections(noc_node);
-
-    return true;
-}
-
-
-void GlobalResources::initGlobalReport(const pugi::xml_document &doc) {
-    pugi::xml_node verbose_node;
-    GlobalReport &globalResourcesReport = GlobalReport::getInstance();
-
-    //	PE Verbosity
-    verbose_node = doc.child("configuration").child("verbose").child("processingElements");
-    globalResourcesReport.verbose_pe_function_calls = verbose_node.child("function_calls").attribute("value").as_bool();
-    globalResourcesReport.verbose_pe_send_flit = verbose_node.child("send_flit").attribute("value").as_bool();
-    globalResourcesReport.verbose_pe_send_head_flit = verbose_node.child("send_head_flit").attribute("value").as_bool();
-    globalResourcesReport.verbose_pe_receive_flit = verbose_node.child("receive_flit").attribute("value").as_bool();
-    globalResourcesReport.verbose_pe_receive_tail_flit = verbose_node.child("receive_tail_flit").attribute("value").as_bool();
-    globalResourcesReport.verbose_pe_throttle = verbose_node.child("throttle").attribute("value").as_bool();
-    globalResourcesReport.verbose_pe_reset = verbose_node.child("reset").attribute("value").as_bool();
-
-    //	Router Verbosity
-    verbose_node = doc.child("configuration").child("verbose").child("router");
-    globalResourcesReport.verbose_router_function_calls = verbose_node.child("function_calls").attribute("value").as_bool();
-    globalResourcesReport.verbose_router_send_flit = verbose_node.child("send_flit").attribute("value").as_bool();
-    globalResourcesReport.verbose_router_send_head_flit = verbose_node.child("send_head_flit").attribute("value").as_bool();
-    globalResourcesReport.verbose_router_receive_flit = verbose_node.child("receive_flit").attribute("value").as_bool();
-    globalResourcesReport.verbose_router_receive_head_flit = verbose_node.child("receive_head_flit").attribute(
-            "value").as_bool();
-    globalResourcesReport.verbose_router_assign_channel = verbose_node.child("assign_channel").attribute("value").as_bool();
-    globalResourcesReport.verbose_router_throttle = verbose_node.child("throttle").attribute("value").as_bool();
-    globalResourcesReport.verbose_router_buffer_overflow = verbose_node.child("buffer_overflow").attribute("value").as_bool();
-    globalResourcesReport.verbose_router_reset = verbose_node.child("reset").attribute("value").as_bool();
-
-    //	Netrace Verbosity
-    verbose_node = doc.child("configuration").child("verbose").child("netrace");
-    globalResourcesReport.verbose_netrace_inject = verbose_node.child("inject").attribute("value").as_bool();
-    globalResourcesReport.verbose_netrace_eject = verbose_node.child("eject").attribute("value").as_bool();
-    globalResourcesReport.verbose_netrace_router_receive = verbose_node.child("router_receive").attribute("value").as_bool();
-
-    //	Task Verbosity
-    verbose_node = doc.child("configuration").child("verbose").child("tasks");
-    globalResourcesReport.verbose_task_xml_parse = verbose_node.child("xml_parse").attribute("value").as_bool();
-    globalResourcesReport.verbose_task_data_receive = verbose_node.child("data_receive").attribute("value").as_bool();
-    globalResourcesReport.verbose_task_data_send = verbose_node.child("data_send").attribute("value").as_bool();
-    globalResourcesReport.verbose_task_source_execute = verbose_node.child("source_execute").attribute("value").as_bool();
-    globalResourcesReport.verbose_task_function_calls = verbose_node.child("function_calls").attribute("value").as_bool();
 }
 
 void GlobalResources::readNodeTypes(const pugi::xml_node &noc_node) {
     for (pugi::xml_node node : noc_node.child("nodeTypes").children("nodeType")) {
-        int id = node.attribute("id").as_int();
+        int typeID = node.attribute("id").as_int();
         std::string model = node.child("model").attribute("value").as_string();
         std::string routing = node.child("routing").attribute("value").as_string();
         std::string selection = node.child("selection").attribute("value").as_string();
         int clkDelay = node.child("clockDelay").attribute("value").as_int();
         std::string arbiterType = node.child("arbiterType").attribute("value").as_string();
-        nodeTypes.emplace_back(id, model, routing, selection, clkDelay, arbiterType);
+        nodeTypes.emplace_back(typeID, model, routing, selection, clkDelay, arbiterType);
     }
 }
 
 void GlobalResources::readNodes(const pugi::xml_node &noc_node) {
     for (pugi::xml_node xmlnode : noc_node.child("nodes").children("node")) {
-        int id = xmlnode.attribute("id").as_int();
-        std::string name = "node_" + std::to_string(id);
+        int nodeID = xmlnode.attribute("id").as_int();
+        std::string name = "node_" + std::to_string(nodeID);
         float x = xmlnode.child("xPos").attribute("value").as_float();
         float y = xmlnode.child("yPos").attribute("value").as_float();
         float z = xmlnode.child("zPos").attribute("value").as_float();
         xPositions.push_back(x);
         yPositions.push_back(y);
         zPositions.push_back(z);
-        std::shared_ptr<NodeType> nodeType = nodeTypes.at(xmlnode.child("nodeType").attribute("value").as_int());
-        nodes.emplace_back(id, Vec3D<float>(x, y, z), nodeType);
+        int nodeTypeID = xmlnode.child("nodeType").attribute("value").as_int();
+        std::shared_ptr<NodeType> nodeType = nodeTypes.at(nodeTypeID);
+        nodes.emplace_back(nodeID, Vec3D<float>(x, y, z), nodeType);
     }
 
     sortPositions();
 
-    fillRestOfNode();
+    fillDirInfoOfNode();  // should be after reading the connection, because connectedNodes field is filled there.
 }
 
 void GlobalResources::sortPositions() {
@@ -292,9 +236,9 @@ void GlobalResources::sortPositions() {
     zPositions.erase(unique(zPositions.begin(), zPositions.end()), zPositions.end());
 }
 
-void GlobalResources::fillRestOfNode() {
+void GlobalResources::fillDirInfoOfNode() {
 
-    for (Node node : nodes) {
+    /*for (Node node : nodes) {
         //check for common directions
         std::vector<Vec3D<float>> distance(DIR::size, Vec3D<float>(2, 2, 2));
         for (int connectedNodeID : node.connectedNodes) {
@@ -337,19 +281,20 @@ void GlobalResources::fillRestOfNode() {
                 }
             }
         }
-    }
+    }*/
 }
 
 void GlobalResources::readConnections(const pugi::xml_node &noc_node) {
     for (pugi::xml_node xml_con : noc_node.child("connections").children("con")) {
-        int id = xml_con.attribute("id").as_int();
+        int connID = xml_con.attribute("id").as_int();
         std::vector<int> nodesOfConnection;
         std::vector<int> vcsCount;
         std::vector<int> buffersDepth;
         std::vector<std::vector<int>> buffersDepths;
 
         for (pugi::xml_node xml_port : xml_con.child("ports").children("port")) {
-            nodesOfConnection.push_back(xml_port.child("node").attribute("value").as_int());
+            int connectedNodeID = xml_port.child("node").attribute("value").as_int();
+            nodesOfConnection.push_back(connectedNodeID);
             vcsCount.push_back(xml_port.child("vcCount").attribute("value").as_int());
             buffersDepth.push_back(xml_port.child("bufferDepth").attribute("value").as_int());
 
@@ -368,19 +313,25 @@ void GlobalResources::readConnections(const pugi::xml_node &noc_node) {
         int depth = xml_con.child("depth").attribute("value").as_int();
         int width = xml_con.child("width").attribute("value").as_int();
 
-        Connection con = Connection(id, nodesOfConnection, vcsCount, buffersDepth, buffersDepths, length, width, depth);
+        Connection con = Connection(connID, nodesOfConnection, vcsCount, buffersDepth, buffersDepths, length, width,
+                                    depth);
 
         int nodesSize = nodesOfConnection.size();
         con.vcBufferUtilization.resize(nodesSize);
         con.bufferUtilization.resize(nodesSize);
         con.vcBufferCongestion.resize(nodesSize);
         con.bufferCongestion.resize(nodesSize);
-        for (int n : con.nodes) {
-            con.vcBufferUtilization.at(con.nodes.at(n)).resize(con.vcsCount.at(con.nodes.at(n)), 0);
-            con.vcBufferCongestion.at(con.nodes.at(n)).resize(con.vcsCount.at(con.nodes.at(n)), 0);
+        for (int nID : con.nodes) {
+            con.vcBufferUtilization.at(nID).resize(con.vcsCount.at(nID), 0);
+            con.vcBufferCongestion.at(nID).resize(con.vcsCount.at(nID), 0);
+            // Now that we know the nodes of each connection, we should reflect this info to the nodes themselves.
+            for (int dstNodeID: con.nodes) {
+                if (nID != dstNodeID)
+                    nodes.at(nID).connectedNodes.push_back(dstNodeID);
+            }
         }
 
-        connections.emplace_back(con);
+        connections.push_back(con);
 
         /*// add Connected nodes and connections to nodes list
         int i = 0;
@@ -416,49 +367,46 @@ void GlobalResources::readConnections(const pugi::xml_node &noc_node) {
     }
 }
 
-bool GlobalResources::readDataStream(std::string taskFilePath, std::string mappingFilePath) {
+void GlobalResources::readTaskAndMapFiles(const std::string &taskFilePath, const std::string &mappingFilePath) {
     std::map<int, int> bindings = readMappingFile(mappingFilePath);
     readTaskFile(taskFilePath, bindings);
-    return true;
 }
 
-std::map<int, int> GlobalResources::readMappingFile(std::string mappingFilePath){
+std::map<int, int> GlobalResources::readMappingFile(const std::string &mappingFilePath) {
     std::cout << "Reading Mapping config: " << mappingFilePath << endl;
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(mappingFilePath.c_str());
     assert(result && "Failed to read Mapping file!");
 
     pugi::xml_node map_node = doc.child("map");
-
-    /// Read Bindings ///
     std::map<int, int> bindings;  // <taskID, nodeID>
     for (pugi::xml_node bind_node : map_node.children("bind")) {
         int taskID = readRequiredIntAttribute(bind_node, "task", "value");
         int nodeID = readRequiredIntAttribute(bind_node, "node", "value");
-        bindings.insert({taskID, nodeID});
+        bindings.emplace(taskID, nodeID);
     }
-
-   return bindings;
+    return bindings;
 }
 
-void GlobalResources::readTaskFile(std::string taskFilePath, const std::map<int, int>& bindings){
+void GlobalResources::readTaskFile(const std::string &taskFilePath, const std::map<int, int> &bindings) {
+    //TODO the bindings vector was used to get the destination node and not task, of a current task.. keep it?
     std::cout << "Reading Data config: " << taskFilePath << endl;
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(taskFilePath.c_str());
     assert(result && "Failed to read Data file!");
     pugi::xml_node data_node = doc.child("data");
 
-    /// Read Types ///
-    numberOfTrafficTypes = data_node.child("dataTypes").select_nodes("dataType").size();
+    // Read Data Types
+    numberOfTrafficTypes = static_cast<int>(data_node.child("dataTypes").select_nodes("dataType").size());
     for (pugi::xml_node type_node : data_node.child("dataTypes").children("dataType")) {
-        int id = readRequiredIntAttribute(type_node, "id");
+        int dataTypeID = readRequiredIntAttribute(type_node, "id");
         std::string name = readRequiredStringAttribute(type_node, "name", "value");
-        dataTypes.emplace_back(id, name);
+        dataTypes.emplace_back(dataTypeID, name);
     }
-    /// Read Data ///
+    // Read Tasks
     for (pugi::xml_node task_node : data_node.child("tasks").children("task")) {
         int taskID = task_node.attribute("id").as_int();
-        Task task = Task(taskID, bindings.at(taskID));
+        Task task = Task{taskID, bindings.at(taskID)};
         readAttributeIfExists(task_node, "start", "min", task.minStart);
         readAttributeIfExists(task_node, "start", "max", task.maxStart);
         readAttributeIfExists(task_node, "duration", "min", task.minDuration);
@@ -468,48 +416,42 @@ void GlobalResources::readTaskFile(std::string taskFilePath, const std::map<int,
 
         // Read Requirements
         std::vector<DataRequirement> requirements;
-        //requirements.resize(task_node.child("requires").select_nodes("requirement").size());
         for (pugi::xml_node requirement_node : task_node.child("requires").children("requirement")) {
             int reqID = readRequiredIntAttribute(requirement_node, "id");
-            int type = readRequiredIntAttribute(requirement_node, "type", "value");
-            DataRequirement req = DataRequirement(reqID, type);
+            int typeID = readRequiredIntAttribute(requirement_node, "type", "value");
+            DataRequirement req = DataRequirement{reqID, typeID};
             readAttributeIfExists(requirement_node, "count", "min", req.minCount);
             readAttributeIfExists(requirement_node, "count", "max", req.maxCount);
-            requirements.emplace_back(req);
+            requirements.push_back(req);
         }
         task.requirements = requirements;
 
         // Read Destinations
-        std::vector<std::pair<float, std::vector<DataDestination *>>> possibilities;
-        possibilities.resize(task_node.child("generates").select_nodes("possibility").size());
+        std::vector<DataSendPossibility> possibilities;
         for (pugi::xml_node generate_node : task_node.child("generates").children("possibility")) {
-            int id = readRequiredIntAttribute(generate_node, "id");
+            int possID = readRequiredIntAttribute(generate_node, "id");
             float probability = readRequiredFloatAttribute(generate_node, "probability", "value");
-
-            std::vector<DataDestination *> destinations;
-            destinations.resize(generate_node.child("destinations").select_nodes("destination").size());
+            std::vector<DataDestination> destinations;
             for (pugi::xml_node destination_node : generate_node.child("destinations").children("destination")) {
-                int id = readRequiredIntAttribute(destination_node, "id");
-                DataType *type = dataTypes.at(readRequiredIntAttribute(destination_node, "type", "value"));
-                Node *node = bindings.at(readRequiredIntAttribute(destination_node, "task", "value"));
+                int dataDestID = readRequiredIntAttribute(destination_node, "id");
+                int typeID = readRequiredIntAttribute(destination_node, "type", "value");
+                int destTaskID = readRequiredIntAttribute(destination_node, "task", "value");
                 int minInterval = readRequiredIntAttribute(destination_node, "interval", "min");
                 int maxInterval = readRequiredIntAttribute(destination_node, "interval", "max");
-                DataDestination *dataDestination = new DataDestination(id, type, node, minInterval, maxInterval);
+                DataDestination dataDestination = DataDestination{dataDestID, typeID, destTaskID, minInterval,
+                                                                  maxInterval};
 
-                readAttributeIfExists(destination_node, "count", "min", dataDestination->minCount);
-                readAttributeIfExists(destination_node, "count", "max", dataDestination->maxCount);
-                readAttributeIfExists(destination_node, "delay", "min", dataDestination->minDelay);
-                readAttributeIfExists(destination_node, "delay", "max", dataDestination->maxDelay);
+                readAttributeIfExists(destination_node, "count", "min", dataDestination.minCount);
+                readAttributeIfExists(destination_node, "count", "max", dataDestination.maxCount);
+                readAttributeIfExists(destination_node, "delay", "min", dataDestination.minDelay);
+                readAttributeIfExists(destination_node, "delay", "max", dataDestination.maxDelay);
 
-                destinations.at(id) = dataDestination;
+                destinations.push_back(dataDestination);
             }
-
-            possibilities.at(id) = {probability, destinations};
+            possibilities.emplace_back(possID, probability, destinations);
         }
-        task->possibilities = possibilities;
+        task.possibilities = possibilities;
 
-        tasks.at(id) = task;
-
+        tasks.push_back(task);
     }
-
 }

@@ -103,6 +103,8 @@ public:
 
     std::vector<std::vector<std::vector<std::vector<long>>>> bufferUsagePerVCHist;
 
+    void readConfigFile(const std::string& config_path);
+
 
     /// VERBOSE ///
     //processing elements

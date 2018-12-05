@@ -40,7 +40,7 @@ GlobalReport::GlobalReport() :
         latencyNetwork("network latency"),
         latencyFlit("flit latency"),
         latencyPacket("packet latency ") {
-    unsigned int numRouters = globalResources.nodes.size() / 2;
+    auto numRouters = static_cast<unsigned int>(globalResources.nodes.size() / 2);
     this->VCsUsageHist.resize(numRouters);
     this->bufferUsageHist.resize(numRouters);
     this->bufferUsagePerVCHist.resize(numRouters);
@@ -106,7 +106,7 @@ void GlobalReport::reportPerformanceCSV(ostream &stream) {
 }
 
 void GlobalReport::issueRoutingCalculation(int id) {
-    std::map<int, int>::iterator it = routingCalulcations.find(id);
+    auto it = routingCalulcations.find(id);
     if (it != routingCalulcations.end())
         it->second++;
     else
@@ -147,21 +147,21 @@ void GlobalReport::reportRoutingCalculations(ostream &stream) {
 //}
 
 void GlobalReport::issueLinkMatrixUpdate(int id, int currentTransmissionState, int lastTransmissionState) {
-    std::map<int, std::vector<long> >::iterator it = linkTransmissionMatrices.find(id);
+    auto it = linkTransmissionMatrices.find(id);
     if (it == linkTransmissionMatrices.end()) {
         // not found, initialization
-        int numberElements = pow(linkTransmissionsMatrixNumberOfStates, 2);
+        int numberElements = static_cast<int>(pow(linkTransmissionsMatrixNumberOfStates, 2));
         std::vector<long> matrix(numberElements, 0);
         linkTransmissionMatrices.insert(std::make_pair(id, matrix));
     }
 
     linkTransmissionMatrices.at(id).at(
-            currentTransmissionState + linkTransmissionsMatrixNumberOfStates * lastTransmissionState)++;
+            static_cast<unsigned long>(currentTransmissionState + linkTransmissionsMatrixNumberOfStates * lastTransmissionState))++;
 }
 
 void GlobalReport::reportLinkMatrix(int id, ostream &stream) {
     auto transmissionMatrix = linkTransmissionMatrices.at(id);
-    long clockCyclesOfLink = std::accumulate(transmissionMatrix.begin(), transmissionMatrix.end(), 0);
+    long clockCyclesOfLink = static_cast<long>(std::accumulate(transmissionMatrix.begin(), transmissionMatrix.end(), 0));
     stream << boost::format("Transmission matrix of link %i:\n") % id;
     int colit = 0, rowit = 0;
     stream << boost::format("from\\to     IDLE     HEAD     HID");
@@ -207,7 +207,7 @@ void GlobalReport::reportLinkMatrices(ostream &stream) {
 }
 
 void GlobalReport::reportLinkMatricesCSV(ostream &stream) {
-    int numberOfElements = pow(linkTransmissionsMatrixNumberOfStates, 2);
+    int numberOfElements = static_cast<int>(pow(linkTransmissionsMatrixNumberOfStates, 2));
     stream << boost::format("link_id");
     for (int var = 0; var < numberOfElements - 1; ++var) {
         stream << boost::format(", %i") % var;
@@ -216,7 +216,7 @@ void GlobalReport::reportLinkMatricesCSV(ostream &stream) {
     for (auto matrix : linkTransmissionMatrices) {
         stream << boost::format("%i, ") % matrix.first;
         for (auto it = matrix.second.begin(); it != matrix.second.end(); it++) {
-            int value = matrix.second.at(it - matrix.second.begin());
+            int value = static_cast<int>(matrix.second.at(it - matrix.second.begin()));
             if (std::next(it) == matrix.second.end()) {
                 stream << boost::format("%i\n") % value;
             } else {
@@ -227,7 +227,7 @@ void GlobalReport::reportLinkMatricesCSV(ostream &stream) {
 }
 
 void GlobalReport::issueAcceleration(int id) {
-    std::map<int, int>::iterator it = numberOfAccelerations.find(id);
+    auto it = numberOfAccelerations.find(id);
     if (it != numberOfAccelerations.end())
         it->second++;
     else
@@ -253,7 +253,7 @@ void GlobalReport::reportAccelerationsTotal() {
 
 void GlobalReport::updateAverageNetworkLatencySystemLevel(double newLatency) {
     if (averageNetworkLatencySystemLevel == -1) {
-        averageNetworkLatencySystemLevel = (double) newLatency;
+        averageNetworkLatencySystemLevel = newLatency;
     } else {
         double scalingLarge = ((double) averageNetworkLatencySystemLevelInstances /
                                ((double) averageNetworkLatencySystemLevelInstances + (double) 1));
@@ -280,7 +280,7 @@ void GlobalReport::reportMaxNetworkLatencySystemLevel() {
 }
 
 void GlobalReport::updateUsageHist(std::vector<std::vector<std::vector<long>>> &histVec, int routerId, int dir,
-                                        int thirdDimensionIndex, int thirdDimensionSize) {
+                                   int thirdDimensionIndex, int thirdDimensionSize) {
     if (!histVec.at(routerId).empty()) {
         int counter = histVec.at(routerId).at(dir).at(thirdDimensionIndex);
         histVec[routerId][dir][thirdDimensionIndex] = ++counter;
@@ -295,7 +295,7 @@ void GlobalReport::updateUsageHist(std::vector<std::vector<std::vector<long>>> &
 }
 
 void GlobalReport::reportUsageHist(std::vector<std::vector<std::vector<long>>> &histVec, std::string &csvFileName,
-                                        int routerId) {
+                                   int routerId) {
     ofstream csvFile;
     csvFile.open(csvFileName);
     for (unsigned int dir = 0; dir < histVec[routerId].size(); dir++) {
@@ -311,7 +311,7 @@ void GlobalReport::reportUsageHist(std::vector<std::vector<std::vector<long>>> &
 }
 
 void GlobalReport::updateBuffUsagePerVCHist(std::vector<std::vector<std::vector<std::vector<long>>>> &histVec,
-                                                 int routerId, int dir, int vc, int bufferOccupation, int numVCs) {
+                                            int routerId, int dir, int vc, int bufferOccupation, int numVCs) {
     if (!histVec.at(routerId).empty()) {
         long counter = histVec.at(routerId).at(dir).at(vc).at(bufferOccupation);
         histVec[routerId][dir][vc][bufferOccupation] = ++counter;
@@ -331,7 +331,7 @@ void GlobalReport::updateBuffUsagePerVCHist(std::vector<std::vector<std::vector<
 }
 
 void GlobalReport::reportBuffUsageHist(std::vector<std::vector<std::vector<std::vector<long>>>> &histVec,
-                                            std::string &csvFileName, int routerId, int dir) {
+                                       std::string &csvFileName, int routerId, int dir) {
     ofstream csvFile;
     csvFile.open(csvFileName);
 
@@ -390,6 +390,58 @@ void GlobalReport::reportAllRoutersUsageHist() {
     }
 }
 
+void GlobalReport::readConfigFile(const std::string &config_path) {
 
+    pugi::xml_document doc;
+    pugi::xml_parse_result result = doc.load_file(config_path.c_str());
+    assert(result && "Failed to read simulator config file!");
+
+    GlobalReport &globalResourcesReport = GlobalReport::getInstance();
+
+    //	PE Verbosity
+    pugi::xml_node verbose_node = doc.child("configuration").child("verbose").child("processingElements");
+    globalResourcesReport.verbose_pe_function_calls = verbose_node.child("function_calls").attribute("value").as_bool();
+    globalResourcesReport.verbose_pe_send_flit = verbose_node.child("send_flit").attribute("value").as_bool();
+    globalResourcesReport.verbose_pe_send_head_flit = verbose_node.child("send_head_flit").attribute("value").as_bool();
+    globalResourcesReport.verbose_pe_receive_flit = verbose_node.child("receive_flit").attribute("value").as_bool();
+    globalResourcesReport.verbose_pe_receive_tail_flit = verbose_node.child("receive_tail_flit").attribute(
+            "value").as_bool();
+    globalResourcesReport.verbose_pe_throttle = verbose_node.child("throttle").attribute("value").as_bool();
+    globalResourcesReport.verbose_pe_reset = verbose_node.child("reset").attribute("value").as_bool();
+
+    //	Router Verbosity
+    verbose_node = doc.child("configuration").child("verbose").child("router");
+    globalResourcesReport.verbose_router_function_calls = verbose_node.child("function_calls").attribute(
+            "value").as_bool();
+    globalResourcesReport.verbose_router_send_flit = verbose_node.child("send_flit").attribute("value").as_bool();
+    globalResourcesReport.verbose_router_send_head_flit = verbose_node.child("send_head_flit").attribute(
+            "value").as_bool();
+    globalResourcesReport.verbose_router_receive_flit = verbose_node.child("receive_flit").attribute("value").as_bool();
+    globalResourcesReport.verbose_router_receive_head_flit = verbose_node.child("receive_head_flit").attribute(
+            "value").as_bool();
+    globalResourcesReport.verbose_router_assign_channel = verbose_node.child("assign_channel").attribute(
+            "value").as_bool();
+    globalResourcesReport.verbose_router_throttle = verbose_node.child("throttle").attribute("value").as_bool();
+    globalResourcesReport.verbose_router_buffer_overflow = verbose_node.child("buffer_overflow").attribute(
+            "value").as_bool();
+    globalResourcesReport.verbose_router_reset = verbose_node.child("reset").attribute("value").as_bool();
+
+    //	Netrace Verbosity
+    verbose_node = doc.child("configuration").child("verbose").child("netrace");
+    globalResourcesReport.verbose_netrace_inject = verbose_node.child("inject").attribute("value").as_bool();
+    globalResourcesReport.verbose_netrace_eject = verbose_node.child("eject").attribute("value").as_bool();
+    globalResourcesReport.verbose_netrace_router_receive = verbose_node.child("router_receive").attribute(
+            "value").as_bool();
+
+    //	Task Verbosity
+    verbose_node = doc.child("configuration").child("verbose").child("tasks");
+    globalResourcesReport.verbose_task_xml_parse = verbose_node.child("xml_parse").attribute("value").as_bool();
+    globalResourcesReport.verbose_task_data_receive = verbose_node.child("data_receive").attribute("value").as_bool();
+    globalResourcesReport.verbose_task_data_send = verbose_node.child("data_send").attribute("value").as_bool();
+    globalResourcesReport.verbose_task_source_execute = verbose_node.child("source_execute").attribute(
+            "value").as_bool();
+    globalResourcesReport.verbose_task_function_calls = verbose_node.child("function_calls").attribute(
+            "value").as_bool();
+}
 
 

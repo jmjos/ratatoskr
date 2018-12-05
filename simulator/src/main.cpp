@@ -29,76 +29,52 @@
 #include "utils/Report.h"
 #include "model/NoC.h"
 
-int sc_main(int arg_num, char *arg_vet[]) {
-    GlobalResources& globalResourcesResources = GlobalResources::getInstance();
-    Report &rep = Report::getInstance();
+int sc_main(int arg_num, char *arg_vec[]) {
+    GlobalResources &globalResources = GlobalResources::getInstance();
+    GlobalReport globalReport = GlobalReport::getInstance();
+    Report &rep = Report::getInstance();  // database report
     srand(time(nullptr));
-    sleep(1); //wait for the systemC branding :/
-
-    cout << "\nA-3D-NoC Simulator Copyright(C) 2014-2019" << endl;
+    sleep(1);  // wait for the systemC branding
+    cout << endl << "A-3D-NoC Simulator Copyright(C) 2014-2019" << endl;
     cout << "   Jan Moritz Joseph (jan.joseph@ovgu.de) " << endl;
     cout << "This program comes with ABSOLUTELY NO WARRANTY;" << endl;
-    cout << "This is free software, and you are welcome to redistribute it"
-         << endl;
-    cout << "under certain conditions. For details see README file." << endl
-         << endl;
+    cout << "This is free software, and you are welcome to redistribute it" << endl;
+    cout << "under certain conditions. For details see README file." << endl << endl;
     cout << "Welcome to the A-3D-NoC Simulator!" << endl;
-
     sc_report_handler::set_verbosity_level(SC_DEBUG);
     sc_report_handler::set_actions(SC_ID_INSTANCE_EXISTS_, SC_DO_NOTHING); //disable renaming warnings
 
     if (arg_num == 2) {
-        globalResourcesResources.readConfigFile(arg_vet[1]);
+        globalResources.readConfigFile(arg_vec[1]);
     } else {
-        globalResourcesResources.readConfigFile("config/config.xml");
+        std::string config_path = "config/config.xml";
+        globalResources.readConfigFile(config_path);
+        globalReport.readConfigFile(config_path);
     }
-
-    globalResourcesResources.readNoCLayout(globalResourcesResources.noc_file);
-
-    if (!globalResourcesResources.data_file.empty() && !globalResourcesResources.map_file.empty())
-        globalResourcesResources.readDataStream(globalResourcesResources.data_file, globalResourcesResources.map_file);
+    globalResources.readNoCLayout(globalResources.noc_file);
+    if (!globalResources.data_file.empty() && !globalResources.map_file.empty())
+        globalResources.readTaskAndMapFiles(globalResources.data_file, globalResources.map_file);
 
     rep.connect("127.0.0.1", "10000");
     rep.startRun("name");
 
-//	rep.startRun(globalResources.inputNoc);
-//	int id = rep.registerElement("run", 0);
-//	rep.reportAttribute(id, "config", globalResources.inputConfig);
-//	rep.reportAttribute(id, "noc", globalResources.inputNoc);
-//	rep.reportAttribute(id, "routing", globalResources.routing);
-//	rep.reportAttribute(id, "selection", globalResources.selection);
-//	rep.reportAttribute(id, "traffic", globalResources.benchmark);
-
     std::unique_ptr<NoC> noc = std::make_unique<NoC>("Layer");
-
-    std::chrono::high_resolution_clock::time_point t1 =
-            std::chrono::high_resolution_clock::now();
-
+    std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
     cout << endl << "Starting Simulation!" << endl;
-    sc_start(globalResourcesResources.simulation_time, SC_NS);
+    sc_start(globalResources.simulation_time, SC_NS);
 
-    GlobalReport report = GlobalReport::getInstance();
-
-//	std::ostream & objOstream = std::cout;
-//	report.reportLinkMatrix(8, objOstream);
-
-    if (globalResourcesResources.outputToFile) {
-        cout << "Generating report of the simulation run into file "
-             << globalResourcesResources.outputFileName << " ... ";
-        report.reportComplete(globalResourcesResources.outputFileName);
+    if (globalResources.outputToFile) {
+        cout << "Generating report of the simulation run into file " << globalResources.outputFileName << " ... ";
+        globalReport.reportComplete(globalResources.outputFileName);
         cout << " done." << endl;
     }
-    report.reportPerformance(cout);
-
+    globalReport.reportPerformance(cout);
     auto duration = std::chrono::duration_cast<std::chrono::seconds>(
             std::chrono::high_resolution_clock::now() - t1).count();
-
     auto durationmin = std::chrono::duration_cast<std::chrono::minutes>(
             std::chrono::high_resolution_clock::now() - t1).count();
-
-    cout << "Execution time: " << durationmin << " minutes and " << duration
-         << " seconds" << std::endl;
-
+    cout << "Execution time: " << durationmin << " minutes and " << duration << " seconds" << std::endl;
     rep.close();
+
     return 0;
 }

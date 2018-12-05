@@ -116,7 +116,7 @@ DataDestination::DataDestination(int id, int dataType, int destinationTask, int 
         maxDelay(0) {
 }
 
-DataSendPossibility::DataSendPossibility(int id, float probability, std::vector<int> dataDestinations) :
+DataSendPossibility::DataSendPossibility(int id, float probability, std::vector<DataDestination> dataDestinations) :
         id(id),
         probability(probability),
         dataDestinations(dataDestinations) {
@@ -128,7 +128,7 @@ Task::Task(int id, int nodeID) :
 
 }
 
-Task::Task(int id, int node, std::vector<int> requirements, std::vector<int> possibilities) :
+Task::Task(int id, int node, std::vector<DataRequirement> requirements, std::vector<DataSendPossibility> possibilities) :
         id(id),
         node(node),
         requirements(requirements),

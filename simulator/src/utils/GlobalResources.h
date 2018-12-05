@@ -30,7 +30,6 @@
 
 #include "Structures.h"
 #include "pugixml.hpp"
-#include "GlobalReport.h"
 
 class GlobalResources {
 
@@ -72,11 +71,11 @@ public:
 
     float getRandomFloatBetween(float, float);
 
-    bool readConfigFile(std::string filePath);
+    void readConfigFile(const std::string &configPath);
 
-    bool readNoCLayout(std::string filePath);
+    void readNoCLayout(const std::string &nocPath);
 
-    bool readDataStream(std::string taskFilePath, std::string mappingFilePath);
+    void readTaskAndMapFiles(const std::string &taskFilePath, const std::string &mappingFilePath);
 
 private:
     std::unique_ptr<std::random_device> rd;
@@ -88,24 +87,24 @@ private:
 
     std::vector<int> strs_to_ints(const std::vector<std::string> &strings);
 
-    void initGlobalReport(const pugi::xml_document &doc);
 
     void readNodeTypes(const pugi::xml_node &noc_node);
 
-    void readNodes(const pugi::xml_node & noc_node);
+    void readNodes(const pugi::xml_node &noc_node);
 
     void sortPositions();
 
-    void fillRestOfNode();
+    void fillDirInfoOfNode();
 
-    void readConnections(const pugi::xml_node & noc_node);
+    void readConnections(const pugi::xml_node &noc_node);
 
     void readAttributeIfExists(pugi::xml_node, const char *, const char *, int &);
 
     void readAttributeIfExists(pugi::xml_node, const char *, int &);
 
-    void readTaskFile(std::string taskFilePath, const std::map<int, int>& bindings);
-    std::map<int, int> readMappingFile(std::string mappingFilePath);
+    void readTaskFile(const std::string &taskFilePath, const std::map<int, int> &bindings);
+
+    std::map<int, int> readMappingFile(const std::string &mappingFilePath);
 
     std::string readRequiredStringAttribute(pugi::xml_node, const char *, const char *);
 
