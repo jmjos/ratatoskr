@@ -12,7 +12,7 @@
 	If not, see <http://www.gnu.org/licenses/>. -->
 <configuration>
   <general>
-    <simulationTime value="30000" />
+    <simulationTime value="3000000" />
     <outputToFile value="true">report</outputToFile>
   </general>
   <noc>
@@ -65,9 +65,9 @@
       <processingElements>
         <function_calls value="false" />
         <send_flit value="false" />
-        <send_head_flit value="true" />
+        <send_head_flit value="false" />
         <receive_flit value="false" />
-        <receive_tail_flit value="true" />
+        <receive_tail_flit value="false" />
         <throttle value="false" />
         <reset value="true" />
       </processingElements>
