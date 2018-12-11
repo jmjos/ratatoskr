@@ -26,13 +26,11 @@ TaskPool::TaskPool() {
 	cout << "Task Testrun" << endl;
 }
 
-TaskPool::~TaskPool() {
-
-}
+TaskPool::~TaskPool() = default;
 
 void TaskPool::start() {
-	for(Task* task: globalResources.tasks) {
-		processingElements.at(task->node->id % processingElements.size())->execute(task);
+	for(Task& task: globalResources.tasks) {
+		processingElements.at(task.node % processingElements.size())->execute(task);
 	}
 }
 

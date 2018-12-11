@@ -38,19 +38,18 @@ class Flit
 public:
 	Report& rep = Report::getInstance();
 	static int idcnt;
-
 	int id;
 	int dbid;
 	int seq_nb;
 	FlitType type;
-	Packet* packet;
+	Packet& packet;
 	Flit* headFlit;
-	int trafficTypeId;
+	dataTypeID_t dataType;
 	double injectionTime;
-	double creationTime;
+	double generationTime;
 
-	Flit(FlitType type, int seq_nb, Packet* p);
-	Flit(FlitType type, int seq_nb, Packet* p, int trafficTypeId, double creationTime);
+	Flit(FlitType type, int seq_nb, Packet& p);
+	Flit(FlitType type, int seq_nb, Packet& p, dataTypeID_t dataType, double generationTime);
 	~Flit();
 
 	friend ostream & operator <<(ostream & os, const Flit& flit);

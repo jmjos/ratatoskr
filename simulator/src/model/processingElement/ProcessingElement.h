@@ -34,9 +34,9 @@ class ProcessingElement : public NetworkParticipant, public sc_module{
 public:
 	int id;
 	int dbid;
-	Node* node;
+	Node& node;
 
-	TrafficPool* trafficPool;
+	TrafficPool& trafficPool;
 
 
 	SC_HAS_PROCESS(ProcessingElement);

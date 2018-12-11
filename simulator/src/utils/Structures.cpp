@@ -23,50 +23,61 @@
 
 const std::vector<DIR::TYPE> DIR::XYZ = {DIR::Local, DIR::East, DIR::West, DIR::North, DIR::South, DIR::Up, DIR::Down};
 
-Channel::Channel() :
+Channel::Channel()
+        :
         dir(0),
-        vc(0) {
+        vc(0)
+{
 }
 
-Channel::Channel(int dir, int vc) :
+Channel::Channel(int dir, int vc)
+        :
         dir(dir),
-        vc(vc) {
+        vc(vc)
+{
 }
 
-bool Channel::operator<(const Channel &c) const {
-    if (dir != c.dir) {
-        return dir < c.dir;
-    } else if (vc != c.vc) {
-        return vc < c.vc;
+bool Channel::operator<(const Channel& c) const
+{
+    if (dir!=c.dir) {
+        return dir<c.dir;
+    }
+    else if (vc!=c.vc) {
+        return vc<c.vc;
     }
     return false;
 }
 
-NodeType::NodeType(int id, std::string model, std::string routing,
-                   std::string selection, int clk, std::string arbiterType) :
+NodeType::NodeType(nodeTypeID_t id, const std::string& model, const std::string& routing,
+        const std::string& selection, int clk, const std::string& arbiterType)
+        :
         id(id),
         model(model),
         routing(routing),
         selection(selection),
         clockDelay(clk),
-        arbiterType(arbiterType) {
+        arbiterType(arbiterType)
+{
 }
 
 /*LayerType::LayerType(int id, int technology) : TODO restructure
         id(id),
         technology(technology) {
-
 }*/
 
-Node::Node(int id, Vec3D<float> pos, std::shared_ptr<NodeType> type) :
+Node::Node(nodeID_t id, Vec3D<float> pos, const std::shared_ptr<NodeType>& type)
+        :
         id(id),
         pos(pos),
         type(type),
-        congestion(0.0) {
+        congestion(0.0)
+{
 }
 
-Connection::Connection(int id, std::vector<int> nodes, std::vector<int> vcsCount, std::vector<int> buffersDepth,
-                       std::vector<std::vector<int>> buffersDepths, float length, int width, int depth) :
+Connection::Connection(connID_t id, const std::vector<nodeID_t>& nodes, const std::vector<int>& vcsCount,
+        const std::vector<int>& buffersDepth,
+        const std::vector<std::vector<int>>& buffersDepths, float length, int width, int depth)
+        :
         id(id),
         nodes(nodes),
         vcsCount(vcsCount),
@@ -74,37 +85,47 @@ Connection::Connection(int id, std::vector<int> nodes, std::vector<int> vcsCount
         buffersDepths(buffersDepths),
         length(length),
         width(width),
-        depth(depth) {
+        depth(depth)
+{
 }
 
-int Connection::getBufferDepthForNode(int node) {
+int Connection::getBufferDepthForNode(nodeID_t node)
+{
     // assert(nodePos.count(n) && "Node not found inside connection! (buffer)");  TODO restructure
     return buffersDepth.at(node);
 }
 
-int Connection::getBufferDepthForNodeAndVC(int node, int vc) {
+int Connection::getBufferDepthForNodeAndVC(nodeID_t node, int vc)
+{
     // assert(nodePos.count(n) && "Node not found inside connection! (buffer)");  TODO restructure
     return buffersDepths.at(node).at(vc);
 }
 
-int Connection::getVCCountForNode(int node) {
+int Connection::getVCCountForNode(nodeID_t node)
+{
     // assert(nodePos.count(n) && "Node not found inside connection! (vc)");  TODO restructure
     return vcsCount.at(node);
 }
 
-DataType::DataType(int id, std::string name) :
+DataType::DataType(dataTypeID_t id, const std::string& name)
+        :
         id(id),
-        name(name) {
+        name(name)
+{
 }
 
-DataRequirement::DataRequirement(int id, int dataType) :
+DataRequirement::DataRequirement(dataReqID_t id, dataTypeID_t dataType)
+        :
         id(id),
         dataType(dataType),
         minCount(-1),
-        maxCount(-1) {
+        maxCount(-1)
+{
 }
 
-DataDestination::DataDestination(int id, int dataType, int destinationTask, int minInterval, int maxInterval) :
+DataDestination::DataDestination(dataDestID_t id, dataTypeID_t dataType, taskID_t destinationTask, int minInterval,
+        int maxInterval)
+        :
         id(id),
         dataType(dataType),
         destinationTask(destinationTask),
@@ -113,22 +134,30 @@ DataDestination::DataDestination(int id, int dataType, int destinationTask, int 
         minCount(-1),
         maxCount(-1),
         minDelay(0),
-        maxDelay(0) {
+        maxDelay(0)
+{
 }
 
-DataSendPossibility::DataSendPossibility(int id, float probability, std::vector<DataDestination> dataDestinations) :
+DataSendPossibility::DataSendPossibility(possID_t id, float probability,
+        const std::vector<DataDestination>& dataDestinations)
+        :
         id(id),
         probability(probability),
-        dataDestinations(dataDestinations) {
+        dataDestinations(dataDestinations)
+{
 }
 
-Task::Task(int id, int nodeID) :
+Task::Task(taskID_t id, nodeID_t nodeID)
+        :
         id(id),
-        node(nodeID) {
+        node(nodeID)
+{
 
 }
 
-Task::Task(int id, int node, std::vector<DataRequirement> requirements, std::vector<DataSendPossibility> possibilities) :
+Task::Task(taskID_t id, nodeID_t node, const std::vector<DataRequirement>& requirements,
+        const std::vector<DataSendPossibility>& possibilities)
+        :
         id(id),
         node(node),
         requirements(requirements),
@@ -139,10 +168,13 @@ Task::Task(int id, int node, std::vector<DataRequirement> requirements, std::vec
         minDuration(-1),
         maxDuration(-1),
         minRepeat(-1),
-        maxRepeat(-1) {
+        maxRepeat(-1)
+{
 }
 
-SyntheticPhase::SyntheticPhase(int id, std::string name, std::string distribution, float injectionRate) :
+SyntheticPhase::SyntheticPhase(synthID_t id, const std::string& name, const std::string& distribution,
+        float injectionRate)
+        :
         id(id),
         name(name),
         distribution(distribution),
@@ -157,5 +189,6 @@ SyntheticPhase::SyntheticPhase(int id, std::string name, std::string distributio
         maxCount(-1),
         minDelay(0),
         maxDelay(0),
-        hotspot(-1) {
+        hotspot(-1)
+{
 }

@@ -23,6 +23,7 @@
 
 #include "systemc.h"
 #include <set>
+#include <utils/PacketFactory.h>
 
 #include "utils/GlobalResources.h"
 #include "utils/GlobalReport.h"
@@ -31,13 +32,15 @@
 
 class NetworkParticipant {
 public:
-	GlobalResources& globalResources = GlobalResources::getInstance();
-	GlobalReport& globalResourcesReportClass = GlobalReport::getInstance();
-	Report& rep = Report::getInstance();
+    GlobalResources& globalResources = GlobalResources::getInstance();
+    GlobalReport& globalReport = GlobalReport::getInstance();
+    Report& rep = Report::getInstance();
+    PacketFactory& packetFactory = PacketFactory::getInstance();
 
+    virtual ~NetworkParticipant() = 0;
 
-	virtual ~NetworkParticipant(){};
-	virtual void initialize()=0;
-	virtual void bind(Connection*, SignalContainer*, SignalContainer*) = 0;
+    virtual void initialize() = 0;
+
+    virtual void bind(Connection*, SignalContainer*, SignalContainer*) = 0;
 };
 

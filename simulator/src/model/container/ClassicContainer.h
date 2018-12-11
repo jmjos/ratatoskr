@@ -19,102 +19,107 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-#ifndef SRC_MODEL_CONTAINER_CLASSICCONTAINER_H_
-#define SRC_MODEL_CONTAINER_CLASSICCONTAINER_H_
+#pragma once
 
 #include "Container.h"
 
-class ClassicSignalContainer: public SignalContainer {
+class ClassicSignalContainer : public SignalContainer {
 public:
-	sc_signal<bool> sigValid;
-	sc_signal<std::vector<bool>*> sigFlowControl;
-	sc_signal<std::vector<int>*> sigTag;
-	sc_signal<Flit*> sigData;
-	sc_signal<int> sigVc;
-	sc_signal<bool> sigReset;
+    sc_signal<bool> sigValid;
+    sc_signal<std::vector<bool>*> sigFlowControl;
+    sc_signal<std::vector<int>*> sigTag;
+    sc_signal<Flit&> sigData;
+    sc_signal<int> sigVc;
+    sc_signal<bool> sigReset;
 
-	ClassicSignalContainer(sc_module_name nm) :
-			SignalContainer(nm) {
-	}
-	;
-	~ClassicSignalContainer() {
-	}
-	;
+    ClassicSignalContainer(sc_module_name nm)
+            :
+            SignalContainer(nm)
+    {
+    };
+
+    ~ClassicSignalContainer()
+    {
+        delete sigFlowControl;
+        delete sigTag;
+        delete sigData;
+    };
 
 };
 
-class ClassicPortContainer: public PortContainer {
+class ClassicPortContainer : public PortContainer {
 public:
-	sc_in<bool> portValidIn;
-	sc_in<std::vector<bool>*> portFlowControlIn;
-	sc_in<std::vector<int>*> portTagIn;
-	sc_in<Flit*> portDataIn;
-	sc_in<int> portVcIn;
-	sc_in<bool> portResetIn;
+    sc_in<bool> portValidIn;
+    sc_in<std::vector<bool>*> portFlowControlIn;
+    sc_in<std::vector<int>*> portTagIn;
+    sc_in<Flit&> portDataIn;
+    sc_in<int> portVcIn;
+    sc_in<bool> portResetIn;
 
-	sc_out<bool> portValidOut;
-	sc_out<std::vector<bool>*> portFlowControlOut;
-	sc_out<std::vector<int>*> portTagOut;
-	sc_out<Flit*> portDataOut;
-	sc_out<int> portVcOut;
-	sc_out<bool> portResetOut;
+    sc_out<bool> portValidOut;
+    sc_out<std::vector<bool>*> portFlowControlOut;
+    sc_out<std::vector<int>*> portTagOut;
+    sc_out<Flit*> portDataOut;
+    sc_out<int> portVcOut;
+    sc_out<bool> portResetOut;
 
-	ClassicPortContainer(sc_module_name nm) :
-			PortContainer(nm) {
-	}
-	;
-	~ClassicPortContainer() {
-	}
-	;
+    ClassicPortContainer(sc_module_name nm)
+            :
+            PortContainer(nm)
+    {
+    };
 
-	void bind(SignalContainer* sIn, SignalContainer* sOut) {
-		ClassicSignalContainer* cscin =
-				dynamic_cast<ClassicSignalContainer*>(sIn);
-		ClassicSignalContainer* cscout =
-				dynamic_cast<ClassicSignalContainer*>(sOut);
+    ~ClassicPortContainer()
+    {
+        delete portFlowControlIn;
+        delete portFlowControlOut;
+        delete portTagIn;
+        delete portTagOut;
+    };
 
-		assert(cscin);
-		assert(cscout);
+    void bind(SignalContainer* sIn, SignalContainer* sOut)
+    {
+        auto cscin = dynamic_cast<ClassicSignalContainer*>(sIn);
+        auto cscout = dynamic_cast<ClassicSignalContainer*>(sOut);
 
-		portValidIn(cscin->sigValid);
-		portFlowControlIn(cscin->sigFlowControl);
-		portTagIn(cscin->sigTag);
-		portDataIn(cscin->sigData);
-		portVcIn(cscin->sigVc);
-		portResetIn(cscin->sigReset);
+        assert(cscin);
+        assert(cscout);
 
-		portValidOut(cscout->sigValid);
-		portFlowControlOut(cscout->sigFlowControl);
-		portTagOut(cscout->sigTag);
-		portDataOut(cscout->sigData);
-		portVcOut(cscout->sigVc);
-		portResetOut(cscout->sigReset);
+        portValidIn(cscin->sigValid);
+        portFlowControlIn(cscin->sigFlowControl);
+        portTagIn(cscin->sigTag);
+        portDataIn(cscin->sigData);
+        portVcIn(cscin->sigVc);
+        portResetIn(cscin->sigReset);
 
-	}
-	;
+        portValidOut(cscout->sigValid);
+        portFlowControlOut(cscout->sigFlowControl);
+        portTagOut(cscout->sigTag);
+        portDataOut(cscout->sigData);
+        portVcOut(cscout->sigVc);
+        portResetOut(cscout->sigReset);
 
-	void bindOpen(SignalContainer* sIn) {
-		ClassicSignalContainer* cscin =
-				dynamic_cast<ClassicSignalContainer*>(sIn);
+    };
 
-		assert(cscin);
+    void bindOpen(SignalContainer* sIn)
+    {
+        auto cscin = dynamic_cast<ClassicSignalContainer*>(sIn);
 
-		portValidIn(cscin->sigValid);
-		portFlowControlIn(cscin->sigFlowControl);
-		portTagIn(cscin->sigTag);
-		portDataIn(cscin->sigData);
-		portVcIn(cscin->sigVc);
-		portResetIn(cscin->sigReset);
+        assert(cscin);
 
-		portValidOut(portOpen);
-		portFlowControlOut(portOpen);
-		portTagOut(portOpen);
-		portDataOut(portOpen);
-		portVcOut(portOpen);
-		portResetOut(portOpen);
+        portValidIn(cscin->sigValid);
+        portFlowControlIn(cscin->sigFlowControl);
+        portTagIn(cscin->sigTag);
+        portDataIn(cscin->sigData);
+        portVcIn(cscin->sigVc);
+        portResetIn(cscin->sigReset);
 
-	}
-
+        portValidOut(portOpen);
+        portFlowControlOut(portOpen);
+        portTagOut(portOpen);
+        portDataOut(portOpen);
+        portVcOut(portOpen);
+        portResetOut(portOpen);
+    }
 };
 
-#endif /* SRC_MODEL_CONTAINER_CLASSICCONTAINER_H_ */

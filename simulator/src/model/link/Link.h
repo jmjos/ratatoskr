@@ -30,37 +30,40 @@
 #include "utils/GlobalResources.h"
 #include "utils/GlobalReport.h"
 
-
-enum LinkType{
-	HORIZONTAL=10, VERTICAL = 11
+enum LinkType {
+    HORIZONTAL = 10, VERTICAL = 11
 };
 
-class Link: public sc_module{
-	GlobalResources& globalResources = GlobalResources::getInstance();
-	GlobalReport& report = GlobalReport::getInstance();
-	int id, globalResourcesId;
-	Flit* previousFlit;
-	Flit* currentFlit;
-	int previousTransmissionState = 0;
-	int currentTransmissionState = 0;
-	LinkType linkType;
-	int linkWidth;
-	int linkDepth;
+class Link : public sc_module {
+    GlobalResources& globalResources = GlobalResources::getInstance();
+    GlobalReport& report = GlobalReport::getInstance();
+    int id, globalID;
+    Flit* previousFlit;
+    Flit* currentFlit;
+    int previousTransmissionState = 0;
+    int currentTransmissionState = 0;
+    LinkType linkType;
+    int linkWidth;
+    int linkDepth;
 
-	// UNCOMMENT FOR RAW DATA ON LINK (@Lennart)
-	// ofstream *rawDataOutput;
-  
+    // UNCOMMENT FOR RAW DATA ON LINK (@Lennart)
+    // ofstream *rawDataOutput;
+
 
 public:
-	sc_in<bool> clk;
-	FlitPortContainer* classicPortContainer;
+    sc_in<bool> clk;
+    FlitPortContainer* classicPortContainer;
 
-	SC_HAS_PROCESS(Link);
-	Link(sc_module_name nm, Connection* c, int globalResourcesId);
-	~Link();
+    SC_HAS_PROCESS(Link);
 
-	void bind(SignalContainer* sigContIn, SignalContainer* sigContOut);
-	void bindOpen(SignalContainer* sigContIn);
-	void passthrough_thread();
+    Link(sc_module_name nm, const Connection& c, int globalID);
+
+    ~Link() override;
+
+    void bind(SignalContainer* sigContIn, SignalContainer* sigContOut);
+
+    void bindOpen(SignalContainer* sigContIn);
+
+    void passthrough_thread();
 };
 

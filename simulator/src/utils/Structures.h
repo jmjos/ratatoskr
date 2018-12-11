@@ -29,6 +29,15 @@
 
 #include "Report.h"
 
+using nodeID_t = int;
+using connID_t = int;
+using nodeTypeID_t = int;
+using dataTypeID_t = int;
+using dataReqID_t = int;
+using dataDestID_t = int;
+using possID_t = int;
+using taskID_t = int;
+using synthID_t = int;
 
 struct DIR {
     const static int size = 7;
@@ -39,53 +48,57 @@ struct DIR {
 
     static const std::vector<TYPE> XYZ;
 
-    static TYPE toDir(int a) {
+    static TYPE toDir(int a)
+    {
         return static_cast<TYPE>(a);
     }
 
-    static std::string toString(TYPE a) {
+    static std::string toString(TYPE a)
+    {
         switch (a) {
-            case Local:
-                return "Local";
-            case East:
-                return "East";
-            case West:
-                return "West";
-            case North:
-                return "North";
-            case South:
-                return "South";
-            case Up:
-                return "Up";
-            case Down:
-                return "Down";
-            default:
-                return "Unknown Direction!!!";
+        case Local:
+            return "Local";
+        case East:
+            return "East";
+        case West:
+            return "West";
+        case North:
+            return "North";
+        case South:
+            return "South";
+        case Up:
+            return "Up";
+        case Down:
+            return "Down";
+        default:
+            return "Unknown Direction!!!";
         }
     }
 
-    static std::string toString(int a) {
+    static std::string toString(int a)
+    {
         return toString(toDir(a));
     }
 
-    static int getOppositeDir(int d) {
+    static int getOppositeDir(int d)
+    {
         switch (d) {
-            case 0:
-                return 0;
-            case 1:
-                return 2;
-            case 2:
-                return 1;
-            case 3:
-                return 4;
-            case 4:
-                return 3;
-            case 5:
-                return 6;
-            case 6:
-                return 5;
-            default:
-                return 0;
+        case 0:
+            return 0;
+        case 1:
+            return 2;
+        case 2:
+            return 1;
+        case 3:
+            return 4;
+        case 4:
+            return 3;
+        case 5:
+            return 6;
+        case 6:
+            return 5;
+        default:
+            return 0;
         }
     }
 };
@@ -98,90 +111,101 @@ struct Channel {
 
     Channel(int dir, int vc);
 
-    bool operator<(const Channel &a) const;
+    bool operator<(const Channel& a) const;
 };
 
 template<typename T>
 struct Vec3D {
     T x = 0, y = 0, z = 0;
 
-    Vec3D() {
+    Vec3D() = default;
+
+    Vec3D(T x, T y, T z)
+            :
+            x(x), y(y), z(z)
+    {
     }
 
-    Vec3D(T x, T y, T z) :
-            x(x), y(y), z(z) {
+    bool operator<(Vec3D<T> v) const
+    {
+        return fabs(x)<fabs(v.x) ||
+                (fabs(x)==fabs(v.x) && (fabs(y)<fabs(v.y) || (fabs(y)==fabs(v.y) && fabs(z)<fabs(v.z))));
     }
 
-    bool operator<(Vec3D<T> v) const {
-        return fabs(x) < fabs(v.x) ||
-               (fabs(x) == fabs(v.x) && (fabs(y) < fabs(v.y) || (fabs(y) == fabs(v.y) && fabs(z) < fabs(v.z))));
+    Vec3D<T> operator+(const Vec3D<T> v) const
+    {
+        return Vec3D<T>(x+v.x, y+v.y, z+v.z);
     }
 
-    Vec3D<T> operator+(const Vec3D<T> v) const {
-        return Vec3D<T>(x + v.x, y + v.y, z + v.z);
+    Vec3D<T> operator-(const Vec3D<T> v) const
+    {
+        return Vec3D<T>(x-v.x, y-v.y, z-v.z);
     }
 
-    Vec3D<T> operator-(const Vec3D<T> v) const {
-        return Vec3D<T>(x - v.x, y - v.y, z - v.z);
+    double norm() const
+    {
+        return ((x*x)+(y*y)+(z*z));
     }
 
-    float norm() const {
-        return ((x * x) + (y * y) + (z * z));
+    double distance(const Vec3D<T> v) const
+    {
+        double disx = fabs(x-v.x);
+        double disy = fabs(y-v.y);
+        double disz = fabs(z-v.z);
+        return sqrt((disx*disx)+(disy*disy)+(disz*disz));
     }
 
-    float distance(const Vec3D<T> v) const {
-        float disx = fabs(x - v.x);
-        float disy = fabs(y - v.y);
-        float disz = fabs(z - v.z);
-        return sqrt((disx * disx) + (disy * disy) + (disz * disz));
+    double sameDimDistance(const Vec3D<T> v) const
+    {
+        double disx = fabs(x-v.x);
+        double disy = fabs(y-v.y);
+        return sqrt((disx*disx)+(disy*disy));
     }
 
-    float sameDimDistance(const Vec3D<T> v) const {
-        float disx = fabs(x - v.x);
-        float disy = fabs(y - v.y);
-        return sqrt((disx * disx) + (disy * disy));
+    bool operator==(const Vec3D<T> v) const
+    {
+        return ((x==v.x) && (y==v.y) && (z==v.z));
     }
 
-    bool operator==(const Vec3D<T> v) const {
-        return ((x == v.x) && (y == v.y) && (z == v.z));
-    }
-
-    int sameDimCount(const Vec3D<T> v) const {
+    int sameDimCount(const Vec3D<T> v) const
+    {
         int count = 0;
-        if (x == v.x) {
+        if (x==v.x) {
             count++;
         }
-        if (y == v.y) {
+        if (y==v.y) {
             count++;
         }
-        if (z == v.z) {
+        if (z==v.z) {
             count++;
         }
         return count;
     }
 
-    int diffDimCount(const Vec3D<T> v) const {
+    int diffDimCount(const Vec3D<T> v) const
+    {
         int count = 0;
-        if (x != v.x) {
+        if (x!=v.x) {
             count++;
         }
-        if (y != v.y) {
+        if (y!=v.y) {
             count++;
         }
-        if (z != v.z) {
+        if (z!=v.z) {
             count++;
         }
         return count;
     }
 
-    friend ostream &operator<<(ostream &output, const Vec3D<T> &v) {
+    friend ostream& operator<<(ostream& output, const Vec3D<T>& v)
+    {
         output << "(" << v.x << ", " << v.y << ", " << v.z << ")";
         return output;
     }
 };
 
 struct NodeType {
-    int id;
+    nodeTypeID_t id;
     std::string model;
     std::string routing;
     std::string selection;
@@ -189,8 +213,8 @@ struct NodeType {
     std::string arbiterType;
     // std::vector<Node*> nodes; TODO restructure
 
-    NodeType(int id, std::string model, std::string routing, std::string selection, int clkDelay,
-             std::string arbiterType);
+    NodeType(nodeTypeID_t id, const std::string& model, const std::string& routing, const std::string& selection,
+            int clkDelay, const std::string& arbiterType);
 };
 
 /*struct LayerType { TODO restructure
@@ -199,26 +223,26 @@ struct NodeType {
 };*/
 
 struct Node {
-    int id;
+    nodeID_t id;
     Vec3D<float> pos;
     std::shared_ptr<NodeType> type;
     float congestion; // crossbar utilization 0-1
-    std::vector<int> connectedNodes;
-    std::vector<int> connections;
-    std::map<DIR::TYPE, int> dirToCon; //maps direction names to connection number
-    std::map<int, DIR::TYPE> conToDir; //maps connection number to direction name
+    std::vector<nodeID_t> connectedNodes;
+    std::vector<connID_t> connections;
+    std::map<DIR::TYPE, connID_t> dirToCon; //maps direction names to connection number
+    std::map<connID_t, DIR::TYPE> conToDir; //maps connection number to direction name
 
     /* int idType; TODO restructure
      LayerType* layer;
      std::map<Node *, std::vector<int>> connectionsToNode; //get connection by connected node
      std::map<Connection *, int> conToPos; // get position of connection inside array
      */
-    Node(int id, Vec3D<float> pos, std::shared_ptr<NodeType> type); //, LayerType* layer); TODO restructure
+    Node(nodeID_t id, Vec3D<float> pos, const std::shared_ptr<NodeType>& type); //, LayerType* layer); TODO restructure
 };
 
 struct Connection {
-    int id;
-    std::vector<int> nodes; //TODO restructure Node* to int
+    connID_t id;
+    std::vector<nodeID_t> nodes; //TODO restructure Node* to int
     std::vector<int> vcsCount;  // vc count for each end.
     std::vector<int> buffersDepth;  // one buffer depth for all ends of a connection.
     std::vector<std::vector<int>> buffersDepths;  // one buffer depth per end.
@@ -232,37 +256,38 @@ struct Connection {
     std::vector<float> bufferCongestion;
     //std::map<Node*, int> nodePos; // get position of node inside the above vectors TODO restructure
 
-    Connection(int id, std::vector<int> nodes, std::vector<int> vcsCount, std::vector<int> buffersDepth,
-               std::vector<std::vector<int>> buffersDepths, float length, int width, int depth);
+    Connection(connID_t id, const std::vector<nodeID_t>& nodes, const std::vector<int>& vcsCount,
+            const std::vector<int>& buffersDepth,
+            const std::vector<std::vector<int>>& buffersDepths, float length, int width, int depth);
 
-    int getBufferDepthForNode(int node);
+    int getBufferDepthForNode(nodeID_t node);
 
-    int getBufferDepthForNodeAndVC(int node, int vc);
+    int getBufferDepthForNodeAndVC(nodeID_t node, int vc);
 
-    int getVCCountForNode(int node);
+    int getVCCountForNode(nodeID_t node);
 };
 
 struct DataType {
-    int id;
+    dataTypeID_t id;
     std::string name;
 
-    DataType(int id, std::string name);
+    DataType(dataTypeID_t id, const std::string& name);
 };
 
 struct DataRequirement {
-    int id;
-    int dataType;
+    dataReqID_t id;
+    dataTypeID_t dataType;
     int minCount;    //required amount of DataType to fulfill requirement (to fire)
     int maxCount;
 
-    DataRequirement(int id, int dataType);
+    DataRequirement(dataReqID_t id, dataTypeID_t dataType);
 };
 
 struct DataDestination {
-    int id;
-    int dataType;
-    int destinationNode;    //fyi: "task" in XML ??
-    int destinationTask;    //fyi: "task" in XML ??
+    dataDestID_t id;
+    dataTypeID_t dataType;
+    nodeID_t destinationNode;    //fyi: "task" in XML ??
+    taskID_t destinationTask;    //fyi: "task" in XML ??
     int minInterval;        //delay between each sent packet
     int maxInterval;
     int minCount;           //generated amount of packets per fire
@@ -270,20 +295,20 @@ struct DataDestination {
     int minDelay;           //delay between fire and first generated packet
     int maxDelay;
 
-    DataDestination(int id, int dataType, int destinationTask, int minInterval, int maxInterval);
+    DataDestination(dataDestID_t id, dataTypeID_t dataType, taskID_t destinationTask, int minInterval, int maxInterval);
 };
 
 struct DataSendPossibility {
-    int id;
+    possID_t id;
     float probability;
     std::vector<DataDestination> dataDestinations;
 
-    DataSendPossibility(int id, float probability, std::vector<DataDestination> dataDestinations);
+    DataSendPossibility(possID_t id, float probability, const std::vector<DataDestination>& dataDestinations);
 };
 
 struct Task {
-    int id;
-    int node;
+    taskID_t id;
+    nodeID_t node;
     std::vector<DataRequirement> requirements;
     // std::vector<std::pair<float, std::vector<DataDestination*>>> possibilities;
     std::vector<DataSendPossibility> possibilities;
@@ -295,13 +320,14 @@ struct Task {
     int minRepeat;      // maximal task execution count
     int maxRepeat;      // task terminates at whatever comes first, maxRepeates or duration
 
-    Task(int id, int nodeID);
+    Task(taskID_t id, nodeID_t nodeID);
 
-    Task(int id, int nodeID, std::vector<DataRequirement> requirements, std::vector<DataSendPossibility> possibilities);
+    Task(taskID_t id, nodeID_t nodeID, const std::vector<DataRequirement>& requirements,
+            const std::vector<DataSendPossibility>& possibilities);
 };
 
 struct SyntheticPhase {
-    int id;
+    synthID_t id;
     std::string name;
     std::string distribution;
     float injectionRate;
@@ -317,6 +343,6 @@ struct SyntheticPhase {
     int maxDelay;
     int hotspot;
 
-    SyntheticPhase(int id, std::string name, std::string distribution, float injectionRate);
+    SyntheticPhase(synthID_t id, const std::string& name, const std::string& distribution, float injectionRate);
 };
 

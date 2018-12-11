@@ -19,20 +19,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-#include "NetworkInterface.h"
 
-NetworkInterface::NetworkInterface(sc_module_name nm, Node* node)
-        :
-        id(node.id),
-        node(node)
+#include "PacketFactory.h"
+
+PacketFactory& PacketFactory::getInstance()
 {
-    this->dbid = rep.registerElement("NetworkInterface", this->id);
-
-    rep.reportAttribute(dbid, "pos_x", std::to_string(node.pos.x));
-    rep.reportAttribute(dbid, "pos_y", std::to_string(node.pos.y));
-    rep.reportAttribute(dbid, "pos_z", std::to_string(node.pos.z));
-    rep.reportAttribute(dbid, "clock", std::to_string(node.type->clockDelay));
-    rep.reportAttribute(dbid, "type", node.type->model);
+    static PacketFactory instance;
+    return instance;
 }
 
-NetworkInterface::~NetworkInterface() = default;
+Packet& PacketFactory::createPacket(Node& src, Node& dst, int size, double generationTime, dataTypeID_t dataType)
+{
+    Packet p = Packet(src, dst, 1, sc_time_stamp().to_double(), dst.type->id);
+    packets.push_back(p);
+    return packets.at(p.id);
+}

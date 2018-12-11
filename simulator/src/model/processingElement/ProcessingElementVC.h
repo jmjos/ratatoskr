@@ -59,7 +59,7 @@ public:
 	std::map<DataDestination *, int> destWait;
 
 	SC_HAS_PROCESS(ProcessingElementVC);
-	ProcessingElementVC(sc_module_name mn, Node *node, TrafficPool *tp);
+	ProcessingElementVC(sc_module_name mn, Node& node, TrafficPool* tp);
 	~ProcessingElementVC();
 
 	void initialize();

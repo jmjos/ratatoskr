@@ -20,6 +20,7 @@
 // SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <model/NoC.h>
 #include "ProcessingElementVC.h"
 
 ProcessingElementVC::ProcessingElementVC(sc_module_name nm, Node *node, TrafficPool *tp) :
@@ -75,9 +76,10 @@ void ProcessingElementVC::thread() {
             DataDestination *dest = tw.first;
 
             if (destWait.at(dest) <= timeStamp) {
-                Packet *p = new Packet(this->node, dest->destination, 1, sc_time_stamp().to_double(), dest->type->id, 0,
-                                       0);
-                p->dataType = dest->type;
+                //TODO restructure
+                // Packet *p = new Packet(this->node, globalResources.nodes.at(dest->destinationTask), 1, sc_time_stamp().to_double(), dest->dataType);
+                // p->dataType = dest->type;
+                Packet& p = packetFactory.createPacket(this->node, globalResources.nodes.at(dest->destinationTask), 1, sc_time_stamp().to_double(), dest->dataType);
 
                 packetPortContainer->portValidOut = true;
                 packetPortContainer->portDataOut = p;

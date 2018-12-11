@@ -25,17 +25,19 @@
 
 #include "utils/portsOpenConst.h"
 
-class SignalContainer : public sc_module{
+class SignalContainer : public sc_module {
 public:
-	SignalContainer(sc_module_name nm){};
-	virtual ~SignalContainer(){};
+    explicit SignalContainer(const sc_module_name& nm) { };
 
+    ~SignalContainer() override = default;
 };
 
-class PortContainer : public sc_module{
+class PortContainer : public sc_module {
 public:
-	PortContainer(sc_module_name nm){};
-	virtual ~PortContainer(){};
-	virtual void bind(SignalContainer*, SignalContainer*)=0;
+    explicit PortContainer(const sc_module_name& nm) { };
+
+    ~PortContainer() override = 0;
+
+    virtual void bind(SignalContainer*, SignalContainer*) = 0;
 };
 

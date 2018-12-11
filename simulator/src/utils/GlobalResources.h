@@ -21,7 +21,6 @@
  ******************************************************************************/
 #pragma once
 
-
 #include <string>
 #include <set>
 #include <map>
@@ -65,17 +64,17 @@ public:
     std::vector<DataType> dataTypes;
     std::vector<SyntheticPhase> syntheticPhases;
 
-    static GlobalResources &getInstance();
+    static GlobalResources& getInstance();
 
     int getRandomIntBetween(int, int);
 
     float getRandomFloatBetween(float, float);
 
-    void readConfigFile(const std::string &configPath);
+    void readConfigFile(const std::string& configPath);
 
-    void readNoCLayout(const std::string &nocPath);
+    void readNoCLayout(const std::string& nocPath);
 
-    void readTaskAndMapFiles(const std::string &taskFilePath, const std::string &mappingFilePath);
+    void readTaskAndMapFiles(const std::string& taskFilePath, const std::string& mappingFilePath);
 
 private:
     std::unique_ptr<std::random_device> rd;
@@ -83,39 +82,38 @@ private:
 
     GlobalResources();
 
-    std::vector<std::string> string_split(const std::string &str, const std::string &delim);
+    std::vector<std::string> string_split(const std::string& str, const std::string& delim);
 
-    std::vector<int> strs_to_ints(const std::vector<std::string> &strings);
+    std::vector<int> strs_to_ints(const std::vector<std::string>& strings);
 
+    void readNodeTypes(const pugi::xml_node& noc_node);
 
-    void readNodeTypes(const pugi::xml_node &noc_node);
+    void readNodes(const pugi::xml_node& noc_node);
 
-    void readNodes(const pugi::xml_node &noc_node);
-
-    void sortPositions();
+    void sortNodesPositions();
 
     void fillDirInfoOfNode();
 
-    void readConnections(const pugi::xml_node &noc_node);
+    void readConnections(const pugi::xml_node& noc_node);
 
-    void readAttributeIfExists(pugi::xml_node, const char *, const char *, int &);
+    void readAttributeIfExists(pugi::xml_node, const char*, const char*, int&);
 
-    void readAttributeIfExists(pugi::xml_node, const char *, int &);
+    void readAttributeIfExists(pugi::xml_node, const char*, int&);
 
-    void readTaskFile(const std::string &taskFilePath, const std::map<int, int> &bindings);
+    void readTaskFile(const std::string& taskFilePath, const std::map<int, int>& bindings);
 
-    std::map<int, int> readMappingFile(const std::string &mappingFilePath);
+    std::map<int, int> readMappingFile(const std::string& mappingFilePath);
 
-    std::string readRequiredStringAttribute(pugi::xml_node, const char *, const char *);
+    std::string readRequiredStringAttribute(pugi::xml_node, const char*, const char*);
 
-    std::string readRequiredStringAttribute(pugi::xml_node, const char *);
+    std::string readRequiredStringAttribute(pugi::xml_node, const char*);
 
-    int readRequiredIntAttribute(pugi::xml_node, const char *, const char *);
+    int readRequiredIntAttribute(pugi::xml_node, const char*, const char*);
 
-    int readRequiredIntAttribute(pugi::xml_node, const char *);
+    int readRequiredIntAttribute(pugi::xml_node, const char*);
 
-    float readRequiredFloatAttribute(pugi::xml_node, const char *, const char *);
+    float readRequiredFloatAttribute(pugi::xml_node, const char*, const char*);
 
-    float readRequiredFloatAttribute(pugi::xml_node, const char *);
+    float readRequiredFloatAttribute(pugi::xml_node, const char*);
 };
 

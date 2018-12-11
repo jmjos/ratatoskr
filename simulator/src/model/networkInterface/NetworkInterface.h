@@ -29,23 +29,29 @@
 #include "model/router/Router.h"
 #include "utils/GlobalReport.h"
 
-class NetworkInterface : public NetworkParticipant, public sc_module{
+class NetworkInterface : public NetworkParticipant, public sc_module {
 public:
-	int id;
-	int dbid;
-	Node* node;
+    int id;
+    int dbid;
+    Node* node;
 
-	Report& rep = Report::getInstance();
+    Report& rep = Report::getInstance();
 
-	SC_HAS_PROCESS(NetworkInterface);
-	NetworkInterface(sc_module_name nm, Node* node);
-	virtual ~NetworkInterface();
+    SC_HAS_PROCESS(NetworkInterface);
 
-	virtual void initialize()=0;
-	virtual void bind(Connection*, SignalContainer*, SignalContainer*) = 0;
-	virtual void thread()=0;
-	virtual void receivePacket()=0;
-	virtual void receiveFlit()=0;
+    NetworkInterface(sc_module_name nm, Node* node);
+
+    ~NetworkInterface() override = 0;
+
+    void initialize() override = 0;
+
+    void bind(Connection*, SignalContainer*, SignalContainer*) override = 0;
+
+    virtual void thread() = 0;
+
+    virtual void receivePacket() = 0;
+
+    virtual void receiveFlit() = 0;
 
 };
 

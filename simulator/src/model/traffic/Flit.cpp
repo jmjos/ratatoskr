@@ -25,53 +25,58 @@
 
 int Flit::idcnt = 0;
 
-Flit::Flit(FlitType type, int seq_nb, Packet *p) {
-    this->id = idcnt++;
+Flit::Flit(FlitType type, int seq_nb, Packet& p)
+        :
+        type(type),
+        seq_nb(seq_nb),
+        packet(p),
+        id(idcnt++),
+        dataType(-1),
+        injectionTime(0),
+        headFlit(nullptr)
+{
     this->dbid = rep.registerElement("Flit", this->id);
-    this->type = type;
-    this->seq_nb = seq_nb;
-    this->packet = p;
-    this->trafficTypeId = 0;
-    this->creationTime = 0;
-    this->injectionTime = 0;
-    this->headFlit = 0;
-
-    rep.reportAttribute(dbid, "flit_packet", std::to_string(p->id));
+    rep.reportAttribute(dbid, "flit_packet", std::to_string(p.id));
     rep.reportAttribute(dbid, "flit_type", std::to_string(type));
     rep.reportAttribute(dbid, "flit_seq", std::to_string(seq_nb));
 }
 
-Flit::Flit(FlitType type, int seq_nb, Packet *p, int trafficTypeId,
-           double creationTime) :
-        Flit(type, seq_nb, p) {
-    this->creationTime = creationTime;
-    this->trafficTypeId = trafficTypeId;
+Flit::Flit(FlitType type, int seq_nb, Packet& p, dataTypeID_t dataType, double generationTime)
+        :
+        Flit(type, seq_nb, p),
+{
+    this->generationTime = generationTime;
+    this->dataType = dataType;
 }
 
-Flit::~Flit() {
+Flit::~Flit()
+{
+    delete headFlit;
 }
 
-ostream &operator<<(ostream &os, const Flit &flit) {
-    int processingElementsSize = GlobalResources::getInstance().nodes.size() / 2;
+ostream& operator<<(ostream& os, const Flit& flit)
+{
+    int processingElementsSize = GlobalResources::getInstance().nodes.size()/2;
     os << "[";
     switch (flit.type) {
-        case HEAD:
-            os << "H";
-            break;
-        case BODY:
-            os << "B";
-            break;
-        case TAIL:
-            os << "T";
-            break;
+    case HEAD:
+        os << "H";
+        break;
+    case BODY:
+        os << "B";
+        break;
+    case TAIL:
+        os << "T";
+        break;
     }
-    os << "_" << flit.id << ": " << flit.packet->src->id % processingElementsSize << "-->"
-       << flit.packet->dst->id % processingElementsSize << "]";
+    os << "_" << flit.id << ": " << flit.packet.src.id%processingElementsSize << "-->"
+       << flit.packet.dst.id%processingElementsSize << "]";
     return os;
 }
 
-void sc_trace(sc_trace_file *&tf, const Flit &flit, std::string nm) {
-    sc_trace(tf, flit.type, nm + ".type");
-    sc_trace(tf, flit.seq_nb, nm + ".seq_nb");
-    sc_trace(tf, flit.id, nm + ".id");
+void sc_trace(sc_trace_file*& tf, const Flit& flit, std::string nm)
+{
+    sc_trace(tf, flit.type, nm+".type");
+    sc_trace(tf, flit.seq_nb, nm+".seq_nb");
+    sc_trace(tf, flit.id, nm+".id");
 }

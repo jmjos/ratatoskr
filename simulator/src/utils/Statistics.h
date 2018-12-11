@@ -28,20 +28,28 @@
 #include <ostream>
 
 class Statistics {
-private:
-	float sampleSum;
-	long sampleSize;
-	float sampleMin;
-	float sampleMax;
-	std::string name;
-
 public:
-	Statistics(std::string name);
-	float average();
-	float min();
-	float max();
-	float sum();
-	long samplesize();
-	bool sample(float sample);
-	void report(ostream& stream);
+    explicit Statistics(const std::string& name);
+
+    float average();
+
+    float min();
+
+    float max();
+
+    float sum();
+
+    long samplesize();
+
+    bool sample(float sample);
+
+    void report(ostream& stream);
+
+private:
+    float sampleSum;
+    long sampleSize;
+    float sampleMin;
+    float sampleMax;
+    std::string name;
+
 };

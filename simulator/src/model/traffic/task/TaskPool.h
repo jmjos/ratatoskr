@@ -37,15 +37,9 @@ private:
 
 public:
 	TaskPool();
-	virtual ~TaskPool();
 
-	void clear(Task*);
-	void start();
+    ~TaskPool() override;
 
-//	void
-
-	//void syntheticPoolProcess();
-	//void sendThread(Taskid src, Taskid dst, int initDelay, int waveCount, int waveDelay, int pkgPerWave, std::string phasename);
-
-	//SC_HAS_PROCESS(SyntheticPool);
+	void clear(Task*) override;
+	void start() override;
 };

@@ -21,38 +21,42 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "Link.h"
 
-Link::Link(sc_module_name nm, Connection *c, int globalResourcesId) {
-
-    this->id = c->id;
-    this->globalResourcesId = globalResourcesId;
+Link::Link(sc_module_name nm, const Connection& c, int globalID)
+{
+    this->id = c.id;
+    this->globalID = globalID;
     classicPortContainer = new FlitPortContainer(
-            ("link_portCont_" + std::to_string(this->id)).c_str());
-    if (c->nodes.size() == 1) {
+            ("link_portCont_"+std::to_string(this->id)).c_str());
+    if (c.nodes.size()==1) {
         this->linkType = HORIZONTAL;
-    } else {
-        if (c->nodes.at(0)->pos.z == c->nodes.at(1)->pos.z) {
+    }
+    else {
+        Node node0 = globalResources.nodes.at(c.nodes.at(0));
+        Node node1 = globalResources.nodes.at(c.nodes.at(1));
+        if (node0.pos.z==node1.pos.z) {
             this->linkType = HORIZONTAL;
-        } else {
+        }
+        else {
             this->linkType = VERTICAL;
         }
     }
     this->currentFlit = nullptr;
     this->previousFlit = nullptr;
-
-
 // this->rawDataOutput = new ofstream((std::string) nm + ".txt");
-
     SC_THREAD(passthrough_thread);
     sensitive << clk.pos();
 
     return;
 }
 
-Link::~Link() {
+Link::~Link()
+{
+    delete classicPortContainer;
     // rawDataOutput->close();
 }
 
-void Link::passthrough_thread() {
+void Link::passthrough_thread()
+{
 
     while (true) {
 
@@ -67,56 +71,62 @@ void Link::passthrough_thread() {
 
         if (!classicPortContainer->portValidIn.read()) {
             // this cycle idle
-            if (previousTransmissionState == IDLESTATE) {
-                // initally, no flits traverse link
+            if (previousTransmissionState==IDLESTATE) {
+                // initally, no flits traverse links
                 outputToFile = "__;";
                 currentTransmissionState = IDLESTATE;
-            } else if (currentFlit->type == HEAD) {
+            }
+            else if (currentFlit->type==HEAD) {
                 // a head flit traversed previously
                 outputToFile = std::to_string(currentFlit->trafficTypeId)
-                               + "_;";
+                        +"_;";
                 currentTransmissionState = HEADIDLESTATE;
-            } else {
-                // a flit already traversed the link
-                outputToFile = std::to_string(currentFlit->trafficTypeId)
-                               + "_;";
-                if(currentFlit->type != HEAD && currentFlit->type != BODY && currentFlit->type != TAIL)
-                    continue;
-                currentTransmissionState = (2 * currentFlit->trafficTypeId)
-                                           + offset + 1;
             }
-        } else {
+            else {
+                // a flit already traversed the links
+                outputToFile = std::to_string(currentFlit->trafficTypeId)
+                        +"_;";
+                if (currentFlit->type!=HEAD && currentFlit->type!=BODY && currentFlit->type!=TAIL)
+                    continue;
+                currentTransmissionState = (2*currentFlit->trafficTypeId)
+                        +offset+1;
+            }
+        }
+        else {
             // this cycle active
             currentFlit = classicPortContainer->portDataIn.read();
-            if (currentFlit->type == HEAD) {
+            if (currentFlit->type==HEAD) {
                 //received head flit
                 outputToFile = "HD;";
                 currentTransmissionState = HEADSTATE;
-            } else {
+            }
+            else {
                 // received data flit
                 outputToFile = std::to_string(currentFlit->trafficTypeId)
-                               + "D;";
-                if(currentFlit->type != HEAD && currentFlit->type != BODY && currentFlit->type != TAIL)
+                        +"D;";
+                if (currentFlit->type!=HEAD && currentFlit->type!=BODY && currentFlit->type!=TAIL)
                     continue;
-                currentTransmissionState = (2 * currentFlit->trafficTypeId)
-                                           + offset;
+                currentTransmissionState = (2*currentFlit->trafficTypeId)
+                        +offset;
             }
         }
 
 //		rawDataOutput->write(outputToFile.c_str(), 3);
 //		rawDataOutput->flush();
-            report.issueLinkMatrixUpdate(globalResourcesId, currentTransmissionState,
-                                         previousTransmissionState);
+        report.issueLinkMatrixUpdate(globalID, currentTransmissionState,
+                previousTransmissionState);
 
         previousTransmissionState = currentTransmissionState;
         previousFlit = currentFlit;
     }
 }
 
-void Link::bind(SignalContainer *sigContIn, SignalContainer *sigContOut) {
+void Link::bind(SignalContainer* sigContIn, SignalContainer* sigContOut)
+{
     classicPortContainer->bind(sigContIn, sigContOut);
 }
 
-void Link::bindOpen(SignalContainer *sigContIn) {
+void Link::bindOpen(SignalContainer* sigContIn)
+{
     classicPortContainer->bindOpen(sigContIn);
 }

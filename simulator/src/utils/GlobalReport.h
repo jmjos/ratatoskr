@@ -29,50 +29,6 @@
 #include "Statistics.h"
 
 class GlobalReport {
-
-private:
-     GlobalResources& globalResources = GlobalResources::getInstance();
-    // s = STATIC (Watt)
-    // d = DYNAMIC (Joule)
-
-    double total_power_s;                //unused
-
-    //Buffer consumption (power per event is determined by a LUT of buffer depth and flit size)
-    double buffer_router_push_pwr_d;    // per flit pushed on buffer
-    double buffer_router_pop_pwr_d;    // per flit popped of buffer (not for lookup)
-    double buffer_router_front_pwr_d;// per flit data received from buffer (only count if flit exists)
-    double buffer_router_pwr_s;            // leakage per router cycle per buffer
-
-    //Power consumption of routing Algorithm (determined by routing algorithm)
-    double routing_pwr_d;                //per routing function called
-    double routing_pwr_s;                //Leakage per Router Cycle
-
-    //Routing function gives vector of possible directions/VCs
-    //Selection function selects direction/VC
-    //Power Consumption of selection Function (determined by selection function)
-    //double selection_pwr_d;				//per selection function called
-    //double selection_pwr_s; 			//Leakage per Router Cycle
-    // not implemented!
-
-    //Power consumption of Crossbar (determined by IOs (5) and Flit size)
-    double crossbar_pwr_d;                // per sent flit
-    double crossbar_pwr_s;                // Leakage per Router Cycle
-
-    //Power consumption of data links (determined by router to router distance)
-    double link_r2r_pwr_d;                // per sent flit
-    double link_r2r_pwr_s;                // unused
-
-    //Power consumption of Network Interface (determined by flit size)
-    double ni_pwr_d;                    // per local flit sent or received
-    double ni_pwr_s;                    // Leakage per Router Cycle
-
-    const int MAX_BUFFER_DEPTH = 50; // Used to create the buffer axes in the histogram of buffer usage
-    const std::vector<int> INNER_ROUTERS = {5, 6, 9, 10, 21, 22, 25, 26, 37, 38, 41, 42}; // Generate VC and buffer histograms for only these routers
-
-    int droppedCounter = 0; // number of dropped flits.
-
-    GlobalReport();
-
 public:
 
     Statistics latencyNetwork;
@@ -84,11 +40,7 @@ public:
     int linkTransmissionsMatrixNumberOfStates;
 
     //Router state vectors and matrices
-    std::map<int, int> routingCalulcations;
-
-    //number of resets
-    std::map<int, int> numberOfResets;
-    std::map<int, int> numberOfAccelerations;
+    std::map<int, int> routingCalculations;
 
     double averageNetworkLatencySystemLevel = -1;
     int averageNetworkLatencySystemLevelInstances = 0;
@@ -104,7 +56,6 @@ public:
     std::vector<std::vector<std::vector<std::vector<long>>>> bufferUsagePerVCHist;
 
     void readConfigFile(const std::string& config_path);
-
 
     /// VERBOSE ///
     //processing elements
@@ -139,41 +90,31 @@ public:
     bool verbose_task_data_send = true;
     bool verbose_task_source_execute = true;
 
-    static GlobalReport &getInstance() {
+    static GlobalReport& getInstance()
+    {
         static GlobalReport instance;
         return instance;
     }
 
-    void reportComplete(std::string filename);
+    void reportComplete(const std::string& filename);
 
-    void reportPerformance(ostream &stream);
+    void reportPerformance(ostream& stream);
 
-    void reportPerformanceCSV(ostream &stream);
-
-    //old: can be deleted
-//	void issueReset(int id);
-//	void reportReset();
-//	void reportResetTotal();
-    void issueAcceleration(int id);
-
-    void reportAccelerations();
-
-    void reportAccelerationsTotal();
+    void reportPerformanceCSV(ostream& stream);
 
     // Link state transmission matrixes
-    void issueLinkMatrixUpdate(int id, int currentTransmissionState,
-                               int lastTransmissionState);
+    void issueLinkMatrixUpdate(int id, int currentTransmissionState, int lastTransmissionState);
 
-    void reportLinkMatrix(int id, ostream &stream);
+    void reportLinkMatrix(int id, ostream& stream);
 
-    void reportLinkMatrices(ostream &stream);
+    void reportLinkMatrices(ostream& stream);
 
-    void reportLinkMatricesCSV(ostream &stream);
+    void reportLinkMatricesCSV(ostream& stream);
 
     // Router status vectors and matrices
     void issueRoutingCalculation(int id);
 
-    void reportRoutingCalculations(ostream &stream);
+    void reportRoutingCalculations(ostream& stream);
 
     void updateAverageNetworkLatencySystemLevel(double newLatency);
 
@@ -183,18 +124,61 @@ public:
 
     void reportMaxNetworkLatencySystemLevel();
 
-    void updateUsageHist(std::vector<std::vector<std::vector<long>>> &histVec,
-                         int routerId, int dir, int value, int thirdDimensionSize);
+    void updateUsageHist(std::vector<std::vector<std::vector<long>>>& histVec,
+            int routerId, int dir, int value, int thirdDimensionSize);
 
-    void reportUsageHist(std::vector<std::vector<std::vector<long>>> &histVec,
-                         std::string &csvFileName, int routerId);
+    void reportUsageHist(std::vector<std::vector<std::vector<long>>>& histVec,
+            std::string& csvFileName, int routerId);
 
-    void updateBuffUsagePerVCHist(std::vector<std::vector<std::vector<std::vector<long>>>> &histVec,
-                                  int routerId, int dir, int vc, int bufferOccupation, int numVCs);
+    void updateBuffUsagePerVCHist(std::vector<std::vector<std::vector<std::vector<long>>>>& histVec,
+            int routerId, int dir, int vc, int bufferOccupation, int numVCs);
 
-    void reportBuffUsageHist(std::vector<std::vector<std::vector<std::vector<long>>>> &histVec,
-                             std::string &csvFileName, int routerId, int dir);
+    void reportBuffUsageHist(std::vector<std::vector<std::vector<std::vector<long>>>>& histVec,
+            std::string& csvFileName, int routerId, int dir);
 
     void reportAllRoutersUsageHist();
+
+private:
+    GlobalResources& globalResources = GlobalResources::getInstance();
+
+    double total_power_s;               //unused
+
+    //Buffer consumption (power per event is determined by a LUT of buffer depth and flit size)
+    double buffer_router_push_pwr_d;    // per flit pushed on buffer
+    double buffer_router_pop_pwr_d;     // per flit popped of buffer (not for lookup)
+    double buffer_router_front_pwr_d;   // per flit data received from buffer (only count if flit exists)
+    double buffer_router_pwr_s;         // leakage per router cycle per buffer
+
+    //Power consumption of routing Algorithm (determined by routing algorithm)
+    double routing_pwr_d;                //per routing function called
+    double routing_pwr_s;                //Leakage per Router Cycle
+
+    //Routing function gives vector of possible directions/VCs
+    //Selection function selects direction/VC
+    //Power Consumption of selection Function (determined by selection function)
+    //double selection_pwr_d;			//per selection function called
+    //double selection_pwr_s; 			//Leakage per Router Cycle
+    // not implemented!
+
+    //Power consumption of Crossbar (determined by IOs (5) and Flit size)
+    double crossbar_pwr_d;              // per sent flit
+    double crossbar_pwr_s;              // Leakage per Router Cycle
+
+    //Power consumption of data links (determined by router to router distance)
+    double link_r2r_pwr_d;              // per sent flit
+    double link_r2r_pwr_s;              // unused
+
+    //Power consumption of Network Interface (determined by flit size)
+    double ni_pwr_d;                    // per local flit sent or received
+    double ni_pwr_s;                    // Leakage per Router Cycle
+
+    // Used to create the buffer axes in the histogram of buffer usage
+    const int MAX_BUFFER_DEPTH = 50;
+    // Generate VC and buffer histograms for only these routers
+    const std::vector<int> INNER_ROUTERS = {5, 6, 9, 10, 21, 22, 25, 26, 37, 38, 41, 42};
+
+    int droppedCounter = 0;             // number of dropped flits.
+
+    GlobalReport();
 };
 

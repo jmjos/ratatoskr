@@ -35,9 +35,8 @@
 
 class NetworkInterfaceVC : public NetworkInterface{
 public:
-	std::queue < Packet* > packet_send_queue;
-	std::queue < Flit* > flit_queue;
-	std::queue < Packet* > packet_recv_queue;
+	std::queue < Packet& > packet_send_queue;
+	std::queue < Packet& > packet_recv_queue;
 
 
 	std::vector<bool>* flowControlOut;
@@ -46,9 +45,6 @@ public:
 	sc_in < bool > clk;
 	FlitPortContainer* flitPortContainer;
 	PacketPortContainer* packetPortContainer;
-
-	GlobalReport& report = GlobalReport::getInstance();
-
 
 	SC_HAS_PROCESS(NetworkInterfaceVC);
 	NetworkInterfaceVC(sc_module_name nm, Node* node);

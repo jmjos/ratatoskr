@@ -25,96 +25,98 @@
 
 #include "model/traffic/Flit.h"
 
-class FlitSignalContainer: public SignalContainer {
+class FlitSignalContainer : public SignalContainer {
 public:
-	sc_signal<bool> sigValid;
-	sc_signal<std::vector<bool>*> sigFlowControl;
-	sc_signal<std::vector<int>*> sigTag;
-	sc_signal<std::vector<bool>*> sigEmpty;
-	sc_signal<Flit*> sigData;
-	sc_signal<int> sigVc;
-	sc_signal<bool> sigReset;
+    sc_signal<bool> sigValid;
+    sc_signal<std::vector<bool>*> sigFlowControl;
+    sc_signal<std::vector<int>*> sigTag;
+    sc_signal<std::vector<bool>*> sigEmpty;
+    sc_signal<Flit&> sigData;
+    sc_signal<int> sigVc;
+    sc_signal<bool> sigReset;
 
-	FlitSignalContainer(sc_module_name nm) :
-			SignalContainer(nm) {
-	}
+    explicit FlitSignalContainer(const sc_module_name& nm)
+            :
+            SignalContainer(nm)
+    {
+    }
 
-	~FlitSignalContainer() {
-	}
+    ~FlitSignalContainer() override = default;
 
 };
 
-class FlitPortContainer: public PortContainer {
+class FlitPortContainer : public PortContainer {
 public:
-	sc_in<bool> portValidIn;
-	sc_in<std::vector<bool>*> portFlowControlIn;
-	sc_in<std::vector<int>*> portTagIn;
-	sc_in<std::vector<bool>*> portEmptyIn;
-	sc_in<Flit*> portDataIn;
-	sc_in<int> portVcIn;
-	sc_in<bool> portResetIn;
+    sc_in<bool> portValidIn;
+    sc_in<std::vector<bool>*> portFlowControlIn;
+    sc_in<std::vector<int>*> portTagIn;
+    sc_in<std::vector<bool>*> portEmptyIn;
+    sc_in<Flit&> portDataIn;
+    sc_in<int> portVcIn;
+    sc_in<bool> portResetIn;
 
-	sc_out<bool> portValidOut;
-	sc_out<std::vector<bool>*> portFlowControlOut;
-	sc_out<std::vector<int>*> portTagOut;
-	sc_out<std::vector<bool>*> portEmptyOut;
-	sc_out<Flit*> portDataOut;
-	sc_out<int> portVcOut;
-	sc_out<bool> portResetOut;
+    sc_out<bool> portValidOut;
+    sc_out<std::vector<bool>*> portFlowControlOut;
+    sc_out<std::vector<int>*> portTagOut;
+    sc_out<std::vector<bool>*> portEmptyOut;
+    sc_out<Flit&> portDataOut;
+    sc_out<int> portVcOut;
+    sc_out<bool> portResetOut;
 
-	FlitPortContainer(sc_module_name nm) :
-			PortContainer(nm) {
-	}
+    explicit FlitPortContainer(const sc_module_name& nm)
+            :
+            PortContainer(nm)
+    {
+    }
 
-	~FlitPortContainer() {
-	}
+    ~FlitPortContainer() override = default;
 
-	void bind(SignalContainer* sIn, SignalContainer* sOut) {
-		FlitSignalContainer* cscin = dynamic_cast<FlitSignalContainer*>(sIn);
-		FlitSignalContainer* cscout = dynamic_cast<FlitSignalContainer*>(sOut);
+    void bind(SignalContainer* sIn, SignalContainer* sOut) override
+    {
+        auto cscin = dynamic_cast<FlitSignalContainer*>(sIn);
+        auto cscout = dynamic_cast<FlitSignalContainer*>(sOut);
 
-		assert(cscin);
-		assert(cscout);
+        assert(cscin);
+        assert(cscout);
 
-		portValidIn(cscin->sigValid);
-		portFlowControlIn(cscin->sigFlowControl);
-		portTagIn(cscin->sigTag);
-		portEmptyIn(cscin->sigEmpty);
-		portDataIn(cscin->sigData);
-		portVcIn(cscin->sigVc);
-		portResetIn(cscin->sigReset);
+        portValidIn(cscin->sigValid);
+        portFlowControlIn(cscin->sigFlowControl);
+        portTagIn(cscin->sigTag);
+        portEmptyIn(cscin->sigEmpty);
+        portDataIn(cscin->sigData);
+        portVcIn(cscin->sigVc);
+        portResetIn(cscin->sigReset);
 
-		portValidOut(cscout->sigValid);
-		portFlowControlOut(cscout->sigFlowControl);
-		portTagOut(cscout->sigTag);
-		portEmptyOut(cscout->sigEmpty);
-		portDataOut(cscout->sigData);
-		portVcOut(cscout->sigVc);
-		portResetOut(cscout->sigReset);
+        portValidOut(cscout->sigValid);
+        portFlowControlOut(cscout->sigFlowControl);
+        portTagOut(cscout->sigTag);
+        portEmptyOut(cscout->sigEmpty);
+        portDataOut(cscout->sigData);
+        portVcOut(cscout->sigVc);
+        portResetOut(cscout->sigReset);
 
-	}
+    }
 
-	void bindOpen(SignalContainer* sIn) {
-		FlitSignalContainer* cscin = dynamic_cast<FlitSignalContainer*>(sIn);
+    void bindOpen(SignalContainer* sIn)
+    {
+        auto cscin = dynamic_cast<FlitSignalContainer*>(sIn);
 
-		assert(cscin);
+        assert(cscin);
 
-		portValidIn(cscin->sigValid);
-		portFlowControlIn(cscin->sigFlowControl);
-		portTagIn(cscin->sigTag);
-		portEmptyIn(cscin->sigEmpty);
-		portDataIn(cscin->sigData);
-		portVcIn(cscin->sigVc);
-		portResetIn(cscin->sigReset);
+        portValidIn(cscin->sigValid);
+        portFlowControlIn(cscin->sigFlowControl);
+        portTagIn(cscin->sigTag);
+        portEmptyIn(cscin->sigEmpty);
+        portDataIn(cscin->sigData);
+        portVcIn(cscin->sigVc);
+        portResetIn(cscin->sigReset);
 
-		portValidOut(portOpen);
-		portFlowControlOut(portOpen);
-		portTagOut(portOpen);
-		portEmptyOut(portOpen);
-		portDataOut(portOpen);
-		portVcOut(portOpen);
-		portResetOut(portOpen);
-
-	}
-
+        portValidOut(portOpen);
+        portFlowControlOut(portOpen);
+        portTagOut(portOpen);
+        portEmptyOut(portOpen);
+        portDataOut(portOpen);
+        portVcOut(portOpen);
+        portResetOut(portOpen);
+    }
 };

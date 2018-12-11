@@ -38,7 +38,8 @@ public:
 	Report& rep = Report::getInstance();
 	int dbid;
 
-	std::vector<ProcessingElement*> processingElements;
+
+	std::vector<std::unique_ptr<ProcessingElement>> processingElements;
 
 	TrafficPool();
 	virtual ~TrafficPool();

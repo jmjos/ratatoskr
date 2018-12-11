@@ -21,40 +21,30 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "Packet.h"
 
-int Packet::idcnt=0;
+int Packet::idcnt = 0;
 
-Packet::Packet(Node* src, Node* dst, int size, int generationTime, int trafficTypeId, int as, int ac) {
-	this->id = idcnt;
-	idcnt++;
+Packet::Packet(Node& src, Node& dst, int size, double generationTime, dataTypeID_t dataType)
+        :
+        src(src),
+        dst(dst),
+        size(size),
+        generationTime(generationTime),
+        dataType(dataType)
+{
+    this->id = idcnt;
+    idcnt++;
 
-	this->src = src;
-	this->dst = dst;
-	this->size = size;
-	this->generationTime = generationTime;
-	this->dbid = rep.registerElement("Packet", this->id);
-	this->pkgclass = -1;
-	this->numhops  = 0;
-	this->as = as;
-	this->ac= ac;
-	this->trafficTypeId = trafficTypeId;
+    this->dbid = rep.registerElement("Packet", this->id);
+    this->pkgclass = -1;
+    this->numhops = 0;
 
-	rep.reportAttribute(dbid, "packet_src", std::to_string(src->id));
-	rep.reportAttribute(dbid, "packet_dst", std::to_string(dst->id));
+    rep.reportAttribute(dbid, "packet_src", std::to_string(src.id));
+    rep.reportAttribute(dbid, "packet_dst", std::to_string(dst.id));
 }
 
-Packet::~Packet() {
-	for (Flit* f : toTransmit) {
-		delete f;
-	}
-	for (Flit* f : inTransmit) {
-		delete f;
-	}
-	for (Flit* f : transmitted) {
-		delete f;
-	}
+std::ostream& operator<<(std::ostream& os, const Packet& p)
+{
+    os << "ID: " << p.id << ", SRC: " << p.src.id << ", DST: " << p.dst.id << ", Size: " << p.size << ", Generated at: "
+       << p.generationTime << std::endl;
+    return os;
 }
-
-std::ostream& operator << (std::ostream& os, const Packet& p) {
-		os << "ID: " << p.id << ", SRC: " << p.src->id << ", DST: " << p.dst->id << ", Size: " << p.size << ", Generated at: "<< p.generationTime << std::endl;
-		return os;
-	}

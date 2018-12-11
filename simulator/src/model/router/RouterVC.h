@@ -88,7 +88,7 @@ public:
 
 	std::vector<Flit*> lastReceivedFlits;
 
-	RouterVC(sc_module_name nm, Node* node);
+	RouterVC(sc_module_name nm, Node& node);
 	~RouterVC();
 
 	void initialize();

@@ -24,69 +24,67 @@
 #include "Container.h"
 #include "model/traffic/Packet.h"
 
-class PacketSignalContainer: public SignalContainer {
+class PacketSignalContainer : public SignalContainer {
 public:
-	sc_signal<bool> sigValid;
-	sc_signal<bool> sigFlowControl;
-	sc_signal<Packet*> sigData;
+    sc_signal<bool> sigValid;
+    sc_signal<bool> sigFlowControl;
+    sc_signal<Packet&> sigData;
 
-	PacketSignalContainer(sc_module_name nm) :
-			SignalContainer(nm) {
-	}
-	;
-	~PacketSignalContainer() {
-	}
-	;
+    explicit PacketSignalContainer(const sc_module_name& nm)
+            :
+            SignalContainer(nm)
+    {
+    };
+
+    ~PacketSignalContainer() override = default;;
 
 };
 
-class PacketPortContainer: public PortContainer {
+class PacketPortContainer : public PortContainer {
 public:
-	sc_in<bool> portValidIn;
-	sc_in<bool> portFlowControlIn;
-	sc_in<Packet*> portDataIn;
+    sc_in<bool> portValidIn;
+    sc_in<bool> portFlowControlIn;
+    sc_in<Packet&> portDataIn;
 
-	sc_out<bool> portValidOut;
-	sc_out<bool> portFlowControlOut;
-	sc_out<Packet*> portDataOut;
+    sc_out<bool> portValidOut;
+    sc_out<bool> portFlowControlOut;
+    sc_out<Packet&> portDataOut;
 
-	PacketPortContainer(sc_module_name nm) :
-			PortContainer(nm) {
-	}
+    explicit PacketPortContainer(const sc_module_name& nm)
+            :
+            PortContainer(nm)
+    {
+    }
 
-	~PacketPortContainer() {
-	}
+    ~PacketPortContainer() override = default;
 
+    void bind(SignalContainer* sIn, SignalContainer* sOut) override {
+        auto cscin = dynamic_cast<PacketSignalContainer*>(sIn);
+        auto cscout = dynamic_cast<PacketSignalContainer*>(sOut);
 
-	void bind(SignalContainer* sIn, SignalContainer* sOut) {
-		PacketSignalContainer* cscin = dynamic_cast<PacketSignalContainer*>(sIn);
-		PacketSignalContainer* cscout = dynamic_cast<PacketSignalContainer*>(sOut);
+        assert(cscin);
+        assert(cscout);
 
-		assert(cscin);
-		assert(cscout);
+        portValidIn(cscin->sigValid);
+        portFlowControlIn(cscin->sigFlowControl);
+        portDataIn(cscin->sigData);
 
-		portValidIn(cscin->sigValid);
-		portFlowControlIn(cscin->sigFlowControl);
-		portDataIn(cscin->sigData);
+        portValidOut(cscout->sigValid);
+        portFlowControlOut(cscout->sigFlowControl);
+        portDataOut(cscout->sigData);
+    };
 
-		portValidOut(cscout->sigValid);
-		portFlowControlOut(cscout->sigFlowControl);
-		portDataOut(cscout->sigData);
+    void bindOpen(SignalContainer* sIn)
+    {
+        auto cscin = dynamic_cast<PacketSignalContainer*>(sIn);
 
-	}
-	;
+        assert(cscin);
 
-	void bindOpen(SignalContainer* sIn) {
-		PacketSignalContainer* cscin = dynamic_cast<PacketSignalContainer*>(sIn);
-		assert(cscin);
-
-		portValidIn(cscin->sigValid);
-		portFlowControlIn(cscin->sigFlowControl);
-		portDataIn(cscin->sigData);
-
-		portValidOut(portOpen);
-		portFlowControlOut(portOpen);
-		portDataOut(portOpen);
-	}
-
+        portValidIn(cscin->sigValid);
+        portFlowControlIn(cscin->sigFlowControl);
+        portDataIn(cscin->sigData);
+        portValidOut(portOpen);
+        portFlowControlOut(portOpen);
+        portDataOut(portOpen);
+    }
 };

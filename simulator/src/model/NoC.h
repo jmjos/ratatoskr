@@ -19,14 +19,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-#ifndef SRC_LAYERTOP_H_
-#define SRC_LAYERTOP_H_
+#pragma once
 
 #include <model/container/FlitContainer.h>
 #include <model/processingElement/ProcessingElementVC.h>
 #include <iostream>
 #include <map>
 #include <string>
+#include <vector>
+#include <utils/PacketFactory.h>
 
 #include "systemc.h"
 
@@ -45,23 +46,34 @@
 #include "model/traffic/synthetic/SyntheticPool.h"
 #include "model/traffic/task/TaskPool.h"
 
-
-class NoC: public sc_module {
-
-private:
-	//GlobalResources &globalResources = GlobalResources::getInstance();
-	GlobalResources& globalResources = GlobalResources::getInstance();
-	Report& rep = Report::getInstance();
-
-	int dbid;
-	std::unique_ptr<TrafficPool> tp;
-	std::vector<NetworkParticipant*> networkParticipant;
-	std::vector<SignalContainer*> signalContainer;
-	std::vector<Link*> link;
+class NoC : public sc_module {
 
 public:
-	SC_HAS_PROCESS(NoC);
-	NoC(sc_module_name);
-};
+    PacketFactory& packetFactory = PacketFactory::getInstance();
 
-#endif /* SRC_LAYERTOP_H_ */
+    SC_HAS_PROCESS(NoC);
+
+    explicit NoC(sc_module_name);
+
+    ~NoC() override;
+
+private:
+    GlobalResources& globalResources = GlobalResources::getInstance();
+    Report& rep = Report::getInstance();
+
+    int dbid;
+    std::unique_ptr<TrafficPool> tp;
+    std::vector<NetworkParticipant*> networkParticipants;
+    std::vector<std::unique_ptr<SignalContainer>> signalContainers;
+    std::vector<std::unique_ptr<Link>> links;
+
+    void createTrafficPool();
+
+    void createNetworkParticipants(const std::vector<std::unique_ptr<sc_clock>>& clocks);
+
+    void createSigContainers();
+
+    void createLinks(const std::vector<std::unique_ptr<sc_clock>>& clocks);
+
+    void runNoC();
+};

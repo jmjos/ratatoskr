@@ -25,10 +25,12 @@
 
 #include "model/traffic/Packet.h"
 
-struct TaskPacket: Packet{
+struct TaskPacket : Packet {
 
-	TaskPacket(Node* src, Node* dst, int size, int generationTime):Packet(src, dst, size, generationTime, 3, 0, 0){
+    TaskPacket(Node& src, Node& dst, int size, int generationTime, dataTypeID_t dataType)
+            :Packet(src, dst, size, generationTime, 0)
+    {
 
-	}
+    }
 };
 

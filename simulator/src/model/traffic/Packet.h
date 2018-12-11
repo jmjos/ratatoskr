@@ -19,8 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-#ifndef SRC_TRAFFIC_PACKET_H_
-#define SRC_TRAFFIC_PACKET_H_
+# pragma once
 
 #include <string>
 #include <iosfwd>
@@ -36,35 +35,23 @@ struct Packet {
 	static int idcnt;
 	int id;
 	int dbid;
-
-	Node* src;
-	Node* dst;
+	Node& src;
+	Node& dst;
 	int size;
-	int generationTime;
-	int pkgclass;
-	int trafficTypeId;
-	float as; // statistical properties of traffic
-	float ac; // statistical properties of traffic
-
-	DataType* dataType = 0;
-
+	double generationTime;
+	dataTypeID_t dataType; // type identifier for link matrices
+	int pkgclass;	// tag for adaptive routing
 	int numhops;
 	std::vector<int> traversedRouter;
 	std::set<int> routerIDs;
-
-
-	std::vector<Flit*> toTransmit;
-	std::vector<Flit*> inTransmit;
-	std::vector<Flit*> transmitted;
-
+	std::vector<Flit&> toTransmit;
+	std::vector<Flit&> inTransmit;
+	std::vector<Flit&> transmitted;
+	std::vector<Flit> flits;
 	Report& rep = Report::getInstance();
 
-	Packet(Node* src, Node* dst, int size, int generationTime, int trafficTypeId, int as, int ac);
-	virtual ~Packet();
+	Packet(Node& src, Node& dst, int size, double generationTime, dataTypeID_t dataType);
 
 	friend ostream & operator <<(ostream & os, const Packet& p);
 
 };
-
-
-#endif /* SRC_TRAFFIC_PACKET_H_ */

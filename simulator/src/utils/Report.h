@@ -35,42 +35,52 @@
 #include <iomanip>
 #include "systemc.h"
 
-#define MAX_BUFFER_SIZE 1000	//Max Buffer Size in Bytes
+#define MAX_BUFFER_SIZE 1000    //Max Buffer Size in Bytes
 #define LOG(x, y) { std::ostringstream oss; oss<<y; Report::getInstance().log(x,oss.str());}
 #define FATAL(x) { LOG(true,x); std::cout<<"Terminating"<<std::endl; Report::getInstance().close(); exit(EXIT_FAILURE);}
 
 enum Logtype {
-	COUT = 1<<0,
-	CERR = 1<<1,
-	LOGFILE = 1<<2,
-	DB = 1<<3
+    COUT = 1 << 0,
+    CERR = 1 << 1,
+    LOGFILE = 1 << 2,
+    DB = 1 << 3
 };
 
 class Report {
 
-private:
-	bool networkDisabled = true;
-	int socketfd = 0;
-	int element_count = 0;
-	std::ofstream logfile;
-	std::string sendBuffer;
-	int dbid=0;
-
-	Report();
-	void addToSendBuffer(std::string str);
-	void send();
-
 public:
-	static Report& getInstance() {
-		static Report instance;
-		return instance;
-	}
+    static Report& getInstance()
+    {
+        static Report instance;
+        return instance;
+    }
 
-	void connect(std::string server, std::string port);
-	void startRun(std::string name);
-	int  registerElement(std::string type, int id);
-	void reportEvent(int element_id, std::string event, std::string data);
-	void reportAttribute(int element_id, std::string name, std::string value);
-	void log(bool qualifier, std::string message, int type = COUT | DB);
-	void close();
+    void connect(const std::string& server, const std::string& port);
+
+    void startRun(const std::string& name);
+
+    int registerElement(const std::string& type, int id);
+
+    void reportEvent(int element_id, const std::string& event, const std::string& data);
+
+    void reportAttribute(int element_id, const std::string& name, const std::string& value);
+
+    void log(bool qualifier, const std::string& message, int type = COUT | DB);
+
+    void close();
+
+private:
+    bool networkDisabled = true;
+    int socketfd = 0;
+    int element_count = 0;
+    std::ofstream logfile;
+    std::string sendBuffer;
+    int dbid = 0;
+
+    Report();
+
+    void addToSendBuffer(const std::string& str);
+
+    void send();
+
 };
