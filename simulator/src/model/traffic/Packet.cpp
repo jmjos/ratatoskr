@@ -48,3 +48,18 @@ std::ostream& operator<<(std::ostream& os, const Packet& p)
        << p.generationTime << std::endl;
     return os;
 }
+
+Packet::~Packet()
+{
+    for(auto& f: toTransmit){
+        delete f;
+    }
+
+    for(auto& f: inTransmit){
+        delete f;
+    }
+
+    for(auto& f: transmitted){
+        delete f;
+    }
+}

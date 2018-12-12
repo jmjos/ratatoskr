@@ -35,8 +35,8 @@
 
 class NetworkInterfaceVC : public NetworkInterface{
 public:
-	std::queue < Packet& > packet_send_queue;
-	std::queue < Packet& > packet_recv_queue;
+	std::queue < Packet* > packet_send_queue;
+	std::queue < Packet* > packet_recv_queue;
 
 
 	std::vector<bool>* flowControlOut;
@@ -47,14 +47,12 @@ public:
 	PacketPortContainer* packetPortContainer;
 
 	SC_HAS_PROCESS(NetworkInterfaceVC);
-	NetworkInterfaceVC(sc_module_name nm, Node* node);
-	~NetworkInterfaceVC();
+	NetworkInterfaceVC(sc_module_name nm, Node& node);
 
-	void initialize();
-	void bind(Connection*, SignalContainer*, SignalContainer*);
-	void thread();
-	void receivePacket();
-	void receiveFlit();
-
+	void initialize() override;
+	void bind(Connection*, SignalContainer*, SignalContainer*) override;
+	void thread() override;
+	void receivePacket() override ;
+	void receiveFlit() override;
 };
 

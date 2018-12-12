@@ -37,8 +37,6 @@ public:
     Report& rep = Report::getInstance();
     PacketFactory& packetFactory = PacketFactory::getInstance();
 
-    virtual ~NetworkParticipant() = 0;
-
     virtual void initialize() = 0;
 
     virtual void bind(Connection*, SignalContainer*, SignalContainer*) = 0;

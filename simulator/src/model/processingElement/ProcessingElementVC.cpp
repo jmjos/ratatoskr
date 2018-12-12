@@ -23,15 +23,15 @@
 #include <model/NoC.h>
 #include "ProcessingElementVC.h"
 
-ProcessingElementVC::ProcessingElementVC(sc_module_name nm, Node *node, TrafficPool *tp) :
-        ProcessingElement(nm, node, tp) {
-    this->packetPortContainer = new PacketPortContainer(("NI_PACKET_CONTAINER" + std::to_string(this->id)).c_str());
+ProcessingElementVC::ProcessingElementVC(sc_module_name mn, Node& node, TrafficPool* tp)
+        :
+        ProcessingElement(mn, node, tp)
+{
+    this->packetPortContainer = new PacketPortContainer(("NI_PACKET_CONTAINER"+std::to_string(this->id)).c_str());
 }
 
-ProcessingElementVC::~ProcessingElementVC() {
-}
-
-void ProcessingElementVC::initialize() {
+void ProcessingElementVC::initialize()
+{
 
     packetPortContainer->portValidOut.write(false);
     packetPortContainer->portFlowControlOut.write(true);
@@ -45,24 +45,25 @@ void ProcessingElementVC::initialize() {
     sensitive << packetPortContainer->portValidIn.pos();
 }
 
-void ProcessingElementVC::thread() {
+void ProcessingElementVC::thread()
+{
     // int lastTimeStamp = 0;
 
     for (;;) {
-        int timeStamp = sc_time_stamp().value() / 1000;
+        int timeStamp = sc_time_stamp().value()/1000;
 
-        std::vector<DataDestination *> removeList;
+        std::vector<DataDestination*> removeList;
 
-        for (auto const &tw : destWait) {
-            DataDestination *dest = tw.first;
-            Task *task = destToTask.at(dest);
-            if (taskTerminationTime.count(task) && taskTerminationTime.at(task) < timeStamp) {
+        for (auto const& tw : destWait) {
+            DataDestination* dest = tw.first;
+            Task* task = destToTask.at(dest);
+            if (taskTerminationTime.count(task) && taskTerminationTime.at(task)<timeStamp) {
                 removeList.push_back(dest);
             }
         }
 
-        for (DataDestination *dest : removeList) {
-            Task *task = destToTask.at(dest);
+        for (DataDestination* dest : removeList) {
+            Task* task = destToTask.at(dest);
             destToTask.erase(dest);
             taskToDest.erase(task);
             taskRepeatLeft.erase(task);
@@ -72,14 +73,15 @@ void ProcessingElementVC::thread() {
             destWait.erase(dest);
         }
 
-        for (auto const &tw : destWait) {
-            DataDestination *dest = tw.first;
+        for (auto const& tw : destWait) {
+            DataDestination* dest = tw.first;
 
-            if (destWait.at(dest) <= timeStamp) {
+            if (destWait.at(dest)<=timeStamp) {
                 //TODO restructure
                 // Packet *p = new Packet(this->node, globalResources.nodes.at(dest->destinationTask), 1, sc_time_stamp().to_double(), dest->dataType);
                 // p->dataType = dest->type;
-                Packet& p = packetFactory.createPacket(this->node, globalResources.nodes.at(dest->destinationTask), 1, sc_time_stamp().to_double(), dest->dataType);
+                Packet& p = packetFactory.createPacket(this->node, globalResources.nodes.at(dest->destinationTask), 1,
+                        sc_time_stamp().to_double(), dest->dataType);
 
                 packetPortContainer->portValidOut = true;
                 packetPortContainer->portDataOut = p;
@@ -90,7 +92,7 @@ void ProcessingElementVC::thread() {
                     countLeft.erase(dest);
                     destWait.erase(dest);
 
-                    Task *task = destToTask.at(dest);
+                    Task* task = destToTask.at(dest);
                     destToTask.erase(dest);
                     taskToDest.at(task).erase(dest);
 
@@ -99,10 +101,11 @@ void ProcessingElementVC::thread() {
                         execute(task);
                     }
 
-                } else {
+                }
+                else {
                     destWait.at(dest) =
-                            globalResources.getRandomIntBetween(dest->minInterval, dest->maxInterval) +
-                            timeStamp;
+                            globalResources.getRandomIntBetween(dest->minInterval, dest->maxInterval)+
+                                    timeStamp;
                 }
                 break;
             }
@@ -112,8 +115,8 @@ void ProcessingElementVC::thread() {
         packetPortContainer->portValidOut = false;
 
         int nextCall = -1;
-        for (auto const &dw : destWait) {
-            if (nextCall > dw.second || nextCall == -1) {
+        for (auto const& dw : destWait) {
+            if (nextCall>dw.second || nextCall==-1) {
                 /* In synthetic mode, we want to apply uniform_batch_mode experiment,
                  * that means all tasks need to send data once in one interval
                  * with some random offset in each interval.
@@ -125,7 +128,7 @@ void ProcessingElementVC::thread() {
                  * by selecting a number between minStart and maxStart,
                  * and the same thing for minInterval and maxInterval.
                  */
-                if (globalResources.benchmark == "synthetic") {
+                if (globalResources.benchmark=="synthetic") {
                     /* Between sender and receiver, we use the clock speed and the interval of the slower PE
                     *  to do the next call calculations.
                     *  We have tried using:
@@ -138,7 +141,7 @@ void ProcessingElementVC::thread() {
                     *  or they seem to work for warmup with a small violation but definitely screw up the run phase.
                     */
 
-                    Task *task = this->destToTask.at(dw.first);
+                    Task* task = this->destToTask.at(dw.first);
                     int minInterval = dw.first->minInterval;
 
                     /* int clockDelay;
@@ -158,32 +161,34 @@ void ProcessingElementVC::thread() {
                          minInterval = destMinInterval;
                      }*/
 
-                    if (timeStamp < task->minStart) {
-                        nextCall = task->minStart + globalResources.getRandomIntBetween(0, minInterval - 1);
+                    if (timeStamp<task->minStart) {
+                        nextCall = task->minStart+globalResources.getRandomIntBetween(0, minInterval-1);
 
-                    } else {
+                    }
+                    else {
                         /*   if (timeStamp < task->minStart + minInterval)
                                nextCall = task->minStart + minInterval + globalResources.getRandomIntBetween(0, minInterval - 1);
                            else {*/
-                        int numIntervalsPassed = (timeStamp - task->minStart) / minInterval;
-                        int intervalBeginning = task->minStart + (numIntervalsPassed * minInterval);
-                        nextCall = intervalBeginning + minInterval + globalResources.getRandomIntBetween(0, minInterval - 1);
+                        int numIntervalsPassed = (timeStamp-task->minStart)/minInterval;
+                        int intervalBeginning = task->minStart+(numIntervalsPassed*minInterval);
+                        nextCall = intervalBeginning+minInterval+globalResources.getRandomIntBetween(0, minInterval-1);
 //                        }
                     }
 //                    nextCall *= clockDelay;
 //                    cout << "currentTime: " << timeStamp << ", nextCall: " << nextCall << endl;
-                } else { // if not synthetic, then execute the original behavior
+                }
+                else { // if not synthetic, then execute the original behavior
                     nextCall = dw.second;
                 }
             }
         }
 
-        if (nextCall == 0) { // limit packet rate
+        if (nextCall==0) { // limit packet rate
             nextCall = 1;
         }
 
-        if (nextCall != -1) {
-            event.notify(nextCall - timeStamp, SC_NS);
+        if (nextCall!=-1) {
+            event.notify(nextCall-timeStamp, SC_NS);
         }
 
         // lastTimeStamp = timeStamp;
@@ -191,11 +196,13 @@ void ProcessingElementVC::thread() {
     }
 }
 
-void ProcessingElementVC::execute(Task *task) {
+void ProcessingElementVC::execute(Task* task)
+{
     if (!taskRepeatLeft.count(task)) {
         taskRepeatLeft[task] = globalResources.getRandomIntBetween(task->minRepeat, task->maxRepeat);
-    } else {
-        if (taskRepeatLeft.at(task) > 0) {
+    }
+    else {
+        if (taskRepeatLeft.at(task)>0) {
             taskRepeatLeft.at(task)--;
         }
 
@@ -209,15 +216,16 @@ void ProcessingElementVC::execute(Task *task) {
         taskStartTime[task] = globalResources.getRandomIntBetween(task->minStart, task->maxStart);
     }
 
-    if (!taskTerminationTime.count(task) && task->minDuration != -1) {
+    if (!taskTerminationTime.count(task) && task->minDuration!=-1) {
         taskTerminationTime[task] =
-                taskStartTime[task] + globalResources.getRandomIntBetween(task->minDuration, task->maxDuration);
+                taskStartTime[task]+globalResources.getRandomIntBetween(task->minDuration, task->maxDuration);
     }
 
     if (task->requirements.empty()) {
         startSending(task);
-    } else {
-        for (DataRequirement *r : task->requirements) {
+    }
+    else {
+        for (DataRequirement* r : task->requirements) {
             neededFor[r->type].insert(task);
             neededAmount[std::make_pair(task, r->type)] = globalResources.getRandomIntBetween(r->minCount, r->maxCount);
             needs[task].insert(r->type);
@@ -225,21 +233,25 @@ void ProcessingElementVC::execute(Task *task) {
     }
 }
 
-void ProcessingElementVC::bind(Connection *con, SignalContainer *sigContIn, SignalContainer *sigContOut) {
+void ProcessingElementVC::bind(Connection* con, SignalContainer* sigContIn, SignalContainer* sigContOut)
+{
     packetPortContainer->bind(sigContIn, sigContOut);
 }
 
-void ProcessingElementVC::receive() {
-    LOG(globalResources.verbose_pe_function_calls, "PE" << this->id << "(Node" << node->id << ")\t- receive_data_process()");
+void ProcessingElementVC::receive()
+{
+    LOG(globalResources.verbose_pe_function_calls,
+            "PE" << this->id << "(Node" << node->id << ")\t- receive_data_process()");
 
     if (packetPortContainer->portValidIn.posedge()) {
-        Packet *received_packet = packetPortContainer->portDataIn.read();
+        Packet* received_packet = packetPortContainer->portDataIn.read();
         if (received_packet) {
-            DataType *type = received_packet->dataType;
+            DataType* type = received_packet->dataType;
 
             if (receivedData.count(type)) {
                 receivedData.at(type)++;
-            } else {
+            }
+            else {
                 receivedData[type] = 1;
             }
 
@@ -248,49 +260,54 @@ void ProcessingElementVC::receive() {
     }
 }
 
-void ProcessingElementVC::startSending(Task *task) {
+void ProcessingElementVC::startSending(Task* task)
+{
     float rn = globalResources.getRandomFloatBetween(0, 1);
 
-    for (unsigned int i = 0; i < task->possibilities.size(); i++) {
-        if (task->possibilities.at(i).first > rn) {
-            std::vector<DataDestination *> *destVec = &(task->possibilities.at(i).second);
-            for (DataDestination *dest : *destVec) {
+    for (unsigned int i = 0; i<task->possibilities.size(); i++) {
+        if (task->possibilities.at(i).first>rn) {
+            std::vector<DataDestination*>* destVec = &(task->possibilities.at(i).second);
+            for (DataDestination* dest : *destVec) {
                 destToTask[dest] = task;
                 taskToDest[task].insert(dest);
 
                 countLeft[dest] = globalResources.getRandomIntBetween(dest->minCount, dest->maxCount);
 
                 int delayTime =
-                        (sc_time_stamp().value() / 1000) + globalResources.getRandomIntBetween(dest->minDelay, dest->maxDelay);
+                        (sc_time_stamp().value()/1000)
+                                +globalResources.getRandomIntBetween(dest->minDelay, dest->maxDelay);
 
-                if (taskStartTime.count(task) && taskStartTime.at(task) > delayTime) {
+                if (taskStartTime.count(task) && taskStartTime.at(task)>delayTime) {
                     destWait[dest] = taskStartTime.at(task);
-                } else {
+                }
+                else {
                     destWait[dest] = delayTime;
                 }
                 event.notify(SC_ZERO_TIME);
             }
             break;
-        } else {
+        }
+        else {
             rn -= task->possibilities.at(i).first;
         }
     }
 }
 
-void ProcessingElementVC::checkNeed() {
-    for (auto const &data : receivedData) {
-        DataType *type = data.first;
-        std::vector<std::pair<Task *, DataType *>> removeList;
+void ProcessingElementVC::checkNeed()
+{
+    for (auto const& data : receivedData) {
+        DataType* type = data.first;
+        std::vector<std::pair<Task*, DataType*>> removeList;
 
         if (neededFor.count(type)) {
-            for (Task *t : neededFor.at(type)) {
-                std::pair<Task *, DataType *> pair = std::make_pair(t, type);
+            for (Task* t : neededFor.at(type)) {
+                std::pair<Task*, DataType*> pair = std::make_pair(t, type);
                 neededAmount.at(pair) -= receivedData.at(type);
                 /* This line was commented out because if a task requires several packets from several data types,
                  it says that the task is finished receiving the required packets while in fact, it still needs some packets.
                  receivedData.at(type) = 0;
                  */
-                if (neededAmount.at(pair) <= 0) {
+                if (neededAmount.at(pair)<=0) {
                     removeList.push_back(pair);
                     // This line is also commented out for the same reason mentioned above.
                     // receivedData.at(type) = -neededAmount.at(pair);
@@ -298,7 +315,7 @@ void ProcessingElementVC::checkNeed() {
             }
         }
 
-        for (std::pair<Task *, DataType *> p : removeList) {
+        for (std::pair<Task*, DataType*> p : removeList) {
             neededFor.erase(p.second);
             neededAmount.erase(p);
             needs.at(p.first).erase(p.second);

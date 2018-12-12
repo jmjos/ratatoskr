@@ -71,8 +71,7 @@ void NoC::createNetworkParticipants(const std::vector<std::unique_ptr<sc_clock>>
         else if (n.type->model=="ProcessingElement") {
             // Creating an network interface.
             std::string ni_name = "ni_"+std::to_string(n.id);
-            Node* n_ptr = &n;
-            NetworkInterfaceVC* ni = new NetworkInterfaceVC(ni_name.c_str(), n_ptr);
+            NetworkInterfaceVC* ni = new NetworkInterfaceVC(ni_name.c_str(), n);
             ni->clk(*clocks.at(n.type->id));
             networkParticipants.at(n.id) = dynamic_cast<NetworkParticipant*>(ni);
 

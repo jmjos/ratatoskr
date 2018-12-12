@@ -22,7 +22,7 @@
 
 #include "NetworkInterfaceVC.h"
 
-NetworkInterfaceVC::NetworkInterfaceVC(sc_module_name nm, Node* node) :
+NetworkInterfaceVC::NetworkInterfaceVC(sc_module_name nm, Node& node) :
 		NetworkInterface(nm, node) {
 	try {
 		this->id = node.id % (globalResources.nodes.size() / 2);
@@ -71,10 +71,6 @@ void NetworkInterfaceVC::receivePacket() {
 		}
 		packet_send_queue.push(p);
 	}
-
-}
-
-NetworkInterfaceVC::~NetworkInterfaceVC() {
 
 }
 

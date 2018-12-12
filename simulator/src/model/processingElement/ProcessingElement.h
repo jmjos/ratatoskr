@@ -35,20 +35,12 @@ public:
 	int id;
 	int dbid;
 	Node& node;
-
-	TrafficPool& trafficPool;
-
+	TrafficPool* trafficPool;
 
 	SC_HAS_PROCESS(ProcessingElement);
-	ProcessingElement(sc_module_name nm, Node* node, TrafficPool* tp);
-	virtual ~ProcessingElement();
-
-	virtual void initialize() = 0;
-	virtual void bind(Connection*, SignalContainer*, SignalContainer*) = 0;
+	ProcessingElement(sc_module_name mn, Node& node, TrafficPool* tp);
 	virtual void receive() = 0;
 	virtual void execute(Task*) = 0;
 	virtual void thread() = 0;
-
-
 };
 

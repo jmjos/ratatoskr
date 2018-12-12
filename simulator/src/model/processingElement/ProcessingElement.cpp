@@ -21,19 +21,16 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "ProcessingElement.h"
 
-ProcessingElement::ProcessingElement(sc_module_name nm, Node* node, TrafficPool* tp) {
-	this->id = node->id % (globalResources.nodes.size() / 2);
-	this->node = node;
-	this->dbid = rep.registerElement("NetworkInterface", this->id);
-	this->trafficPool = tp;
-
-	rep.reportAttribute(dbid, "pos_x", std::to_string(node->pos.x));
-	rep.reportAttribute(dbid, "pos_y", std::to_string(node->pos.y));
-	rep.reportAttribute(dbid, "pos_z", std::to_string(node->pos.z));
-	rep.reportAttribute(dbid, "clock", std::to_string(node->type->clockDelay));
-	rep.reportAttribute(dbid, "type", node->type->model);
-}
-
-ProcessingElement::~ProcessingElement(){
-
+ProcessingElement::ProcessingElement(sc_module_name mn, Node& node, TrafficPool* tp)
+        :
+        node(node),
+        trafficPool(tp)
+{
+    this->id = node.id%(globalResources.nodes.size()/2);
+    this->dbid = rep.registerElement("NetworkInterface", this->id);
+    rep.reportAttribute(dbid, "pos_x", std::to_string(node.pos.x));
+    rep.reportAttribute(dbid, "pos_y", std::to_string(node.pos.y));
+    rep.reportAttribute(dbid, "pos_z", std::to_string(node.pos.z));
+    rep.reportAttribute(dbid, "clock", std::to_string(node.type->clockDelay));
+    rep.reportAttribute(dbid, "type", node.type->model);
 }

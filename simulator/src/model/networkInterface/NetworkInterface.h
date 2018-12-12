@@ -33,19 +33,13 @@ class NetworkInterface : public NetworkParticipant, public sc_module {
 public:
     int id;
     int dbid;
-    Node* node;
+    Node& node;
 
     Report& rep = Report::getInstance();
 
     SC_HAS_PROCESS(NetworkInterface);
 
-    NetworkInterface(sc_module_name nm, Node* node);
-
-    ~NetworkInterface() override = 0;
-
-    void initialize() override = 0;
-
-    void bind(Connection*, SignalContainer*, SignalContainer*) override = 0;
+    NetworkInterface(sc_module_name nm, Node& node);
 
     virtual void thread() = 0;
 

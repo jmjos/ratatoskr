@@ -60,13 +60,12 @@ public:
 
 	SC_HAS_PROCESS(ProcessingElementVC);
 	ProcessingElementVC(sc_module_name mn, Node& node, TrafficPool* tp);
-	~ProcessingElementVC();
 
-	void initialize();
-	void bind(Connection *, SignalContainer *, SignalContainer *);
-	void execute(Task *);
-	void receive();
-	void thread();
+	void initialize() override;
+	void bind(Connection *, SignalContainer *, SignalContainer *) override;
+	void execute(Task *) override;
+	void receive() override;
+	void thread() override;
 
 	void startSending(Task *);
 	void checkNeed();

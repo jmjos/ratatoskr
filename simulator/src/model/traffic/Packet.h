@@ -44,14 +44,16 @@ struct Packet {
 	int numhops;
 	std::vector<int> traversedRouter;
 	std::set<int> routerIDs;
-	std::vector<Flit&> toTransmit;
-	std::vector<Flit&> inTransmit;
-	std::vector<Flit&> transmitted;
+	std::vector<Flit*> toTransmit;
+	std::vector<Flit*> inTransmit;
+	std::vector<Flit*> transmitted;
 	std::vector<Flit> flits;
 	Report& rep = Report::getInstance();
 
 	Packet(Node& src, Node& dst, int size, double generationTime, dataTypeID_t dataType);
 
 	friend ostream & operator <<(ostream & os, const Packet& p);
+
+	~Packet();
 
 };
