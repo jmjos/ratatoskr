@@ -60,7 +60,6 @@ public:
 private:
     GlobalResources& globalResources = GlobalResources::getInstance();
     Report& rep = Report::getInstance();
-
     int dbid;
     std::unique_ptr<TrafficPool> tp;
     std::vector<NetworkParticipant*> networkParticipants;

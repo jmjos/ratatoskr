@@ -51,15 +51,8 @@ std::ostream& operator<<(std::ostream& os, const Packet& p)
 
 Packet::~Packet()
 {
-    for(auto& f: toTransmit){
+    for(auto& f:flits){
         delete f;
     }
-
-    for(auto& f: inTransmit){
-        delete f;
-    }
-
-    for(auto& f: transmitted){
-        delete f;
-    }
+    flits.clear();
 }

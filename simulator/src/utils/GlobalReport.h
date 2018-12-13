@@ -30,6 +30,7 @@
 
 class GlobalReport {
 public:
+    int droppedCounter = 0;             // number of dropped flits.
 
     Statistics latencyNetwork;
     Statistics latencyFlit;
@@ -177,7 +178,7 @@ private:
     // Generate VC and buffer histograms for only these routers
     const std::vector<int> INNER_ROUTERS = {5, 6, 9, 10, 21, 22, 25, 26, 37, 38, 41, 42};
 
-    int droppedCounter = 0;             // number of dropped flits.
+
 
     GlobalReport();
 };

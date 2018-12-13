@@ -137,16 +137,14 @@ void GlobalReport::issueLinkMatrixUpdate(int id, int currentTransmissionState, i
         linkTransmissionMatrices.insert(std::make_pair(id, matrix));
     }
 
-    linkTransmissionMatrices.at(id).at(
-            static_cast<unsigned long>(currentTransmissionState
-                    +linkTransmissionsMatrixNumberOfStates*lastTransmissionState))++;
+    linkTransmissionMatrices.at(id).at(currentTransmissionState+linkTransmissionsMatrixNumberOfStates*lastTransmissionState)++;
 }
 
 void GlobalReport::reportLinkMatrix(int id, ostream& stream)
 {
     auto transmissionMatrix = linkTransmissionMatrices.at(id);
-    long clockCyclesOfLink = static_cast<long>(std::accumulate(transmissionMatrix.begin(), transmissionMatrix.end(),
-            0));
+    int clockCyclesOfLink = std::accumulate(transmissionMatrix.begin(), transmissionMatrix.end(),
+            0);
     stream << boost::format("Transmission matrix of links %i:\n")%id;
     int colit = 0, rowit = 0;
     stream << boost::format("from\\to     IDLE     HEAD     HID");
@@ -297,12 +295,12 @@ void GlobalReport::updateBuffUsagePerVCHist(std::vector<std::vector<std::vector<
     }
     else {
         std::vector<std::vector<std::vector<long>>> vec_3d(DIR::size);
-        for (unsigned int i = 0; i<vec_3d.size(); i++) {
+        for (auto& temp_vec : vec_3d) {
             std::vector<std::vector<long>> vec_2d(numVCs);
             for (auto& vec_1d : vec_2d) {
                 vec_1d.assign(MAX_BUFFER_DEPTH, 0);
             }
-            vec_3d[i] = vec_2d;
+            temp_vec = vec_2d;
         }
         histVec[routerId] = vec_3d;
         histVec[routerId][dir][vc][bufferOccupation] = 1;

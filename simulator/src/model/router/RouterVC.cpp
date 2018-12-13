@@ -1,24 +1,24 @@
-////////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2018 Jan Moritz Joseph
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-////////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
+ * Copyright (C) 2018 joseph
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ ******************************************************************************/
 #include "RouterVC.h"
 
 RouterVC::RouterVC(sc_module_name nm, Node *node) :
@@ -95,7 +95,7 @@ RouterVC::RouterVC(sc_module_name nm, Node *node) :
     //trace input
     for (int dir = 0; dir < conCount; dir++) {
         sc_trace(tf, classicPortContainer.at(dir).portValidIn,
-                 "validIn." + DIR::toString(node->conToDir[dir]));
+                 "validIn." + DIR::toString(node->conPosToDir[dir]));
     }*/
 
     lastReceivedFlits.resize(conCount);
@@ -234,8 +234,8 @@ void RouterVC::receive() {
 
                     if (rpInfo.count({flit->packet, c})) FATAL("packet duplication!");
                     LOG(
-                            (globalResources.verbose_router_receive_head_flit) || globalResources.verbose_router_receive_flit,
-                            "Router" << this->id << "[" << DIR::toString(node->conToDir[dirIn]) << vcIn
+                            (globalReport.verbose_router_receive_head_flit) || globalReport.verbose_router_receive_flit,
+                            "Router" << this->id << "[" << DIR::toString(node->dirOfConPos[dirIn]) << vcIn
                                      << "]\t- Receive Flit " << *flit);
                     pkgcnt.at(dirIn)->at(vcIn)++;
                     rInfo->tagOut.at(Channel(dirIn, vcIn)) = flit->packet->pkgclass;
@@ -243,8 +243,8 @@ void RouterVC::receive() {
                 }
                 // rep.reportEvent(dbid, "router_receive_flit", std::to_string(flit->id));
                 if (!buf->enqueue(flit)) {
-                    LOG(globalResources.verbose_router_buffer_overflow,
-                        "Router" << this->id << "[" << DIR::toString(node->conToDir[dirIn]) << vcIn
+                    LOG(globalReport.verbose_router_buffer_overflow,
+                        "Router" << this->id << "[" << DIR::toString(node->dirOfConPos[dirIn]) << vcIn
                                  << "]\t- Buffer Overflow " << *flit);
                 } else {
                     rep.reportEvent(buf->dbid, "buffer_enqueue_flit", std::to_string(flit->id));
@@ -272,14 +272,14 @@ void RouterVC::updateUsageStats() {
             buf = buffer.at(dirIn)->at(vcIn);
             if (!buf->empty()) {
                 numberActiveVCs++;
-                globalResourcesReportClass.updateBuffUsagePerVCHist(globalResourcesReportClass.bufferUsagePerVCHist, this->id, dirIn,
+                globalReport.updateBuffUsagePerVCHist(globalReport.bufferUsagePerVCHist, this->id, dirIn,
                                                            vcIn, buf->occupied(), numVCs);
             }
         }
         /* this 1 is added to create a column for numberOfActiveVCs=0.
            yes it's an extra column but it allow us to use the same function to update both buffer stats and VC stats.
         */
-        globalResourcesReportClass.updateUsageHist(globalResourcesReportClass.VCsUsageHist, this->id, node->conToDir[dirIn],
+        globalReport.updateUsageHist(globalReport.VCsUsageHist, this->id, node->dirOfConPos[dirIn],
                                           numberActiveVCs, numVCs + 1);
     }
 }
@@ -302,8 +302,7 @@ void RouterVC::route() {
 
                         routedPackets.insert({flit->packet, in});
                         flit->packet->numhops++;
-                        flit->packet->traversedRouter.push_back(node->id);
-                        flit->packet->routerIDs.insert(node->id);
+                        flit->packet->traversedRouters.push_back(node->id);
                     } else {
                         rpi->dropFlag = true;
                         rep.reportEvent(dbid, "router_routefail", std::to_string(flit->id));
@@ -318,7 +317,7 @@ void RouterVC::allocateVC() {
     for (auto &routingPair : rInfo->routingStateTable) {
         Channel in = routingPair.first;
         Channel &out = routingPair.second;
-        BufferFIFO<Flit *> *buf = buffer.at(in.dir)->at(in.vc);
+        BufferFIFO<Flit *> *buf = buffer.at(in.conPos)->at(in.vc);
         Flit *flit = buf->front();
         if (out.vc == -1) { // allocate output VCs, if necessary
             RoutingPacketInformation *rpi = rpInfo.at({flit->packet, in});
@@ -353,7 +352,7 @@ bool RouterVC::handleHeadFlitSpecialCases(RoutingPacketInformation *rpi, const F
     if (rpi->rerouteFlag) {
         rpi->rerouteFlag = false;
         LOG(true,
-            "Router" << this->id << "[" << DIR::toString(node->conToDir[in.dir]) << in.vc << "]\t- Reroute! "
+            "Router" << this->id << "[" << DIR::toString(node->dirOfConPos[in.conPos]) << in.vc << "]\t- Reroute! "
                      << *flit);
         routing->route(rInfo, rpi);
         selection->select(rInfo, rpi);
@@ -362,19 +361,19 @@ bool RouterVC::handleHeadFlitSpecialCases(RoutingPacketInformation *rpi, const F
             rpi->dropFlag = true;
             rep.reportEvent(dbid, "router_select2fail", std::to_string(flit->id));
             LOG(true,
-                "Router" << this->id << "[" << DIR::toString(node->conToDir[in.dir]) << in.vc
+                "Router" << this->id << "[" << DIR::toString(node->dirOfConPos[in.conPos]) << in.vc
                          << "]\t- Reroute Fail! "
                          << *flit);
 
         } else {
-            LOG(true, "Router" << this->id << "[" << DIR::toString(node->conToDir[in.dir]) << in.vc
+            LOG(true, "Router" << this->id << "[" << DIR::toString(node->dirOfConPos[in.conPos]) << in.vc
                                << "]\t- Reroute Success! " << *flit);
             result = true;
         }
 
     } else if (rpi->delayFlag) {
         rpi->delayFlag = false;
-        FATAL("Router" << this->id << "[" << DIR::toString(node->conToDir[in.dir]) << in.dir << "]\t- Delay! "
+        FATAL("Router" << this->id << "[" << DIR::toString(node->dirOfConPos[in.conPos]) << in.conPos << "]\t- Delay! "
                        << *flit);
     }
     return result;
@@ -387,13 +386,13 @@ bool RouterVC::handleBodyFlitWithDropFlag(RoutingPacketInformation *rpi, const F
             rep.reportEvent(dbid, "pkg_dropped", std::to_string(flit->packet->dbid));
             routedPackets.erase({flit->packet, in});
             rpInfo.erase({flit->packet, in});
-            pkgcnt.at(in.dir)->at(in.vc)--;
+            pkgcnt.at(in.conPos)->at(in.vc)--;
             delete flit->packet;
             delete rpi;
-            globalResources.droppedCounter++;
+            globalReport.droppedCounter++;
         }
 
-        routedFlits.at(in.dir)->at(in.vc) = 0;
+        routedFlits.at(in.conPos)->at(in.vc) = 0;
         return true;
     }
     return false;
@@ -401,9 +400,9 @@ bool RouterVC::handleBodyFlitWithDropFlag(RoutingPacketInformation *rpi, const F
 
 // If not able to make a decision, then report it.
 void RouterVC::checkFailedDecision(RoutingPacketInformation *rpi, const Flit *flit, const Channel &in) {
-    if (rpi->outputChannel.dir == -1) {
+    if (rpi->outputChannel.conPos == -1) {
         rep.reportEvent(dbid, "router_routefail", std::to_string(flit->id));
-        FATAL("Router" << this->id << "[" << DIR::toString(node->conToDir[in.dir]) << in.dir
+        FATAL("Router" << this->id << "[" << DIR::toString(node->dirOfConPos[in.conPos]) << in.conPos
                        << "]\t- Failed Decision! "
                        << *flit);
     }
@@ -442,17 +441,17 @@ void RouterVC::arbitrate() {
                     continue;
 
                 // Make sure router table has only one entry per flit
-                if (!arbiterDirs.count(out.dir)) {
+                if (!arbiterDirs.count(out.conPos)) {
                     if (flit->type == HEAD && !rInfo->occupyTable.count(out)) {
                         rInfo->occupyTable[out] = flit->packet;
-                        LOG(globalResources.verbose_router_assign_channel,
-                            "Router" << this->id << "[" << DIR::toString(node->conToDir[out.dir]) << out.vc
+                        LOG(globalReport.verbose_router_assign_channel,
+                            "Router" << this->id << "[" << DIR::toString(node->dirOfConPos[out.conPos]) << out.vc
                                      << "]\t- Assign to " << *flit);
                     }
 
                     if (rInfo->occupyTable.at(out) == flit->packet) {
                         arbitratedFlits.insert({flit, c, out});
-                        arbiterDirs.insert(out.dir);
+                        arbiterDirs.insert(out.conPos);
                         routedFlits.at(dirIn)->at(vcIn) = 0;
                     }
                 }
@@ -511,13 +510,13 @@ int RouterVC::getNextAvailableVC(int dir) {
 
 // Check if the down stream router is ready (flow control).
 bool RouterVC::isDownStreamRouterReady(const Channel &in, const Channel &out) {
-    bool isReady = classicPortContainer.at(out.dir).portFlowControlIn.read()->at(out.vc);
+    bool isReady = classicPortContainer.at(out.conPos).portFlowControlIn.read()->at(out.vc);
     if (!isReady) {
-        BufferFIFO<Flit *> *buf = buffer.at(in.dir)->at(in.vc);
+        BufferFIFO<Flit *> *buf = buffer.at(in.conPos)->at(in.vc);
         Flit *flit = buf->front();
         //Flit *flit = routedFlits.at(in.dir)->at(in.vc);
-        LOG(globalResources.verbose_router_throttle,
-            "Router" << this->id << "[" << DIR::toString(node->conToDir[in.dir]) << in.dir << "]\t- Flow Control! "
+        LOG(globalReport.verbose_router_throttle,
+            "Router" << this->id << "[" << DIR::toString(node->dirOfConPos[in.conPos]) << in.conPos << "]\t- Flow Control! "
                      << *flit);
     }
     return isReady;
@@ -525,11 +524,11 @@ bool RouterVC::isDownStreamRouterReady(const Channel &in, const Channel &out) {
 
 // The actual arbitration step; flits are inserted into arbitration data structure, which is read by send function.
 void RouterVC::arbitrateFlit(Channel in, Channel out, std::set<int> &arbitratedDirs) {
-    BufferFIFO<Flit *> *buf = buffer.at(in.dir)->at(in.vc);
+    BufferFIFO<Flit *> *buf = buffer.at(in.conPos)->at(in.vc);
     Flit *flit = buf->front();//routedFlits.at(dirIn)->at(vcIn);
     //Flit *flit = routedFlits.at(in.dir)->at(in.vc);
     arbitratedFlits.insert({flit, in, out});
-    arbitratedDirs.insert(out.dir);
+    arbitratedDirs.insert(out.conPos);
     //routedFlits.at(in.dir)->at(in.vc) = 0;
 }
 
@@ -573,9 +572,9 @@ void RouterVC::arbitrateFair() {
     for (unsigned int dirOut = rrDirOff, i = 0; i < buffer.size(); dirOut = (dirOut + 1) % buffer.size(), i++) {
         int vcOut = getNextAvailableVC(dirOut);
         Channel out = Channel(dirOut, vcOut);
-        if (rInfo->fairOccupyTable.count(out) && !arbitratedDirs.count(out.dir)) {
+        if (rInfo->fairOccupyTable.count(out) && !arbitratedDirs.count(out.conPos)) {
             Channel in = rInfo->fairOccupyTable[out];
-            BufferFIFO<Flit *> *buf = buffer.at(in.dir)->at(in.vc);
+            BufferFIFO<Flit *> *buf = buffer.at(in.conPos)->at(in.vc);
             Flit *flit = buf->front();//routedFlits.at(dirIn)->at(vcIn);
             //Flit *flit = routedFlits.at(in.dir)->at(in.vc);
 
@@ -600,9 +599,9 @@ void RouterVC::send() {
         if (rpInfo.count({flit->packet, in}))
             rpi = rpInfo.at({flit->packet, in});
 
-        classicPortContainer.at(out.dir).portValidOut.write(true);
-        classicPortContainer.at(out.dir).portDataOut.write(flit);
-        classicPortContainer.at(out.dir).portVcOut.write(out.vc);
+        classicPortContainer.at(out.conPos).portValidOut.write(true);
+        classicPortContainer.at(out.conPos).portDataOut.write(flit);
+        classicPortContainer.at(out.conPos).portVcOut.write(out.vc);
 
         if (flit->type == TAIL) {
             routedPackets.erase({flit->packet, in});
@@ -612,18 +611,18 @@ void RouterVC::send() {
                 rInfo->fairOccupyTable.erase(out);
             else FATAL("Unknown arbiter type!");
 
-            if (node->conToDir[out.dir] != DIR::Local)
+            if (node->dirOfConPos[out.conPos] != DIR::Local)
                 rInfo->freeVCs[out] = true;
 
             rpInfo.erase({flit->packet, in});
-            pkgcnt.at(in.dir)->at(in.vc)--;
+            pkgcnt.at(in.conPos)->at(in.vc)--;
             rInfo->routingStateTable.erase(in);
             if (rpInfo.count({flit->packet, in}))
                 delete rpi;
         }
         LOG(
-                (globalResources.verbose_router_send_head_flit && flit->type == HEAD) || globalResources.verbose_router_send_flit,
-                "Router" << this->id << "[" << DIR::toString(node->conToDir[out.dir]) << out.vc << "]\t- Send Flit "
+                (globalReport.verbose_router_send_head_flit && flit->type == HEAD) || globalReport.verbose_router_send_flit,
+                "Router" << this->id << "[" << DIR::toString(node->dirOfConPos[out.conPos]) << out.vc << "]\t- Send Flit "
                          << *flit);
     }
     arbitratedFlits.clear();

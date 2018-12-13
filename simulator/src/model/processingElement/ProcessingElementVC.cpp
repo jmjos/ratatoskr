@@ -50,7 +50,7 @@ void ProcessingElementVC::thread()
     // int lastTimeStamp = 0;
 
     for (;;) {
-        int timeStamp = sc_time_stamp().value()/1000;
+        int timeStamp = static_cast<int>(sc_time_stamp().value()/1000);
 
         std::vector<DataDestination*> removeList;
 
@@ -80,7 +80,7 @@ void ProcessingElementVC::thread()
                 //TODO restructure
                 // Packet *p = new Packet(this->node, globalResources.nodes.at(dest->destinationTask), 1, sc_time_stamp().to_double(), dest->dataType);
                 // p->dataType = dest->type;
-                Packet& p = packetFactory.createPacket(this->node, globalResources.nodes.at(dest->destinationTask), 1,
+                Packet* p = packetFactory.createPacket(this->node, globalResources.nodes.at(dest->destinationTask), 1,
                         sc_time_stamp().to_double(), dest->dataType);
 
                 packetPortContainer->portValidOut = true;
@@ -240,7 +240,7 @@ void ProcessingElementVC::bind(Connection* con, SignalContainer* sigContIn, Sign
 
 void ProcessingElementVC::receive()
 {
-    LOG(globalResources.verbose_pe_function_calls,
+    LOG(globalReport.verbose_pe_function_calls,
             "PE" << this->id << "(Node" << node->id << ")\t- receive_data_process()");
 
     if (packetPortContainer->portValidIn.posedge()) {
@@ -274,8 +274,8 @@ void ProcessingElementVC::startSending(Task* task)
                 countLeft[dest] = globalResources.getRandomIntBetween(dest->minCount, dest->maxCount);
 
                 int delayTime =
-                        (sc_time_stamp().value()/1000)
-                                +globalResources.getRandomIntBetween(dest->minDelay, dest->maxDelay);
+                        static_cast<int>((sc_time_stamp().value()/1000)
+                                +globalResources.getRandomIntBetween(dest->minDelay, dest->maxDelay));
 
                 if (taskStartTime.count(task) && taskStartTime.at(task)>delayTime) {
                     destWait[dest] = taskStartTime.at(task);

@@ -19,8 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-#ifndef SRC_TRAFFIC_SYNTHETIC_SYNTHETICPOOL_H_
-#define SRC_TRAFFIC_SYNTHETIC_SYNTHETICPOOL_H_
+#pragma once
 
 #include "systemc.h"
 #include "utils/GlobalResources.h"
@@ -29,21 +28,26 @@
 #include "SyntheticPacket.h"
 #include "model/traffic/TrafficPool.h"
 
-class SyntheticPool: public TrafficPool {
+class SyntheticPool : public TrafficPool {
 private:
-	std::map<int, int> uniform();
-	std::map<int, int> transpose();
-	std::map<int, int> tornado();
-	std::map<int, int> hotspot(int);
-	std::map<int, int> bitcomplement();
+    std::map<int, int> uniform();
+
+    std::map<int, int> transpose();
+
+    std::map<int, int> tornado();
+
+    std::map<int, int> hotspot(int);
+
+    std::map<int, int> bitcomplement();
 
 public:
-	SyntheticPool();
-	virtual ~SyntheticPool();
+    SyntheticPool();
 
-	void clear(Task*);
-	void start();
-	void shuffle_execute_tasks(std::vector<Task*> &tasks, int phaseId);
+    ~SyntheticPool() = default;
+
+    void clear(Task*) override;
+
+    void start() override;
+
+    void shuffle_execute_tasks(std::vector<Task*>& tasks, int phaseId);
 };
-
-#endif /* SRC_TRAFFIC_SYNTHETIC_SYNTHETICPOOL_H_ */

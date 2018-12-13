@@ -1,3 +1,5 @@
+#include <utility>
+
 /*******************************************************************************
  * Copyright (C) 2018 Jan Moritz Joseph
  * 
@@ -19,19 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-#ifndef SRC_TRAFFIC_SYNTHETIC_SYNTHETICPACKET_H_
-#define SRC_TRAFFIC_SYNTHETIC_SYNTHETICPACKET_H_
+#pragma once
 
 #include <string>
 
 #include "model/traffic/Packet.h"
 
-struct SyntheticPacket: Packet{
-	std::string phase;
+struct SyntheticPacket : Packet {
+    std::string phase;
 
-	SyntheticPacket(Node* src, Node* dst, int size, int generationTime, std::string phase):Packet(src, dst, size, generationTime, 3, 0, 0){
-		this->phase = phase;
-	}
+    SyntheticPacket(Node& src, Node& dst, int size, int generationTime, std::string phase)
+            :Packet(src, dst, size, generationTime, 3)
+    {
+        this->phase = std::move(phase);
+    }
 };
-
-#endif /* SRC_TRAFFIC_SYNTHETIC_SYNTHETICPACKET_H_ */

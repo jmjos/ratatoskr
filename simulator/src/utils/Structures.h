@@ -104,7 +104,7 @@ struct DIR {
 };
 
 struct Channel {
-    int dir;
+    int conPos;
     int vc;
 
     Channel();
@@ -222,22 +222,37 @@ struct NodeType {
 	LayerType(int id, int technology);
 };*/
 
-struct Node {
+class Node {
+public:
     nodeID_t id;
     Vec3D<float> pos;
     std::shared_ptr<NodeType> type;
     float congestion; // crossbar utilization 0-1
     std::vector<nodeID_t> connectedNodes;
     std::vector<connID_t> connections;
-    std::map<DIR::TYPE, connID_t> dirToCon; //maps direction names to connection number
-    std::map<connID_t, DIR::TYPE> conToDir; //maps connection number to direction name
 
     /* int idType; TODO restructure
      LayerType* layer;
      std::map<Node *, std::vector<int>> connectionsToNode; //get connection by connected node
-     std::map<Connection *, int> conToPos; // get position of connection inside array
+     std::map<connID_t, int> conToPos; // get position of connection inside array
      */
-    Node(nodeID_t id, Vec3D<float> pos, const std::shared_ptr<NodeType>& type); //, LayerType* layer); TODO restructure
+    Node(nodeID_t id, Vec3D<float> pos, const std::shared_ptr<NodeType>& type);
+
+    Node();
+
+    int getConnPosition(connID_t connID) const;
+
+    int getConPosOfDir(DIR::TYPE dir) const;
+
+    void setConPosOfDir(DIR::TYPE dir, connID_t connID);
+
+    DIR::TYPE getDirOfCon(connID_t connID) const;
+
+    void setDirOfConn(connID_t connID, DIR::TYPE dir);
+
+private:
+    std::map<DIR::TYPE, int> conPosOfDir; //maps direction names to connection position inside this node's connections
+    std::map<int, DIR::TYPE> dirOfConPos; //maps connection position (inside this node's connections) to direction name
 };
 
 struct Connection {
@@ -260,11 +275,11 @@ struct Connection {
             const std::vector<int>& buffersDepth,
             const std::vector<std::vector<int>>& buffersDepths, float length, int width, int depth);
 
-    int getBufferDepthForNode(nodeID_t node);
+    int getBufferDepthForNode(nodeID_t nodeID);
 
-    int getBufferDepthForNodeAndVC(nodeID_t node, int vc);
+    int getBufferDepthForNodeAndVC(nodeID_t nodeID, int vcID);
 
-    int getVCCountForNode(nodeID_t node);
+    int getVCCountForNode(nodeID_t nodeID);
 };
 
 struct DataType {
@@ -286,13 +301,13 @@ struct DataRequirement {
 struct DataDestination {
     dataDestID_t id;
     dataTypeID_t dataType;
-    nodeID_t destinationNode;    //fyi: "task" in XML ??
-    taskID_t destinationTask;    //fyi: "task" in XML ??
-    int minInterval;        //delay between each sent packet
+    nodeID_t destinationNode;       //fyi: "task" in XML ??
+    taskID_t destinationTask;       //fyi: "task" in XML ??
+    int minInterval;                //delay between each sent packet
     int maxInterval;
-    int minCount;           //generated amount of packets per fire
+    int minCount;                   //generated amount of packets per fire
     int maxCount;
-    int minDelay;           //delay between fire and first generated packet
+    int minDelay;                   //delay between fire and first generated packet
     int maxDelay;
 
     DataDestination(dataDestID_t id, dataTypeID_t dataType, taskID_t destinationTask, int minInterval, int maxInterval);
@@ -310,7 +325,6 @@ struct Task {
     taskID_t id;
     nodeID_t node;
     std::vector<DataRequirement> requirements;
-    // std::vector<std::pair<float, std::vector<DataDestination*>>> possibilities;
     std::vector<DataSendPossibility> possibilities;
     int syntheticPhase;
     int minStart;       // simulation time in ns at which the task starts

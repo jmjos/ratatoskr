@@ -51,5 +51,4 @@ private:
     float sampleMin;
     float sampleMax;
     std::string name;
-
 };

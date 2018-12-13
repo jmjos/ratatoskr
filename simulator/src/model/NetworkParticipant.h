@@ -40,5 +40,7 @@ public:
     virtual void initialize() = 0;
 
     virtual void bind(Connection*, SignalContainer*, SignalContainer*) = 0;
+
+    virtual ~NetworkParticipant() = 0;
 };
 

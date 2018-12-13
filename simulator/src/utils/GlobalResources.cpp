@@ -122,7 +122,7 @@ std::vector<std::string> GlobalResources::string_split(const std::string& str, c
 
 std::vector<int> GlobalResources::strs_to_ints(const std::vector<std::string>& strings)
 {
-    std::vector<int> ints;
+    std::vector<int> ints{};
     for (auto& str: strings) {
         ints.push_back(std::stoi(str));
     }
@@ -207,7 +207,7 @@ void GlobalResources::readNoCLayout(const std::string& nocPath)
     readNodeTypes(noc_node);
     readNodes(noc_node);
     readConnections(noc_node);
-    fillDirInfoOfNode();
+    fillDirInfoOfNodeConn();
 }
 
 void GlobalResources::readNodeTypes(const pugi::xml_node& noc_node)
@@ -253,7 +253,7 @@ void GlobalResources::sortNodesPositions()
     zPositions.erase(unique(zPositions.begin(), zPositions.end()), zPositions.end());
 }
 
-void GlobalResources::fillDirInfoOfNode()
+void GlobalResources::fillDirInfoOfNodeConn()
 {
     for (Node& node : nodes) {
         //check for common directions
@@ -262,9 +262,9 @@ void GlobalResources::fillDirInfoOfNode()
             Node connectedNode = nodes.at(connectedNodeID);
             Vec3D<float> offset = node.pos-connectedNode.pos;
             int nullValues;
-            nullValues = offset.x == 1.0 ? 0 : 1;
-            nullValues += offset.y == 1.0 ? 0 : 1;
-            nullValues += offset.z == 1.0 ? 0 : 1;
+            nullValues = offset.x==1.0 ? 0 : 1;
+            nullValues += offset.y==1.0 ? 0 : 1;
+            nullValues += offset.z==1.0 ? 0 : 1;
             auto find_conn = [&node, &connectedNode]() -> connID_t {
                 for (auto& conn1: node.connections) {
                     for (auto& conn2: connectedNode.connections) {
@@ -274,45 +274,34 @@ void GlobalResources::fillDirInfoOfNode()
                 }
             };
             connID_t matching_conn = find_conn();
-
+            DIR::TYPE dir;
             if (nullValues==2) { //one axis differs
-                if (offset.x>0 && (!node.dirToCon[DIR::West] || offset.x<distance.at(DIR::West).x)) {
-                    node.dirToCon[DIR::West] = matching_conn;
-                    node.conToDir[matching_conn] = DIR::West;
-                    distance.at(DIR::West) = offset;
+                if (offset.x>0 && (node.getConPosOfDir(DIR::West)==-1 || offset.x<distance.at(DIR::West).x)) {
+                    dir = DIR::West;
                 }
-                else if (offset.x<0 && (!node.dirToCon[DIR::East] || offset.x>distance.at(DIR::East).x)) {
-                    node.dirToCon[DIR::East] = matching_conn;
-                    node.conToDir[matching_conn] = DIR::East;
-                    distance.at(DIR::East) = offset;
+                else if (offset.x<0 && (node.getConPosOfDir(DIR::East)==-1 || offset.x>distance.at(DIR::East).x)) {
+                    dir = DIR::East;
                 }
-                else if (offset.y<0 && (!node.dirToCon[DIR::North] || offset.y>distance.at(DIR::North).y)) {
-                    node.dirToCon[DIR::North] = matching_conn;
-                    node.conToDir[matching_conn] = DIR::North;
-                    distance.at(DIR::North) = offset;
+                else if (offset.y<0 && (node.getConPosOfDir(DIR::North)==-1 || offset.y>distance.at(DIR::North).y)) {
+                    dir = DIR::North;
                 }
-                else if (offset.y>0 && (!node.dirToCon[DIR::South] || offset.y<distance.at(DIR::South).y)) {
-                    node.dirToCon[DIR::South] = matching_conn;
-                    node.conToDir[matching_conn] = DIR::South;
-                    distance.at(DIR::South) = offset;
+                else if (offset.y>0 && (node.getConPosOfDir(DIR::South)==-1 || offset.y<distance.at(DIR::South).y)) {
+                    dir = DIR::South;
                 }
-                else if (offset.z<0 && (!node.dirToCon[DIR::Up] || offset.z>distance.at(DIR::Up).z)) {
-                    node.dirToCon[DIR::Up] = matching_conn;
-                    node.conToDir[matching_conn] = DIR::Up;
-                    distance.at(DIR::Up) = offset;
+                else if (offset.z<0 && (node.getConPosOfDir(DIR::Up)==-1 || offset.z>distance.at(DIR::Up).z)) {
+                    dir = DIR::Up;
                 }
-                else if (offset.z>0 && (!node.dirToCon[DIR::Down] || offset.z<distance.at(DIR::Down).z)) {
-                    node.dirToCon[DIR::Down] = matching_conn;
-                    node.conToDir[matching_conn] = DIR::Down;
-                    distance.at(DIR::Down) = offset;
+                else if (offset.z>0 && (node.getConPosOfDir(DIR::Down)==-1 || offset.z<distance.at(DIR::Down).z)) {
+                    dir = DIR::Down;
                 }
+                distance.at(dir) = offset;
             }
             else if (nullValues==3) { //no axis differs
-                if (!node.dirToCon[DIR::Local]) {
-                    node.dirToCon[DIR::Local] = matching_conn;
-                    node.conToDir[matching_conn] = DIR::Local;
-                }
+                if (!node.getConPosOfDir(DIR::Local))
+                    dir = DIR::Local;
             }
+            node.setConPosOfDir(dir, matching_conn);
+            node.setDirOfConn(matching_conn, dir);
         }
     }
 }
@@ -321,10 +310,10 @@ void GlobalResources::readConnections(const pugi::xml_node& noc_node)
 {
     for (pugi::xml_node xml_con : noc_node.child("connections").children("con")) {
         connID_t connID = xml_con.attribute("id").as_int();
-        std::vector<nodeID_t> nodesOfConnection;
-        std::vector<int> vcsCount;
-        std::vector<int> buffersDepth;
-        std::vector<std::vector<int>> buffersDepths;
+        std::vector<nodeID_t> nodesOfConnection{};
+        std::vector<int> vcsCount{};
+        std::vector<int> buffersDepth{};
+        std::vector<std::vector<int>> buffersDepths{};
 
         for (pugi::xml_node xml_port : xml_con.child("ports").children("port")) {
             nodeID_t connectedNodeID = xml_port.child("node").attribute("value").as_int();
@@ -453,7 +442,7 @@ void GlobalResources::readTaskFile(const std::string& taskFilePath, const std::m
         readAttributeIfExists(task_node, "repeat", "max", task.maxRepeat);
 
         // Read Requirements
-        std::vector<DataRequirement> requirements;
+        std::vector<DataRequirement> requirements{};
         for (pugi::xml_node requirement_node : task_node.child("requires").children("requirement")) {
             dataReqID_t reqID = readRequiredIntAttribute(requirement_node, "id");
             dataTypeID_t typeID = readRequiredIntAttribute(requirement_node, "type", "value");
@@ -465,11 +454,11 @@ void GlobalResources::readTaskFile(const std::string& taskFilePath, const std::m
         task.requirements = requirements;
 
         // Read Destinations
-        std::vector<DataSendPossibility> possibilities;
+        std::vector<DataSendPossibility> possibilities{};
         for (pugi::xml_node generate_node : task_node.child("generates").children("possibility")) {
             possID_t possID = readRequiredIntAttribute(generate_node, "id");
             float probability = readRequiredFloatAttribute(generate_node, "probability", "value");
-            std::vector<DataDestination> destinations;
+            std::vector<DataDestination> destinations{};
             for (pugi::xml_node destination_node : generate_node.child("destinations").children("destination")) {
                 dataDestID_t dataDestID = readRequiredIntAttribute(destination_node, "id");
                 dataTypeID_t typeID = readRequiredIntAttribute(destination_node, "type", "value");

@@ -28,8 +28,7 @@ sc_core::sc_signal_in_if<T> const&
 portConst(T const& v) // keep the name consistent with vh_open
 {
     // Yes, this is an (elaboration-time) memory leak.  You can avoid it with some extra effort
-    sc_core::sc_signal<T>* sig_p = new sc_core::sc_signal<T>(
-            sc_core::sc_gen_unique_name("portConst"));
+    auto* sig_p = new sc_core::sc_signal<T>(sc_core::sc_gen_unique_name("portConst"));
     sig_p->write(v);
     return *sig_p;
 }
@@ -38,7 +37,6 @@ static struct {
     template<typename T>
     operator sc_core::sc_signal_inout_if<T>&() const
     {
-        return *(new sc_core::sc_signal<T>(
-                sc_core::sc_gen_unique_name("portOpen")));
+        return *(new sc_core::sc_signal<T>(sc_core::sc_gen_unique_name("portOpen")));
     }
 } const portOpen = {};

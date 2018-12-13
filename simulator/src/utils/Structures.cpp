@@ -1,46 +1,46 @@
-////////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2018 Jan Moritz Joseph
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-////////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
+ * Copyright (C) 2018 Jan Moritz Joseph
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ ******************************************************************************/
 #include "Structures.h"
 
 const std::vector<DIR::TYPE> DIR::XYZ = {DIR::Local, DIR::East, DIR::West, DIR::North, DIR::South, DIR::Up, DIR::Down};
 
 Channel::Channel()
         :
-        dir(0),
+        conPos(0),
         vc(0)
 {
 }
 
 Channel::Channel(int dir, int vc)
         :
-        dir(dir),
+        conPos(dir),
         vc(vc)
 {
 }
 
 bool Channel::operator<(const Channel& c) const
 {
-    if (dir!=c.dir) {
-        return dir<c.dir;
+    if (conPos!=c.conPos) {
+        return conPos<c.conPos;
     }
     else if (vc!=c.vc) {
         return vc<c.vc;
@@ -74,6 +74,44 @@ Node::Node(nodeID_t id, Vec3D<float> pos, const std::shared_ptr<NodeType>& type)
 {
 }
 
+Node::Node()
+        :
+        id(0),
+        congestion(0.0)
+{
+}
+
+int Node::getConnPosition(connID_t connID) const
+{
+    return std::find(connections.begin(), connections.end(), connID) - connections.begin();
+}
+
+DIR::TYPE Node::getDirOfCon(connID_t connID) const
+{
+    int pos = getConnPosition(connID);
+    return dirOfConPos.at(pos);
+}
+
+void Node::setDirOfConn(connID_t connID, DIR::TYPE dir)
+{
+    int pos = getConnPosition(connID);
+    dirOfConPos.at(pos) = dir;
+}
+
+int Node::getConPosOfDir(DIR::TYPE dir) const
+{
+    if (conPosOfDir.count(dir) == 1)
+        return conPosOfDir.at(dir);
+    else
+        return -1; // so the caller can use this method in a condition
+}
+
+void Node::setConPosOfDir(DIR::TYPE dir, connID_t connID)
+{
+    int pos = getConnPosition(connID);
+    conPosOfDir.at(dir) = pos;
+}
+
 Connection::Connection(connID_t id, const std::vector<nodeID_t>& nodes, const std::vector<int>& vcsCount,
         const std::vector<int>& buffersDepth,
         const std::vector<std::vector<int>>& buffersDepths, float length, int width, int depth)
@@ -89,22 +127,22 @@ Connection::Connection(connID_t id, const std::vector<nodeID_t>& nodes, const st
 {
 }
 
-int Connection::getBufferDepthForNode(nodeID_t node)
+int Connection::getBufferDepthForNode(nodeID_t nodeID)
 {
-    // assert(nodePos.count(n) && "Node not found inside connection! (buffer)");  TODO restructure
-    return buffersDepth.at(node);
+    int pos = std::find(nodes.begin(), nodes.end(), nodeID) - nodes.begin();
+    return buffersDepth.at(pos);
 }
 
-int Connection::getBufferDepthForNodeAndVC(nodeID_t node, int vc)
+int Connection::getBufferDepthForNodeAndVC(nodeID_t nodeID, int vcID)
 {
-    // assert(nodePos.count(n) && "Node not found inside connection! (buffer)");  TODO restructure
-    return buffersDepths.at(node).at(vc);
+    int pos = std::find(nodes.begin(), nodes.end(), nodeID) - nodes.begin();
+    return buffersDepths.at(pos).at(vcID);
 }
 
-int Connection::getVCCountForNode(nodeID_t node)
+int Connection::getVCCountForNode(nodeID_t nodeID)
 {
-    // assert(nodePos.count(n) && "Node not found inside connection! (vc)");  TODO restructure
-    return vcsCount.at(node);
+    int pos = std::find(nodes.begin(), nodes.end(), nodeID) - nodes.begin();
+    return vcsCount.at(pos);
 }
 
 DataType::DataType(dataTypeID_t id, const std::string& name)

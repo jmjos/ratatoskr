@@ -1,12 +1,25 @@
-/*
- * Helper.h
+/*******************************************************************************
+ * Copyright (C) 2018 Jan Moritz Joseph
  *
- *  Created on: May 23, 2017
- *      Author: wrieden
- */
-
-#ifndef __HELPER_GENERIC_H_
-#define __HELPER_GENERIC_H_
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ ******************************************************************************/
+#pragma once
 
 #include "utils/GlobalResources.h"
 #include "utils/Structures.h"
@@ -16,20 +29,16 @@
 #include "utils/Report.h"
 #include "model/container/Container.h"
 
-class Helper{
+class Helper {
 public:
-	static std::set<Channel> getAllChannel(Node* curr);
-	static std::set<Channel> getAllChannelWithoutLocal(Node* curr);
-	static std::set<Channel> getChannelWithVC(std::set<int> vc, std::set<Channel> availableChannel);
-	static std::set<Channel> getChannelWithDir(std::set<int> dir, std::set<Channel> availableChannel);
-	static std::set<Channel> filterTurns(std::set<std::pair<Channel,Channel>> prohibitedTurns, Channel inputChannel, std::set<Channel> availableChannel);
-	static std::set<Channel> filterTurnsDir(std::set<std::pair<int,int>> prohibitedTurns, Channel inputChannel, std::set<Channel> availableChannel);
-	static std::set<Channel> getChannelWithLeastCongestion(Node* curr, int levelCount, std::set<Channel> availableChannel);
-	static std::set<Channel> getChannelWithRating(float minRating, float maxRating, std::set<Channel> availableChannel, std::map<Channel, float> channelRating);
-	static std::set<Channel> getChannelWithHighestRating(std::set<Channel> availableChannel, std::map<Channel, float> channelRating);
+    std::set<Channel> getAllChannels(const Node& node);
 
-private:
-	Helper();
+    std::set<Channel> getAllChannelsWithoutLocal(const Node& node);
+
+    std::set<Channel> getChannelsWithVC(const std::set<int>& vc, const std::set<Channel>& availableChannel);
+
+    std::set<Channel> getChannelsWithDir(const std::set<int>& conPos, const std::set<Channel>& availableChannel);
+
+protected:
+    GlobalResources& globalResources = GlobalResources::getInstance();
 };
-
-#endif /* SRC_MODEL_ROUTINGS_MESH_HELPER_H_ */

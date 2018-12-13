@@ -92,7 +92,7 @@ private:
 
     void sortNodesPositions();
 
-    void fillDirInfoOfNode();
+    void fillDirInfoOfNodeConn();
 
     void readConnections(const pugi::xml_node& noc_node);
 
@@ -115,5 +115,7 @@ private:
     float readRequiredFloatAttribute(pugi::xml_node, const char*, const char*);
 
     float readRequiredFloatAttribute(pugi::xml_node, const char*);
+
+
 };
 

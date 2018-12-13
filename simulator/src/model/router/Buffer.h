@@ -19,8 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-#ifndef SRC_MODEL_ROUTER_BUFFER_H_
-#define SRC_MODEL_ROUTER_BUFFER_H_
+#pragma once
 
 #include <list>
 #include "utils/Structures.h"
@@ -32,126 +31,148 @@ extern int buffer_idcnt;
 template<class T>
 class Buffer {
 protected:
-	std::list<T> *list;
+    std::list<T>* list;
 
 public:
-	int depth; //max elements of type T
-	Report& rep = Report::getInstance();
-	int id;
-	int dbid;
+    unsigned long depth; //max elements of type T
+    Report& rep = Report::getInstance();
+    int id;
+    int dbid;
 
+    explicit Buffer(unsigned long depth)
+            :
+            depth(depth)
+    {
+        list = new std::list<T>;
+        id = buffer_idcnt++;
+        dbid = rep.registerElement("Buffer", id);
+    }
 
-	Buffer(int depth) {
-		this->depth = depth;
-		list = new std::list<T>;
+    virtual ~Buffer()
+    {
+        delete list;
+    }
 
-		id=buffer_idcnt++;
-		dbid = rep.registerElement("Buffer", id);
-	}
+    virtual bool enqueue(T) = 0;
 
-	virtual ~Buffer() {
-		delete list;
-	}
+    virtual T dequeue() = 0;
 
-	virtual bool enqueue(T)=0;
-	virtual T dequeue()=0;
-	virtual T front()=0;
-	virtual T back()=0;
+    virtual T front() = 0;
 
-	bool empty() {
-		return list->empty();
-	}
-	int free() {
-		return depth - list->size();
-	}
+    virtual T back() = 0;
 
-	int occupied() {
-		return list->size();
-	}
+    bool empty()
+    {
+        return list->empty();
+    }
 
-	void flush() {
-		list->clear();
-	}
+    unsigned long free()
+    {
+        return depth-list->size();
+    }
+
+    unsigned long occupied()
+    {
+        return list->size();
+    }
+
+    void flush()
+    {
+        list->clear();
+    }
 
 };
 
 template<typename T>
-class BufferFIFO: public Buffer<T> {
+class BufferFIFO : public Buffer<T> {
 public:
-	BufferFIFO(int depth) :
-			Buffer<T>(depth) {
-	}
+    explicit BufferFIFO(unsigned long depth)
+            :
+            Buffer<T>(depth)
+    {
+    }
 
-	~BufferFIFO(){};
+    ~BufferFIFO() = default;;
 
-	bool enqueue(T a) {
-		if (Buffer<T>::free() > 0) {
-			Buffer<T>::list->push_back(a);
-			return true;
-		}
-		return false;
-	}
+    bool enqueue(T a)
+    {
+        if (Buffer<T>::free()>0) {
+            Buffer<T>::list->push_back(a);
+            return true;
+        }
+        return false;
+    }
 
-	T dequeue() {
-		if (!Buffer<T>::empty()) {
-			T a = Buffer<T>::list->front();
-			Buffer<T>::list->pop_front();
-			return a;
-		}
-		return 0;
-	}
-	T front() {
-		if (!Buffer<T>::empty()) {
-			return Buffer<T>::list->front();
-		}
-		return 0;
-	}
-	T back() {
-		if (!Buffer<T>::empty()) {
-			return Buffer<T>::list->back();
-		}
-		return 0;
-	}
+    T dequeue()
+    {
+        if (!Buffer<T>::empty()) {
+            T a = Buffer<T>::list->front();
+            Buffer<T>::list->pop_front();
+            return a;
+        }
+        return 0;
+    }
+
+    T front()
+    {
+        if (!Buffer<T>::empty()) {
+            return Buffer<T>::list->front();
+        }
+        return 0;
+    }
+
+    T back()
+    {
+        if (!Buffer<T>::empty()) {
+            return Buffer<T>::list->back();
+        }
+        return 0;
+    }
 };
 
 template<typename T>
-class BufferLIFO: public Buffer<T> {
+class BufferLIFO : public Buffer<T> {
 public:
-	BufferLIFO(int depth) :
-			Buffer<T>(depth) {
-	}
+    explicit BufferLIFO(unsigned long depth)
+            :
+            Buffer<T>(depth)
+    {
+    }
 
-	~BufferLIFO(){};
+    ~BufferLIFO() = default;
 
-	bool enqueue(T a) {
-		if (Buffer<T>::free() > 0) {
-			Buffer<T>::list->push_back(a);
-			return true;
-		}
-		return false;
-	}
+    bool enqueue(T a)
+    {
+        if (Buffer<T>::free()>0) {
+            Buffer<T>::list->push_back(a);
+            return true;
+        }
+        return false;
+    }
 
-	T dequeue() {
-		if (!Buffer<T>::empty()) {
-			T a = Buffer<T>::list->back();
-			Buffer<T>::list->pop_back();
-			return a;
-		}
-		return 0;
-	}
+    T dequeue()
+    {
+        if (!Buffer<T>::empty()) {
+            T a = Buffer<T>::list->back();
+            Buffer<T>::list->pop_back();
+            return a;
+        }
+        return 0;
+    }
 
-	T front() {
-		if (!Buffer<T>::empty()) {
-			return Buffer<T>::list->back();
-		}
-		return 0;
-	}
-	T back() {
-		if (!Buffer<T>::empty()) {
-			return Buffer<T>::list->front();
-		}
-		return 0;
-	}
+    T front()
+    {
+        if (!Buffer<T>::empty()) {
+            return Buffer<T>::list->back();
+        }
+        return 0;
+    }
+
+    T back()
+    {
+        if (!Buffer<T>::empty()) {
+            return Buffer<T>::list->front();
+        }
+        return 0;
+    }
 };
-
-#endif /* SRC_MODEL_ROUTER_BUFFER_H_ */

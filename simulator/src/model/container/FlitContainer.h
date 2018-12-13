@@ -31,7 +31,7 @@ public:
     sc_signal<std::vector<bool>*> sigFlowControl;
     sc_signal<std::vector<int>*> sigTag;
     sc_signal<std::vector<bool>*> sigEmpty;
-    sc_signal<Flit&> sigData;
+    sc_signal<Flit*> sigData;
     sc_signal<int> sigVc;
     sc_signal<bool> sigReset;
 
@@ -41,7 +41,12 @@ public:
     {
     }
 
-    ~FlitSignalContainer() override = default;
+    ~FlitSignalContainer() override
+    {
+        delete sigFlowControl;
+        delete sigTag;
+        delete sigEmpty;
+    };
 
 };
 
@@ -51,7 +56,7 @@ public:
     sc_in<std::vector<bool>*> portFlowControlIn;
     sc_in<std::vector<int>*> portTagIn;
     sc_in<std::vector<bool>*> portEmptyIn;
-    sc_in<Flit&> portDataIn;
+    sc_in<Flit*> portDataIn;
     sc_in<int> portVcIn;
     sc_in<bool> portResetIn;
 
@@ -59,7 +64,7 @@ public:
     sc_out<std::vector<bool>*> portFlowControlOut;
     sc_out<std::vector<int>*> portTagOut;
     sc_out<std::vector<bool>*> portEmptyOut;
-    sc_out<Flit&> portDataOut;
+    sc_out<Flit*> portDataOut;
     sc_out<int> portVcOut;
     sc_out<bool> portResetOut;
 
@@ -69,7 +74,15 @@ public:
     {
     }
 
-    ~FlitPortContainer() override = default;
+    ~FlitPortContainer() override
+    {
+        delete portFlowControlIn;
+        delete portFlowControlOut;
+        delete portTagIn;
+        delete portTagOut;
+        delete portEmptyIn;
+        delete portEmptyOut;
+    };
 
     void bind(SignalContainer* sIn, SignalContainer* sOut) override
     {

@@ -19,13 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-// VC Router
-// - wormhole
-// - virtual channel
-// - round robin arbiter
-// - flow control
-#ifndef SRC_MODEL_ROUTER_ROUTERVC_H_
-#define SRC_MODEL_ROUTER_ROUTERVC_H_
+#pragma once
 
 #include <model/container/FlitContainer.h>
 #include "Router.h"
@@ -34,18 +28,11 @@
 #include "routings/Routing.h"
 #include "routings/RoutingXYZ.h"
 #include "routings/RoutingHeteroXYZ.h"
-#include "routings/RoutingTMR.h"
-#include "routings/RoutingDPR.h"
-#include "routings/RoutingESPADA.h"
 
 #include "selection/Selection.h"
 #include "selection/SelectionRoundRobin.h"
 #include "selection/SelectionOutputRoundRobin.h"
 #include "selection/Selection1stFreeVC.h"
-#include "selection/SelectionDyXYZ.h"
-#include "selection/SelectionEDXYZ.h"
-#include "selection/SelectionAgRA.h"
-#include "selection/SelectionMAFA.h"
 
 class RouterVC: public Router {
 
@@ -109,5 +96,3 @@ public:
 	void writeControl();
 
 };
-
-#endif /* SRC_MODEL_ROUTER_RouterVC_H_ */

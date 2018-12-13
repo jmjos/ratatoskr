@@ -33,22 +33,24 @@
 #include "model/router/routings/Routing.h"
 
 struct Selection {
-	GlobalResources& globalResources = GlobalResources::getInstance();
-	Report& rep = Report::getInstance();
+    GlobalResources& globalResources = GlobalResources::getInstance();
+    Report& rep = Report::getInstance();
 
-	int dbid;
-	Node* node;
+    int dbid;
+    Node* node;
 
-	Selection(Node* node) {
-		this->node = node;
-		this->dbid = rep.registerElement("Selection", node->id);
-	}
+    Selection(Node* node)
+    {
+        this->node = node;
+        this->dbid = rep.registerElement("Selection", node->id);
+    }
 
-	virtual ~Selection() {
+    virtual ~Selection()
+    {
 
-	}
+    }
 
-	//virtual void checkValid()=0;
-	virtual void select(RoutingInformation*, RoutingPacketInformation*)=0;
+    //virtual void checkValid()=0;
+    virtual void select(RoutingInformation*, RoutingPacketInformation*) = 0;
 };
 

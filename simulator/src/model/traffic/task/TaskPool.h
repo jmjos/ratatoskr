@@ -23,23 +23,20 @@
 
 #include "systemc.h"
 
-
 #include <model/traffic/task/TaskPacket.h>
 #include "utils/GlobalResources.h"
 #include "utils/Report.h"
 #include "utils/Structures.h"
 #include "model/traffic/TrafficPool.h"
 
-
-class TaskPool: public TrafficPool{
-private:
-
+class TaskPool : public TrafficPool {
 
 public:
-	TaskPool();
+    TaskPool();
 
-    ~TaskPool() override;
+    ~TaskPool() = default;
 
-	void clear(Task*) override;
-	void start() override;
+    void clear(Task*) override;
+
+    void start() override;
 };

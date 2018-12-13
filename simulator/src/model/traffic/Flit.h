@@ -23,37 +23,40 @@
 
 #include "systemc.h"
 #include <string>
+#include "utils/Report.h"
 
 #include "utils/Structures.h"
 
+using flitID_t = int;
 
 class Packet;
 
-enum FlitType{
-	HEAD=10, BODY = 11, TAIL = 12
+enum FlitType {
+    HEAD = 10, BODY = 11, TAIL = 12
 };
 
-class Flit
-{
+class Flit {
 public:
-	Report& rep = Report::getInstance();
-	static int idcnt;
-	int id;
-	int dbid;
-	int seq_nb;
-	FlitType type;
-	Packet& packet;
-	Flit* headFlit;
-	dataTypeID_t dataType;
-	double injectionTime;
-	double generationTime;
+    Report& rep = Report::getInstance();
+    static flitID_t idcnt;
+    flitID_t id;
+    flitID_t dbid;
+    int seq_nb;
+    FlitType type;
+    Packet* packet;
+    Flit* headFlit;
+    dataTypeID_t dataType;
+    double injectionTime;
+    double generationTime;
 
-	Flit(FlitType type, int seq_nb, Packet& p);
-	Flit(FlitType type, int seq_nb, Packet& p, dataTypeID_t dataType, double generationTime);
-	~Flit();
+    Flit(FlitType type, int seq_nb, Packet* p);
 
-	friend ostream & operator <<(ostream & os, const Flit& flit);
+    Flit(FlitType type, int seq_nb, Packet* p, dataTypeID_t dataType, double generationTime);
 
-	friend void sc_trace(sc_trace_file*& tf, const Flit& flit, std::string nm);
+    friend ostream& operator<<(ostream& os, const Flit& flit);
+
+    friend void sc_trace(sc_trace_file*& tf, const Flit& flit, std::string nm);
+
+    ~Flit() = default;
 };
 

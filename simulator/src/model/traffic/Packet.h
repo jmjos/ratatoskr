@@ -30,7 +30,6 @@
 #include "Flit.h"
 #include "utils/Report.h"
 
-
 struct Packet {
 	static int idcnt;
 	int id;
@@ -42,12 +41,11 @@ struct Packet {
 	dataTypeID_t dataType; // type identifier for link matrices
 	int pkgclass;	// tag for adaptive routing
 	int numhops;
-	std::vector<int> traversedRouter;
-	std::set<int> routerIDs;
-	std::vector<Flit*> toTransmit;
-	std::vector<Flit*> inTransmit;
-	std::vector<Flit*> transmitted;
-	std::vector<Flit> flits;
+	std::vector<int> traversedRouters;
+	std::vector<int> toTransmit;
+	std::vector<int> inTransmit;
+	std::vector<int> transmitted;
+	std::vector<Flit*> flits;
 	Report& rep = Report::getInstance();
 
 	Packet(Node& src, Node& dst, int size, double generationTime, dataTypeID_t dataType);
@@ -55,5 +53,4 @@ struct Packet {
 	friend ostream & operator <<(ostream & os, const Packet& p);
 
 	~Packet();
-
 };

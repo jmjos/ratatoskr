@@ -28,7 +28,7 @@ class PacketSignalContainer : public SignalContainer {
 public:
     sc_signal<bool> sigValid;
     sc_signal<bool> sigFlowControl;
-    sc_signal<Packet&> sigData;
+    sc_signal<Packet*> sigData;
 
     explicit PacketSignalContainer(const sc_module_name& nm)
             :
@@ -36,7 +36,10 @@ public:
     {
     };
 
-    ~PacketSignalContainer() override = default;;
+    ~PacketSignalContainer() override
+    {
+        delete sigData;
+    }
 
 };
 
@@ -44,11 +47,11 @@ class PacketPortContainer : public PortContainer {
 public:
     sc_in<bool> portValidIn;
     sc_in<bool> portFlowControlIn;
-    sc_in<Packet&> portDataIn;
+    sc_in<Packet*> portDataIn;
 
     sc_out<bool> portValidOut;
     sc_out<bool> portFlowControlOut;
-    sc_out<Packet&> portDataOut;
+    sc_out<Packet*> portDataOut;
 
     explicit PacketPortContainer(const sc_module_name& nm)
             :
@@ -56,9 +59,14 @@ public:
     {
     }
 
-    ~PacketPortContainer() override = default;
+    ~PacketPortContainer() override
+    {
+        delete portDataIn;
+        delete portDataOut;
+    };
 
-    void bind(SignalContainer* sIn, SignalContainer* sOut) override {
+    void bind(SignalContainer* sIn, SignalContainer* sOut) override
+    {
         auto cscin = dynamic_cast<PacketSignalContainer*>(sIn);
         auto cscout = dynamic_cast<PacketSignalContainer*>(sOut);
 

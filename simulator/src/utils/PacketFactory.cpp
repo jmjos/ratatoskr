@@ -28,9 +28,16 @@ PacketFactory& PacketFactory::getInstance()
     return instance;
 }
 
-Packet& PacketFactory::createPacket(Node& src, Node& dst, int size, double generationTime, dataTypeID_t dataType)
+Packet* PacketFactory::createPacket(Node& src, Node& dst, int size, double generationTime, dataTypeID_t dataType)
 {
-    Packet p = Packet(src, dst, 1, sc_time_stamp().to_double(), dst.type->id);
+    auto p = new Packet(src, dst, 1, sc_time_stamp().to_double(), dst.type->id);
     packets.push_back(p);
-    return packets.at(p.id);
+    return p;
+}
+
+void PacketFactory::deletePacket(Packet* p)
+{
+    auto it = std::find(packets.begin(), packets.end(), p);
+    delete(*it);
+    packets.erase(it);
 }

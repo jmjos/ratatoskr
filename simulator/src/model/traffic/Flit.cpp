@@ -25,7 +25,7 @@
 
 int Flit::idcnt = 0;
 
-Flit::Flit(FlitType type, int seq_nb, Packet& p)
+Flit::Flit(FlitType type, int seq_nb, Packet* p)
         :
         type(type),
         seq_nb(seq_nb),
@@ -36,22 +36,17 @@ Flit::Flit(FlitType type, int seq_nb, Packet& p)
         headFlit(nullptr)
 {
     this->dbid = rep.registerElement("Flit", this->id);
-    rep.reportAttribute(dbid, "flit_packet", std::to_string(p.id));
+    rep.reportAttribute(dbid, "flit_packet", std::to_string(p->id));
     rep.reportAttribute(dbid, "flit_type", std::to_string(type));
     rep.reportAttribute(dbid, "flit_seq", std::to_string(seq_nb));
 }
 
-Flit::Flit(FlitType type, int seq_nb, Packet& p, dataTypeID_t dataType, double generationTime)
+Flit::Flit(FlitType type, int seq_nb, Packet* p, dataTypeID_t dataType, double generationTime)
         :
-        Flit(type, seq_nb, p),
+        Flit(type, seq_nb, p)
 {
     this->generationTime = generationTime;
     this->dataType = dataType;
-}
-
-Flit::~Flit()
-{
-    delete headFlit;
 }
 
 ostream& operator<<(ostream& os, const Flit& flit)
@@ -69,8 +64,8 @@ ostream& operator<<(ostream& os, const Flit& flit)
         os << "T";
         break;
     }
-    os << "_" << flit.id << ": " << flit.packet.src.id%processingElementsSize << "-->"
-       << flit.packet.dst.id%processingElementsSize << "]";
+    os << "_" << flit.id << ": " << flit.packet->src.id%processingElementsSize << "-->"
+       << flit.packet->dst.id%processingElementsSize << "]";
     return os;
 }
 

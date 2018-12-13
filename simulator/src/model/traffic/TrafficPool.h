@@ -19,9 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-#ifndef SRC_TRAFFIC_TRAFFICPOOL_H_
-#define SRC_TRAFFIC_TRAFFICPOOL_H_
-
+#pragma once
 
 #include "utils/Structures.h"
 #include "utils/GlobalResources.h"
@@ -29,25 +27,18 @@
 #include "Packet.h"
 #include "model/processingElement/ProcessingElement.h"
 
-
-
-
-class TrafficPool{
+class TrafficPool {
 public:
-	GlobalResources& globalResources = GlobalResources::getInstance();
-	Report& rep = Report::getInstance();
-	int dbid;
+    GlobalResources& globalResources = GlobalResources::getInstance();
+    Report& rep = Report::getInstance();
+    int dbid;
+    std::vector<ProcessingElement*> processingElements;
 
+    TrafficPool();
 
-	std::vector<std::unique_ptr<ProcessingElement>> processingElements;
+    ~TrafficPool();
 
-	TrafficPool();
-	virtual ~TrafficPool();
-	virtual void start() = 0;
-	virtual void clear(Task*) = 0;
+    virtual void start() = 0;
+
+    virtual void clear(Task*) = 0;
 };
-
-
-
-
-#endif /* SRC_TRAFFIC_TRAFFICPOOL_H_ */

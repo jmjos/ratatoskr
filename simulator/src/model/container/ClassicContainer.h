@@ -28,7 +28,7 @@ public:
     sc_signal<bool> sigValid;
     sc_signal<std::vector<bool>*> sigFlowControl;
     sc_signal<std::vector<int>*> sigTag;
-    sc_signal<Flit&> sigData;
+    sc_signal<Flit*> sigData;
     sc_signal<int> sigVc;
     sc_signal<bool> sigReset;
 
@@ -52,7 +52,7 @@ public:
     sc_in<bool> portValidIn;
     sc_in<std::vector<bool>*> portFlowControlIn;
     sc_in<std::vector<int>*> portTagIn;
-    sc_in<Flit&> portDataIn;
+    sc_in<Flit*> portDataIn;
     sc_in<int> portVcIn;
     sc_in<bool> portResetIn;
 
@@ -75,6 +75,8 @@ public:
         delete portFlowControlOut;
         delete portTagIn;
         delete portTagOut;
+        delete portDataIn;
+        delete portDataOut;
     };
 
     void bind(SignalContainer* sIn, SignalContainer* sOut)

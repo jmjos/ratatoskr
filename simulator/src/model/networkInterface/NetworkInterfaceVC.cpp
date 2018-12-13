@@ -48,7 +48,7 @@ void NetworkInterfaceVC::receivePacket() {
 
 	if (packetPortContainer->portValidIn.posedge()) {
 
-		Packet& p = packetPortContainer->portDataIn.read();
+		Packet* p = packetPortContainer->portDataIn.read();
 
 		Flit* headFlit;
 		for (int i = 0; i < globalResources.flitsPerPacket; i++) {
@@ -60,13 +60,13 @@ void NetworkInterfaceVC::receivePacket() {
 			} else {
 				type = FlitType::BODY;
 			}
-			Flit* current_flit = new Flit(type, i % globalResources.flitsPerPacket, p, p.dataType,
+			Flit* current_flit = new Flit(type, i % globalResources.flitsPerPacket, p, p->dataType,
 					sc_time_stamp().to_double());
 			if (type == FlitType::HEAD) {
 				headFlit = current_flit;
 			}
 			current_flit->headFlit = headFlit;
-			p.toTransmit.at(globalResources.flitsPerPacket - i - 1) = current_flit;
+			p->toTransmit.at(globalResources.flitsPerPacket - i - 1) = current_flit;
 			delete current_flit;
 		}
 		packet_send_queue.push(p);

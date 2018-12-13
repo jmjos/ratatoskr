@@ -66,7 +66,6 @@ void NoC::createNetworkParticipants(const std::vector<std::unique_ptr<sc_clock>>
             RouterVC* r = new RouterVC(name.c_str(), n);
             r->clk(*clocks.at(n.type->id));
             networkParticipants.at(n.id) = dynamic_cast<NetworkParticipant*>(r);
-            delete r;
         }
         else if (n.type->model=="ProcessingElement") {
             // Creating an network interface.
@@ -87,13 +86,9 @@ void NoC::createNetworkParticipants(const std::vector<std::unique_ptr<sc_clock>>
             networkParticipants.push_back(dynamic_cast<NetworkParticipant*>(pe));
             signalContainers.push_back(move(sig1));
             signalContainers.push_back(move(sig2));
-            tp->processingElements.at(n.id%tp->processingElements.size()) = move(
-                    std::make_unique<ProcessingElementVC>(pe));
+            tp->processingElements.at(n.id%tp->processingElements.size()) = pe;
 
             pe_size++;
-
-            delete ni;
-            delete pe;
         }
     }
     tp->processingElements.resize(pe_size);
@@ -149,7 +144,6 @@ void NoC::runNoC()
 
 NoC::~NoC()
 {
-    for (auto& r : networkParticipants) {
+    for (auto& r : networkParticipants)
         delete r;
-    }
 }

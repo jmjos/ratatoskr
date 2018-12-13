@@ -35,6 +35,7 @@ enum LinkType {
 };
 
 class Link : public sc_module {
+public:
     GlobalResources& globalResources = GlobalResources::getInstance();
     GlobalReport& report = GlobalReport::getInstance();
     int id, globalID;
@@ -45,12 +46,8 @@ class Link : public sc_module {
     LinkType linkType;
     int linkWidth;
     int linkDepth;
-
     // UNCOMMENT FOR RAW DATA ON LINK (@Lennart)
     // ofstream *rawDataOutput;
-
-
-public:
     sc_in<bool> clk;
     FlitPortContainer* classicPortContainer;
 
