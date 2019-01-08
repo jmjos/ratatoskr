@@ -40,7 +40,7 @@ public:
 	SC_HAS_PROCESS(ProcessingElement);
 	ProcessingElement(sc_module_name mn, Node& node, TrafficPool* tp);
 	virtual void receive() = 0;
-	virtual void execute(Task*) = 0;
+	virtual void execute(Task&) = 0;
 	virtual void thread() = 0;
 };
 

@@ -29,25 +29,29 @@
 #include "model/traffic/TrafficPool.h"
 
 class SyntheticPool : public TrafficPool {
-private:
-    std::map<int, int> uniform();
-
-    std::map<int, int> transpose();
-
-    std::map<int, int> tornado();
-
-    std::map<int, int> hotspot(int);
-
-    std::map<int, int> bitcomplement();
-
 public:
     SyntheticPool();
 
-    ~SyntheticPool() = default;
+    ~SyntheticPool();
 
     void clear(Task*) override;
 
     void start() override;
 
     void shuffle_execute_tasks(std::vector<Task*>& tasks, int phaseId);
+
+private:
+    std::vector<Task*> tasks;
+
+    std::map<int, int>
+    uniform(taskID_t& taskId, int& phaseId, dataTypeID_t& dataTypeId, dataDestID_t& dataDestId, int maxClockDelay,
+            const SyntheticPhase& sp);
+
+    std::map<int, int> transpose();
+
+    std::map<int, int> tornado();
+
+    std::map<int, int> hotSpot(int);
+
+    std::map<int, int> bitComplement();
 };

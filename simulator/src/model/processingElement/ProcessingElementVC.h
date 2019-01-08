@@ -36,37 +36,45 @@
 
 #include "ProcessingElement.h"
 
-class ProcessingElementVC: public ProcessingElement {
+class ProcessingElementVC : public ProcessingElement {
 public:
-	sc_event event;
+    sc_event event;
 
-	PacketPortContainer *packetPortContainer;
+    PacketPortContainer* packetPortContainer;
 
-	std::map<DataType *, std::set<Task *>> neededFor;
-	std::map<std::pair<Task *, DataType *>, int> neededAmount;
-	std::map<Task *, std::set<DataType *>> needs;
-	std::map<DataType *, int> receivedData;
+    std::map<dataTypeID_t, std::set<Task>> neededFor;
+    std::map<std::pair<Task, dataTypeID_t>, int> neededAmount;
+    std::map<Task, std::set<dataTypeID_t>> needs;
+    std::map<dataTypeID_t, int> receivedData;
 
-	std::map<DataDestination *, Task *> destToTask;
-	std::map<Task *, std::set<DataDestination *>> taskToDest;
+    std::map<DataDestination, Task> destToTask;
+    std::map<Task, std::set<DataDestination>> taskToDest;
 
-	std::map<Task *, int> taskRepeatLeft;
-	std::map<Task *, int> taskStartTime;
-	std::map<Task *, int> taskTerminationTime;
+    std::map<Task, int> taskRepeatLeft;
+    std::map<Task, int> taskStartTime;
+    std::map<Task, int> taskTerminationTime;
 
-	std::map<DataDestination *, int> countLeft;
+    std::map<DataDestination, int> countLeft;
 
-	std::map<DataDestination *, int> destWait;
+    std::map<DataDestination, int> destWait;
 
-	SC_HAS_PROCESS(ProcessingElementVC);
-	ProcessingElementVC(sc_module_name mn, Node& node, TrafficPool* tp);
+    SC_HAS_PROCESS(ProcessingElementVC);
 
-	void initialize() override;
-	void bind(Connection *, SignalContainer *, SignalContainer *) override;
-	void execute(Task *) override;
-	void receive() override;
-	void thread() override;
+    ProcessingElementVC(sc_module_name mn, Node& node, TrafficPool* tp);
 
-	void startSending(Task *);
-	void checkNeed();
+    ~ProcessingElementVC() override;
+
+    void initialize() override;
+
+    void bind(Connection*, SignalContainer*, SignalContainer*) override;
+
+    void execute(Task&) override;
+
+    void receive() override;
+
+    void thread() override;
+
+    void startSending(Task&);
+
+    void checkNeed();
 };

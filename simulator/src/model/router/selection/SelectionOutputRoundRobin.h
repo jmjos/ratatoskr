@@ -26,18 +26,15 @@
 struct SelectionOutputRoundRobin : public Selection {
     int rrVC = 0;
 
-    SelectionOutputRoundRobin(Node* node)
+    explicit SelectionOutputRoundRobin(const Node& node)
             :
             Selection(node)
     {
     }
 
-    ~SelectionOutputRoundRobin()
-    {
-    }
+    ~SelectionOutputRoundRobin() override = default;
 
-    //void checkValid()=0;
-    void select(RoutingInformation* ri, RoutingPacketInformation* rpi);
+    void select(RoutingInformation* ri, RoutingPacketInformation* rpi) override;
 };
 
 

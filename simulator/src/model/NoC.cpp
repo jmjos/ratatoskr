@@ -59,7 +59,6 @@ void NoC::createTrafficPool()
 
 void NoC::createNetworkParticipants(const std::vector<std::unique_ptr<sc_clock>>& clocks)
 {
-    unsigned long pe_size = 0;
     for (Node& n : globalResources.nodes) {
         if (n.type->model=="RouterVC") {
             std::string name = "router_"+std::to_string(n.id);
@@ -87,11 +86,8 @@ void NoC::createNetworkParticipants(const std::vector<std::unique_ptr<sc_clock>>
             signalContainers.push_back(move(sig1));
             signalContainers.push_back(move(sig2));
             tp->processingElements.at(n.id%tp->processingElements.size()) = pe;
-
-            pe_size++;
         }
     }
-    tp->processingElements.resize(pe_size);
 }
 
 void NoC::createSigContainers()
@@ -146,4 +142,5 @@ NoC::~NoC()
 {
     for (auto& r : networkParticipants)
         delete r;
+    networkParticipants.clear();
 }

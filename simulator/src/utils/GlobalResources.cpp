@@ -482,3 +482,13 @@ void GlobalResources::readTaskFile(const std::string& taskFilePath, const std::m
         tasks.push_back(task);
     }
 }
+
+std::vector<Node*> GlobalResources::getNodesByPos(const Vec3D<float>& pos)
+{
+    std::vector<Node*> matching_nodes{};
+    for (auto& node:nodes)
+        if (node.getNodeByPos(pos)) {
+            matching_nodes.push_back(&node);
+        }
+    return matching_nodes;
+}

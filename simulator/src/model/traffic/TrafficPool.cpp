@@ -29,5 +29,5 @@ TrafficPool::TrafficPool()
 
 TrafficPool::~TrafficPool()
 {
-    processingElements.clear();
+    processingElements.clear();  // The actual objects were deleted in the destructor of NoC class.
 }

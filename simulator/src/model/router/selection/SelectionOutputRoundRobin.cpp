@@ -27,17 +27,17 @@ void SelectionOutputRoundRobin::select(RoutingInformation* ri, RoutingPacketInfo
     std::set<Channel> channel = rpi->routedChannel;
     rrVC++;
     if (!channel.empty()) {
-        int vcs = ri->vcCount.at(channel.begin()->dir);
-
+        int vcs = ri->vcCount.at(channel.begin()->conPos);
         for (int i = 0; i<vcs; i++) {
-            std::set<Channel> selchannel = Helper::getChannelsWithVC({(rrVC+i)%vcs}, channel);
-            if (!selchannel.empty()) {
-                rpi->selectedChannel = selchannel;
-                rpi->recentSelectedChannel = selchannel;
+            Helper helper{};
+            std::set<Channel> selChannel = helper.getChannelsWithVC({(rrVC+i)%vcs}, channel);
+            if (!selChannel.empty()) {
+                rpi->selectedChannel = selChannel;
+                rpi->recentSelectedChannel = selChannel;
                 return;
             }
         }
     }
 
-};
+}
 

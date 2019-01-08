@@ -43,7 +43,7 @@ long MeshHelper::getHopDistance(const Node& n1, const Node& n2)
 //exclude dir??
 ChannelInfo MeshHelper::getRecursiveChannelInfo(ChannelInfo info)
 {
-    if (info.currNode.id == info.destinationNode.id || info.hop>=info.maxHops) {
+    if (info.currNode.id==info.destinationNode.id || info.hop>=info.maxHops) {
         info.minimalCongestion = info.congestion;
         info.averageCongestion = info.congestion;
         info.minPathToDestDistance = getHopDistance(info.currNode, info.destinationNode);
@@ -60,11 +60,12 @@ ChannelInfo MeshHelper::getRecursiveChannelInfo(ChannelInfo info)
         return info;
     }
 
-    Connection* con = info.currNode->connections.at(info.channel.conPos);
-    Node* connectedNode = info.currNode->conToNode.at(info.channel.conPos);
-    int nodeNum = con->nodePos.at(connectedNode);
+    connID_t conn_id = info.currNode.connections.at(info.channel.conPos);
+    Connection con = globalResources.connections.at(conn_id);
+    auto connected_node_ptr = std::find_if_not(con.nodes.begin(), con.nodes.end(), info.currNode.id);
+    Node connected_node = globalResources.nodes.at(*connected_node_ptr);
     long oldDistanceToDest = getHopDistance(info.currNode, info.destinationNode);
-    long newDistanceToDest = getHopDistance(connectedNode, info.destinationNode);
+    long newDistanceToDest = getHopDistance(connected_node, info.destinationNode);
 
     if (newDistanceToDest>=oldDistanceToDest) {
         info.onMinimalPath = false;
@@ -72,15 +73,9 @@ ChannelInfo MeshHelper::getRecursiveChannelInfo(ChannelInfo info)
         //return info;
     }
 
-    std::set<Channel> channel = getAllChannelsWithoutLocal(connectedNode);
+    std::set<Channel> channel = getAllChannelsWithoutLocal(connected_node);
     channel = MeshHelper::getChannelsWithVC({0}, channel);
-
-    //	if(!info.forbiddenTurns.empty()){
-    //		channel = MeshHelper::filterTurns(info.forbiddenTurns,info.channel, channel);
-    //	}
-    //std::set<Channel> minimalChannel = getMinimalChannels(connectedNode, info.destinationNode, channel);
-
-    if (channel.empty() && connectedNode!=info.destinationNode && info.hop+1<info.maxHops) {
+    if (channel.empty() && connected_node.id!=info.destinationNode.id && info.hop+1<info.maxHops) {
         info.availablePaths = 0;
         info.minimalPaths = 0;
         info.nonminimalPaths = 0;
@@ -91,14 +86,13 @@ ChannelInfo MeshHelper::getRecursiveChannelInfo(ChannelInfo info)
         return info;
     }
 
-    info.congestion +=
-            connectedNode->congestion*info.congestionFactor;//con->bufferCongestion.at(nodeNum) * info.congestionFactor;
-    info.currNode = connectedNode;
+    info.congestion += connected_node.congestion*info.congestionFactor;
+    info.currNode = connected_node;
     info.congestionFactor *= info.decreaseFactor;
     info.hop++;
 
     ChannelInfo result(info.sourceNode, info.destinationNode, info.channel, info.maxHops);
-    if (connectedNode==info.destinationNode || info.hop>=info.maxHops) {
+    if (connected_node.id==info.destinationNode.id || info.hop>=info.maxHops) {
         result.combine(getRecursiveChannelInfo(info));
     }
     else {

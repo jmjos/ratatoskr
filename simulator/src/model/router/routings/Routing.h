@@ -19,15 +19,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-/*
- * Routing.h
- *
- *  Created on: Jan 13, 2017
- *      Author: wrieden
- */
 
-#ifndef SRC_MODEL_ROUTINGS_ROUTING_H_
-#define SRC_MODEL_ROUTINGS_ROUTING_H_
+#pragma once
 
 #include "utils/GlobalResources.h"
 #include "utils/Structures.h"
@@ -132,5 +125,3 @@ struct Routing {
     //virtual Channel selectFinal(RoutingInformation*)=0; //selects output channel, directly called before arbiter, -1 halt, -2 reroute
 
 };
-
-#endif

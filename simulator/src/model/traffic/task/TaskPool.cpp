@@ -29,13 +29,12 @@ TaskPool::TaskPool()
 
 void TaskPool::start()
 {
-    for (Task& task: globalResources.tasks) {
-        processingElements.at(task.node%processingElements.size())->execute(task);
+    for (auto& task: globalResources.tasks) {
+        processingElements.at(task.nodeID%processingElements.size())->execute(task);
     }
 }
 
 void TaskPool::clear(Task*)
 {
-
 }
 

@@ -37,7 +37,7 @@ public:
 
     std::set<Channel> getChannelsWithVC(const std::set<int>& vc, const std::set<Channel>& availableChannel);
 
-    std::set<Channel> getChannelsWithDir(const std::set<int>& conPos, const std::set<Channel>& availableChannel);
+    std::set<Channel> getChannelsWithConPos(const std::set<int>& conPos, const std::set<Channel>& availableChannel);
 
 protected:
     GlobalResources& globalResources = GlobalResources::getInstance();

@@ -25,14 +25,14 @@
 
 struct Selection1stFreeVC : public Selection {
 
-    Selection1stFreeVC(Node *node) :
-            Selection(node) {
+    explicit Selection1stFreeVC(const Node& node)
+            :
+            Selection(node)
+    {
     }
 
-    ~Selection1stFreeVC() {
-    }
+    ~Selection1stFreeVC() override;
 
-    //void checkValid()=0;
-    void select(RoutingInformation *ri, RoutingPacketInformation *rpi);
+    void select(RoutingInformation* ri, RoutingPacketInformation* rpi) override;
 };
 

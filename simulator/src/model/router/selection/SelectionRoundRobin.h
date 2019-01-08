@@ -26,18 +26,15 @@
 struct SelectionRoundRobin : public Selection {
     std::vector<int> rrVC;
 
-    SelectionRoundRobin(Node* node)
+    explicit SelectionRoundRobin(const Node& node)
             :
-            Selection(node), rrVC(node->connections.size(), 0)
-    {
-
-    }
-
-    ~SelectionRoundRobin()
+            Selection(node), rrVC(node.connections.size(), 0)
     {
     }
+
+    ~SelectionRoundRobin() override = default;
 
     //void checkValid()=0;
-    void select(RoutingInformation* ri, RoutingPacketInformation* rpi);
+    void select(RoutingInformation* ri, RoutingPacketInformation* rpi) override;
 };
 

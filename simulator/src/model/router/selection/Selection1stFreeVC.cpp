@@ -21,15 +21,17 @@
  ******************************************************************************/
 #include "Selection1stFreeVC.h"
 
-void Selection1stFreeVC::select(RoutingInformation *ri, RoutingPacketInformation *rpi) {
+void Selection1stFreeVC::select(RoutingInformation* ri, RoutingPacketInformation* rpi)
+{
     std::set<Channel> channel = rpi->routedChannel;
     if (!channel.empty()) {
-        int selectedDirection = channel.begin()->dir; //not needed, general case of multiple directions
-        if (node->dirOfConPos[selectedDirection] != DIR::Local) {
-            channel = Helper::getChannelsWithDir({selectedDirection}, channel);
-            int vcs = ri->vcCount.at(selectedDirection);
-            for (int i = 0; i < vcs; i++) {
-                Channel selChannel{selectedDirection, i};
+        int selected_con_pos = channel.begin()->conPos; //not needed, general case of multiple directions
+        if (node.getDirOfConPos(selected_con_pos)!=DIR::Local) {
+            // Helper helper {};
+            // channel = helper.getChannelsWithConPos({selected_con_pos}, channel);
+            int vcs = ri->vcCount.at(selected_con_pos);
+            for (int i = 0; i<vcs; i++) {
+                Channel selChannel{selected_con_pos, i};
                 if (ri->freeVCs.at(selChannel)) {
                     rpi->selectedChannel = std::set<Channel>{selChannel};
                     rpi->recentSelectedChannel = std::set<Channel>{selChannel};
@@ -37,10 +39,13 @@ void Selection1stFreeVC::select(RoutingInformation *ri, RoutingPacketInformation
                     return;
                 }
             }
-        } else {
-            Channel selChannel{selectedDirection, 0};
+        }
+        else {
+            Channel selChannel{selected_con_pos, 0};
             rpi->selectedChannel = std::set<Channel>{selChannel};
             rpi->recentSelectedChannel = std::set<Channel>{selChannel};
         }
     }
-};
+}
+
+Selection1stFreeVC::~Selection1stFreeVC() = default;

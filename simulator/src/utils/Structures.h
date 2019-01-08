@@ -248,7 +248,11 @@ public:
 
     DIR::TYPE getDirOfCon(connID_t connID) const;
 
+    DIR::TYPE getDirOfConPos(int conPos) const;
+
     void setDirOfConn(connID_t connID, DIR::TYPE dir);
+
+    Node* getNodeByPos(const Vec3D<float>& pos);
 
 private:
     std::map<DIR::TYPE, int> conPosOfDir; //maps direction names to connection position inside this node's connections
@@ -323,7 +327,7 @@ struct DataSendPossibility {
 
 struct Task {
     taskID_t id;
-    nodeID_t node;
+    nodeID_t nodeID;
     std::vector<DataRequirement> requirements;
     std::vector<DataSendPossibility> possibilities;
     int syntheticPhase;

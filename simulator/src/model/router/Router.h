@@ -19,8 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-#ifndef SRC_MODEL_ROUTER_ROUTER_H_
-#define SRC_MODEL_ROUTER_ROUTER_H_
+#pragma once
 
 #include <set>
 #include "systemc.h"
@@ -36,14 +35,15 @@ public:
 
 	SC_HAS_PROCESS(Router);
 	Router(sc_module_name nm, Node* node);
-	virtual ~Router();
 
-	virtual void initialize() = 0;
-	virtual void bind(Connection*, SignalContainer*, SignalContainer*) = 0;
+	~Router() override = default;
+
+	void initialize() override = 0;
+
+	void bind(Connection*, SignalContainer*, SignalContainer*) override = 0;
+
 	virtual void thread() = 0;
 	virtual void receive() = 0;
 	virtual void updateUsageStats() = 0;
 
 };
-
-#endif /* SRC_MODEL_ROUTER_ROUTER_H_ */

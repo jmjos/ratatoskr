@@ -83,7 +83,7 @@ Node::Node()
 
 int Node::getConnPosition(connID_t connID) const
 {
-    return std::find(connections.begin(), connections.end(), connID) - connections.begin();
+    return std::find(connections.begin(), connections.end(), connID)-connections.begin();
 }
 
 DIR::TYPE Node::getDirOfCon(connID_t connID) const
@@ -100,7 +100,7 @@ void Node::setDirOfConn(connID_t connID, DIR::TYPE dir)
 
 int Node::getConPosOfDir(DIR::TYPE dir) const
 {
-    if (conPosOfDir.count(dir) == 1)
+    if (conPosOfDir.count(dir)==1)
         return conPosOfDir.at(dir);
     else
         return -1; // so the caller can use this method in a condition
@@ -110,6 +110,18 @@ void Node::setConPosOfDir(DIR::TYPE dir, connID_t connID)
 {
     int pos = getConnPosition(connID);
     conPosOfDir.at(dir) = pos;
+}
+
+DIR::TYPE Node::getDirOfConPos(int conPos) const
+{
+    return dirOfConPos.at(conPos);
+}
+
+Node* Node::getNodeByPos(const Vec3D<float>& pos)
+{
+    if (this->pos==pos)
+        return this;
+    else return nullptr;
 }
 
 Connection::Connection(connID_t id, const std::vector<nodeID_t>& nodes, const std::vector<int>& vcsCount,
@@ -129,19 +141,19 @@ Connection::Connection(connID_t id, const std::vector<nodeID_t>& nodes, const st
 
 int Connection::getBufferDepthForNode(nodeID_t nodeID)
 {
-    int pos = std::find(nodes.begin(), nodes.end(), nodeID) - nodes.begin();
+    int pos = std::find(nodes.begin(), nodes.end(), nodeID)-nodes.begin();
     return buffersDepth.at(pos);
 }
 
 int Connection::getBufferDepthForNodeAndVC(nodeID_t nodeID, int vcID)
 {
-    int pos = std::find(nodes.begin(), nodes.end(), nodeID) - nodes.begin();
+    int pos = std::find(nodes.begin(), nodes.end(), nodeID)-nodes.begin();
     return buffersDepths.at(pos).at(vcID);
 }
 
 int Connection::getVCCountForNode(nodeID_t nodeID)
 {
-    int pos = std::find(nodes.begin(), nodes.end(), nodeID) - nodes.begin();
+    int pos = std::find(nodes.begin(), nodes.end(), nodeID)-nodes.begin();
     return vcsCount.at(pos);
 }
 
@@ -188,7 +200,7 @@ DataSendPossibility::DataSendPossibility(possID_t id, float probability,
 Task::Task(taskID_t id, nodeID_t nodeID)
         :
         id(id),
-        node(nodeID)
+        nodeID(nodeID)
 {
 
 }
@@ -197,7 +209,7 @@ Task::Task(taskID_t id, nodeID_t node, const std::vector<DataRequirement>& requi
         const std::vector<DataSendPossibility>& possibilities)
         :
         id(id),
-        node(node),
+        nodeID(node),
         requirements(requirements),
         possibilities(possibilities),
         syntheticPhase(0),

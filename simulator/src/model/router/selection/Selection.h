@@ -35,22 +35,19 @@
 struct Selection {
     GlobalResources& globalResources = GlobalResources::getInstance();
     Report& rep = Report::getInstance();
-
     int dbid;
-    Node* node;
+    Node node;
 
-    Selection(Node* node)
+    explicit Selection(const Node& node)
     {
         this->node = node;
-        this->dbid = rep.registerElement("Selection", node->id);
+        this->dbid = rep.registerElement("Selection", node.id);
     }
 
-    virtual ~Selection()
-    {
+    virtual ~Selection();
 
-    }
-
-    //virtual void checkValid()=0;
     virtual void select(RoutingInformation*, RoutingPacketInformation*) = 0;
 };
+
+Selection::~Selection() = default;
 

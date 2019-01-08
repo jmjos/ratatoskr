@@ -58,7 +58,7 @@ std::set<Channel> Helper::getChannelsWithVC(const std::set<int>& vc, const std::
     return channel;
 }
 
-std::set<Channel> Helper::getChannelsWithDir(const std::set<int>& conPos, const std::set<Channel>& availableChannel)
+std::set<Channel> Helper::getChannelsWithConPos(const std::set<int>& conPos, const std::set<Channel>& availableChannel)
 {
     std::set<Channel> channel{};
     for (Channel ch : availableChannel) {

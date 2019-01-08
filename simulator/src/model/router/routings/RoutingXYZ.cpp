@@ -50,22 +50,22 @@ void RoutingXYZ::route(RoutingInformation *ri, RoutingPacketInformation *rpi) {
     if (dstPos == node->pos) {
         channel = {Channel(node->conPosOfDir.at(DIR::Local), 0)};
     } else if (dstPos.x < node->pos.x) {
-        channel = Helper::getChannelsWithDir({node->conPosOfDir.at(DIR::West)},
+        channel = Helper::getChannelsWithConPos({node->conPosOfDir.at(DIR::West)},
                 ri->allChannelWithoutLocal);
     } else if (dstPos.x > node->pos.x) {
-        channel = Helper::getChannelsWithDir({node->conPosOfDir.at(DIR::East)},
+        channel = Helper::getChannelsWithConPos({node->conPosOfDir.at(DIR::East)},
                 ri->allChannelWithoutLocal);
     } else if (dstPos.y < node->pos.y) {
-        channel = Helper::getChannelsWithDir({node->conPosOfDir.at(DIR::South)},
+        channel = Helper::getChannelsWithConPos({node->conPosOfDir.at(DIR::South)},
                 ri->allChannelWithoutLocal);
     } else if (dstPos.y > node->pos.y) {
-        channel = Helper::getChannelsWithDir({node->conPosOfDir.at(DIR::North)},
+        channel = Helper::getChannelsWithConPos({node->conPosOfDir.at(DIR::North)},
                 ri->allChannelWithoutLocal);
     } else if (dstPos.z < node->pos.z) {
-        channel = Helper::getChannelsWithDir({node->conPosOfDir.at(DIR::Down)},
+        channel = Helper::getChannelsWithConPos({node->conPosOfDir.at(DIR::Down)},
                 ri->allChannelWithoutLocal);
     } else if (dstPos.z > node->pos.z) {
-        channel = Helper::getChannelsWithDir({node->conPosOfDir.at(DIR::Up)},
+        channel = Helper::getChannelsWithConPos({node->conPosOfDir.at(DIR::Up)},
                 ri->allChannelWithoutLocal);
     }
 

@@ -30,9 +30,5 @@ Router::Router(sc_module_name nm, Node* node) {
 	rep.reportAttribute(dbid, "pos_y", std::to_string(node->pos.y));
 	rep.reportAttribute(dbid, "pos_z", std::to_string(node->pos.z));
 	rep.reportAttribute(dbid, "clock", std::to_string(node->type->clockDelay));
-	rep.reportAttribute(dbid, "type", node->type->routerModel);
-}
-
-Router::~Router(){
-
+	rep.reportAttribute(dbid, "type", node->type->model);
 }

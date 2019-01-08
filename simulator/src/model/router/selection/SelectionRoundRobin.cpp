@@ -26,15 +26,16 @@ void SelectionRoundRobin::select(RoutingInformation* ri, RoutingPacketInformatio
 {
     std::set<Channel> channel = rpi->routedChannel;
     if (!channel.empty()) {
-        int selectedDirection = channel.begin()->dir;
-        channel = Helper::getChannelsWithDir({selectedDirection}, channel);
+        int selectedDirection = channel.begin()->conPos;
+        Helper helper{};
+        channel = helper.getChannelsWithConPos({selectedDirection}, channel);
         int vcs = ri->vcCount.at(selectedDirection);
         for (int i = 0; i<vcs; i++) {
-            std::set<Channel> selchannel = Helper::getChannelsWithVC({(rrVC.at(selectedDirection))%vcs}, channel);
+            std::set<Channel> selChannel = helper.getChannelsWithVC({(rrVC.at(selectedDirection))%vcs}, channel);
             rrVC.at(selectedDirection)++;
-            if (!selchannel.empty()) {
-                rpi->selectedChannel = selchannel;
-                rpi->recentSelectedChannel = selchannel;
+            if (!selChannel.empty()) {
+                rpi->selectedChannel = selChannel;
+                rpi->recentSelectedChannel = selChannel;
                 return;
             }
         }

@@ -1,24 +1,24 @@
-////////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2018 joseph
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-////////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
+ * Copyright (C) 2018 joseph
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ ******************************************************************************/
 
 #include <model/NoC.h>
 #include "ProcessingElementVC.h"
@@ -32,38 +32,32 @@ ProcessingElementVC::ProcessingElementVC(sc_module_name mn, Node& node, TrafficP
 
 void ProcessingElementVC::initialize()
 {
-
     packetPortContainer->portValidOut.write(false);
     packetPortContainer->portFlowControlOut.write(true);
-
     // sc_spawn(sc_bind(&SyntheticPool::sendThread, this, con.first,
     // con.second,initDelay,sp.waveCount,sp.waveDelay,sp.pkgPerWave, sp.name));
-
     SC_THREAD(thread);
-
     SC_METHOD(receive);
     sensitive << packetPortContainer->portValidIn.pos();
 }
 
 void ProcessingElementVC::thread()
 {
-    // int lastTimeStamp = 0;
-
     for (;;) {
         int timeStamp = static_cast<int>(sc_time_stamp().value()/1000);
 
-        std::vector<DataDestination*> removeList;
+        std::vector<DataDestination> removeList;
 
         for (auto const& tw : destWait) {
-            DataDestination* dest = tw.first;
-            Task* task = destToTask.at(dest);
+            DataDestination dest = tw.first;
+            Task task = destToTask.at(dest);
             if (taskTerminationTime.count(task) && taskTerminationTime.at(task)<timeStamp) {
                 removeList.push_back(dest);
             }
         }
 
-        for (DataDestination* dest : removeList) {
-            Task* task = destToTask.at(dest);
+        for (auto& dest : removeList) {
+            Task task = destToTask.at(dest);
             destToTask.erase(dest);
             taskToDest.erase(task);
             taskRepeatLeft.erase(task);
@@ -74,14 +68,14 @@ void ProcessingElementVC::thread()
         }
 
         for (auto const& tw : destWait) {
-            DataDestination* dest = tw.first;
+            DataDestination dest = tw.first;
 
             if (destWait.at(dest)<=timeStamp) {
                 //TODO restructure
                 // Packet *p = new Packet(this->node, globalResources.nodes.at(dest->destinationTask), 1, sc_time_stamp().to_double(), dest->dataType);
                 // p->dataType = dest->type;
-                Packet* p = packetFactory.createPacket(this->node, globalResources.nodes.at(dest->destinationTask), 1,
-                        sc_time_stamp().to_double(), dest->dataType);
+                Packet* p = packetFactory.createPacket(this->node, globalResources.nodes.at(dest.destinationTask), 1,
+                        sc_time_stamp().to_double(), dest.dataType);
 
                 packetPortContainer->portValidOut = true;
                 packetPortContainer->portDataOut = p;
@@ -92,7 +86,7 @@ void ProcessingElementVC::thread()
                     countLeft.erase(dest);
                     destWait.erase(dest);
 
-                    Task* task = destToTask.at(dest);
+                    Task task = destToTask.at(dest);
                     destToTask.erase(dest);
                     taskToDest.at(task).erase(dest);
 
@@ -104,8 +98,7 @@ void ProcessingElementVC::thread()
                 }
                 else {
                     destWait.at(dest) =
-                            globalResources.getRandomIntBetween(dest->minInterval, dest->maxInterval)+
-                                    timeStamp;
+                            globalResources.getRandomIntBetween(dest.minInterval, dest.maxInterval)+timeStamp;
                 }
                 break;
             }
@@ -129,53 +122,19 @@ void ProcessingElementVC::thread()
                  * and the same thing for minInterval and maxInterval.
                  */
                 if (globalResources.benchmark=="synthetic") {
-                    /* Between sender and receiver, we use the clock speed and the interval of the slower PE
-                    *  to do the next call calculations.
-                    *  We have tried using:
-                    *  		1- the source clock.
-                    *  		2- the dest clock.
-                    *  		3- clock = 1.
-                    *  		4- don't multiply nextCall by the clock.
-                    *  		5- the current solution of choosing the slower one.
-                    *  Solutions [1..4] either don't work at all for both warmup and run phases,
-                    *  or they seem to work for warmup with a small violation but definitely screw up the run phase.
-                    */
 
-                    Task* task = this->destToTask.at(dw.first);
-                    int minInterval = dw.first->minInterval;
+                    Task task = this->destToTask.at(dw.first);
+                    int minInterval = dw.first.minInterval;
 
-                    /* int clockDelay;
-                     int minInterval;
-
-                     int sourceClockDelay = this->node->type->clockDelay;
-                     int sourceMinInterval = std::floor(clockDelay / task->currentSP->injectionRate);
-
-                     int destClockDelay = dw.first->destination->type->clockDelay;
-                     int destMinInterval = dw.first->minInterval;
-
-                     if (sourceClockDelay > destClockDelay) {
-                         clockDelay = sourceClockDelay;
-                         minInterval = sourceMinInterval;
-                     } else {
-                         clockDelay = destClockDelay;
-                         minInterval = destMinInterval;
-                     }*/
-
-                    if (timeStamp<task->minStart) {
-                        nextCall = task->minStart+globalResources.getRandomIntBetween(0, minInterval-1);
+                    if (timeStamp<task.minStart) {
+                        nextCall = task.minStart+globalResources.getRandomIntBetween(0, minInterval-1);
 
                     }
                     else {
-                        /*   if (timeStamp < task->minStart + minInterval)
-                               nextCall = task->minStart + minInterval + globalResources.getRandomIntBetween(0, minInterval - 1);
-                           else {*/
-                        int numIntervalsPassed = (timeStamp-task->minStart)/minInterval;
-                        int intervalBeginning = task->minStart+(numIntervalsPassed*minInterval);
+                        int numIntervalsPassed = (timeStamp-task.minStart)/minInterval;
+                        int intervalBeginning = task.minStart+(numIntervalsPassed*minInterval);
                         nextCall = intervalBeginning+minInterval+globalResources.getRandomIntBetween(0, minInterval-1);
-//                        }
                     }
-//                    nextCall *= clockDelay;
-//                    cout << "currentTime: " << timeStamp << ", nextCall: " << nextCall << endl;
                 }
                 else { // if not synthetic, then execute the original behavior
                     nextCall = dw.second;
@@ -191,15 +150,14 @@ void ProcessingElementVC::thread()
             event.notify(nextCall-timeStamp, SC_NS);
         }
 
-        // lastTimeStamp = timeStamp;
         wait(event);
     }
 }
 
-void ProcessingElementVC::execute(Task* task)
+void ProcessingElementVC::execute(Task& task)
 {
     if (!taskRepeatLeft.count(task)) {
-        taskRepeatLeft[task] = globalResources.getRandomIntBetween(task->minRepeat, task->maxRepeat);
+        taskRepeatLeft[task] = globalResources.getRandomIntBetween(task.minRepeat, task.maxRepeat);
     }
     else {
         if (taskRepeatLeft.at(task)>0) {
@@ -213,22 +171,23 @@ void ProcessingElementVC::execute(Task* task)
     }
 
     if (!taskStartTime.count(task)) {
-        taskStartTime[task] = globalResources.getRandomIntBetween(task->minStart, task->maxStart);
+        taskStartTime[task] = globalResources.getRandomIntBetween(task.minStart, task.maxStart);
     }
 
-    if (!taskTerminationTime.count(task) && task->minDuration!=-1) {
+    if (!taskTerminationTime.count(task) && task.minDuration!=-1) {
         taskTerminationTime[task] =
-                taskStartTime[task]+globalResources.getRandomIntBetween(task->minDuration, task->maxDuration);
+                taskStartTime[task]+globalResources.getRandomIntBetween(task.minDuration, task.maxDuration);
     }
 
-    if (task->requirements.empty()) {
+    if (task.requirements.empty()) {
         startSending(task);
     }
     else {
-        for (DataRequirement* r : task->requirements) {
-            neededFor[r->type].insert(task);
-            neededAmount[std::make_pair(task, r->type)] = globalResources.getRandomIntBetween(r->minCount, r->maxCount);
-            needs[task].insert(r->type);
+        for (DataRequirement& r : task.requirements) {
+            neededFor[r.dataType].insert(task);
+            neededAmount[std::make_pair(task, r.dataType)] = globalResources.getRandomIntBetween(r.minCount,
+                    r.maxCount);
+            needs[task].insert(r.dataType);
         }
     }
 }
@@ -241,12 +200,12 @@ void ProcessingElementVC::bind(Connection* con, SignalContainer* sigContIn, Sign
 void ProcessingElementVC::receive()
 {
     LOG(globalReport.verbose_pe_function_calls,
-            "PE" << this->id << "(Node" << node->id << ")\t- receive_data_process()");
+            "PE" << this->id << "(Node" << node.id << ")\t- receive_data_process()");
 
     if (packetPortContainer->portValidIn.posedge()) {
         Packet* received_packet = packetPortContainer->portDataIn.read();
         if (received_packet) {
-            DataType* type = received_packet->dataType;
+            dataTypeID_t type = received_packet->dataType;
 
             if (receivedData.count(type)) {
                 receivedData.at(type)++;
@@ -254,28 +213,27 @@ void ProcessingElementVC::receive()
             else {
                 receivedData[type] = 1;
             }
-
             checkNeed();
         }
     }
 }
 
-void ProcessingElementVC::startSending(Task* task)
+void ProcessingElementVC::startSending(Task& task)
 {
     float rn = globalResources.getRandomFloatBetween(0, 1);
 
-    for (unsigned int i = 0; i<task->possibilities.size(); i++) {
-        if (task->possibilities.at(i).first>rn) {
-            std::vector<DataDestination*>* destVec = &(task->possibilities.at(i).second);
-            for (DataDestination* dest : *destVec) {
+    for (unsigned int i = 0; i<task.possibilities.size(); i++) {
+        if (task.possibilities.at(i).probability>rn) {
+            std::vector<DataDestination> destVec = task.possibilities.at(i).dataDestinations;
+            for (DataDestination& dest : destVec) {
                 destToTask[dest] = task;
                 taskToDest[task].insert(dest);
 
-                countLeft[dest] = globalResources.getRandomIntBetween(dest->minCount, dest->maxCount);
+                countLeft[dest] = globalResources.getRandomIntBetween(dest.minCount, dest.maxCount);
 
                 int delayTime =
                         static_cast<int>((sc_time_stamp().value()/1000)
-                                +globalResources.getRandomIntBetween(dest->minDelay, dest->maxDelay));
+                                +globalResources.getRandomIntBetween(dest.minDelay, dest.maxDelay));
 
                 if (taskStartTime.count(task) && taskStartTime.at(task)>delayTime) {
                     destWait[dest] = taskStartTime.at(task);
@@ -288,7 +246,7 @@ void ProcessingElementVC::startSending(Task* task)
             break;
         }
         else {
-            rn -= task->possibilities.at(i).first;
+            rn -= task.possibilities.at(i).probability;
         }
     }
 }
@@ -296,12 +254,12 @@ void ProcessingElementVC::startSending(Task* task)
 void ProcessingElementVC::checkNeed()
 {
     for (auto const& data : receivedData) {
-        DataType* type = data.first;
-        std::vector<std::pair<Task*, DataType*>> removeList;
+        dataTypeID_t type = data.first;
+        std::vector<std::pair<Task, dataTypeID_t>> removeList;
 
         if (neededFor.count(type)) {
-            for (Task* t : neededFor.at(type)) {
-                std::pair<Task*, DataType*> pair = std::make_pair(t, type);
+            for (const Task& t : neededFor.at(type)) {
+                std::pair<Task, dataTypeID_t> pair = std::make_pair(t, type);
                 neededAmount.at(pair) -= receivedData.at(type);
                 /* This line was commented out because if a task requires several packets from several data types,
                  it says that the task is finished receiving the required packets while in fact, it still needs some packets.
@@ -315,7 +273,7 @@ void ProcessingElementVC::checkNeed()
             }
         }
 
-        for (std::pair<Task*, DataType*> p : removeList) {
+        for (auto& p : removeList) {
             neededFor.erase(p.second);
             neededAmount.erase(p);
             needs.at(p.first).erase(p.second);
@@ -325,4 +283,9 @@ void ProcessingElementVC::checkNeed()
             }
         }
     }
+}
+
+ProcessingElementVC::~ProcessingElementVC()
+{
+    delete packetPortContainer;
 }

@@ -76,6 +76,8 @@ public:
 
     void readTaskAndMapFiles(const std::string& taskFilePath, const std::string& mappingFilePath);
 
+    std::vector<Node*> getNodesByPos(const Vec3D<float>& pos);
+
 private:
     std::unique_ptr<std::random_device> rd;
     std::unique_ptr<std::mt19937_64> rand;
