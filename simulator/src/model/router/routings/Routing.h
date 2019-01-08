@@ -19,7 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-
 #pragma once
 
 #include "utils/GlobalResources.h"
@@ -33,11 +32,12 @@
 #include "model/router/helper/MeshHelper.h"
 
 struct RoutingInformation {
-    Node *node;
+    GlobalResources& globalResources = GlobalResources::getInstance();
+    Node node;
     std::set<Channel> allChannel;
     std::set<Channel> allChannelWithoutLocal;
     std::vector<int> vcCount;
-    std::map<Channel, Packet *> occupyTable; // this structure of the occupy table is used with rrVC arbiter.
+    std::map<Channel, Packet*> occupyTable;     // this structure of the occupy table is used with rrVC arbiter.
     std::map<Channel, Channel> fairOccupyTable; // this structure is used with fairArbiter.
     std::map<Channel, bool> freeVCs;
     std::map<Channel, Channel> routingStateTable;
@@ -48,26 +48,28 @@ struct RoutingInformation {
     std::map<Channel, bool> flowIn;
     std::map<Channel, bool> emptyIn;
 
-    RoutingInformation(Node *node) {
+    explicit RoutingInformation(Node& node)
+    {
         this->node = node;
-        vcCount.resize(node->connections.size());
-        for (Connection *c : node->connections) {
-
-            if (c->nodes.size() == 1) {
-                vcCount.at(node->conToPos.at(c)) = c->vcCount.at(0);
-            } else {
-                for (int i = 0; i < c->vcCount.size(); i++) {
-                    if (i != c->nodePos.at(node)) {
-                        vcCount.at(node->conToPos.at(c)) = c->vcCount.at(i);
+        vcCount.resize(node.connections.size());
+        for (connID_t con_id : node.connections) {
+            Connection c = globalResources.connections.at(con_id);
+            int conPos = node.getConnPosition(con_id);
+            if (c.nodes.size()==1) {
+                vcCount.at(conPos) = c.vcsCount.at(0);
+            }
+            else {
+                for (int i = 0; i<c.vcsCount.size(); i++) {
+                    if (i!=c.getNodePos(node.id)) {
+                        vcCount.at(conPos) = c.vcsCount.at(i);
                         break;
                     }
                 }
             }
-
-            for (int vc = 0; vc < vcCount.at(node->conToPos.at(c)); vc++) {
-                Channel ch = {node->conToPos.at(c), vc};
+            for (int vc = 0; vc<vcCount.at(conPos); vc++) {
+                Channel ch = {conPos, vc};
                 allChannel.insert(ch);
-                if (c->nodes.size() != 1) {
+                if (c.nodes.size()!=1) {
                     allChannelWithoutLocal.insert(ch);
                     freeVCs[ch] = true;
                 }
@@ -77,7 +79,7 @@ struct RoutingInformation {
 };
 
 struct RoutingPacketInformation {
-    Packet *packet;
+    Packet* packet;
     Channel inputChannel;
     std::set<Channel> routedChannel;
     std::set<Channel> selectedChannel;
@@ -87,41 +89,40 @@ struct RoutingPacketInformation {
     std::map<Channel, int> nextClass;
     Channel outputChannel;
 
-    bool rerouteFlag = 0;
-    bool delayFlag = 0;
-    bool unableFlag = 0;
-    bool dropFlag = 0;
+    bool rerouteFlag = false;
+    bool delayFlag = false;
+    bool unableFlag = false;
+    bool dropFlag = false;
 
-    RoutingPacketInformation(Packet *packet) {
+    explicit RoutingPacketInformation(Packet* packet)
+    {
         this->packet = packet;
         outputChannel = Channel(-1, -1);
     };
 };
 
 struct Routing {
-    GlobalResources &globalResources = GlobalResources::getInstance();
-    Report &rep = Report::getInstance();
+    GlobalResources& globalResources = GlobalResources::getInstance();
+    Report& rep = Report::getInstance();
 
     int dbid;
-    Node *node;
+    Node node;
 
-    Routing(Node *node) {
+    explicit Routing(Node& node)
+    {
         this->node = node;
-        this->dbid = rep.registerElement("Routing", node->id);
+        this->dbid = rep.registerElement("Routing", node.id);
     }
 
-    virtual ~Routing() {
-    }
+    virtual ~Routing() = default;
 
     virtual void checkValid() = 0;
 
-    virtual void route(RoutingInformation *, RoutingPacketInformation *) = 0; //returns all allowed channel
-    virtual void makeDecision(RoutingInformation *, RoutingPacketInformation *) = 0; //returns all allowed channel
+    virtual void route(RoutingInformation*, RoutingPacketInformation*) = 0; //returns all allowed channel
 
-    virtual void beginCycle(RoutingInformation *) = 0; //called at the beginning of each router cycle
-    virtual void endCycle(RoutingInformation *) = 0; //called at the beginning of each router cycle
+    virtual void makeDecision(RoutingInformation*, RoutingPacketInformation*) = 0; //returns all allowed channel
 
-    //virtual std::set<Channel> select(RoutingInformation*)=0; //selects channel based on congestion etc
-    //virtual Channel selectFinal(RoutingInformation*)=0; //selects output channel, directly called before arbiter, -1 halt, -2 reroute
+    virtual void beginCycle(RoutingInformation*) = 0; //called at the beginning of each router cycle
 
+    virtual void endCycle(RoutingInformation*) = 0; //called at the beginning of each router cycle
 };

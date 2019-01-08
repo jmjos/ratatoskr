@@ -33,26 +33,30 @@
 
 #include "NetworkInterface.h"
 
-class NetworkInterfaceVC : public NetworkInterface{
+class NetworkInterfaceVC : public NetworkInterface {
 public:
-	std::queue < Packet* > packet_send_queue;
-	std::queue < Packet* > packet_recv_queue;
+    std::queue<Packet*> packet_send_queue;
+    std::queue<Packet*> packet_recv_queue;
 
+    std::vector<bool>* flowControlOut;
+    std::vector<int>* tagOut;
+    std::vector<bool>* emptyOut;
+    sc_in<bool> clk;
+    FlitPortContainer* flitPortContainer;
+    PacketPortContainer* packetPortContainer;
 
-	std::vector<bool>* flowControlOut;
-	std::vector<int>* tagOut;
-	std::vector<bool>* emptyOut;
-	sc_in < bool > clk;
-	FlitPortContainer* flitPortContainer;
-	PacketPortContainer* packetPortContainer;
+    SC_HAS_PROCESS(NetworkInterfaceVC);
 
-	SC_HAS_PROCESS(NetworkInterfaceVC);
-	NetworkInterfaceVC(sc_module_name nm, Node& node);
+    NetworkInterfaceVC(sc_module_name nm, Node& node);
 
-	void initialize() override;
-	void bind(Connection*, SignalContainer*, SignalContainer*) override;
-	void thread() override;
-	void receivePacket() override ;
-	void receiveFlit() override;
+    void initialize() override;
+
+    void bind(Connection*, SignalContainer*, SignalContainer*) override;
+
+    void thread() override;
+
+    void receivePacket() override;
+
+    void receiveFlit() override;
 };
 

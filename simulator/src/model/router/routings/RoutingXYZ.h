@@ -24,15 +24,20 @@
 #include "Routing.h"
 
 struct RoutingXYZ : public Routing {
-	int rrVC=0;
+    int rrVC = 0;
 
-	RoutingXYZ(Node* node);
-	~RoutingXYZ();
-	void checkValid();
-	void route(RoutingInformation*, RoutingPacketInformation*);
-	void makeDecision(RoutingInformation*, RoutingPacketInformation*);
+    explicit RoutingXYZ(Node& node);
 
-	void beginCycle(RoutingInformation*);
-	void endCycle(RoutingInformation*);
+    ~RoutingXYZ() override = default;
+
+    void checkValid() override;
+
+    void route(RoutingInformation*, RoutingPacketInformation*) override;
+
+    void makeDecision(RoutingInformation*, RoutingPacketInformation*) override;
+
+    void beginCycle(RoutingInformation*) override;
+
+    void endCycle(RoutingInformation*) override;
 };
 

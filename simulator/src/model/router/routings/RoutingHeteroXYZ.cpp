@@ -21,76 +21,77 @@
  ******************************************************************************/
 #include "RoutingHeteroXYZ.h"
 
-RoutingHeteroXYZ::RoutingHeteroXYZ(Node* node) :
-		Routing(node) {
+RoutingHeteroXYZ::RoutingHeteroXYZ(Node& node)
+        :
+        Routing(node)
+{
 }
 
-RoutingHeteroXYZ::~RoutingHeteroXYZ() {
+void RoutingHeteroXYZ::checkValid()
+{
+    node.checkValid();
 }
 
-void RoutingHeteroXYZ::checkValid() {
-	assert(node->connectedNodes.size() <= 7);
-	assert(node->connections.size() <= node->connectedNodes.size() + 1);
-	assert(node->conPosOfDir.size() == node->connections.size());
+void RoutingHeteroXYZ::route(RoutingInformation* ri, RoutingPacketInformation* rpi)
+{
+    std::set<Channel> channel{};
+    std::map<Channel, float> channelRating;
+    Vec3D<float> dstPos = rpi->packet->dst.pos;
+    Helper helper{};
 
-	int i = 0;
-	for (std::pair<DIR::TYPE, int> pair : node->conPosOfDir) {
-		assert(std::find(DIR::XYZ.begin(), DIR::XYZ.end(), pair.first) != DIR::XYZ.end());
-		i++;
-	}
-	assert(node->connections.size() == i);
+    if (dstPos==node.pos) {
+        channel = {Channel(node.getConPosOfDir(DIR::Local), 0)};
+    }
+    else if (dstPos.z<node.pos.z) {
+        channel = helper.getChannelsWithConPos({node.getConPosOfDir(DIR::Down)},
+                ri->allChannelWithoutLocal);
+    }
+    else if (dstPos.z>=node.pos.z) {
+        if (dstPos.x<node.pos.x) {
+            channel = helper.getChannelsWithConPos({node.getConPosOfDir(DIR::West)},
+                    ri->allChannelWithoutLocal);
+        }
+        else if (dstPos.x>node.pos.x) {
+            channel = helper.getChannelsWithConPos({node.getConPosOfDir(DIR::East)},
+                    ri->allChannelWithoutLocal);
+        }
+        else if (dstPos.y<node.pos.y) {
+            channel = helper.getChannelsWithConPos({node.getConPosOfDir(DIR::South)},
+                    ri->allChannelWithoutLocal);
+        }
+        else if (dstPos.y>node.pos.y) {
+            channel = helper.getChannelsWithConPos({node.getConPosOfDir(DIR::North)},
+                    ri->allChannelWithoutLocal);
+        }
+        else
+            channel = helper.getChannelsWithConPos({node.getConPosOfDir(DIR::Up)},
+                    ri->allChannelWithoutLocal);
+    }
+
+    for (Channel c : channel) {
+        channelRating[c] = 1;
+    }
+
+    rpi->routedChannel = channel;
+    rpi->routedChannelRating = channelRating;
 }
 
-void RoutingHeteroXYZ::route(RoutingInformation* ri, RoutingPacketInformation* rpi) {
-	//rep.reportEvent(dbid, "routing_route_packet", std::to_string(rpi->packet->id));
-
-	std::set<Channel> channel;
-	std::map<Channel, float> channelRating;
-
-	Vec3D<float> dstPos = rpi->packet->dst->pos;
-	if (dstPos == node->pos) {
-		channel= {Channel(node->conPosOfDir.at(DIR::Local), 0)};
-	} else if (dstPos.z < node->pos.z) {
-		channel = Helper::getChannelsWithConPos({node->conPosOfDir.at(DIR::Down)},
-				ri->allChannelWithoutLocal);
-	} else if (dstPos.z >= node->pos.z) {
-		if (dstPos.x < node->pos.x) {
-			channel = Helper::getChannelsWithConPos({node->conPosOfDir.at(DIR::West)},
-					ri->allChannelWithoutLocal);
-		} else if (dstPos.x > node->pos.x) {
-			channel = Helper::getChannelsWithConPos({node->conPosOfDir.at(DIR::East)},
-					ri->allChannelWithoutLocal);
-		} else if (dstPos.y < node->pos.y) {
-			channel = Helper::getChannelsWithConPos({node->conPosOfDir.at(DIR::South)},
-					ri->allChannelWithoutLocal);
-		} else if (dstPos.y > node->pos.y) {
-			channel = Helper::getChannelsWithConPos({node->conPosOfDir.at(DIR::North)},
-					ri->allChannelWithoutLocal);
-		}
-		else
-		channel = Helper::getChannelsWithConPos({node->conPosOfDir.at(DIR::Up)},
-				ri->allChannelWithoutLocal);
-	}
-
-	for (Channel c : channel) {
-		channelRating[c] = 1;
-	}
-
-	rpi->routedChannel = channel;
-	rpi->routedChannelRating = channelRating;
+void RoutingHeteroXYZ::makeDecision(RoutingInformation* ri, RoutingPacketInformation* rpi)
+{
+    if (!rpi->recentSelectedChannel.empty()) {
+        rpi->outputChannel = *rpi->recentSelectedChannel.begin();
+    }
+    else {
+        FATAL("Router" << ri->node.id << "[" << DIR::toString(ri->node.getDirOfConPos(rpi->inputChannel.conPos))
+                       << rpi->inputChannel.vc << "] - Unable to make decision! " << *rpi->packet);
+    }
 }
 
-void RoutingHeteroXYZ::makeDecision(RoutingInformation* ri, RoutingPacketInformation* rpi) {
-	if (rpi->recentSelectedChannel.size()) {
-		rpi->outputChannel = *rpi->recentSelectedChannel.begin();
-	} else {
-		FATAL("Router" << ri->node->id << "[" << DIR::toString(ri->node->dirOfConPos.at(rpi->inputChannel.conPos)) << rpi->inputChannel.vc << "] - Unable to make decision! "<< *rpi->packet);
-	}
+void RoutingHeteroXYZ::beginCycle(RoutingInformation* ri)
+{
 }
 
-void RoutingHeteroXYZ::beginCycle(RoutingInformation* ri) {
-}
-
-void RoutingHeteroXYZ::endCycle(RoutingInformation* ri) {
+void RoutingHeteroXYZ::endCycle(RoutingInformation* ri)
+{
 }
 

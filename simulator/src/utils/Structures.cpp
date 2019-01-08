@@ -124,6 +124,20 @@ Node* Node::getNodeByPos(const Vec3D<float>& pos)
     else return nullptr;
 }
 
+void Node::checkValid()
+{
+    assert(connectedNodes.size() <= 7);
+    assert(connections.size() <= connectedNodes.size() + 1);
+    assert(conPosOfDir.size() == connections.size());
+
+    int i = 0;
+    for (std::pair<DIR::TYPE, int> pair : conPosOfDir) {
+        assert(std::find(DIR::XYZ.begin(), DIR::XYZ.end(), pair.first) != DIR::XYZ.end());
+        i++;
+    }
+    assert(connections.size() == i);
+}
+
 Connection::Connection(connID_t id, const std::vector<nodeID_t>& nodes, const std::vector<int>& vcsCount,
         const std::vector<int>& buffersDepth,
         const std::vector<std::vector<int>>& buffersDepths, float length, int width, int depth)
@@ -155,6 +169,11 @@ int Connection::getVCCountForNode(nodeID_t nodeID)
 {
     int pos = std::find(nodes.begin(), nodes.end(), nodeID)-nodes.begin();
     return vcsCount.at(pos);
+}
+
+int Connection::getNodePos(nodeID_t n_id)
+{
+    return std::find(nodes.begin(), nodes.end(), n_id) - nodes.begin();
 }
 
 DataType::DataType(dataTypeID_t id, const std::string& name)

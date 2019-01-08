@@ -21,51 +21,49 @@
  ******************************************************************************/
 #include "RoutingXYZ.h"
 
-RoutingXYZ::RoutingXYZ(Node *node) :
-        Routing(node) {
+RoutingXYZ::RoutingXYZ(Node& node)
+        :
+        Routing(node)
+{
 }
 
-RoutingXYZ::~RoutingXYZ() {
+void RoutingXYZ::checkValid()
+{
+    node.checkValid();
 }
 
-void RoutingXYZ::checkValid() {
-    assert(node->connectedNodes.size() <= 7);
-    assert(node->connections.size() <= node->connectedNodes.size() + 1);
-    assert(node->conPosOfDir.size() == node->connections.size());
-
-    int i = 0;
-    for (std::pair<DIR::TYPE, int> pair : node->conPosOfDir) {
-        assert(std::find(DIR::XYZ.begin(), DIR::XYZ.end(), pair.first) != DIR::XYZ.end());
-        i++;
-    }
-    assert(node->connections.size() == i);
-}
-
-void RoutingXYZ::route(RoutingInformation *ri, RoutingPacketInformation *rpi) {
-
-    std::set<Channel> channel;
+void RoutingXYZ::route(RoutingInformation* ri, RoutingPacketInformation* rpi)
+{
+    std::set<Channel> channel{};
     std::map<Channel, float> channelRating;
+    Vec3D<float> dstPos = rpi->packet->dst.pos;
+    Helper helper{};
 
-    Vec3D<float> dstPos = rpi->packet->dst->pos;
-    if (dstPos == node->pos) {
-        channel = {Channel(node->conPosOfDir.at(DIR::Local), 0)};
-    } else if (dstPos.x < node->pos.x) {
-        channel = Helper::getChannelsWithConPos({node->conPosOfDir.at(DIR::West)},
+    if (dstPos==node.pos) {
+        channel = {Channel(node.getConPosOfDir(DIR::Local), 0)};
+    }
+    else if (dstPos.x<node.pos.x) {
+        channel = helper.getChannelsWithConPos({node.getConPosOfDir(DIR::West)},
                 ri->allChannelWithoutLocal);
-    } else if (dstPos.x > node->pos.x) {
-        channel = Helper::getChannelsWithConPos({node->conPosOfDir.at(DIR::East)},
+    }
+    else if (dstPos.x>node.pos.x) {
+        channel = helper.getChannelsWithConPos({node.getConPosOfDir(DIR::East)},
                 ri->allChannelWithoutLocal);
-    } else if (dstPos.y < node->pos.y) {
-        channel = Helper::getChannelsWithConPos({node->conPosOfDir.at(DIR::South)},
+    }
+    else if (dstPos.y<node.pos.y) {
+        channel = helper.getChannelsWithConPos({node.getConPosOfDir(DIR::South)},
                 ri->allChannelWithoutLocal);
-    } else if (dstPos.y > node->pos.y) {
-        channel = Helper::getChannelsWithConPos({node->conPosOfDir.at(DIR::North)},
+    }
+    else if (dstPos.y>node.pos.y) {
+        channel = helper.getChannelsWithConPos({node.getConPosOfDir(DIR::North)},
                 ri->allChannelWithoutLocal);
-    } else if (dstPos.z < node->pos.z) {
-        channel = Helper::getChannelsWithConPos({node->conPosOfDir.at(DIR::Down)},
+    }
+    else if (dstPos.z<node.pos.z) {
+        channel = helper.getChannelsWithConPos({node.getConPosOfDir(DIR::Down)},
                 ri->allChannelWithoutLocal);
-    } else if (dstPos.z > node->pos.z) {
-        channel = Helper::getChannelsWithConPos({node->conPosOfDir.at(DIR::Up)},
+    }
+    else if (dstPos.z>node.pos.z) {
+        channel = helper.getChannelsWithConPos({node.getConPosOfDir(DIR::Up)},
                 ri->allChannelWithoutLocal);
     }
 
@@ -77,18 +75,22 @@ void RoutingXYZ::route(RoutingInformation *ri, RoutingPacketInformation *rpi) {
     rpi->routedChannelRating = channelRating;
 }
 
-void RoutingXYZ::makeDecision(RoutingInformation *ri, RoutingPacketInformation *rpi) {
-    if (rpi->recentSelectedChannel.size()) {
+void RoutingXYZ::makeDecision(RoutingInformation* ri, RoutingPacketInformation* rpi)
+{
+    if (!rpi->recentSelectedChannel.empty()) {
         rpi->outputChannel = *rpi->recentSelectedChannel.begin();
-    } else {
-        FATAL("Router" << ri->node->id << "[" << DIR::toString(ri->node->dirOfConPos.at(rpi->inputChannel.conPos))
+    }
+    else {
+        FATAL("Router" << ri->node.id << "[" << DIR::toString(ri->node.getDirOfConPos(rpi->inputChannel.conPos))
                        << rpi->inputChannel.vc << "] - Unable to make decision! " << *rpi->packet);
     }
 }
 
-void RoutingXYZ::beginCycle(RoutingInformation *ri) {
+void RoutingXYZ::beginCycle(RoutingInformation* ri)
+{
 }
 
-void RoutingXYZ::endCycle(RoutingInformation *ri) {
+void RoutingXYZ::endCycle(RoutingInformation* ri)
+{
 }
 

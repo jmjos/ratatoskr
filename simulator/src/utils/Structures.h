@@ -254,6 +254,8 @@ public:
 
     Node* getNodeByPos(const Vec3D<float>& pos);
 
+    void checkValid();
+
 private:
     std::map<DIR::TYPE, int> conPosOfDir; //maps direction names to connection position inside this node's connections
     std::map<int, DIR::TYPE> dirOfConPos; //maps connection position (inside this node's connections) to direction name
@@ -284,6 +286,8 @@ struct Connection {
     int getBufferDepthForNodeAndVC(nodeID_t nodeID, int vcID);
 
     int getVCCountForNode(nodeID_t nodeID);
+
+    int getNodePos(nodeID_t n_id);
 };
 
 struct DataType {
