@@ -79,10 +79,12 @@ public:
     std::vector<Node*> getNodesByPos(const Vec3D<float>& pos);
 
 private:
-    std::unique_ptr<std::random_device> rd;
-    std::unique_ptr<std::mt19937_64> rand;
+    std::random_device* rd;
+    std::mt19937_64* rand;
 
     GlobalResources();
+
+    ~GlobalResources();
 
     std::vector<std::string> string_split(const std::string& str, const std::string& delim);
 
@@ -117,7 +119,5 @@ private:
     float readRequiredFloatAttribute(pugi::xml_node, const char*, const char*);
 
     float readRequiredFloatAttribute(pugi::xml_node, const char*);
-
-
 };
 

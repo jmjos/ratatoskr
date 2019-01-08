@@ -32,8 +32,8 @@ GlobalResources::GlobalResources()
         numberOfTrafficTypes(0),
         synthetic_start_measurement_time(-1)
 {
-    rd = std::make_unique<std::random_device>();
-    rand = std::make_unique<std::mt19937_64>(*rd);
+    rd = new std::random_device();
+    rand = new std::mt19937_64((*rd)());
 }
 
 GlobalResources& GlobalResources::getInstance()
@@ -491,4 +491,10 @@ std::vector<Node*> GlobalResources::getNodesByPos(const Vec3D<float>& pos)
             matching_nodes.push_back(&node);
         }
     return matching_nodes;
+}
+
+GlobalResources::~GlobalResources()
+{
+    delete rd;
+    delete rand;
 }

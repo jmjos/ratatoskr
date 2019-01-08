@@ -62,7 +62,9 @@ ChannelInfo MeshHelper::getRecursiveChannelInfo(ChannelInfo info)
 
     connID_t conn_id = info.currNode.connections.at(info.channel.conPos);
     Connection con = globalResources.connections.at(conn_id);
-    auto connected_node_ptr = std::find_if_not(con.nodes.begin(), con.nodes.end(), info.currNode.id);
+    nodeID_t curr_node_id = info.currNode.id;
+    auto connected_node_ptr = std::find_if(con.nodes.begin(), con.nodes.end(),
+            [&curr_node_id](const nodeID_t& n_id) { return curr_node_id!=n_id; });
     Node connected_node = globalResources.nodes.at(*connected_node_ptr);
     long oldDistanceToDest = getHopDistance(info.currNode, info.destinationNode);
     long newDistanceToDest = getHopDistance(connected_node, info.destinationNode);
