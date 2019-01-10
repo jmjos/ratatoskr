@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
+/*
 #include "RouterVC.h"
 
 RouterVC::RouterVC(sc_module_name nm, Node *node) :
@@ -89,6 +90,7 @@ RouterVC::RouterVC(sc_module_name nm, Node *node) :
         FATAL("Router" << this->id << "\t- Unknown selection: " << node->type->selection);
     }
 
+*/
 /*	tf = sc_create_vcd_trace_file(nm);
     tf->set_time_unit(1, SC_NS);
     sc_trace(tf, clk, "clk");
@@ -96,7 +98,8 @@ RouterVC::RouterVC(sc_module_name nm, Node *node) :
     for (int dir = 0; dir < conCount; dir++) {
         sc_trace(tf, classicPortContainer.at(dir).portValidIn,
                  "validIn." + DIR::toString(node->conPosToDir[dir]));
-    }*/
+    }*//*
+
 
     lastReceivedFlits.resize(conCount);
 }
@@ -276,9 +279,11 @@ void RouterVC::updateUsageStats() {
                                                            vcIn, buf->occupied(), numVCs);
             }
         }
-        /* this 1 is added to create a column for numberOfActiveVCs=0.
-           yes it's an extra column but it allow us to use the same function to update both buffer stats and VC stats.
         */
+/* this 1 is added to create a column for numberOfActiveVCs=0.
+           yes it's an extra column but it allow us to use the same function to update both buffer stats and VC stats.
+        *//*
+
         globalReport.updateUsageHist(globalReport.VCsUsageHist, this->id, node->dirOfConPos[dirIn],
                                           numberActiveVCs, numVCs + 1);
     }
@@ -332,6 +337,7 @@ void RouterVC::allocateVC() {
     }
 }
 
+*/
 /* Handles the following cases when we have a head flit:
  * 1- dropFlag is set.
  * 2- rerouteFlag is set.
@@ -341,7 +347,8 @@ void RouterVC::allocateVC() {
  * The function returns true in the following cases, and false otherwise:
  * 1- dropFlag is set and no selected channel.
  * 2- delayFlag is set.
- * */
+ * *//*
+
 bool RouterVC::handleHeadFlitSpecialCases(RoutingPacketInformation *rpi, const Flit *flit, const Channel &in) {
     bool result = false;
 
@@ -490,11 +497,13 @@ int RouterVC::getNextAvailableVC(int dir) {
     else {
         int currVC = currentVCs.at(dir);
 
-        /* Current VC contains the VC used in the previous cycle.
+        */
+/* Current VC contains the VC used in the previous cycle.
          * there are two cases:
          * 1) if this VC still has flits left, the next VC will be used (if-case)
          * 2) if there are no flit left, i.e. a tail flit passed the router, the first VC available will be used (else).
-         * */
+         * *//*
+
         if (std::count(vcs.begin(), vcs.end(), currVC)) {
             auto p = std::find(vcs.begin(), vcs.end(), currVC);
             if (p == vcs.end() - 1)
@@ -627,3 +636,4 @@ void RouterVC::send() {
     }
     arbitratedFlits.clear();
 }
+*/

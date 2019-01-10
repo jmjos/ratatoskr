@@ -360,10 +360,10 @@ void GlobalReport::reportAllRoutersUsageHist()
                 std::cerr << "VCUsage folder was not created!" << std::endl;
                 std::exit(EXIT_FAILURE);
             }
-            for (unsigned int dir = 0; dir<globalResources.nodes[i].connections.size(); dir++) {
+            for (unsigned int conPos = 0; conPos<globalResources.nodes[i].connections.size(); conPos++) {
                 csvFileName = "BuffUsage/"+std::to_string(i)+"_"+
-                        DIR::toString(globalResources.nodes[i].conToDir[dir])+".csv";
-                reportBuffUsageHist(bufferUsagePerVCHist, csvFileName, i, dir);
+                        DIR::toString(globalResources.nodes[i].getDirOfConPos(conPos))+".csv";
+                reportBuffUsageHist(bufferUsagePerVCHist, csvFileName, i, conPos);
             }
         }
     }

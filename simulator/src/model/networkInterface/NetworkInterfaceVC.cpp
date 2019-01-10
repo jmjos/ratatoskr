@@ -49,7 +49,7 @@ void NetworkInterfaceVC::receivePacket() {
 
 		Packet* p = packetPortContainer->portDataIn.read();
 
-		Flit* headFlit;
+		Flit* headFlit{};
 		for (int i = 0; i < globalResources.flitsPerPacket; i++) {
 			FlitType type;
 			if (i % globalResources.flitsPerPacket == 0) {
@@ -65,7 +65,7 @@ void NetworkInterfaceVC::receivePacket() {
 				headFlit = current_flit;
 			}
 			current_flit->headFlit = headFlit;
-			p->toTransmit.at(globalResources.flitsPerPacket - i - 1) = current_flit;
+			p->toTransmit.at(globalResources.flitsPerPacket - i - 1) = current_flit->id;
 			delete current_flit;
 		}
 		packet_send_queue.push(p);
@@ -77,7 +77,6 @@ void NetworkInterfaceVC::initialize() {
 
 	flitPortContainer->portValidOut.write(false);
 	flitPortContainer->portFlowControlOut.write(flowControlOut);
-	flitPortContainer->portTagOut.write(tagOut);
 	flitPortContainer->portEmptyOut.write(emptyOut);
 
 	SC_METHOD(thread);
@@ -108,10 +107,10 @@ void NetworkInterfaceVC::thread() {
 			if (flitPortContainer->portFlowControlIn.read()->at(0)) {
 				Packet* p = packet_send_queue.front();
 
-				Flit* current_flit = p->toTransmit.back();
+				Flit* current_flit = p->flits.at(p->toTransmit.back());
 				current_flit->injectionTime = sc_time_stamp().to_double();
 				p->toTransmit.pop_back();
-				p->inTransmit.push_back(current_flit);
+				p->inTransmit.push_back(current_flit->id);
 
 				rep.reportEvent(dbid, "pe_send_flit", std::to_string(current_flit->id));
 
@@ -166,21 +165,21 @@ void NetworkInterfaceVC::receiveFlit() {
 		// generate packet statistics. in case of synthetic traffic only for run phase
 		if ((float) globalResources.synthetic_start_measurement_time
 				<= (sc_time_stamp().to_double() / (float) 1000)) {
-			globalReport.latencyFlit.sample(sc_time_stamp().to_double() - received_flit->injectionTime);
+			globalReport.latencyFlit.sample(
+					static_cast<float>(sc_time_stamp().to_double() - received_flit->injectionTime));
 			if (received_flit->type == TAIL) {
 				globalReport.latencyPacket.sample(
-						sc_time_stamp().to_double() - received_flit->headFlit->generationTime);
+						static_cast<float>(sc_time_stamp().to_double() - received_flit->headFlit->generationTime));
 				globalReport.latencyNetwork.sample(
-						sc_time_stamp().to_double() - received_flit->headFlit->injectionTime);
+						static_cast<float>(sc_time_stamp().to_double() - received_flit->headFlit->injectionTime));
 			}
 		}
 
-		std::vector<Flit*>::iterator position = std::find(p->inTransmit.begin(),
-				p->inTransmit.end(), received_flit);
+		auto position = std::find(p->inTransmit.begin(), p->inTransmit.end(), received_flit->id);
 		if (position != p->inTransmit.end())
 			p->inTransmit.erase(position);
 
-		p->transmitted.push_back(received_flit);
+		p->transmitted.push_back(received_flit->id);
 		rep.reportEvent(dbid, "pe_receive_flit", std::to_string(received_flit->id));
 
 		LOG((globalReport.verbose_pe_receive_tail_flit && received_flit->type == TAIL) || globalReport.verbose_pe_receive_flit,

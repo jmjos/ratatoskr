@@ -24,23 +24,25 @@
 #include "systemc.h"
 #include <queue>
 #include <algorithm>
-
-#include "utils/Structures.h"
-#include "model/router/Router.h"
+#include "model/NetworkParticipant.h"
 
 class TrafficPool;
 
-class ProcessingElement : public NetworkParticipant, public sc_module{
+class ProcessingElement : public NetworkParticipant, public sc_module {
 public:
-	int id;
-	int dbid;
-	Node& node;
-	TrafficPool* trafficPool;
+    int id;
+    int dbid;
+    Node& node;
+    TrafficPool* trafficPool;
 
-	SC_HAS_PROCESS(ProcessingElement);
-	ProcessingElement(sc_module_name mn, Node& node, TrafficPool* tp);
-	virtual void receive() = 0;
-	virtual void execute(Task&) = 0;
-	virtual void thread() = 0;
+    SC_HAS_PROCESS(ProcessingElement);
+
+    ProcessingElement(sc_module_name mn, Node& node, TrafficPool* tp);
+
+    virtual void receive() = 0;
+
+    virtual void execute(Task&) = 0;
+
+    virtual void thread() = 0;
 };
 

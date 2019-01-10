@@ -27,10 +27,8 @@ class ClassicSignalContainer : public SignalContainer {
 public:
     sc_signal<bool> sigValid;
     sc_signal<std::vector<bool>*> sigFlowControl;
-    sc_signal<std::vector<int>*> sigTag;
     sc_signal<Flit*> sigData;
     sc_signal<int> sigVc;
-    sc_signal<bool> sigReset;
 
     ClassicSignalContainer(sc_module_name nm)
             :
@@ -40,9 +38,6 @@ public:
 
     ~ClassicSignalContainer()
     {
-        delete sigFlowControl;
-        delete sigTag;
-        delete sigData;
     };
 
 };
@@ -51,17 +46,13 @@ class ClassicPortContainer : public PortContainer {
 public:
     sc_in<bool> portValidIn;
     sc_in<std::vector<bool>*> portFlowControlIn;
-    sc_in<std::vector<int>*> portTagIn;
     sc_in<Flit*> portDataIn;
     sc_in<int> portVcIn;
-    sc_in<bool> portResetIn;
 
     sc_out<bool> portValidOut;
     sc_out<std::vector<bool>*> portFlowControlOut;
-    sc_out<std::vector<int>*> portTagOut;
     sc_out<Flit*> portDataOut;
     sc_out<int> portVcOut;
-    sc_out<bool> portResetOut;
 
     ClassicPortContainer(sc_module_name nm)
             :
@@ -71,12 +62,6 @@ public:
 
     ~ClassicPortContainer()
     {
-        delete portFlowControlIn;
-        delete portFlowControlOut;
-        delete portTagIn;
-        delete portTagOut;
-        delete portDataIn;
-        delete portDataOut;
     };
 
     void bind(SignalContainer* sIn, SignalContainer* sOut)
@@ -89,17 +74,13 @@ public:
 
         portValidIn(cscin->sigValid);
         portFlowControlIn(cscin->sigFlowControl);
-        portTagIn(cscin->sigTag);
         portDataIn(cscin->sigData);
         portVcIn(cscin->sigVc);
-        portResetIn(cscin->sigReset);
 
         portValidOut(cscout->sigValid);
         portFlowControlOut(cscout->sigFlowControl);
-        portTagOut(cscout->sigTag);
         portDataOut(cscout->sigData);
         portVcOut(cscout->sigVc);
-        portResetOut(cscout->sigReset);
 
     };
 
@@ -111,17 +92,13 @@ public:
 
         portValidIn(cscin->sigValid);
         portFlowControlIn(cscin->sigFlowControl);
-        portTagIn(cscin->sigTag);
         portDataIn(cscin->sigData);
         portVcIn(cscin->sigVc);
-        portResetIn(cscin->sigReset);
 
         portValidOut(portOpen);
         portFlowControlOut(portOpen);
-        portTagOut(portOpen);
         portDataOut(portOpen);
         portVcOut(portOpen);
-        portResetOut(portOpen);
     }
 };
 

@@ -34,12 +34,12 @@ protected:
     std::list<T>* list;
 
 public:
-    unsigned long depth; //max elements of type T
+    int depth; //max elements of type T
     Report& rep = Report::getInstance();
     int id;
     int dbid;
 
-    explicit Buffer(unsigned long depth)
+    explicit Buffer(int depth)
             :
             depth(depth)
     {
@@ -48,7 +48,7 @@ public:
         dbid = rep.registerElement("Buffer", id);
     }
 
-    virtual ~Buffer()
+    ~Buffer()
     {
         delete list;
     }
@@ -86,13 +86,13 @@ public:
 template<typename T>
 class BufferFIFO : public Buffer<T> {
 public:
-    explicit BufferFIFO(unsigned long depth)
+    explicit BufferFIFO(int depth)
             :
             Buffer<T>(depth)
     {
     }
 
-    ~BufferFIFO() = default;;
+    ~BufferFIFO() = default;
 
     bool enqueue(T a)
     {
@@ -133,7 +133,7 @@ public:
 template<typename T>
 class BufferLIFO : public Buffer<T> {
 public:
-    explicit BufferLIFO(unsigned long depth)
+    explicit BufferLIFO(int depth)
             :
             Buffer<T>(depth)
     {

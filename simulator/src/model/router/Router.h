@@ -22,28 +22,35 @@
 #pragma once
 
 #include <set>
+#include <model/container/FlitContainer.h>
 #include "systemc.h"
 #include "model/NetworkParticipant.h"
 #include "utils/Structures.h"
+#include "Buffer.h"
 
-class Router : public NetworkParticipant, public sc_module{
+class Router : public NetworkParticipant, public sc_module {
 public:
-	int id;
-	int dbid;
-	Node* node;
+    int id;
+    int dbid;
+    Node& node;
+    sc_vector<FlitPortContainer> classicPortContainer;
+    std::vector<std::vector<BufferFIFO<Flit*>*>*> buffers;
+    sc_in<bool> clk;
+    std::vector<Flit*> lastReceivedFlits;
 
+    SC_HAS_PROCESS(Router);
 
-	SC_HAS_PROCESS(Router);
-	Router(sc_module_name nm, Node* node);
+    Router(sc_module_name nm, Node& node);
 
-	~Router() override = default;
+    void initialize() override = 0;
 
-	void initialize() override = 0;
+    void bind(Connection*, SignalContainer*, SignalContainer*) override = 0;
 
-	void bind(Connection*, SignalContainer*, SignalContainer*) override = 0;
+    virtual void thread() = 0;
 
-	virtual void thread() = 0;
-	virtual void receive() = 0;
-	virtual void updateUsageStats() = 0;
+    virtual void receive() = 0;
 
+    virtual void updateUsageStats() = 0;
+
+    virtual void route() = 0;
 };

@@ -36,10 +36,7 @@ public:
     {
     };
 
-    ~PacketSignalContainer() override
-    {
-        delete sigData;
-    }
+    ~PacketSignalContainer() override = default;
 
 };
 
@@ -59,11 +56,7 @@ public:
     {
     }
 
-    ~PacketPortContainer() override
-    {
-        delete portDataIn;
-        delete portDataOut;
-    };
+    ~PacketPortContainer() override = default;
 
     void bind(SignalContainer* sIn, SignalContainer* sOut) override
     {

@@ -41,6 +41,5 @@ public:
 
     virtual void bind(Connection*, SignalContainer*, SignalContainer*) = 0;
 
-    virtual ~NetworkParticipant() = 0;
+    ~NetworkParticipant() = default;
 };
-

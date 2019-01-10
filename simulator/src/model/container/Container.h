@@ -36,8 +36,7 @@ class PortContainer : public sc_module {
 public:
     explicit PortContainer(const sc_module_name& nm) { };
 
-    ~PortContainer() override = 0;
+    ~PortContainer() override = default;
 
     virtual void bind(SignalContainer*, SignalContainer*) = 0;
 };
-

@@ -219,7 +219,8 @@ void GlobalResources::readNodeTypes(const pugi::xml_node& noc_node)
         std::string selection = node.child("selection").attribute("value").as_string();
         int clkDelay = node.child("clockDelay").attribute("value").as_int();
         std::string arbiterType = node.child("arbiterType").attribute("value").as_string();
-        nodeTypes.emplace_back(typeID, model, routing, selection, clkDelay, arbiterType);
+        auto nodeType = std::make_shared<NodeType>(typeID, model, routing, selection, clkDelay, arbiterType);
+        nodeTypes.emplace_back(nodeType);
     }
 }
 

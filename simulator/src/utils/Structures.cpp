@@ -207,6 +207,16 @@ DataDestination::DataDestination(dataDestID_t id, dataTypeID_t dataType, taskID_
 {
 }
 
+bool DataDestination::operator==(const DataDestination& dt) const
+{
+    return this->id == dt.id;
+}
+
+bool DataDestination::operator<(const DataDestination& dt) const
+{
+    return this->id < dt.id;
+}
+
 DataSendPossibility::DataSendPossibility(possID_t id, float probability,
         const std::vector<DataDestination>& dataDestinations)
         :
@@ -239,6 +249,16 @@ Task::Task(taskID_t id, nodeID_t node, const std::vector<DataRequirement>& requi
         minRepeat(-1),
         maxRepeat(-1)
 {
+}
+
+bool Task::operator==(const Task& t) const
+{
+    return this->id == t.id;
+}
+
+bool Task::operator<(const Task& t) const
+{
+    return this->id < t.id;
 }
 
 SyntheticPhase::SyntheticPhase(synthID_t id, const std::string& name, const std::string& distribution,

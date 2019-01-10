@@ -318,7 +318,13 @@ struct DataDestination {
     int minDelay;                   //delay between fire and first generated packet
     int maxDelay;
 
+    DataDestination() = default;
+
     DataDestination(dataDestID_t id, dataTypeID_t dataType, taskID_t destinationTask, int minInterval, int maxInterval);
+
+    bool operator==(const DataDestination& dt) const;
+
+    bool operator<(const DataDestination& dt) const;
 };
 
 struct DataSendPossibility {
@@ -342,10 +348,16 @@ struct Task {
     int minRepeat;      // maximal task execution count
     int maxRepeat;      // task terminates at whatever comes first, maxRepeates or duration
 
+    Task() = default;
+
     Task(taskID_t id, nodeID_t nodeID);
 
     Task(taskID_t id, nodeID_t nodeID, const std::vector<DataRequirement>& requirements,
             const std::vector<DataSendPossibility>& possibilities);
+
+    bool operator==(const Task& t) const;
+
+    bool operator<(const Task& t) const;
 };
 
 struct SyntheticPhase {
