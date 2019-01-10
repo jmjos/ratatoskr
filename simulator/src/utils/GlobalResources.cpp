@@ -275,7 +275,7 @@ void GlobalResources::fillDirInfoOfNodeConn()
                 }
             };
             connID_t matching_conn = find_conn();
-            DIR::TYPE dir;
+            DIR::TYPE dir{};
             if (nullValues==2) { //one axis differs
                 if (offset.x>0 && (node.getConPosOfDir(DIR::West)==-1 || offset.x<distance.at(DIR::West).x)) {
                     dir = DIR::West;
@@ -319,13 +319,14 @@ void GlobalResources::readConnections(const pugi::xml_node& noc_node)
         for (pugi::xml_node xml_port : xml_con.child("ports").children("port")) {
             nodeID_t connectedNodeID = xml_port.child("node").attribute("value").as_int();
             nodesOfConnection.push_back(connectedNodeID);
-            vcsCount.push_back(xml_port.child("vcCount").attribute("value").as_int());
+            int vcCount = xml_port.child("vcCount").attribute("value").as_int();
+            vcsCount.push_back(vcCount);
             buffersDepth.push_back(xml_port.child("bufferDepth").attribute("value").as_int());
 
             if (bufferDepthType=="perVC") {
                 std::string str_vec = xml_port.child("buffersDepths").attribute("value").as_string();
                 std::vector<std::string> strings = string_split(str_vec, ",");
-                if (strings.size()!=vcsCount.size()) {
+                if (strings.size()!=vcCount) {
                     FATAL("The buffersDepths size is not equal to vcCount!");
                 }
                 std::vector<int> bd = strs_to_ints(strings);

@@ -48,6 +48,11 @@ bool Channel::operator<(const Channel& c) const
     return false;
 }
 
+bool Channel::operator==(const Channel& a) const
+{
+    return this->conPos == a.conPos && this->vc == a.vc;
+}
+
 NodeType::NodeType(nodeTypeID_t id, const std::string& model, const std::string& routing,
         const std::string& selection, int clk, const std::string& arbiterType)
         :

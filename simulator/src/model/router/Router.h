@@ -23,6 +23,7 @@
 
 #include <set>
 #include <model/container/FlitContainer.h>
+#include <model/router/routings/BaseRouting.h>
 #include "systemc.h"
 #include "model/NetworkParticipant.h"
 #include "utils/Structures.h"
@@ -37,6 +38,8 @@ public:
     std::vector<std::vector<BufferFIFO<Flit*>*>*> buffers;
     sc_in<bool> clk;
     std::vector<Flit*> lastReceivedFlits;
+    std::map<Channel, Channel> occupyTable;
+    std::unique_ptr<BaseRouting> routing;
 
     SC_HAS_PROCESS(Router);
 

@@ -38,7 +38,7 @@
 
 #include "container/Container.h"
 #include "router/Router.h"
-#include "router/NewRouterVC.h"
+#include "model/router/RouterVC.h"
 
 #include "link/Link.h"
 #include "networkInterface/NetworkInterfaceVC.h"

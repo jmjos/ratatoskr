@@ -62,7 +62,7 @@ void NoC::createNetworkParticipants(const std::vector<std::unique_ptr<sc_clock>>
     for (Node& n : globalResources.nodes) {
         if (n.type->model=="RouterVC") {
             std::string name = "router_"+std::to_string(n.id);
-            NewRouterVC* r = new NewRouterVC(name.c_str(), n);
+            RouterVC* r = new RouterVC(name.c_str(), n);
             r->clk(*clocks.at(n.type->id));
             networkParticipants.at(n.id) = dynamic_cast<NetworkParticipant*>(r);
         }

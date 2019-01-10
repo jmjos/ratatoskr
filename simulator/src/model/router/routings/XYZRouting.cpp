@@ -19,26 +19,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-#include <model/router/routings/XYZRouting.h>
-#include <model/router/routings/HeteroXYZRouting.h>
-#include "Router.h"
+#include "XYZRouting.h"
 
-Router::Router(sc_module_name nm, Node& node)
-        :
-        node(node)
+int XYZRouting::route(int src_node_id, int dst_node_id)
 {
-    int numOfRouters = globalResources.nodes.size()/2;
-    this->id = node.id%(numOfRouters);
-    this->dbid = rep.registerElement("Router", this->id);
+    Node src_node = globalResources.nodes.at(src_node_id);
+    Vec3D<float> src_pos = src_node.pos;
+    Vec3D<float> dst_pos = globalResources.nodes.at(dst_node_id).pos;
+    int con_pos = -1;
 
-    rep.reportAttribute(dbid, "pos_x", std::to_string(node.pos.x));
-    rep.reportAttribute(dbid, "pos_y", std::to_string(node.pos.y));
-    rep.reportAttribute(dbid, "pos_z", std::to_string(node.pos.z));
-    rep.reportAttribute(dbid, "clock", std::to_string(node.type->clockDelay));
-    rep.reportAttribute(dbid, "type", node.type->model);
+    if (dst_pos==src_pos) {
+        con_pos = src_node.getConPosOfDir(DIR::Local);
+    }
+    else if (dst_pos.x<src_pos.x) {
+        con_pos = src_node.getConPosOfDir(DIR::West);
+    }
+    else if (dst_pos.x>src_pos.x) {
+        con_pos = src_node.getConPosOfDir(DIR::East);
+    }
+    else if (dst_pos.y<src_pos.y) {
+        con_pos = src_node.getConPosOfDir(DIR::South);
+    }
+    else if (dst_pos.y>src_pos.y) {
+        con_pos = src_node.getConPosOfDir(DIR::North);
+    }
+    else if (dst_pos.z<src_pos.z) {
+        con_pos = src_node.getConPosOfDir(DIR::Down);
+    }
+    else if (dst_pos.z>src_pos.z) {
+        con_pos = src_node.getConPosOfDir(DIR::Up);
+    }
 
-    if(node.type->routing=="XYZ")
-        routing = std::make_unique<XYZRouting>();
-    else if(node.type->routing=="HeteroXYZ")
-        routing = std::make_unique<HeteroXYZRouting>();
+    return con_pos;
 }
+

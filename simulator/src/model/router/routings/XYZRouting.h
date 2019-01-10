@@ -19,26 +19,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  ******************************************************************************/
-#include <model/router/routings/XYZRouting.h>
-#include <model/router/routings/HeteroXYZRouting.h>
-#include "Router.h"
+#pragma once
 
-Router::Router(sc_module_name nm, Node& node)
-        :
-        node(node)
-{
-    int numOfRouters = globalResources.nodes.size()/2;
-    this->id = node.id%(numOfRouters);
-    this->dbid = rep.registerElement("Router", this->id);
+#include "BaseRouting.h"
 
-    rep.reportAttribute(dbid, "pos_x", std::to_string(node.pos.x));
-    rep.reportAttribute(dbid, "pos_y", std::to_string(node.pos.y));
-    rep.reportAttribute(dbid, "pos_z", std::to_string(node.pos.z));
-    rep.reportAttribute(dbid, "clock", std::to_string(node.type->clockDelay));
-    rep.reportAttribute(dbid, "type", node.type->model);
+class XYZRouting : public BaseRouting {
+public:
+    XYZRouting() = default;
 
-    if(node.type->routing=="XYZ")
-        routing = std::make_unique<XYZRouting>();
-    else if(node.type->routing=="HeteroXYZ")
-        routing = std::make_unique<HeteroXYZRouting>();
-}
+    ~XYZRouting() = default;
+
+    int route(int src_node_id, int dst_node_id) override;
+};
