@@ -32,7 +32,7 @@ There are several ways to compile the project. If you'd just like to use the pro
 - SystemC 2.3.3 www.accellera.org/images/downloads/standards/systemc/systemc-2.3.3.gz
 - cmake assumes an installation of systemc to /usr/local/systemc-2.3.3 If not the case, please modify simulator/CMakeLists.txt
 
-### Building with build script
+#### Building with build script
 We provide a build script, which relys on cmake. It is provided run it via:
 ```
 > cd simulator
@@ -40,7 +40,7 @@ We provide a build script, which relys on cmake. It is provided run it via:
 ```
 
 
-### Building with cmake
+#### Building with cmake
 Go into simulator folder. Simply type
 ```
 > cd simulator
@@ -62,7 +62,14 @@ To use a subfolder and multi-thread build:
 > cp sim ..
 ```
 
-### Building with Eclipse for C/C++
+#### Building with CLion
+
+Works out-of-the-box using "Open Existing Project" and then opening the CMakeLists.txt in the prject folder. Enjoy.
+
+#### Building with Eclipse
+
+Open a workspace at the location "workspace"-folder. Then, create an new C++ project with the same name as the subfolder of the project you want to work on (i.e. a3dnoc-simulator). After applying the settings, you should be ready to go! 
+
 Project Settings: 
 
 ```
@@ -71,10 +78,6 @@ Project Settings:
 > Includes: -I /usr/local/systemc/include   -I ./src
 > Libraries: -l systemc, -L /usr/local/systemc/lib-linux64  
 ```
-
-### Using Eclipse to build
-
-Open a workspace at the location "workspace"-folder. Then, create an new C++ project with the same name as the subfolder of the project you want to work on (i.e. a3dnoc-simulator). After applying the settings, you should be ready to go! 
 
 ### Running the Software
 
