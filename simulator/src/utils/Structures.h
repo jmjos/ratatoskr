@@ -204,6 +204,10 @@ struct Vec3D {
         output << "(" << v.x << ", " << v.y << ", " << v.z << ")";
         return output;
     }
+
+    bool isZero() const{
+        return x==0 && y==0 && z==0;
+    }
 };
 
 struct NodeType {
@@ -273,9 +277,7 @@ struct Connection {
     int width;
     int depth;
 
-    std::vector<std::vector<int>> vcBufferUtilization; // for the lazy folks ...
     std::vector<int> bufferUtilization;
-    std::vector<std::vector<float>> vcBufferCongestion; // buffer utilization 0-1
     std::vector<float> bufferCongestion;
     //std::map<Node*, int> nodePos; // get position of node inside the above vectors TODO restructure
 

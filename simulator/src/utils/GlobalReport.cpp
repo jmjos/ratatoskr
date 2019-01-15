@@ -87,7 +87,7 @@ void GlobalReport::reportComplete(const std::string& filename)
     reportPerformanceCSV(csvfile);
     csvfile.close();
 
-    reportAllRoutersUsageHist();
+    //TODO reportAllRoutersUsageHist();
 }
 
 void GlobalReport::reportPerformance(ostream& stream)

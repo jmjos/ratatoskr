@@ -100,7 +100,7 @@ DIR::TYPE Node::getDirOfCon(connID_t connID) const
 void Node::setDirOfConn(connID_t connID, DIR::TYPE dir)
 {
     int pos = getConnPosition(connID);
-    dirOfConPos.at(pos) = dir;
+    dirOfConPos.insert({pos, dir});
 }
 
 int Node::getConPosOfDir(DIR::TYPE dir) const
@@ -114,7 +114,7 @@ int Node::getConPosOfDir(DIR::TYPE dir) const
 void Node::setConPosOfDir(DIR::TYPE dir, connID_t connID)
 {
     int pos = getConnPosition(connID);
-    conPosOfDir.at(dir) = pos;
+    conPosOfDir.insert({dir, pos});
 }
 
 DIR::TYPE Node::getDirOfConPos(int conPos) const

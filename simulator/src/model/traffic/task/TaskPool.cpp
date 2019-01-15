@@ -20,11 +20,16 @@
  * SOFTWARE.
  ******************************************************************************/
 #include <model/traffic/task/TaskPool.h>
+#include "TaskPool.h"
 
 TaskPool::TaskPool()
 {
     cout << endl;
     cout << "Task Testrun" << endl;
+}
+
+TaskPool::TaskPool(int numOfElements)
+{
 }
 
 void TaskPool::start()
@@ -37,4 +42,3 @@ void TaskPool::start()
 void TaskPool::clear(Task*)
 {
 }
-

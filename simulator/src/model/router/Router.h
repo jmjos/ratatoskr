@@ -45,6 +45,8 @@ public:
 
     Router(sc_module_name nm, Node& node);
 
+    ~Router();
+
     void initialize() override = 0;
 
     void bind(Connection*, SignalContainer*, SignalContainer*) override = 0;

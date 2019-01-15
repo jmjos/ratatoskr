@@ -21,7 +21,6 @@
  ******************************************************************************/
 #include "TrafficPool.h"
 #include "model/networkInterface/NetworkInterface.h"
-
 TrafficPool::TrafficPool()
 {
     this->dbid = rep.registerElement("TrafficPool", 0);
@@ -31,3 +30,6 @@ TrafficPool::~TrafficPool()
 {
     processingElements.clear();  // The actual objects were deleted in the destructor of NoC class.
 }
+
+
+

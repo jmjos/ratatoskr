@@ -28,8 +28,6 @@ NetworkInterfaceVC::NetworkInterfaceVC(sc_module_name nm, Node& node) :
 		this->dbid = rep.registerElement("ProcessingElement", this->id);
 		this->node = node;
 		this->flowControlOut = new std::vector<bool>(1, true);
-		this->tagOut = new std::vector<int>(1, 0);
-		this->emptyOut = new std::vector<bool>(1, true);
 
 		this->flitPortContainer = new FlitPortContainer(
 				("NI_FLIT_CONTAINER" + std::to_string(this->id)).c_str());
@@ -39,6 +37,14 @@ NetworkInterfaceVC::NetworkInterfaceVC(sc_module_name nm, Node& node) :
 		std::cout << e.what() << std::endl;
 	}
 
+	SC_METHOD(thread);
+	sensitive << clk.pos() << clk.neg();
+
+	SC_METHOD(receiveFlit);
+	sensitive << flitPortContainer->portValidIn.pos();
+
+	SC_METHOD(receivePacket);
+	sensitive << packetPortContainer->portValidIn.pos();
 }
 
 void NetworkInterfaceVC::receivePacket() {
@@ -77,16 +83,6 @@ void NetworkInterfaceVC::initialize() {
 
 	flitPortContainer->portValidOut.write(false);
 	flitPortContainer->portFlowControlOut.write(flowControlOut);
-	flitPortContainer->portEmptyOut.write(emptyOut);
-
-	SC_METHOD(thread);
-	sensitive << clk.pos() << clk.neg();
-
-	SC_METHOD(receiveFlit);
-	sensitive << flitPortContainer->portValidIn.pos();
-
-	SC_METHOD(receivePacket);
-	sensitive << packetPortContainer->portValidIn.pos();
 }
 
 void NetworkInterfaceVC::bind(Connection* con, SignalContainer* sigContIn,

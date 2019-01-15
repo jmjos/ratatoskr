@@ -26,7 +26,8 @@ NoC::NoC(sc_module_name nm)
 {
     dbid = rep.registerElement("NoC", 0);
     networkParticipants.resize(globalResources.nodes.size());
-    signalContainers.resize(globalResources.connections.size()*2);
+    packetSignalContainers.resize(globalResources.nodes.size());
+    flitSignalContainers.resize(globalResources.connections.size() * 2);
     links.resize(globalResources.connections.size()*2);
 
     createTrafficPool();
@@ -46,6 +47,7 @@ NoC::NoC(sc_module_name nm)
 
 void NoC::createTrafficPool()
 {
+    unsigned long numOfPEs = globalResources.nodes.size()/2;
     if (globalResources.benchmark=="task") {
         tp = std::make_unique<TaskPool>();
     }
@@ -55,6 +57,7 @@ void NoC::createTrafficPool()
     else {
         FATAL("Please specify correct benchmark type");
     }
+    tp->processingElements.resize(numOfPEs);
 }
 
 void NoC::createNetworkParticipants(const std::vector<std::unique_ptr<sc_clock>>& clocks)
@@ -83,46 +86,46 @@ void NoC::createNetworkParticipants(const std::vector<std::unique_ptr<sc_clock>>
             ni->bind(nullptr, sig1.get(), sig2.get());
             pe->bind(nullptr, sig2.get(), sig1.get());
             networkParticipants.push_back(dynamic_cast<NetworkParticipant*>(pe));
-            signalContainers.push_back(move(sig1));
-            signalContainers.push_back(move(sig2));
-            tp->processingElements.at(n.id%tp->processingElements.size()) = pe;
+            packetSignalContainers.push_back(move(sig1));
+            packetSignalContainers.push_back(move(sig2));
+            tp->processingElements.at(n.id%tp->processingElements.size()) =  pe;
         }
     }
 }
 
 void NoC::createSigContainers()
 {
-    for (int i = 0; i<signalContainers.size(); i++) {
-        signalContainers.at(i) = std::make_unique<FlitSignalContainer>(
+    for (int i = 0; i<flitSignalContainers.size(); i++) {
+        flitSignalContainers.at(i) = std::make_unique<FlitSignalContainer>(
                 ("flitSigCont_"+std::__cxx11::to_string(i)).c_str());
     }
 }
 
 void NoC::createLinks(const std::vector<std::unique_ptr<sc_clock>>& clocks)
 {
-    for (int i = 0; i<globalResources.connections.size(); i += 2) {
-        Connection& c = globalResources.connections.at(i);
-
+    int link_id = 0;
+    for (auto& c : globalResources.connections) {
         if (c.nodes.size()==2) { //might extend to bus architecture
-            links.at(i) = std::make_unique<Link>(
-                    ("link_"+std::to_string(i)+"_Conn_"+std::to_string(c.id)).c_str(), c, i);
-            links.at(i+1) = std::make_unique<Link>(
-                    ("link_"+std::to_string(i+1)+"_Conn_"+std::to_string(c.id)).c_str(), c,
-                    i+1);
+            links.at(link_id) = std::make_unique<Link>(
+                    ("link_"+std::to_string(link_id)+"_Conn_"+std::to_string(c.id)).c_str(), c, link_id);
+            links.at(link_id+1) = std::make_unique<Link>(
+                    ("link_"+std::to_string(link_id+1)+"_Conn_"+std::to_string(c.id)).c_str(), c,
+                    link_id+1);
 
             Node& node1 = globalResources.nodes.at(c.nodes.at(0));
             Node& node2 = globalResources.nodes.at(c.nodes.at(1));
 
             std::unique_ptr<Connection> c_ptr = std::make_unique<Connection>(c);
-            networkParticipants.at(node1.id)->bind(c_ptr.get(), signalContainers.at(i).get(),
-                    signalContainers.at(i+1).get());
-            networkParticipants.at(node2.id)->bind(c_ptr.get(), signalContainers.at(i+1).get(),
-                    signalContainers.at(i).get());
+            networkParticipants.at(node1.id)->bind(c_ptr.get(), flitSignalContainers.at(link_id).get(),
+                    flitSignalContainers.at(link_id+1).get());
+            networkParticipants.at(node2.id)->bind(c_ptr.get(), flitSignalContainers.at(link_id+1).get(),
+                    flitSignalContainers.at(link_id).get());
 
-            links.at(i)->classicPortContainer->bindOpen(signalContainers.at(i).get());
-            links.at(i+1)->classicPortContainer->bindOpen(signalContainers.at(i+1).get());
-            links.at(i)->clk(*clocks.at(node1.type->id));
-            links.at(i+1)->clk(*clocks.at(node2.type->id));
+            links.at(link_id)->classicPortContainer->bindOpen(flitSignalContainers.at(link_id).get());
+            links.at(link_id+1)->classicPortContainer->bindOpen(flitSignalContainers.at(link_id+1).get());
+            links.at(link_id)->clk(*clocks.at(node1.type->id));
+            links.at(link_id+1)->clk(*clocks.at(node2.type->id));
+            link_id +=2;
         }
         else {
             FATAL("Unsupported number of endpoints in connection " << c.id);

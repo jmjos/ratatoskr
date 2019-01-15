@@ -258,14 +258,10 @@ void GlobalResources::fillDirInfoOfNodeConn()
 {
     for (Node& node : nodes) {
         //check for common directions
-        std::vector<Vec3D<float>> distance(DIR::size, Vec3D<float>(2, 2, 2));
+        Vec3D<float> distance{};
         for (int connectedNodeID : node.connectedNodes) {
             Node connectedNode = nodes.at(connectedNodeID);
-            Vec3D<float> offset = node.pos-connectedNode.pos;
-            int nullValues;
-            nullValues = offset.x==1.0 ? 0 : 1;
-            nullValues += offset.y==1.0 ? 0 : 1;
-            nullValues += offset.z==1.0 ? 0 : 1;
+            distance = node.pos-connectedNode.pos;
             auto find_conn = [&node, &connectedNode]() -> connID_t {
                 for (auto& conn1: node.connections) {
                     for (auto& conn2: connectedNode.connections) {
@@ -276,30 +272,28 @@ void GlobalResources::fillDirInfoOfNodeConn()
             };
             connID_t matching_conn = find_conn();
             DIR::TYPE dir{};
-            if (nullValues==2) { //one axis differs
-                if (offset.x>0 && (node.getConPosOfDir(DIR::West)==-1 || offset.x<distance.at(DIR::West).x)) {
+            if (distance.isZero()) { //no axis differs
+                dir = DIR::Local;
+            }
+            else { //one axis differs
+                if (distance.x>0) {
                     dir = DIR::West;
                 }
-                else if (offset.x<0 && (node.getConPosOfDir(DIR::East)==-1 || offset.x>distance.at(DIR::East).x)) {
+                else if (distance.x<0) {
                     dir = DIR::East;
                 }
-                else if (offset.y<0 && (node.getConPosOfDir(DIR::North)==-1 || offset.y>distance.at(DIR::North).y)) {
+                else if (distance.y<0) {
                     dir = DIR::North;
                 }
-                else if (offset.y>0 && (node.getConPosOfDir(DIR::South)==-1 || offset.y<distance.at(DIR::South).y)) {
+                else if (distance.y>0) {
                     dir = DIR::South;
                 }
-                else if (offset.z<0 && (node.getConPosOfDir(DIR::Up)==-1 || offset.z>distance.at(DIR::Up).z)) {
+                else if (distance.z<0) {
                     dir = DIR::Up;
                 }
-                else if (offset.z>0 && (node.getConPosOfDir(DIR::Down)==-1 || offset.z<distance.at(DIR::Down).z)) {
+                else if (distance.z>0) {
                     dir = DIR::Down;
                 }
-                distance.at(dir) = offset;
-            }
-            else if (nullValues==3) { //no axis differs
-                if (!node.getConPosOfDir(DIR::Local))
-                    dir = DIR::Local;
             }
             node.setConPosOfDir(dir, matching_conn);
             node.setDirOfConn(matching_conn, dir);
@@ -342,18 +336,15 @@ void GlobalResources::readConnections(const pugi::xml_node& noc_node)
                 depth);
 
         int nodesSize = nodesOfConnection.size();
-        con.vcBufferUtilization.resize(nodesSize);
         con.bufferUtilization.resize(nodesSize);
-        con.vcBufferCongestion.resize(nodesSize);
         con.bufferCongestion.resize(nodesSize);
         for (nodeID_t nID : con.nodes) {
-            con.vcBufferUtilization.at(nID).resize(con.vcsCount.at(nID), 0);
-            con.vcBufferCongestion.at(nID).resize(con.vcsCount.at(nID), 0);
             // Now that we know the nodes of each connection, we should reflect this info to the nodes themselves.
             for (nodeID_t dstNodeID: con.nodes) {
                 if (nID!=dstNodeID)
                     nodes.at(nID).connectedNodes.push_back(dstNodeID);
             }
+            nodes.at(nID).connections.push_back(con.id);
         }
 
         connections.push_back(con);

@@ -50,9 +50,7 @@ RouterVC::RouterVC(sc_module_name nm, Node& node)
             rep.reportAttribute(buf->dbid, "dir", std::to_string(conPos));
             rep.reportAttribute(buf->dbid, "vc", std::to_string(vc));
         }
-        classicPortContainer.at(conPos).portValidOut.write(false);
-        classicPortContainer.at(conPos).portFlowControlOut.write(flowControlOut.at(conPos));
-        sensitive << classicPortContainer.at(conPos).portValidIn.pos();
+
     }
     lastReceivedFlits.resize(conCount);
 
@@ -63,16 +61,9 @@ RouterVC::RouterVC(sc_module_name nm, Node& node)
     sensitive << clk.pos();
 
     SC_METHOD(receive);
-}
-
-RouterVC::~RouterVC()
-{
-    for (auto& dir_buf:buffers) {
-        for (auto& vc_buf:*dir_buf)
-            vc_buf->flush();
-        dir_buf->clear();
+    for (int conPos = 0; conPos<node.connections.size(); conPos++) {
+        sensitive << classicPortContainer.at(conPos).portValidIn.pos();
     }
-    buffers.clear();
 }
 
 void RouterVC::bind(Connection* con, SignalContainer* sigContIn, SignalContainer* sigContOut)
@@ -141,4 +132,16 @@ void RouterVC::receive()
 
 void RouterVC::initialize()
 {
+    for (int conPos = 0; conPos<node.connections.size(); conPos++) {
+        classicPortContainer.at(conPos).portValidOut.write(false);
+        classicPortContainer.at(conPos).portFlowControlOut.write(flowControlOut.at(conPos));
+
+    }
+}
+
+RouterVC::~RouterVC()
+{
+    for(auto& fc:flowControlOut)
+        delete fc;
+    flowControlOut.clear();
 }

@@ -63,7 +63,9 @@ private:
     int dbid;
     std::unique_ptr<TrafficPool> tp;
     std::vector<NetworkParticipant*> networkParticipants;
-    std::vector<std::unique_ptr<SignalContainer>> signalContainers;
+    //std::vector<std::unique_ptr<SignalContainer>> signalContainers;
+    std::vector<std::unique_ptr<FlitSignalContainer>> flitSignalContainers;
+    std::vector<std::unique_ptr<PacketSignalContainer>> packetSignalContainers;
     std::vector<std::unique_ptr<Link>> links;
 
     void createTrafficPool();

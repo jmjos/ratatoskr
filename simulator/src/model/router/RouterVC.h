@@ -33,7 +33,7 @@ public:
 
     RouterVC(sc_module_name nm, Node& node);
 
-    ~RouterVC() override;
+    ~RouterVC();
 
     void initialize() override;
 

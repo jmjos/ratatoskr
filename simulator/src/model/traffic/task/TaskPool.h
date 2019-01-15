@@ -34,6 +34,8 @@ class TaskPool : public TrafficPool {
 public:
     TaskPool();
 
+    TaskPool(int numOfElements);
+
     ~TaskPool() = default;
 
     void clear(Task*) override;

@@ -39,8 +39,6 @@ public:
     std::queue<Packet*> packet_recv_queue;
 
     std::vector<bool>* flowControlOut;
-    std::vector<int>* tagOut;
-    std::vector<bool>* emptyOut;
     sc_in<bool> clk;
     FlitPortContainer* flitPortContainer;
     PacketPortContainer* packetPortContainer;

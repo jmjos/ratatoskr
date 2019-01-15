@@ -27,17 +27,20 @@ ProcessingElementVC::ProcessingElementVC(sc_module_name mn, Node& node, TrafficP
         ProcessingElement(mn, node, tp)
 {
     this->packetPortContainer = new PacketPortContainer(("NI_PACKET_CONTAINER"+std::to_string(this->id)).c_str());
+
+    SC_THREAD(thread);
+    SC_METHOD(receive);
+    sensitive << packetPortContainer->portValidIn.pos();
 }
 
 void ProcessingElementVC::initialize()
 {
+
     packetPortContainer->portValidOut.write(false);
     packetPortContainer->portFlowControlOut.write(true);
     // sc_spawn(sc_bind(&SyntheticPool::sendThread, this, con.first,
     // con.second,initDelay,sp.waveCount,sp.waveDelay,sp.pkgPerWave, sp.name));
-    SC_THREAD(thread);
-    SC_METHOD(receive);
-    sensitive << packetPortContainer->portValidIn.pos();
+
 }
 
 void ProcessingElementVC::thread()

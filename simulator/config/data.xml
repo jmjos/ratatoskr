@@ -22,7 +22,7 @@
 			</requires>
 	
 			<generates>
-				<possibility id = "0">
+				<!--<possibility id = "0">
 					<probability value = "0.7" />				
 					<destinations>
 						<destination id = "0">
@@ -53,7 +53,7 @@
 							<task value = "3" />
 						</destination>
 					</destinations>
-				</possibility>
+				</possibility>-->
 			</generates>
 		</task>
 		

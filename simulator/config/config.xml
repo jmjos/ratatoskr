@@ -12,12 +12,12 @@
 	If not, see <http://www.gnu.org/licenses/>. -->
 <configuration>
   <general>
-    <simulationTime value="3000000" />
+    <simulationTime value="10000" />
     <outputToFile value="true">report</outputToFile>
   </general>
   <noc>
-    <nocFile>config/network.xml</nocFile>
-    <flitsPerPacket value="32" />
+    <nocFile>config/working.xml</nocFile>
+    <flitsPerPacket value="10" />
     <Vdd value="5" />
   </noc>
   <application>
@@ -51,8 +51,8 @@
 
     </synthetic>
  
-      <dataFile>config/data1.xml</dataFile>
-      <mapFile>config/map1.xml</mapFile>
+      <dataFile>config/data.xml</dataFile>
+      <mapFile>config/map.xml</mapFile>
 
       <simulationFile>traffic/pipelinePerformance_2D/PipelineResetTB.xml</simulationFile>
       <mappingFile>traffic/pipelinePerformance_2D/PipelineResetTBMapping.xml</mappingFile>
@@ -65,9 +65,9 @@
       <processingElements>
         <function_calls value="false" />
         <send_flit value="false" />
-        <send_head_flit value="false" />
+        <send_head_flit value="true" />
         <receive_flit value="false" />
-        <receive_tail_flit value="false" />
+        <receive_tail_flit value="true" />
         <throttle value="false" />
         <reset value="true" />
       </processingElements>

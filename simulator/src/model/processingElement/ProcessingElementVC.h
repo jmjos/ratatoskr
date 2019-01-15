@@ -56,7 +56,7 @@ public:
 
     ProcessingElementVC(sc_module_name mn, Node& node, TrafficPool* tp);
 
-    ~ProcessingElementVC() override;
+    ~ProcessingElementVC();
 
     void initialize() override;
 

@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <network-on-chip xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<bufferDepthType value="single" /> <!-- single, perVC-->
 	<nodeTypes>
 		<nodeType id="0">
-			<model value="RouterVC"/>
-			<routing value="DPR"/>
-			<selection value="EDXYZ"/>
-			<clockSpeed value="1"/>
+			<model value="RouterVC" />
+			<routing value="XYZ" />
+			<!--<selection value="RoundRobin" />-->
+			<selection value="1stFreeVC" />
+			<clockDelay value="1" />
+			<arbiterType value="fair" /> <!-- rrVC, fair -->
 		</nodeType>
 		<nodeType id="1">
-			<model value="ProcessingElement"/>
-			<clockSpeed value="2"/>
+			<model value="ProcessingElement" />
+			<clockDelay value="1" />
 		</nodeType>
 	</nodeTypes>
 

@@ -42,3 +42,14 @@ Router::Router(sc_module_name nm, Node& node)
     else if(node.type->routing=="HeteroXYZ")
         routing = std::make_unique<HeteroXYZRouting>();
 }
+
+Router::~Router()
+{
+    for (auto& dir_buf:buffers) {
+        for (auto& vc_buf:*dir_buf)
+            vc_buf->flush();
+        dir_buf->clear();
+    }
+    buffers.clear();
+    lastReceivedFlits.clear();
+}
