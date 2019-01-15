@@ -122,7 +122,7 @@ To run the uniform random simulation please go to <a href="https://github.com/jm
 
 ## Documentation
 
-Take a look at the [documentation table of contents](doc/TOC.md).
+Take a look at the [documentation table of contents](docs/TOC.md).
 This documentation is bundled with the project which makes it 
 available for offline reading and provides a useful starting point for
 any documentation you want to write about your project.
