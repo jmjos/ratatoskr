@@ -97,14 +97,14 @@ you'll link the systemc Libraries.
 
 
 
-## Usage
+## Configuring the simulator
 The simulator takes three input files:
 - config/config.xml for basic configuation. Warning: The path is static linked in the source code, so keep folder structure
 - a XML file describing the traffic and a mapping file, mapping tasks to processing elements. Examples can be found in simulator/traffic
 
 Run the simulator using ./sim.
 
-Details on the configuration can be found in the wiki. 
+Details on the configuration can be found in the documentation. 
 
 ## Model
 
@@ -119,6 +119,13 @@ The router model is:
 - supports synchronous and asynchronous clock speeds of layers
 
 To run the uniform random simulation please go to <a href="https://github.com/jmjos/ratatoskr/tree/master/scripts/urand">README.md</a>
+
+## Documentation
+
+Take a look at the [documentation table of contents](doc/TOC.md).
+This documentation is bundled with the project which makes it 
+available for offline reading and provides a useful starting point for
+any documentation you want to write about your project.
 
 ## Contributing
 If you wish to contribute, please contact me at my univeristy email address jan.joseph@ovgu.de. We offer student development jobs for students from Magdeburg.
