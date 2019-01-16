@@ -4,6 +4,10 @@ language: cpp
 
 compiler: gcc
 
+before_install:
+        - sudo apt install libpugixml-dev
+        - sudo apt install ibboost-all-dev
+
 before_script:
         - mkdir systemc
         - wget https://accellera.org/images/downloads/standards/systemc/systemc-2.3.1a.tar.gz
