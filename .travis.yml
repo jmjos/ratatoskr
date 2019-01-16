@@ -5,8 +5,8 @@ language: cpp
 compiler: gcc
 
 before_install:
-        - sudo apt install libpugixml-dev
-        - sudo apt install ibboost-all-dev
+        - sudo apt install -y libpugixml-dev
+        - sudo apt install -y libboost-all-dev
 
 before_script:
         - mkdir systemc
