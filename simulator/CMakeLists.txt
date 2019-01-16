@@ -1,7 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 PROJECT(sim)
 
-SET(CMAKE_PREFIX_PATH /usr/local/systemc-2.3.1)
+SET(CMAKE_PREFIX_PATH /usr/local/systemc-2.3.3)
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++11 -O3")
 
