@@ -1,0 +1,25 @@
+dist: xenial
+
+language: cpp
+
+compiler: gcc
+
+before_script:
+        - mkdir systemc
+        - wget https://accellera.org/images/downloads/standards/systemc/systemc-2.3.1a.tar.gz
+        - tar -xf systemc-2.3.1a.tar.gz
+        - cd systemc-2.3.1a
+        - mkdir objdir
+        - cd objdir
+        - ../configure --prefix=/usr/local/systemc-2.3.3
+        - make -j
+        - sudo mkdir /usr/local/systemc-2.3.3
+        - sudo make install
+        - sudo sed -i '/using std::gets;/d' /usr/local/systemc-2.3.3/include/systemc.h
+        - cd ../..
+        - cd simulator
+        - mkdir build
+        - cd build
+        - cmake ..
+
+script: make
