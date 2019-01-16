@@ -1,5 +1,9 @@
 <img style="width:50%;" src="https://github.com/jmjos/ratatoskr/raw/master/docs/misc/logo.png">
 
+[![Build Status](https://travis-ci.com/jmjos/ratatoskr.svg?branch=master)](https://travis-ci.com/jmjos/ratatoskr)
+[![CodeFactor](https://www.codefactor.io/repository/github/jmjos/ratatoskr/badge)](https://www.codefactor.io/repository/github/jmjos/ratatoskr)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1c867426f3d5450a9aed9a7d56602ffe)](https://www.codacy.com/app/jmjos/ratatoskr?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jmjos/ratatoskr&amp;utm_campaign=Badge_Grade)
+
 # Ratatoskr NoC simulator
 
 Welcome to the project website of ratatoskr, a framework to design technology-asymmetric interconnect architectures targeting heterogeneous 3D-SoCs. It is developed at the University in Magdeburg (Germany). Our A-3D-Network-on-Chip simulator is a Network-on-Chip Simulator for asymmetric NoC-architectures. It is developed using SystemC, a system description language based on C++, and it can be downloaded here. The software is under MIT license terms.
