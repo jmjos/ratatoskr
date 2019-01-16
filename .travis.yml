@@ -5,6 +5,7 @@ language: cpp
 compiler: gcc
 
 before_install:
+        - sudo apt update
         - sudo apt -y install libpugixml-dev
         - sudo apt -y install libboost-all-dev
 
