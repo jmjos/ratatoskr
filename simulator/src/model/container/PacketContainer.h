@@ -69,7 +69,6 @@ public:
         portValidIn(cscin->sigValid);
         portFlowControlIn(cscin->sigFlowControl);
         portDataIn(cscin->sigData);
-
         portValidOut(cscout->sigValid);
         portFlowControlOut(cscout->sigFlowControl);
         portDataOut(cscout->sigData);

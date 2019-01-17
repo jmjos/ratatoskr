@@ -75,3 +75,8 @@ void sc_trace(sc_trace_file*& tf, const Flit& flit, std::string nm)
     sc_trace(tf, flit.seq_nb, nm+".seq_nb");
     sc_trace(tf, flit.id, nm+".id");
 }
+
+Flit::~Flit()
+{
+
+}

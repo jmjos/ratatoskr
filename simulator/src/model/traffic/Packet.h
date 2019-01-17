@@ -34,8 +34,8 @@ struct Packet {
 	static int idcnt;
 	int id;
 	int dbid;
-	Node& src;
-	Node& dst;
+	Node src;
+	Node dst;
 	int size;
 	double generationTime;
 	dataTypeID_t dataType; // type identifier for link matrices

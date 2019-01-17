@@ -61,16 +61,17 @@ private:
     GlobalResources& globalResources = GlobalResources::getInstance();
     Report& rep = Report::getInstance();
     int dbid;
+    std::vector<std::unique_ptr<sc_clock>> clocks;
     std::unique_ptr<TrafficPool> tp;
     std::vector<NetworkParticipant*> networkParticipants;
-    //std::vector<std::unique_ptr<SignalContainer>> signalContainers;
     std::vector<std::unique_ptr<FlitSignalContainer>> flitSignalContainers;
     std::vector<std::unique_ptr<PacketSignalContainer>> packetSignalContainers;
+    //std::vector<SignalContainer*> signalContainers;
     std::vector<std::unique_ptr<Link>> links;
 
     void createTrafficPool();
 
-    void createNetworkParticipants(const std::vector<std::unique_ptr<sc_clock>>& clocks);
+    void createNetworkParticipants();
 
     void createSigContainers();
 

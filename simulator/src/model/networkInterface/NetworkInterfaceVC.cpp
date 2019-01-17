@@ -37,14 +37,14 @@ NetworkInterfaceVC::NetworkInterfaceVC(sc_module_name nm, Node& node) :
 		std::cout << e.what() << std::endl;
 	}
 
-	SC_METHOD(thread);
+	/*SC_METHOD(thread);
 	sensitive << clk.pos() << clk.neg();
 
 	SC_METHOD(receiveFlit);
 	sensitive << flitPortContainer->portValidIn.pos();
 
 	SC_METHOD(receivePacket);
-	sensitive << packetPortContainer->portValidIn.pos();
+	sensitive << packetPortContainer->portValidIn.pos();*/
 }
 
 void NetworkInterfaceVC::receivePacket() {
@@ -81,8 +81,8 @@ void NetworkInterfaceVC::receivePacket() {
 
 void NetworkInterfaceVC::initialize() {
 
-	flitPortContainer->portValidOut.write(false);
-	flitPortContainer->portFlowControlOut.write(flowControlOut);
+	/*flitPortContainer->portValidOut.write(false);
+	flitPortContainer->portFlowControlOut.write(flowControlOut);*/
 }
 
 void NetworkInterfaceVC::bind(Connection* con, SignalContainer* sigContIn,
@@ -95,7 +95,7 @@ void NetworkInterfaceVC::bind(Connection* con, SignalContainer* sigContIn,
 }
 
 void NetworkInterfaceVC::thread() {
-	LOG(globalReport.verbose_pe_function_calls,
+	/*LOG(globalReport.verbose_pe_function_calls,
 			"NI" << this->id << "(Node" << node.id << ")\t- send_data_process()");
 
 	if (clk.posedge()) {
@@ -144,10 +144,11 @@ void NetworkInterfaceVC::thread() {
 	} else if (clk.negedge()) {
 		flitPortContainer->portValidOut.write(false);
 		packetPortContainer->portValidOut.write(false);
-	}
+	}*/
 }
 
 void NetworkInterfaceVC::receiveFlit() {
+	/*
 	LOG(globalReport.verbose_pe_function_calls,
 		"NI" << this->id << "(Node" << node.id << ")\t- receive_data_process()");
 
@@ -206,5 +207,6 @@ void NetworkInterfaceVC::receiveFlit() {
 		}
 	}
 	// build packet from flit, send packet to application (via TLM?)
+	 */
 }
 

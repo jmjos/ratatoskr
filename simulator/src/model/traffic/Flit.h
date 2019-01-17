@@ -57,6 +57,6 @@ public:
 
     friend void sc_trace(sc_trace_file*& tf, const Flit& flit, std::string nm);
 
-    ~Flit() = default;
+    ~Flit();
 };
 
