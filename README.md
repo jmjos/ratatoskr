@@ -6,7 +6,7 @@
 
 # Ratatoskr NoC simulator
 
-Welcome to the project website of ratatoskr, a framework to design technology-asymmetric interconnect architectures targeting heterogeneous 3D-SoCs. It is developed at the University in Magdeburg (Germany). Our A-3D-Network-on-Chip simulator is a Network-on-Chip Simulator for asymmetric NoC-architectures. It is developed using SystemC, a system description language based on C++, and it can be downloaded here. The software is under MIT license terms.
+Welcome to the project website of ratatoskr, a framework to design technology-asymmetric interconnect architectures targeting heterogeneous 3D-SoCs. It is developed at the University in Magdeburg (Germany). Our A-3D-Network-on-Chip simulator is a Network-on-Chip Simulator for asymmetric NoC-architectures. It is developed using SystemC, a system description language based on C++. The software is under MIT license terms.
 
 If you use the simulator in your research, we would appreciate the following citation in any publications to which it has contributed:
 
@@ -15,10 +15,6 @@ If you use the simulator in your research, we would appreciate the following cit
 Jan Moritz Joseph, Sven Wrieden, Christopher Blochwitz, Alberto Garc&iacute;a-Ortiz, Thilo Pionteck: <a href="about:black" target="_blank"><em> A Simulation Environment for Design Space Exploration for Asymmetric 3D-Network-on-Chip</em></a>, 11th International Symposium on Reconfigurable Communication-centric Systems-on-Chip (ReCoSoC 2016), Tallinn, 2016
 
 ---
-
-## Table of Contents
-
-
 
 ## Installation
 
@@ -30,7 +26,7 @@ There are several ways to compile the project. If you'd just like to use the pro
 - CentOS 7 & boost-devel.x86_64 & pugixml-devel.x86_64
 - cmake 3.10.2
 - SystemC 2.3.3 www.accellera.org/images/downloads/standards/systemc/systemc-2.3.3.gz
-- cmake assumes an installation of systemc to /usr/local/systemc-2.3.3 If not the case, please modify simulator/CMakeLists.txt
+- cmake assumes an installation of systemc to ``/usr/local/systemc-2.3.3`` If not the case, please modify simulator/CMakeLists.txt
 
 #### Building with build script
 We provide a build script, which relys on cmake. It is provided run it via:
@@ -46,11 +42,6 @@ Go into simulator folder. Simply type
 > cd simulator
 > cmake .
 > make
-```
-
-This will result in an executable sim:
-```
->./sim
 ```
 
 To use a subfolder and multi-thread build:
@@ -95,6 +86,11 @@ or in eclipse under run configuration, environment, new
 
 you'll link the systemc Libraries.
 
+Execute the simulator:
+
+```
+>./sim
+```
 
 
 ## Configuring the simulator
@@ -131,7 +127,7 @@ any documentation you want to write about your project.
 If you wish to contribute, please contact me at my univeristy email address jan.joseph@ovgu.de. We offer student development jobs for students from Magdeburg.
 
 ## Credits
-A special thanks to my students Sven Wrieden and Imad Hajjar for their amazing help with the project. 
+A special thanks to my students Sven Wrieden and Imad Hajjar (github.com/imadhajjar) for their amazing help with the project. 
 
 ## License
 
