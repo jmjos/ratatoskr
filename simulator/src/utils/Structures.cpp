@@ -143,6 +143,16 @@ void Node::checkValid()
     assert(connections.size() == i);
 }
 
+connID_t Node::getConnWithNode(const Node& connectedNode)
+{
+    for (auto& conn1: this->connections) {
+        for (auto& conn2: connectedNode.connections) {
+            if (conn1==conn2)
+                return conn1;
+        }
+    }
+}
+
 Connection::Connection(connID_t id, const std::vector<nodeID_t>& nodes, const std::vector<int>& vcsCount,
         const std::vector<int>& buffersDepth,
         const std::vector<std::vector<int>>& buffersDepths, float length, int width, int depth)

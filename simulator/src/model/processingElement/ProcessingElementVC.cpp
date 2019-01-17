@@ -75,6 +75,7 @@ void ProcessingElementVC::thread()
                 //TODO restructure
                 // Packet *p = new Packet(this->node, globalResources.nodes.at(dest->destinationTask), 1, sc_time_stamp().to_double(), dest->dataType);
                 // p->dataType = dest->type;
+                //cout << "PE " << this->id << " generating packet @ " << sc_time_stamp() << endl;
                 Packet* p = packetFactory.createPacket(this->node, globalResources.nodes.at(dest.destinationTask), 1,
                         sc_time_stamp().to_double(), dest.dataType);
 

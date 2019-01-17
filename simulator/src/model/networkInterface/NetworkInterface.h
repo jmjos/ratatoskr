@@ -33,8 +33,7 @@ class NetworkInterface : public NetworkParticipant, public sc_module {
 public:
     int id;
     int dbid;
-    Node& node;
-
+    Node node;
     Report& rep = Report::getInstance();
 
     SC_HAS_PROCESS(NetworkInterface);
@@ -43,9 +42,10 @@ public:
 
     virtual void thread() = 0;
 
-    virtual void receivePacket() = 0;
+    virtual void receivePacketFromPE() = 0;
 
     virtual void receiveFlit() = 0;
 
+    virtual void preparePacket(Packet* p) = 0;
 };
 

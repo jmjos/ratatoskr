@@ -262,15 +262,7 @@ void GlobalResources::fillDirInfoOfNodeConn()
         for (int connectedNodeID : node.connectedNodes) {
             Node connectedNode = nodes.at(connectedNodeID);
             distance = node.pos-connectedNode.pos;
-            auto find_conn = [&node, &connectedNode]() -> connID_t {
-                for (auto& conn1: node.connections) {
-                    for (auto& conn2: connectedNode.connections) {
-                        if (conn1==conn2)
-                            return conn1;
-                    }
-                }
-            };
-            connID_t matching_conn = find_conn();
+            connID_t matching_conn = node.getConnWithNode(connectedNode);
             DIR::TYPE dir{};
             if (distance.isZero()) { //no axis differs
                 dir = DIR::Local;

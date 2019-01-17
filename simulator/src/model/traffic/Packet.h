@@ -42,9 +42,9 @@ struct Packet {
 	int pkgclass;	// tag for adaptive routing
 	int numhops;
 	std::vector<int> traversedRouters;
-	std::vector<int> toTransmit;
-	std::vector<int> inTransmit;
-	std::vector<int> transmitted;
+	std::vector<flitID_t> toTransmit;
+	std::vector<flitID_t> inTransmit;
+	std::vector<flitID_t> transmitted;
 	std::vector<Flit*> flits;
 	Report& rep = Report::getInstance();
 

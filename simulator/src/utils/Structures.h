@@ -258,6 +258,8 @@ public:
 
     void setDirOfConn(connID_t connID, DIR::TYPE dir);
 
+    connID_t getConnWithNode(const Node& connectedNode);
+
     Node* getNodeByPos(const Vec3D<float>& pos);
 
     void checkValid();

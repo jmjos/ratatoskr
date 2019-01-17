@@ -33,11 +33,9 @@ Packet::Packet(Node& src, Node& dst, int size, double generationTime, dataTypeID
 {
     this->id = idcnt;
     idcnt++;
-
-    this->dbid = rep.registerElement("Packet", this->id);
     this->pkgclass = -1;
     this->numhops = 0;
-
+    this->dbid = rep.registerElement("Packet", this->id);
     rep.reportAttribute(dbid, "packet_src", std::to_string(src.id));
     rep.reportAttribute(dbid, "packet_dst", std::to_string(dst.id));
 }

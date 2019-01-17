@@ -39,6 +39,10 @@ Flit::Flit(FlitType type, int seq_nb, Packet* p)
     rep.reportAttribute(dbid, "flit_packet", std::to_string(p->id));
     rep.reportAttribute(dbid, "flit_type", std::to_string(type));
     rep.reportAttribute(dbid, "flit_seq", std::to_string(seq_nb));
+    if (type==FlitType::HEAD)
+        this->headFlit = this;
+    else
+        this->headFlit = p->flits.at(0);
 }
 
 Flit::Flit(FlitType type, int seq_nb, Packet* p, dataTypeID_t dataType, double generationTime)

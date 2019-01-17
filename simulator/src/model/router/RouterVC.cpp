@@ -37,7 +37,6 @@ RouterVC::RouterVC(sc_module_name nm, Node& node)
         flowControlOut.at(conPos) = new std::vector<bool>(vcCount, false);
         buffers.at(conPos) = new std::vector<BufferFIFO<Flit*>*>(vcCount);
         for (int vc = 0; vc<vcCount; vc++) {
-
             int vc_buf_size = 0;
             if (globalResources.bufferDepthType=="single")
                 vc_buf_size = con.getBufferDepthForNode(node.id);
@@ -52,6 +51,7 @@ RouterVC::RouterVC(sc_module_name nm, Node& node)
         }
 
     }
+
     lastReceivedFlits.resize(conCount);
 
     SC_METHOD(thread);
@@ -93,7 +93,6 @@ void RouterVC::updateUsageStats()
                         vcIn, static_cast<int>(buf->occupied()), numVCs);
             }
         }
-
         /* this 1 is added to create a column for numberOfActiveVCs=0.
            yes it's an extra column but it allow us to use the same function to update both buffer stats and VC stats.
         */
@@ -112,11 +111,11 @@ void RouterVC::route()
             //check, if flit is cin front element of buffer and no route has been calculated
             if (flit && !occupyTable.count(cin)) {
                 if (flit->type==HEAD) { //check if head and calculate route
-
                     int src_node_id = flit->packet->src.id;
                     int dst_node_id = flit->packet->dst.id;
                     int chosen_con_pos = routing->route(src_node_id, dst_node_id);
-
+                    if (chosen_con_pos==-1)
+                        std::cerr << "Bad routing" << std::endl;
                     flit->packet->numhops++;
                     flit->packet->traversedRouters.push_back(node.id);
                 }
@@ -127,6 +126,40 @@ void RouterVC::route()
 
 void RouterVC::receive()
 {
+    for (unsigned int conPos = 0; conPos<node.connections.size(); conPos++) {
+        if (classicPortContainer.at(conPos).portValidIn.read()) {
+            Flit* flit = classicPortContainer.at(conPos).portDataIn.read();
+            int vc = classicPortContainer.at(conPos).portVcIn.read();
+            BufferFIFO<Flit*>* buf = buffers.at(conPos)->at(vc);
+            Channel c = Channel(conPos, vc);
+
+            // prevents double writing of data, which occurs for asynchronous buffers.
+            // problem: this function is executed for all buffers if new data arrive. If some directions are clocked at different data rate, the slower data rates are duplicated.
+
+            Flit* lrFlit = lastReceivedFlits.at(conPos);
+            if (!lrFlit || lrFlit->id!=flit->id) {
+                if (buf->enqueue(flit)) {
+                    rep.reportEvent(buf->dbid, "buffer_enqueue_flit", std::to_string(flit->id));
+                    lastReceivedFlits[conPos] = flit;
+                }
+                else {
+                    LOG(globalReport.verbose_router_buffer_overflow,
+                            "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
+                                     << "]\t- Buffer Overflow " << *flit);
+                }
+                if (flit->type==HEAD) {
+                    LOG(globalReport.verbose_router_receive_head_flit,
+                            "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
+                                     << "]\t- Receive Flit " << *flit);
+                }
+                else {
+                    LOG(globalReport.verbose_router_receive_flit,
+                            "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
+                                     << "]\t- Receive Flit " << *flit);
+                }
+            }
+        }
+    }
 }
 
 void RouterVC::initialize()
@@ -135,11 +168,27 @@ void RouterVC::initialize()
         classicPortContainer.at(conPos).portValidOut.write(false);
         classicPortContainer.at(conPos).portFlowControlOut.write(flowControlOut.at(conPos));
     }
+
+    // Setting credits according to the buffer depth of the downstream routers.
+    for (auto& n_id:node.connectedNodes) {
+        Node connectedRouter = globalResources.nodes.at(n_id);
+        Connection conn = globalResources.connections.at(node.getConnWithNode(connectedRouter));
+        for (int vc = 0; vc<conn.getVCCountForNode(connectedRouter.id); vc++) {
+            int conPos = node.getConnPosition(conn.id);
+            Channel ch {conPos, vc};
+            int buf_size = 0;
+            if (globalResources.bufferDepthType=="single")
+                buf_size = conn.getBufferDepthForNode(connectedRouter.id);
+            else if (globalResources.bufferDepthType=="perVC")
+                buf_size = conn.getBufferDepthForNodeAndVC(connectedRouter.id, vc);
+            creditCounter.insert({ch, buf_size});
+        }
+    }
 }
 
 RouterVC::~RouterVC()
 {
-    for(auto& fc:flowControlOut)
+    for (auto& fc:flowControlOut)
         delete fc;
     flowControlOut.clear();
 }
