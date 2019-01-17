@@ -54,16 +54,16 @@ RouterVC::RouterVC(sc_module_name nm, Node& node)
     }
     lastReceivedFlits.resize(conCount);
 
-    /*SC_METHOD(thread);
+    SC_METHOD(thread);
     sensitive << clk.pos() << clk.neg();
-
+/*
     SC_METHOD(updateUsageStats);
     sensitive << clk.pos();
-
+*/
     SC_METHOD(receive);
     for (int conPos = 0; conPos<node.connections.size(); conPos++) {
         sensitive << classicPortContainer.at(conPos).portValidIn.pos();
-    }*/
+    }
 }
 
 void RouterVC::bind(Connection* con, SignalContainer* sigContIn, SignalContainer* sigContOut)
@@ -120,7 +120,6 @@ void RouterVC::route()
                     flit->packet->numhops++;
                     flit->packet->traversedRouters.push_back(node.id);
                 }
-
             }
         }
     }
@@ -133,9 +132,8 @@ void RouterVC::receive()
 void RouterVC::initialize()
 {
     for (int conPos = 0; conPos<node.connections.size(); conPos++) {
-        //classicPortContainer.at(conPos).portValidOut.write(false);
-        //classicPortContainer.at(conPos).portFlowControlOut.write(flowControlOut.at(conPos));
-
+        classicPortContainer.at(conPos).portValidOut.write(false);
+        classicPortContainer.at(conPos).portFlowControlOut.write(flowControlOut.at(conPos));
     }
 }
 

@@ -30,14 +30,13 @@ ProcessingElementVC::ProcessingElementVC(sc_module_name mn, Node& node, TrafficP
 
     SC_THREAD(thread);
     SC_METHOD(receive);
-    //sensitive << packetPortContainer->portValidIn.pos();
+    sensitive << packetPortContainer->portValidIn.pos();
 }
 
 void ProcessingElementVC::initialize()
 {
-
-    //packetPortContainer->portValidOut.write(false);
-    //packetPortContainer->portFlowControlOut.write(true);
+    packetPortContainer->portValidOut.write(false);
+    packetPortContainer->portFlowControlOut.write(true);
     // sc_spawn(sc_bind(&SyntheticPool::sendThread, this, con.first,
     // con.second,initDelay,sp.waveCount,sp.waveDelay,sp.pkgPerWave, sp.name));
 
@@ -46,7 +45,6 @@ void ProcessingElementVC::initialize()
 void ProcessingElementVC::thread()
 {
     for (;;) {
-        cout << "Imad" << endl;
         int timeStamp = static_cast<int>(sc_time_stamp().value()/1000);
 
         std::vector<DataDestination> removeList;
@@ -80,8 +78,8 @@ void ProcessingElementVC::thread()
                 Packet* p = packetFactory.createPacket(this->node, globalResources.nodes.at(dest.destinationTask), 1,
                         sc_time_stamp().to_double(), dest.dataType);
 
-                //packetPortContainer->portValidOut = true;
-                //packetPortContainer->portDataOut = p;
+                packetPortContainer->portValidOut = true;
+                packetPortContainer->portDataOut = p;
 
                 countLeft.at(dest)--;
 
@@ -108,7 +106,7 @@ void ProcessingElementVC::thread()
         }
 
         wait(SC_ZERO_TIME);
-        //packetPortContainer->portValidOut = false;
+        packetPortContainer->portValidOut = false;
 
         int nextCall = -1;
         for (auto const& dw : destWait) {
@@ -204,7 +202,7 @@ void ProcessingElementVC::receive()
 {
     LOG(globalReport.verbose_pe_function_calls,
             "PE" << this->id << "(Node" << node.id << ")\t- receive_data_process()");
-/*
+
     if (packetPortContainer->portValidIn.posedge()) {
         Packet* received_packet = packetPortContainer->portDataIn.read();
         if (received_packet) {
@@ -218,7 +216,7 @@ void ProcessingElementVC::receive()
             }
             checkNeed();
         }
-    }*/
+    }
 }
 
 void ProcessingElementVC::startSending(Task& task)
@@ -290,5 +288,5 @@ void ProcessingElementVC::checkNeed()
 
 ProcessingElementVC::~ProcessingElementVC()
 {
-    //delete packetPortContainer;
+    delete packetPortContainer;
 }
