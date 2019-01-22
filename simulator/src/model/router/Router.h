@@ -38,8 +38,9 @@ public:
     std::vector<std::vector<BufferFIFO<Flit*>*>*> buffers;
     sc_in<bool> clk;
     std::vector<Flit*> lastReceivedFlits;
-    std::map<Channel, Channel> occupyTable;
-    std::unique_ptr<BaseRouting> routing;
+    std::map<Channel, Channel> routingTable; // key:in, value:out
+    std::map<Channel, Channel> switchTable;  // key:in, value:out
+    std::unique_ptr<BaseRouting> routingAlg;
 
     SC_HAS_PROCESS(Router);
 

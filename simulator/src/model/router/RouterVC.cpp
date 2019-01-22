@@ -24,7 +24,9 @@
 
 RouterVC::RouterVC(sc_module_name nm, Node& node)
         :
-        Router(nm, node)
+        Router(nm, node),
+        rrDirOff(0),
+        rrSwitch(0)
 {
     int conCount = node.connections.size();
     classicPortContainer.init(conCount);
@@ -74,7 +76,12 @@ void RouterVC::bind(Connection* con, SignalContainer* sigContIn, SignalContainer
 void RouterVC::thread()
 {
     if (clk.posedge()) {
-//        route();
+        //route();
+        // key: connection position of output, value: the requesting inputs.
+        std::map<int, std::vector<Channel>> requests = generateRequests();
+        generateAck(requests);
+        switchAllocation();
+
     }
 }
 
@@ -103,25 +110,25 @@ void RouterVC::updateUsageStats()
 
 void RouterVC::route()
 {
-    for (unsigned int conPos = 0; conPos<node.connections.size(); conPos++) {
+    /*for (unsigned int conPos = 0; conPos<node.connections.size(); conPos++) {
         for (unsigned int vcIn = 0; vcIn<buffers.at(conPos)->size(); vcIn++) {
             BufferFIFO<Flit*>* buf = buffers.at(conPos)->at(vcIn);
             Flit* flit = buf->front();
             Channel cin = Channel(conPos, vcIn);
             //check, if flit is cin front element of buffer and no route has been calculated
-            if (flit && !occupyTable.count(cin)) {
+            if (flit && !routingTable.count(cin)) {
                 if (flit->type==HEAD) { //check if head and calculate route
                     int src_node_id = flit->packet->src.id;
                     int dst_node_id = flit->packet->dst.id;
-                    int chosen_con_pos = routing->route(src_node_id, dst_node_id);
-                    if (chosen_con_pos==-1)
+                    int chosen_conPos = routingAlg->route(src_node_id, dst_node_id);
+                    if (chosen_conPos==-1)
                         std::cerr << "Bad routing" << std::endl;
                     flit->packet->numhops++;
                     flit->packet->traversedRouters.push_back(node.id);
                 }
             }
         }
-    }
+    }*/
 }
 
 void RouterVC::receive()
@@ -175,7 +182,7 @@ void RouterVC::initialize()
         Connection conn = globalResources.connections.at(node.getConnWithNode(connectedRouter));
         for (int vc = 0; vc<conn.getVCCountForNode(connectedRouter.id); vc++) {
             int conPos = node.getConnPosition(conn.id);
-            Channel ch {conPos, vc};
+            Channel ch{conPos, vc};
             int buf_size = 0;
             if (globalResources.bufferDepthType=="single")
                 buf_size = conn.getBufferDepthForNode(connectedRouter.id);
@@ -191,4 +198,101 @@ RouterVC::~RouterVC()
     for (auto& fc:flowControlOut)
         delete fc;
     flowControlOut.clear();
+}
+
+std::map<int, std::vector<Channel>> RouterVC::generateRequests()
+{
+    std::map<int, std::vector<Channel>> requests{};
+    auto insert_request = [&requests](int out, Channel in) {
+        if (!requests.count(out)) {
+            auto entry = std::make_pair(out, std::vector<Channel>{in});
+            requests.insert(entry);
+        }
+        else
+            requests.at(out).push_back(in);
+    };
+    for (int in_conPos = 0; in_conPos<node.connections.size(); in_conPos++) {
+        int in_vc = 0; //TODO round_robin
+        BufferFIFO<Flit*>* buf = buffers.at(in_conPos)->at(in_vc);
+        Flit* flit = buf->front();
+        if (flit && flit->type==HEAD) {
+            int src_node_id = this->id;
+            int dst_node_id = flit->packet->dst.id;
+            int chosen_conPos = routingAlg->route(src_node_id, dst_node_id);
+            if (chosen_conPos==-1)
+                std::cerr << "Bad routing" << std::endl;
+            insert_request(chosen_conPos, {in_conPos, in_vc});
+        }
+    }
+    return requests;
+}
+
+void RouterVC::generateAck(const std::map<int, std::vector<Channel>>& requests)
+{
+    for (auto& request:requests) {
+        int requested_out = request.first;
+        std::vector<Channel> requesting_ins = request.second;
+        for (auto& requesting_in:requesting_ins) {
+            int out_vc = getNextFreeVC(requested_out);
+            routingTable.insert(requesting_in, {requested_out, out_vc});
+            BufferFIFO<Flit*>* buf = buffers.at(requesting_in.conPos)->at(requesting_in.vc);
+            Flit* flit = buf->front();
+            assert(flit);
+            flit->packet->numhops++;
+            flit->packet->traversedRouters.push_back(this->id);
+        }
+    }
+}
+
+int RouterVC::getNextFreeVC(int out)
+{
+    std::vector<int> used_vcs{};
+    for (auto& entry:routingTable) {
+        if (out==entry.second.conPos)
+            used_vcs.push_back(entry.second.vc);
+    }
+
+    std::sort(used_vcs.begin(), used_vcs.end());
+
+    if (used_vcs.empty())   // if there are no used vcs.
+        return 0;
+    else {
+        connID_t con_id = node.connections.at(out);
+        Connection con = globalResources.connections.at(con_id);
+        int vcCount = con.getVCCountForNode(node.id);
+        if (used_vcs.size()==vcCount)   // if all vcs are used.
+            return -1;
+        else {
+            std::vector<int> search_values(vcCount);
+            std::iota(search_values.begin(), search_values.end(), 0);
+            auto find_if_not_used = [&used_vcs](const int& search_value) {
+                auto result = std::find(used_vcs.begin(), used_vcs.end(), search_value);
+                if (result==used_vcs.end())
+                    return search_value;
+            };
+            std::for_each(search_values.begin(), search_values.end(), find_if_not_used);
+        }
+    }
+}
+
+void RouterVC::switchAllocation()
+{
+    std::map<Channel, Channel> routingTableCopy = this->routingTable;
+    int num_of_matches{0};
+    for (auto& entry:this->routingTable) {
+        Channel in = entry.first;
+        Channel out = entry.second;
+        for(auto& entry_copy:routingTableCopy){
+            Channel in_copy = entry_copy.first;
+            Channel out_copy = entry_copy.second;
+            if(out == out_copy) {
+                num_of_matches++;
+            }
+        }
+    }
+}
+
+void RouterVC::round_robin(int pos)
+{
+
 }

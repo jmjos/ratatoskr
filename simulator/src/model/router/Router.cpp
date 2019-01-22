@@ -38,9 +38,9 @@ Router::Router(sc_module_name nm, Node& node)
     rep.reportAttribute(dbid, "type", node.type->model);
 
     if(node.type->routing=="XYZ")
-        routing = std::make_unique<XYZRouting>();
+        routingAlg = std::make_unique<XYZRouting>();
     else if(node.type->routing=="HeteroXYZ")
-        routing = std::make_unique<HeteroXYZRouting>();
+        routingAlg = std::make_unique<HeteroXYZRouting>();
 }
 
 Router::~Router()

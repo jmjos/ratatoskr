@@ -27,7 +27,8 @@
 class RouterVC : public Router {
 public:
 
-    int rrDirOff = 0;
+    int rrDirOff;
+    int rrSwitch;
     std::vector<std::vector<bool>*> flowControlOut;
     std::map<Channel, int> creditCounter;
 
@@ -46,4 +47,15 @@ public:
     void updateUsageStats() override;
 
     void route() override;
+
+    std::map<int, std::vector<Channel>> generateRequests();
+
+    void generateAck(const std::map<int, std::vector<Channel>>& requests);
+
+    int getNextFreeVC(int out);
+
+    void switchAllocation();
+
+private:
+    void round_robin(int pos);
 };
