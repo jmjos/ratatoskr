@@ -82,7 +82,7 @@ void RouterVC::thread() {
 
         std::map<int, std::vector<Channel>> vc_requests = VCAllocation_generateRequests();
         VCAllocation_generateAck(vc_requests);
-    } else if (clk.negedge()){
+    } else if (clk.negedge()) {
         for (unsigned int con = 0; con < node.connections.size(); con++) {
             classicPortContainer.at(con).portValidOut.write(false);
         }
@@ -256,21 +256,19 @@ std::map<Channel, std::vector<Channel>> RouterVC::switchAllocation_generateReque
     };
     for (int in_conPos = 0; in_conPos < node.connections.size(); in_conPos++) {
         std::vector<int> vcs = getAllocatedVCsOfInDir(in_conPos);
+        for (int in_vc:vcs) {
+            BufferFIFO<Flit *> *buf = buffers.at(in_conPos)->at(in_vc);
+            Flit *flit = buf->front();
+            if (!flit) {
+                auto it = std::find(vcs.begin(), vcs.end(), in_vc);
+                vcs.erase(it);
+            }
+        }
         if (!vcs.empty()) {
-            for (int in_vc:vcs) {
-                BufferFIFO<Flit *> *buf = buffers.at(in_conPos)->at(in_vc);
-                Flit *flit = buf->front();
-                if (!flit) {
-                    auto it = std::find(vcs.begin(), vcs.end(), in_vc);
-                    vcs.erase(it);
-                }
-            }
-            if (!vcs.empty()){
-                int in_vc = vcs.front(); //TODO round_robin
-                Channel in{in_conPos, in_vc};
-                Channel out = routingTable.at(in);
-                insert_request(out, in);
-            }
+            int in_vc = vcs.front(); //TODO round_robin
+            Channel in{in_conPos, in_vc};
+            Channel out = routingTable.at(in);
+            insert_request(out, in);
         }
     }
     return requests;
@@ -312,7 +310,7 @@ void RouterVC::send() {
         if (creditCounter.at(out) > 0) {
             BufferFIFO<Flit *> *buf = buffers.at(in.conPos)->at(in.vc);
             Flit *flit = buf->front();
-            assert(!flit);
+            assert(flit);
             buf->dequeue();
             classicPortContainer.at(out.conPos).portValidOut.write(true);
             classicPortContainer.at(out.conPos).portDataOut.write(flit);
