@@ -64,7 +64,7 @@
     <verbose>
       <processingElements>
         <function_calls value="false" />
-        <send_flit value="true" />
+        <send_flit value="false" />
         <send_head_flit value="true" />
         <receive_flit value="false" />
         <receive_tail_flit value="true" />

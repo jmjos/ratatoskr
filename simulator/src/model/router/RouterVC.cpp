@@ -304,6 +304,7 @@ void RouterVC::send() {
         if (creditCounter.at(out) > 0) {
             BufferFIFO<Flit *> *buf = buffers.at(in.conPos)->at(in.vc);
             Flit *flit = buf->front();
+            buf->dequeue();
             classicPortContainer.at(out.conPos).portValidOut.write(true);
             classicPortContainer.at(out.conPos).portDataOut.write(flit);
             classicPortContainer.at(out.conPos).portVcOut.write(out.vc);
