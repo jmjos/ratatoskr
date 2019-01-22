@@ -114,6 +114,8 @@ struct Channel {
     bool operator<(const Channel& a) const;
 
     bool operator==(const Channel& a) const;
+
+    bool operator!=(const Channel& a) const;
 };
 
 template<typename T>

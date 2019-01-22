@@ -53,6 +53,10 @@ bool Channel::operator==(const Channel& a) const
     return this->conPos == a.conPos && this->vc == a.vc;
 }
 
+bool Channel::operator!=(const Channel &a) const {
+    return !operator==(a);
+}
+
 NodeType::NodeType(nodeTypeID_t id, const std::string& model, const std::string& routing,
         const std::string& selection, int clk, const std::string& arbiterType)
         :

@@ -27,7 +27,7 @@ Router::Router(sc_module_name nm, Node& node)
         :
         node(node)
 {
-    int numOfRouters = globalResources.nodes.size()/2;
+    int numOfRouters = static_cast<int>(globalResources.nodes.size() / 2);
     this->id = node.id%(numOfRouters);
     this->dbid = rep.registerElement("Router", this->id);
 

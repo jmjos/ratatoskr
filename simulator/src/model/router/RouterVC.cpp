@@ -22,31 +22,30 @@
 
 #include "RouterVC.h"
 
-RouterVC::RouterVC(sc_module_name nm, Node& node)
+RouterVC::RouterVC(sc_module_name nm, Node &node)
         :
         Router(nm, node),
         rrDirOff(0),
-        rrSwitch(0)
-{
+        rrSwitch(0) {
     int conCount = node.connections.size();
     classicPortContainer.init(conCount);
     buffers.resize(conCount);
     flowControlOut.resize(conCount);
-    for (int conPos = 0; conPos<node.connections.size(); conPos++) {
+    for (int conPos = 0; conPos < node.connections.size(); conPos++) {
         connID_t con_id = node.connections.at(conPos);
         Connection con = globalResources.connections.at(con_id);
         int vcCount = con.getVCCountForNode(node.id);
         flowControlOut.at(conPos) = new std::vector<bool>(vcCount, false);
-        buffers.at(conPos) = new std::vector<BufferFIFO<Flit*>*>(vcCount);
-        for (int vc = 0; vc<vcCount; vc++) {
+        buffers.at(conPos) = new std::vector<BufferFIFO<Flit *> *>(vcCount);
+        for (int vc = 0; vc < vcCount; vc++) {
             int vc_buf_size = 0;
-            if (globalResources.bufferDepthType=="single")
+            if (globalResources.bufferDepthType == "single")
                 vc_buf_size = con.getBufferDepthForNode(node.id);
-            else if (globalResources.bufferDepthType=="perVC")
+            else if (globalResources.bufferDepthType == "perVC")
                 vc_buf_size = con.getBufferDepthForNodeAndVC(node.id, vc);
             else FATAL("The type of buffer depth is not defined!");
-            auto* buf = new BufferFIFO<Flit*>(vc_buf_size);
-            buffers.at(conPos)->insert(buffers.at(conPos)->begin()+vc, buf);
+            auto *buf = new BufferFIFO<Flit *>(vc_buf_size);
+            buffers.at(conPos)->insert(buffers.at(conPos)->begin() + vc, buf);
             rep.reportAttribute(buf->dbid, "node", std::to_string(node.id));
             rep.reportAttribute(buf->dbid, "dir", std::to_string(conPos));
             rep.reportAttribute(buf->dbid, "vc", std::to_string(vc));
@@ -63,163 +62,137 @@ RouterVC::RouterVC(sc_module_name nm, Node& node)
     sensitive << clk.pos();
 */
     SC_METHOD(receive);
-    for (int conPos = 0; conPos<node.connections.size(); conPos++) {
+    for (int conPos = 0; conPos < node.connections.size(); conPos++) {
         sensitive << classicPortContainer.at(conPos).portValidIn.pos();
     }
 }
 
-void RouterVC::bind(Connection* con, SignalContainer* sigContIn, SignalContainer* sigContOut)
-{
+void RouterVC::bind(Connection *con, SignalContainer *sigContIn, SignalContainer *sigContOut) {
     classicPortContainer.at(node.getConnPosition(con->id)).bind(sigContIn, sigContOut);
 }
 
-void RouterVC::thread()
-{
+void RouterVC::thread() {
     if (clk.posedge()) {
         //route();
         // key: connection position of output, value: the requesting inputs.
-        std::map<int, std::vector<Channel>> requests = generateRequests();
-        generateAck(requests);
-        switchAllocation();
+        send();
+
+        std::map<Channel, std::vector<Channel>> switch_requests = switchAllocation_generateRequests();
+        switchAllocation_generateAck(switch_requests);
+
+        std::map<int, std::vector<Channel>> vc_requests = VCAllocation_generateRequests();
+        VCAllocation_generateAck(vc_requests);
 
     }
 }
 
 // VC and buffer usage statistics
-void RouterVC::updateUsageStats()
-{
-    for (unsigned int dirIn = 0; dirIn<node.connections.size(); dirIn++) {
+void RouterVC::updateUsageStats() {
+    for (unsigned int dirIn = 0; dirIn < node.connections.size(); dirIn++) {
         int numVCs = buffers.at(dirIn)->size();
         int numberActiveVCs = 0;
 
-        for (unsigned int vcIn = 0; vcIn<numVCs; vcIn++) {
-            BufferFIFO<Flit*>* buf = buffers.at(dirIn)->at(vcIn);
+        for (unsigned int vcIn = 0; vcIn < numVCs; vcIn++) {
+            BufferFIFO<Flit *> *buf = buffers.at(dirIn)->at(vcIn);
             if (!buf->empty()) {
                 numberActiveVCs++;
                 globalReport.updateBuffUsagePerVCHist(globalReport.bufferUsagePerVCHist, this->id, dirIn,
-                        vcIn, static_cast<int>(buf->occupied()), numVCs);
+                                                      vcIn, static_cast<int>(buf->occupied()), numVCs);
             }
         }
         /* this 1 is added to create a column for numberOfActiveVCs=0.
            yes it's an extra column but it allow us to use the same function to update both buffer stats and VC stats.
         */
         globalReport.updateUsageHist(globalReport.VCsUsageHist, this->id, node.getDirOfConPos(dirIn),
-                numberActiveVCs, numVCs+1);
+                                     numberActiveVCs, numVCs + 1);
     }
 }
 
-void RouterVC::route()
-{
-    /*for (unsigned int conPos = 0; conPos<node.connections.size(); conPos++) {
-        for (unsigned int vcIn = 0; vcIn<buffers.at(conPos)->size(); vcIn++) {
-            BufferFIFO<Flit*>* buf = buffers.at(conPos)->at(vcIn);
-            Flit* flit = buf->front();
-            Channel cin = Channel(conPos, vcIn);
-            //check, if flit is cin front element of buffer and no route has been calculated
-            if (flit && !routingTable.count(cin)) {
-                if (flit->type==HEAD) { //check if head and calculate route
-                    int src_node_id = flit->packet->src.id;
-                    int dst_node_id = flit->packet->dst.id;
-                    int chosen_conPos = routingAlg->route(src_node_id, dst_node_id);
-                    if (chosen_conPos==-1)
-                        std::cerr << "Bad routing" << std::endl;
-                    flit->packet->numhops++;
-                    flit->packet->traversedRouters.push_back(node.id);
-                }
-            }
-        }
-    }*/
+void RouterVC::route() {
 }
 
-void RouterVC::receive()
-{
-    for (unsigned int conPos = 0; conPos<node.connections.size(); conPos++) {
+void RouterVC::receive() {
+    for (unsigned int conPos = 0; conPos < node.connections.size(); conPos++) {
         if (classicPortContainer.at(conPos).portValidIn.read()) {
-            Flit* flit = classicPortContainer.at(conPos).portDataIn.read();
+            Flit *flit = classicPortContainer.at(conPos).portDataIn.read();
             int vc = classicPortContainer.at(conPos).portVcIn.read();
-            BufferFIFO<Flit*>* buf = buffers.at(conPos)->at(vc);
+            BufferFIFO<Flit *> *buf = buffers.at(conPos)->at(vc);
             Channel c = Channel(conPos, vc);
 
             // prevents double writing of data, which occurs for asynchronous buffers.
             // problem: this function is executed for all buffers if new data arrive. If some directions are clocked at different data rate, the slower data rates are duplicated.
 
-            Flit* lrFlit = lastReceivedFlits.at(conPos);
-            if (!lrFlit || lrFlit->id!=flit->id) {
+            Flit *lrFlit = lastReceivedFlits.at(conPos);
+            if (!lrFlit || lrFlit->id != flit->id) {
                 if (buf->enqueue(flit)) {
                     rep.reportEvent(buf->dbid, "buffer_enqueue_flit", std::to_string(flit->id));
                     lastReceivedFlits[conPos] = flit;
-                }
-                else {
+                } else {
                     LOG(globalReport.verbose_router_buffer_overflow,
-                            "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
-                                     << "]\t- Buffer Overflow " << *flit);
+                        "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
+                                 << "]\t- Buffer Overflow " << *flit);
                 }
-                if (flit->type==HEAD) {
+                if (flit->type == HEAD) {
                     LOG(globalReport.verbose_router_receive_head_flit,
-                            "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
-                                     << "]\t- Receive Flit " << *flit);
-                }
-                else {
+                        "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
+                                 << "]\t- Receive Flit " << *flit);
+                } else {
                     LOG(globalReport.verbose_router_receive_flit,
-                            "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
-                                     << "]\t- Receive Flit " << *flit);
+                        "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
+                                 << "]\t- Receive Flit " << *flit);
                 }
             }
         }
     }
 }
 
-void RouterVC::initialize()
-{
-    for (int conPos = 0; conPos<node.connections.size(); conPos++) {
+void RouterVC::initialize() {
+    for (int conPos = 0; conPos < node.connections.size(); conPos++) {
         classicPortContainer.at(conPos).portValidOut.write(false);
         classicPortContainer.at(conPos).portFlowControlOut.write(flowControlOut.at(conPos));
     }
 
     // Setting credits according to the buffer depth of the downstream routers.
-    for (auto& n_id:node.connectedNodes) {
+    for (auto &n_id:node.connectedNodes) {
         Node connectedRouter = globalResources.nodes.at(n_id);
         Connection conn = globalResources.connections.at(node.getConnWithNode(connectedRouter));
-        for (int vc = 0; vc<conn.getVCCountForNode(connectedRouter.id); vc++) {
+        for (int vc = 0; vc < conn.getVCCountForNode(connectedRouter.id); vc++) {
             int conPos = node.getConnPosition(conn.id);
             Channel ch{conPos, vc};
             int buf_size = 0;
-            if (globalResources.bufferDepthType=="single")
+            if (globalResources.bufferDepthType == "single")
                 buf_size = conn.getBufferDepthForNode(connectedRouter.id);
-            else if (globalResources.bufferDepthType=="perVC")
+            else if (globalResources.bufferDepthType == "perVC")
                 buf_size = conn.getBufferDepthForNodeAndVC(connectedRouter.id, vc);
             creditCounter.insert({ch, buf_size});
         }
     }
 }
 
-RouterVC::~RouterVC()
-{
-    for (auto& fc:flowControlOut)
+RouterVC::~RouterVC() {
+    for (auto &fc:flowControlOut)
         delete fc;
     flowControlOut.clear();
 }
 
-std::map<int, std::vector<Channel>> RouterVC::generateRequests()
-{
+std::map<int, std::vector<Channel>> RouterVC::VCAllocation_generateRequests() {
     std::map<int, std::vector<Channel>> requests{};
     auto insert_request = [&requests](int out, Channel in) {
         if (!requests.count(out)) {
             auto entry = std::make_pair(out, std::vector<Channel>{in});
             requests.insert(entry);
-        }
-        else
+        } else
             requests.at(out).push_back(in);
     };
-    for (int in_conPos = 0; in_conPos<node.connections.size(); in_conPos++) {
+    for (int in_conPos = 0; in_conPos < node.connections.size(); in_conPos++) {
         int in_vc = 0; //TODO round_robin
-        BufferFIFO<Flit*>* buf = buffers.at(in_conPos)->at(in_vc);
-        Flit* flit = buf->front();
-        if (flit && flit->type==HEAD) {
+        BufferFIFO<Flit *> *buf = buffers.at(in_conPos)->at(in_vc);
+        Flit *flit = buf->front();
+        if (flit && flit->type == HEAD) {
             int src_node_id = this->id;
             int dst_node_id = flit->packet->dst.id;
             int chosen_conPos = routingAlg->route(src_node_id, dst_node_id);
-            if (chosen_conPos==-1)
+            if (chosen_conPos == -1)
                 std::cerr << "Bad routing" << std::endl;
             insert_request(chosen_conPos, {in_conPos, in_vc});
         }
@@ -227,16 +200,15 @@ std::map<int, std::vector<Channel>> RouterVC::generateRequests()
     return requests;
 }
 
-void RouterVC::generateAck(const std::map<int, std::vector<Channel>>& requests)
-{
-    for (auto& request:requests) {
+void RouterVC::VCAllocation_generateAck(const std::map<int, std::vector<Channel>> &requests) {
+    for (auto &request:requests) {
         int requested_out = request.first;
         std::vector<Channel> requesting_ins = request.second;
-        for (auto& requesting_in:requesting_ins) {
-            int out_vc = getNextFreeVC(requested_out);
-            routingTable.insert(requesting_in, {requested_out, out_vc});
-            BufferFIFO<Flit*>* buf = buffers.at(requesting_in.conPos)->at(requesting_in.vc);
-            Flit* flit = buf->front();
+        for (auto &requesting_in:requesting_ins) {
+            int out_vc = VCAllocation_getNextFreeVC(requested_out);
+            routingTable[requesting_in] = {requested_out, out_vc};
+            BufferFIFO<Flit *> *buf = buffers.at(requesting_in.conPos)->at(requesting_in.vc);
+            Flit *flit = buf->front();
             assert(flit);
             flit->packet->numhops++;
             flit->packet->traversedRouters.push_back(this->id);
@@ -244,14 +216,8 @@ void RouterVC::generateAck(const std::map<int, std::vector<Channel>>& requests)
     }
 }
 
-int RouterVC::getNextFreeVC(int out)
-{
-    std::vector<int> used_vcs{};
-    for (auto& entry:routingTable) {
-        if (out==entry.second.conPos)
-            used_vcs.push_back(entry.second.vc);
-    }
-
+int RouterVC::VCAllocation_getNextFreeVC(int out) {
+    std::vector<int> used_vcs = getAllocatedVCsOfOutDir(out);
     std::sort(used_vcs.begin(), used_vcs.end());
 
     if (used_vcs.empty())   // if there are no used vcs.
@@ -260,14 +226,14 @@ int RouterVC::getNextFreeVC(int out)
         connID_t con_id = node.connections.at(out);
         Connection con = globalResources.connections.at(con_id);
         int vcCount = con.getVCCountForNode(node.id);
-        if (used_vcs.size()==vcCount)   // if all vcs are used.
+        if (used_vcs.size() == vcCount)   // if all vcs are used.
             return -1;
         else {
             std::vector<int> search_values(vcCount);
             std::iota(search_values.begin(), search_values.end(), 0);
-            auto find_if_not_used = [&used_vcs](const int& search_value) {
+            auto find_if_not_used = [&used_vcs](const int &search_value) {
                 auto result = std::find(used_vcs.begin(), used_vcs.end(), search_value);
-                if (result==used_vcs.end())
+                if (result == used_vcs.end())
                     return search_value;
             };
             std::for_each(search_values.begin(), search_values.end(), find_if_not_used);
@@ -275,24 +241,88 @@ int RouterVC::getNextFreeVC(int out)
     }
 }
 
-void RouterVC::switchAllocation()
-{
-    std::map<Channel, Channel> routingTableCopy = this->routingTable;
-    int num_of_matches{0};
-    for (auto& entry:this->routingTable) {
-        Channel in = entry.first;
-        Channel out = entry.second;
-        for(auto& entry_copy:routingTableCopy){
-            Channel in_copy = entry_copy.first;
-            Channel out_copy = entry_copy.second;
-            if(out == out_copy) {
-                num_of_matches++;
+std::map<Channel, std::vector<Channel>> RouterVC::switchAllocation_generateRequests() {
+    std::map<Channel, std::vector<Channel>> requests{};
+    auto insert_request = [&requests](Channel out, Channel in) {
+        if (!requests.count(out)) {
+            auto entry = std::make_pair(out, std::vector<Channel>{in});
+            requests.insert(entry);
+        } else
+            requests.at(out).push_back(in);
+    };
+    for (int in_conPos = 0; in_conPos < node.connections.size(); in_conPos++) {
+        std::vector<int> vcs = getAllocatedVCsOfInDir(in_conPos);
+        if (!vcs.empty()) {
+            for (int in_vc:vcs) {
+                BufferFIFO<Flit *> *buf = buffers.at(in_conPos)->at(in_vc);
+                Flit *flit = buf->front();
+                if (!flit) {
+                    auto it = std::find(vcs.begin(), vcs.end(), in_vc);
+                    vcs.erase(it);
+                }
             }
+            int in_vc = vcs.front(); //TODO round_robin
+            Channel in{in_conPos, in_vc};
+            Channel out = routingTable.at(in);
+            insert_request(out, in);
         }
+    }
+    return requests;
+}
+
+std::vector<int> RouterVC::getAllocatedVCsOfInDir(int conPos) {
+    std::vector<int> vcs{};
+    for (auto &entry:routingTable) {
+        if (conPos == entry.first.conPos)
+            vcs.push_back(entry.first.vc);
+    }
+    return vcs;
+}
+
+std::vector<int> RouterVC::getAllocatedVCsOfOutDir(int conPos) {
+    std::vector<int> vcs{};
+    for (auto &entry:routingTable) {
+        if (conPos == entry.second.conPos)
+            vcs.push_back(entry.second.vc);
+    }
+    return vcs;
+}
+
+void RouterVC::switchAllocation_generateAck(const std::map<Channel, std::vector<Channel>> &requests) {
+    for (auto &request:requests) {
+        Channel requested_out = request.first;
+        std::vector<Channel> requesting_ins = request.second;
+        Channel selected_in = requesting_ins.front();
+        switchTable[selected_in] = requested_out;
     }
 }
 
-void RouterVC::round_robin(int pos)
-{
+void RouterVC::send() {
+    for (auto &entry:switchTable) {
+        Channel in = entry.first;
+        Channel out = entry.second;
+        if (creditCounter.at(out) > 0) {
+            BufferFIFO<Flit *> *buf = buffers.at(in.conPos)->at(in.vc);
+            Flit *flit = buf->front();
+            classicPortContainer.at(out.conPos).portValidOut.write(true);
+            classicPortContainer.at(out.conPos).portDataOut.write(flit);
+            classicPortContainer.at(out.conPos).portVcOut.write(out.vc);
+            for (auto e:*flowControlOut.at(in.conPos)) {
+                e = false;
+            }
+            flowControlOut.at(in.conPos)->at(in.vc) = true;
+            classicPortContainer.at(in.conPos).portFlowControlOut.write(flowControlOut.at(in.conPos));
+            creditCounter.at(out)--;
+            if (flit->type == TAIL) {
+                routingTable.erase(in);
 
+            }
+            LOG(
+                    (globalReport.verbose_router_send_head_flit && flit->type == HEAD) ||
+                    globalReport.verbose_router_send_flit,
+                    "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(out.conPos)) << out.vc
+                             << "]\t- Send Flit "
+                             << *flit);
+        }
+    }
 }

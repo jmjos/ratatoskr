@@ -29,16 +29,16 @@ public:
 
     int rrDirOff;
     int rrSwitch;
-    std::vector<std::vector<bool>*> flowControlOut;
+    std::vector<std::vector<bool> *> flowControlOut;
     std::map<Channel, int> creditCounter;
 
-    RouterVC(sc_module_name nm, Node& node);
+    RouterVC(sc_module_name nm, Node &node);
 
     ~RouterVC();
 
     void initialize() override;
 
-    void bind(Connection*, SignalContainer*, SignalContainer*) override;
+    void bind(Connection *, SignalContainer *, SignalContainer *) override;
 
     void receive() override;
 
@@ -48,14 +48,21 @@ public:
 
     void route() override;
 
-    std::map<int, std::vector<Channel>> generateRequests();
+    void send();
 
-    void generateAck(const std::map<int, std::vector<Channel>>& requests);
+    std::map<int, std::vector<Channel>> VCAllocation_generateRequests();
 
-    int getNextFreeVC(int out);
+    void VCAllocation_generateAck(const std::map<int, std::vector<Channel>> &requests);
 
-    void switchAllocation();
+    int VCAllocation_getNextFreeVC(int out);
+
+    std::map<Channel, std::vector<Channel>> switchAllocation_generateRequests();
+
+    void switchAllocation_generateAck(const std::map<Channel, std::vector<Channel>> &requests);
 
 private:
-    void round_robin(int pos);
+
+    std::vector<int> getAllocatedVCsOfInDir(int conPos);
+
+    std::vector<int> getAllocatedVCsOfOutDir(int conPos);
 };
