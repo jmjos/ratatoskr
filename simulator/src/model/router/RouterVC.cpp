@@ -82,7 +82,10 @@ void RouterVC::thread() {
 
         std::map<int, std::vector<Channel>> vc_requests = VCAllocation_generateRequests();
         VCAllocation_generateAck(vc_requests);
-
+    } else if (clk.negedge()){
+        for (unsigned int con = 0; con < node.connections.size(); con++) {
+            classicPortContainer.at(con).portValidOut.write(false);
+        }
     }
 }
 
@@ -188,7 +191,8 @@ std::map<int, std::vector<Channel>> RouterVC::VCAllocation_generateRequests() {
         int in_vc = 0; //TODO round_robin
         BufferFIFO<Flit *> *buf = buffers.at(in_conPos)->at(in_vc);
         Flit *flit = buf->front();
-        if (flit && flit->type == HEAD) {
+
+        if (flit && flit->type == HEAD && !routingTable.count({in_conPos, in_vc})) {
             int src_node_id = this->id;
             int dst_node_id = flit->packet->dst.id;
             int chosen_conPos = routingAlg->route(src_node_id, dst_node_id);
@@ -261,13 +265,25 @@ std::map<Channel, std::vector<Channel>> RouterVC::switchAllocation_generateReque
                     vcs.erase(it);
                 }
             }
-            int in_vc = vcs.front(); //TODO round_robin
-            Channel in{in_conPos, in_vc};
-            Channel out = routingTable.at(in);
-            insert_request(out, in);
+            if (!vcs.empty()){
+                int in_vc = vcs.front(); //TODO round_robin
+                Channel in{in_conPos, in_vc};
+                Channel out = routingTable.at(in);
+                insert_request(out, in);
+            }
         }
     }
     return requests;
+}
+
+
+void RouterVC::switchAllocation_generateAck(const std::map<Channel, std::vector<Channel>> &requests) {
+    for (auto &request:requests) {
+        Channel requested_out = request.first;
+        std::vector<Channel> requesting_ins = request.second;
+        Channel selected_in = requesting_ins.front();
+        switchTable[selected_in] = requested_out;
+    }
 }
 
 std::vector<int> RouterVC::getAllocatedVCsOfInDir(int conPos) {
@@ -288,14 +304,6 @@ std::vector<int> RouterVC::getAllocatedVCsOfOutDir(int conPos) {
     return vcs;
 }
 
-void RouterVC::switchAllocation_generateAck(const std::map<Channel, std::vector<Channel>> &requests) {
-    for (auto &request:requests) {
-        Channel requested_out = request.first;
-        std::vector<Channel> requesting_ins = request.second;
-        Channel selected_in = requesting_ins.front();
-        switchTable[selected_in] = requested_out;
-    }
-}
 
 void RouterVC::send() {
     for (auto &entry:switchTable) {
@@ -304,6 +312,7 @@ void RouterVC::send() {
         if (creditCounter.at(out) > 0) {
             BufferFIFO<Flit *> *buf = buffers.at(in.conPos)->at(in.vc);
             Flit *flit = buf->front();
+            assert(!flit);
             buf->dequeue();
             classicPortContainer.at(out.conPos).portValidOut.write(true);
             classicPortContainer.at(out.conPos).portDataOut.write(flit);
@@ -326,4 +335,5 @@ void RouterVC::send() {
                              << *flit);
         }
     }
+    switchTable.clear();
 }
