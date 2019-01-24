@@ -23,7 +23,8 @@
 
 NetworkInterfaceVC::NetworkInterfaceVC(sc_module_name nm, Node& node)
         :
-        NetworkInterface(nm, node)
+        NetworkInterface(nm, node),
+        lastReceivedCreditID(-1)
 {
     try {
         this->id = node.id%(globalResources.nodes.size()/2);
@@ -32,7 +33,6 @@ NetworkInterfaceVC::NetworkInterfaceVC(sc_module_name nm, Node& node)
         Node connectedRouter = globalResources.nodes.at(node.connectedNodes.at(0));
         Connection conn = globalResources.connections.at(node.getConnWithNode(connectedRouter));
         this->creditCounter = conn.getBufferDepthForNode(connectedRouter.id);
-        //this->flowControlOut = new std::vector<bool>(1, true);
         this->flitPortContainer = new FlitPortContainer(
                 ("NI_FLIT_CONTAINER"+std::to_string(this->id)).c_str());
         this->packetPortContainer = new PacketPortContainer(
@@ -187,7 +187,6 @@ void NetworkInterfaceVC::receiveFlitFromRouter()
 
 NetworkInterfaceVC::~NetworkInterfaceVC()
 {
-    //delete flowControlOut;
     delete flitPortContainer;
     delete packetPortContainer;
 }
@@ -195,6 +194,7 @@ NetworkInterfaceVC::~NetworkInterfaceVC()
 void NetworkInterfaceVC::receiveFlowControlCreditFromRouter() {
     auto credit = flitPortContainer->portFlowControlIn.read();
     assert(credit.vc == 0);
-    //TODO ASYNC
-    creditCounter++;
+    if (lastReceivedCreditID != credit.id){
+        creditCounter++;
+    }
 }

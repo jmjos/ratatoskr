@@ -30,6 +30,7 @@ public:
     int rrDirOff;
     int rrSwitch;
     std::map<Channel, int> creditCounter;
+    std::map<Channel, int> lastReceivedCreditID;
 
     RouterVC(sc_module_name nm, Node &node);
 

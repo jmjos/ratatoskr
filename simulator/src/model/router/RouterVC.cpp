@@ -91,6 +91,7 @@ void RouterVC::initialize() {
             else if (globalResources.bufferDepthType == "perVC")
                 buf_size = conn.getBufferDepthForNodeAndVC(connectedRouter.id, vc);
             creditCounter.insert({ch, buf_size});
+            lastReceivedCreditID.insert({ch, -1});
         }
     }
 }
@@ -335,10 +336,10 @@ void RouterVC::send() {
 void RouterVC::receiveFlowControlCredit() {
     for (int conPos = 0; conPos < node.connections.size(); conPos++) {
         if (classicPortContainer.at(conPos).portFlowControlValidIn.read()) {
-            //TODO ASYNC
             auto credit = classicPortContainer.at(conPos).portFlowControlIn.read();
             Channel ch{conPos, credit.vc};
-            creditCounter.at(ch)++;
+            if (lastReceivedCreditID.at(ch) != credit.id)
+                creditCounter.at(ch)++;
         }
     }
 }

@@ -37,11 +37,11 @@ class NetworkInterfaceVC : public NetworkInterface {
 public:
     std::queue<Packet*> packet_send_queue;
     std::queue<Packet*> packet_recv_queue;
-    //std::vector<bool>* flowControlOut;
     sc_in<bool> clk;
     FlitPortContainer* flitPortContainer;
     PacketPortContainer* packetPortContainer;
     int creditCounter;
+    int lastReceivedCreditID;
 
     SC_HAS_PROCESS(NetworkInterfaceVC);
 
