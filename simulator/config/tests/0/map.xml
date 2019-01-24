@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<bind>
+		<task value = "0" />
+		<node value = "8" />
+	</bind>
+	
+	<bind>
+		<task value = "1" />
+		<node value = "9" />
+	</bind>
+	
+	<bind>
+		<task value = "2" />
+		<node value = "10" />
+	</bind>
+	
+	<bind>
+		<task value = "3" />
+		<node value = "11" />
+	</bind>
+	
+	<bind>
+		<task value = "4" />
+		<node value = "12" />
+	</bind>
+	
+	<bind>
+		<task value = "5" />
+		<node value = "13" />
+	</bind>
+	
+	<bind>
+		<task value = "6" />
+		<node value = "14" />
+	</bind>
+	
+	<bind>
+		<task value = "7" />
+		<node value = "15" />
+	</bind>
+</map>

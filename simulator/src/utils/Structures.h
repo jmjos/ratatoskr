@@ -59,17 +59,17 @@ struct DIR {
         case Local:
             return "Local";
         case East:
-            return "East";
+            return " East";
         case West:
-            return "West";
+            return " West";
         case North:
             return "North";
         case South:
             return "South";
         case Up:
-            return "Up";
+            return "   Up";
         case Down:
-            return "Down";
+            return " Down";
         default:
             return "Unknown Direction!!!";
         }
@@ -319,7 +319,7 @@ struct DataRequirement {
 struct DataDestination {
     dataDestID_t id;
     dataTypeID_t dataType;
-    nodeID_t destinationNode;       //fyi: "task" in XML ??
+    //nodeID_t destinationNode;       //fyi: "task" in XML ??
     taskID_t destinationTask;       //fyi: "task" in XML ??
     int minInterval;                //delay between each sent packet
     int maxInterval;
@@ -330,7 +330,7 @@ struct DataDestination {
 
     DataDestination() = default;
 
-    DataDestination(dataDestID_t id, dataTypeID_t dataType, taskID_t destinationTask, int minInterval, int maxInterval);
+    DataDestination(dataDestID_t id, dataTypeID_t dataType, nodeID_t destinationNode, int minInterval, int maxInterval);
 
     bool operator==(const DataDestination& dt) const;
 

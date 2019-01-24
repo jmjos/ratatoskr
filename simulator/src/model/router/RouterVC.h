@@ -27,10 +27,10 @@
 class RouterVC : public Router {
 public:
 
-    int rrDirOff;
-    int rrSwitch;
     std::map<Channel, int> creditCounter;
     std::map<Channel, int> lastReceivedCreditID;
+    std::map<int, int> VCAllocation_inputVCPtr;
+    std::map<int, int> switchAllocation_outputVCPtr;
 
     RouterVC(sc_module_name nm, Node &node);
 
@@ -54,11 +54,13 @@ public:
 
     int VCAllocation_getNextFreeVC(int out);
 
-    std::map<Channel, std::vector<Channel>> switchAllocation_generateRequests();
+    int VCAllocation_getNextVCToBeAllocated(int in);
 
-    void switchAllocation_generateAck(const std::map<Channel, std::vector<Channel>> &requests);
+    std::map<int, std::vector<Channel>> switchAllocation_generateRequests();
 
-    void receiveFlowControlCredit();
+    void switchAllocation_generateAck(const std::map<int, std::vector<Channel>> &requests);
+
+    void receiveFlowControlCredit() override;
 
 private:
 

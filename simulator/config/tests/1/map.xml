@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<bind>
+		<task value = "0" />
+		<node value = "0" />
+	</bind>
+	
+	<bind>
+		<task value = "1" />
+		<node value = "2" />
+	</bind>
+	
+	<bind>
+		<task value = "2" />
+		<node value = "5" />
+	</bind>
+</map>

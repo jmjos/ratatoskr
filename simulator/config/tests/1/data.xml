@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<dataTypes>
+		<dataType id="0">
+			<name value="image"/>
+		</dataType>
+		<dataType id="1">
+			<name value="image part"/>
+		</dataType>
+		<dataType id="2">
+			<name value="feature"/>
+		</dataType>
+	</dataTypes>
+
+	<tasks>
+		<task id = "0">
+			<start min = "1" max = "1"/>
+			<duration min = "-1" max = "-1"/>
+			<repeat min = "1" max = "1"/>
+			<generates>
+				<possibility id = "0">
+					<probability value = "1" />
+					<destinations>
+						<destination id = "0">
+							<delay min = "0" max = "0" />
+							<interval min = "0" max = "0"/>
+							<count min = "1" max = "1" />
+							<type value = "0" />
+							<task value = "2" />
+						</destination>
+					</destinations>
+				</possibility>
+			</generates>
+		</task>
+		
+		<task id = "1">
+			<start min = "1" max = "1"/>
+			<duration min = "-1" max = "-1"/>
+			<repeat min = "1" max = "1"/>
+			<generates>
+				<possibility id = "0">
+					<probability value = "1" />				
+					<destinations>
+						<destination id = "0">
+							<delay min = "0" max = "0" />
+							<interval min = "0" max = "0"/>
+							<count min = "1" max = "1" />
+							<type value = "1" />
+							<task value = "2" />
+						</destination>
+					</destinations>
+				</possibility>
+			</generates>
+		</task>
+		
+		<task id = "2">
+			<start min = "0" max = "0"/>
+			<duration min = "-1" max = "-1"/>
+			<repeat min = "1" max = "1"/>
+			<requires>
+				<requirement id = "0">
+					<type value = "0"/>
+					<source value = "0"/>
+					<count min = "1" max = "1" />
+				</requirement>
+			</requires>
+			<requires>
+				<requirement id = "1">
+					<type value = "1"/>
+					<source value = "1"/>
+					<count min = "1" max = "1" />
+				</requirement>
+			</requires>
+		</task>
+	</tasks>
+</data>
