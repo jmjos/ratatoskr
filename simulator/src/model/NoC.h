@@ -69,13 +69,10 @@ private:
     //std::vector<SignalContainer*> signalContainers;
     std::vector<std::unique_ptr<Link>> links;
 
+    void createClocks();
     void createTrafficPool();
-
     void createNetworkParticipants();
-
     void createSigContainers();
-
     void createLinks(const std::vector<std::unique_ptr<sc_clock>>& clocks);
-
     void runNoC();
 };

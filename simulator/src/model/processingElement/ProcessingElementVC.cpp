@@ -39,7 +39,6 @@ void ProcessingElementVC::initialize()
     packetPortContainer->portFlowControlOut.write(true);
     // sc_spawn(sc_bind(&SyntheticPool::sendThread, this, con.first,
     // con.second,initDelay,sp.waveCount,sp.waveDelay,sp.pkgPerWave, sp.name));
-
 }
 
 void ProcessingElementVC::thread()
@@ -96,7 +95,6 @@ void ProcessingElementVC::thread()
                         taskToDest.erase(task);
                         execute(task);
                     }
-
                 }
                 else {
                     destWait.at(dest) =
@@ -124,13 +122,11 @@ void ProcessingElementVC::thread()
                  * and the same thing for minInterval and maxInterval.
                  */
                 if (globalResources.benchmark=="synthetic") {
-
                     Task task = this->destToTask.at(dw.first);
                     int minInterval = dw.first.minInterval;
 
                     if (timeStamp<task.minStart) {
                         nextCall = task.minStart+globalResources.getRandomIntBetween(0, minInterval-1);
-
                     }
                     else {
                         int numIntervalsPassed = (timeStamp-task.minStart)/minInterval;

@@ -124,7 +124,6 @@ void GlobalReport::reportRoutingCalculations(ostream& stream)
     for (auto it : routingCalculations) {
         stream << boost::format("\tRouter id: %i had %i calculations \n")%it.first%it.second;
     }
-
 }
 
 void GlobalReport::issueLinkMatrixUpdate(int id, int currentTransmissionState, int lastTransmissionState)
@@ -291,7 +290,6 @@ void GlobalReport::updateBuffUsagePerVCHist(std::vector<std::vector<std::vector<
     if (!histVec.at(routerId).empty()) {
         long counter = histVec.at(routerId).at(dir).at(vc).at(bufferOccupation);
         histVec[routerId][dir][vc][bufferOccupation] = ++counter;
-
     }
     else {
         std::vector<std::vector<std::vector<long>>> vec_3d(DIR::size);
@@ -371,7 +369,6 @@ void GlobalReport::reportAllRoutersUsageHist()
 
 void GlobalReport::readConfigFile(const std::string& config_path)
 {
-
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(config_path.c_str());
     assert(result && "Failed to read simulator config file!");

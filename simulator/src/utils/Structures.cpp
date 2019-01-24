@@ -250,7 +250,6 @@ Task::Task(taskID_t id, nodeID_t nodeID)
         id(id),
         nodeID(nodeID)
 {
-
 }
 
 Task::Task(taskID_t id, nodeID_t node, const std::vector<DataRequirement>& requirements,
