@@ -31,6 +31,7 @@ RouterVC::RouterVC(sc_module_name nm, Node& node)
     buffers.resize(conCount);
     for (int conPos = 0; conPos<node.connections.size(); conPos++) {
         VCAllocation_inputVCPtr.insert({conPos, 0});
+        switchAllocation_inputVCPtr.insert({conPos, 0});
         switchAllocation_outputVCPtr.insert({conPos, 0});
         connID_t con_id = node.connections.at(conPos);
         Connection con = globalResources.connections.at(con_id);
@@ -197,7 +198,7 @@ std::map<int, std::vector<Channel>> RouterVC::VCAllocation_generateRequests()
             requests.at(out).push_back(in);
     };
     for (int in_conPos = 0; in_conPos<node.connections.size(); in_conPos++) {
-        int in_vc = VCAllocation_getNextVCToBeAllocated(in_conPos);//WHAHAHAHAH
+        int in_vc = VCAllocation_getNextVCToBeAllocated(in_conPos, VCAllocation_inputVCPtr);
         if (in_vc!=-1) {
             BufferFIFO<Flit*>* buf = buffers.at(in_conPos)->at(in_vc);
             Flit* flit = buf->front();
@@ -282,7 +283,6 @@ std::map<int, std::vector<Channel>> RouterVC::switchAllocation_generateRequests(
         }
         if (!vcs.empty()) {
             int in_vc = vcs.front(); //TODO round_robin
-            //int in_vc = roundRobin(switchTable, in_conPos);
             Channel in{in_conPos, in_vc};
             Channel out = routingTable.at(in);
             insert_request(out, in);
@@ -323,6 +323,7 @@ void RouterVC::switchAllocation_generateAck(const std::map<int, std::vector<Chan
         }
         int requested_out_vc = routingTable.at(selected_in).vc;
         switchTable[selected_in] = {requested_out_dir, requested_out_vc};
+        switchAllocation_inputVCPtr.at(selected_in.conPos)++;
         switchAllocation_outputVCPtr.at(requested_out_dir) = requested_out_vc+1;
     }
 }
@@ -399,7 +400,7 @@ RouterVC::~RouterVC()
 {
 }
 
-int RouterVC::VCAllocation_getNextVCToBeAllocated(int in)
+int RouterVC::VCAllocation_getNextVCToBeAllocated(int in, std::map<int, int> inputVCPtr)
 {
     // get all vcs starting from VCAllocation_inputVCPtr.
     connID_t con_id = node.connections.at(in);
@@ -407,7 +408,7 @@ int RouterVC::VCAllocation_getNextVCToBeAllocated(int in)
     int vcCount = con.getVCCountForNode(node.id);
     std::vector<int> vcs(vcCount);
     //this generates a list staring from the ptr (e.g. [2 3 4 5])
-    std::iota(vcs.begin(), vcs.end(), VCAllocation_inputVCPtr.at(in));
+    std::iota(vcs.begin(), vcs.end(), inputVCPtr.at(in));
     // this generates a list under round robin, i.e. convert [2 3 4 5] to [2 3 0 1]
     std::for_each(vcs.begin(), vcs.end(), [&vcCount](int& vc) { vc = vc%vcCount; });
 

@@ -30,6 +30,7 @@ public:
     std::map<Channel, int> creditCounter;
     std::map<Channel, int> lastReceivedCreditID;
     std::map<int, int> VCAllocation_inputVCPtr;
+    std::map<int, int> switchAllocation_inputVCPtr;
     std::map<int, int> switchAllocation_outputVCPtr;
 
     RouterVC(sc_module_name nm, Node &node);
@@ -54,7 +55,8 @@ public:
 
     int VCAllocation_getNextFreeVC(int out);
 
-    int VCAllocation_getNextVCToBeAllocated(int in);
+    int VCAllocation_getNextVCToBeAllocated(int in, std::map<int, int> inputPtr);
+
 
     std::map<int, std::vector<Channel>> switchAllocation_generateRequests();
 
