@@ -30,12 +30,10 @@ RouterVC::RouterVC(sc_module_name nm, Node &node)
     int conCount = node.connections.size();
     classicPortContainer.init(conCount);
     buffers.resize(conCount);
-    flowControlOut.resize(conCount);
     for (int conPos = 0; conPos < node.connections.size(); conPos++) {
         connID_t con_id = node.connections.at(conPos);
         Connection con = globalResources.connections.at(con_id);
         int vcCount = con.getVCCountForNode(node.id);
-        flowControlOut.at(conPos) = new std::vector<bool>(vcCount, false);
         buffers.at(conPos) = new std::vector<BufferFIFO<Flit *> *>(vcCount);
         for (int vc = 0; vc < vcCount; vc++) {
             int vc_buf_size = 0;
@@ -77,7 +75,7 @@ void RouterVC::bind(Connection *con, SignalContainer *sigContIn, SignalContainer
 void RouterVC::initialize() {
     for (int conPos = 0; conPos < node.connections.size(); conPos++) {
         classicPortContainer.at(conPos).portValidOut.write(false);
-        classicPortContainer.at(conPos).portFlowControlOut.write(flowControlOut.at(conPos));
+        classicPortContainer.at(conPos).portFlowControlValidOut.write(false);
     }
 
     // Setting credits according to the buffer depth of the downstream routers.
@@ -312,12 +310,8 @@ void RouterVC::send() {
             classicPortContainer.at(out.conPos).portValidOut.write(true);
             classicPortContainer.at(out.conPos).portDataOut.write(flit);
             classicPortContainer.at(out.conPos).portVcOut.write(out.vc);
-            for (auto e:*flowControlOut.at(in.conPos)) {
-                e = false;
-            }
-            auto ch = in;
-            flowControlOut.at(in.conPos)->at(in.vc) = true;
-            classicPortContainer.at(in.conPos).portFlowControlOut.write(flowControlOut.at(in.conPos));
+            Credit credit{in.vc};
+            classicPortContainer.at(in.conPos).portFlowControlOut.write(credit);
             classicPortContainer.at(in.conPos).portFlowControlValidOut.write(true);
             if (DIR::Local !=node.getDirOfConPos(out.conPos)) // NI has infinite buffers
                 creditCounter.at(out)--;
@@ -341,23 +335,14 @@ void RouterVC::send() {
 void RouterVC::receiveFlowControlCredit() {
     for (int conPos = 0; conPos < node.connections.size(); conPos++) {
         if (classicPortContainer.at(conPos).portFlowControlValidIn.read()) {
-            auto flowControlStatusOfVCs = classicPortContainer.at(conPos).portFlowControlIn.read();
-            int vc = 0;
-            for (auto flowControlStatusOfVC : *flowControlStatusOfVCs) {
-                if(flowControlStatusOfVC){
-                    Channel ch{conPos, vc};
-                    creditCounter.at(ch)++;
-                    break;
-                }
-                vc++;
-            }
+            //TODO ASYNC
+            auto credit = classicPortContainer.at(conPos).portFlowControlIn.read();
+            Channel ch{conPos, credit.vc};
+            creditCounter.at(ch)++;
         }
     }
 }
 
 
 RouterVC::~RouterVC() {
-    for (auto &fc:flowControlOut)
-        delete fc;
-    flowControlOut.clear();
 }

@@ -390,3 +390,25 @@ struct SyntheticPhase {
     SyntheticPhase(synthID_t id, const std::string& name, const std::string& distribution, float injectionRate);
 };
 
+class Credit{
+public:
+    int id;
+    static int idcnt;
+    int vc;
+
+    Credit() = default;
+
+    explicit Credit(int vc);
+
+    ~Credit() = default;
+
+    bool operator==(const Credit& credit) const;
+
+    Credit& operator=(const Credit& credit);
+
+    friend ostream& operator<<(ostream& os, const Credit& credit) {
+        return os;
+    }
+
+    friend void sc_trace(sc_trace_file*& tf, const Credit& credit, std::string nm){};
+};

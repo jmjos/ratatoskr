@@ -29,7 +29,6 @@ public:
 
     int rrDirOff;
     int rrSwitch;
-    std::vector<std::vector<bool> *> flowControlOut;
     std::map<Channel, int> creditCounter;
 
     RouterVC(sc_module_name nm, Node &node);

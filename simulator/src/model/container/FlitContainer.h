@@ -24,12 +24,13 @@
 #include "Container.h"
 
 #include "model/traffic/Flit.h"
+#include "utils/Structures.h"
 
 class FlitSignalContainer : public SignalContainer {
 public:
     sc_signal<bool> sigValid;
     sc_signal<bool> sigFlowControlValid;
-    sc_signal<std::vector<bool>*> sigFlowControl;
+    sc_signal<Credit> sigFlowControl;
     sc_signal<Flit*> sigData;
     sc_signal<int> sigVc;
 
@@ -47,13 +48,13 @@ class FlitPortContainer : public PortContainer {
 public:
     sc_in<bool> portValidIn;
     sc_in<bool> portFlowControlValidIn;
-    sc_in<std::vector<bool>*> portFlowControlIn;
+    sc_in<Credit> portFlowControlIn;
     sc_in<Flit*> portDataIn;
     sc_in<int> portVcIn;
 
     sc_out<bool> portValidOut;
     sc_out<bool> portFlowControlValidOut;
-    sc_out<std::vector<bool>*> portFlowControlOut;
+    sc_out<Credit> portFlowControlOut;
     sc_out<Flit*> portDataOut;
     sc_out<int> portVcOut;
 

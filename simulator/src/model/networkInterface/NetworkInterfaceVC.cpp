@@ -32,7 +32,7 @@ NetworkInterfaceVC::NetworkInterfaceVC(sc_module_name nm, Node& node)
         Node connectedRouter = globalResources.nodes.at(node.connectedNodes.at(0));
         Connection conn = globalResources.connections.at(node.getConnWithNode(connectedRouter));
         this->creditCounter = conn.getBufferDepthForNode(connectedRouter.id);
-        this->flowControlOut = new std::vector<bool>(1, true);
+        //this->flowControlOut = new std::vector<bool>(1, true);
         this->flitPortContainer = new FlitPortContainer(
                 ("NI_FLIT_CONTAINER"+std::to_string(this->id)).c_str());
         this->packetPortContainer = new PacketPortContainer(
@@ -58,7 +58,7 @@ NetworkInterfaceVC::NetworkInterfaceVC(sc_module_name nm, Node& node)
 void NetworkInterfaceVC::initialize()
 {
     flitPortContainer->portValidOut.write(false);
-    flitPortContainer->portFlowControlOut.write(flowControlOut);
+    flitPortContainer->portFlowControlValidOut.write(false);
 }
 
 void NetworkInterfaceVC::bind(Connection* con, SignalContainer* sigContIn, SignalContainer* sigContOut)
@@ -187,13 +187,14 @@ void NetworkInterfaceVC::receiveFlitFromRouter()
 
 NetworkInterfaceVC::~NetworkInterfaceVC()
 {
-    delete flowControlOut;
+    //delete flowControlOut;
     delete flitPortContainer;
     delete packetPortContainer;
 }
 
 void NetworkInterfaceVC::receiveFlowControlCreditFromRouter() {
-    auto flowControlStatus = flitPortContainer->portFlowControlIn.read();
-    if (flowControlStatus->at(0)) // only check VC 0 since NI does not send on other VC
-        creditCounter++;
+    auto credit = flitPortContainer->portFlowControlIn.read();
+    assert(credit.vc == 0);
+    //TODO ASYNC
+    creditCounter++;
 }

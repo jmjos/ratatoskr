@@ -37,7 +37,7 @@ class NetworkInterfaceVC : public NetworkInterface {
 public:
     std::queue<Packet*> packet_send_queue;
     std::queue<Packet*> packet_recv_queue;
-    std::vector<bool>* flowControlOut;
+    //std::vector<bool>* flowControlOut;
     sc_in<bool> clk;
     FlitPortContainer* flitPortContainer;
     PacketPortContainer* packetPortContainer;
