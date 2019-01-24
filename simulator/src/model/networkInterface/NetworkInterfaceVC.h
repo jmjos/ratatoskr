@@ -57,8 +57,10 @@ public:
 
     void receivePacketFromPE() override;
 
-    void receiveFlit() override;
+    void receiveFlitFromRouter() override;
 
-    void preparePacket(Packet* p) override;
+    void generateFlitsForPacket(Packet *p) override;
+
+    void receiveFlowControlCreditFromRouter();
 };
 

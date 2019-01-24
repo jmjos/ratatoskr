@@ -28,8 +28,8 @@
 class FlitSignalContainer : public SignalContainer {
 public:
     sc_signal<bool> sigValid;
+    sc_signal<bool> sigFlowControlValid;
     sc_signal<std::vector<bool>*> sigFlowControl;
-    sc_signal<std::vector<bool>*> sigEmpty;
     sc_signal<Flit*> sigData;
     sc_signal<int> sigVc;
 
@@ -46,14 +46,14 @@ public:
 class FlitPortContainer : public PortContainer {
 public:
     sc_in<bool> portValidIn;
+    sc_in<bool> portFlowControlValidIn;
     sc_in<std::vector<bool>*> portFlowControlIn;
-    sc_in<std::vector<bool>*> portEmptyIn;
     sc_in<Flit*> portDataIn;
     sc_in<int> portVcIn;
 
     sc_out<bool> portValidOut;
+    sc_out<bool> portFlowControlValidOut;
     sc_out<std::vector<bool>*> portFlowControlOut;
-    sc_out<std::vector<bool>*> portEmptyOut;
     sc_out<Flit*> portDataOut;
     sc_out<int> portVcOut;
 
@@ -74,14 +74,14 @@ public:
         assert(cscout);
 
         portValidIn(cscin->sigValid);
+        portFlowControlValidIn(cscin->sigFlowControlValid);
         portFlowControlIn(cscin->sigFlowControl);
-        portEmptyIn(cscin->sigEmpty);
         portDataIn(cscin->sigData);
         portVcIn(cscin->sigVc);
 
         portValidOut(cscout->sigValid);
+        portFlowControlValidOut(cscout->sigFlowControlValid);
         portFlowControlOut(cscout->sigFlowControl);
-        portEmptyOut(cscout->sigEmpty);
         portDataOut(cscout->sigData);
         portVcOut(cscout->sigVc);
 
@@ -94,14 +94,14 @@ public:
         assert(cscin);
 
         portValidIn(cscin->sigValid);
+        portFlowControlValidIn(cscin->sigFlowControlValid);
         portFlowControlIn(cscin->sigFlowControl);
-        portEmptyIn(cscin->sigEmpty);
         portDataIn(cscin->sigData);
         portVcIn(cscin->sigVc);
 
         portValidOut(portOpen);
+        portFlowControlValidOut(portOpen);
         portFlowControlOut(portOpen);
-        portEmptyOut(portOpen);
         portDataOut(portOpen);
         portVcOut(portOpen);
     }

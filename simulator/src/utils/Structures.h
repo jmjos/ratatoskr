@@ -116,6 +116,8 @@ struct Channel {
     bool operator==(const Channel& a) const;
 
     bool operator!=(const Channel& a) const;
+
+    friend ostream& operator<<(ostream& os, const Channel& ch);
 };
 
 template<typename T>

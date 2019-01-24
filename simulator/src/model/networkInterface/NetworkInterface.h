@@ -44,8 +44,8 @@ public:
 
     virtual void receivePacketFromPE() = 0;
 
-    virtual void receiveFlit() = 0;
+    virtual void receiveFlitFromRouter() = 0;
 
-    virtual void preparePacket(Packet* p) = 0;
+    virtual void generateFlitsForPacket(Packet *p) = 0;
 };
 

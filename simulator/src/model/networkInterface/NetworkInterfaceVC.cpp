@@ -45,11 +45,28 @@ NetworkInterfaceVC::NetworkInterfaceVC(sc_module_name nm, Node& node)
     SC_METHOD(thread);
     sensitive << clk.pos() << clk.neg();
 
-    SC_METHOD(receiveFlit);
+    SC_METHOD(receiveFlitFromRouter);
     sensitive << flitPortContainer->portValidIn.pos();
 
     SC_METHOD(receivePacketFromPE);
     sensitive << packetPortContainer->portValidIn.pos();
+
+    SC_METHOD(receiveFlowControlCreditFromRouter);
+    sensitive << flitPortContainer->portFlowControlValidIn.pos();
+}
+
+void NetworkInterfaceVC::initialize()
+{
+    flitPortContainer->portValidOut.write(false);
+    flitPortContainer->portFlowControlOut.write(flowControlOut);
+}
+
+void NetworkInterfaceVC::bind(Connection* con, SignalContainer* sigContIn, SignalContainer* sigContOut)
+{
+    if (con==nullptr)
+        packetPortContainer->bind(sigContIn, sigContOut);
+    else
+        flitPortContainer->bind(sigContIn, sigContOut);
 }
 
 void NetworkInterfaceVC::receivePacketFromPE()
@@ -57,13 +74,12 @@ void NetworkInterfaceVC::receivePacketFromPE()
     if (packetPortContainer->portValidIn.posedge()) {
         LOG(globalReport.verbose_pe_function_calls, "NI" << this->id << "(Node" << node.id << ")t- receive()");
         Packet* p = packetPortContainer->portDataIn.read();
-        preparePacket(p);
-        //cout << "NI " << this->id << " pushing packet to queue @ " << sc_time_stamp()  << endl;
+        generateFlitsForPacket(p);
         packet_send_queue.push(p);
     }
 }
 
-void NetworkInterfaceVC::preparePacket(Packet* p)
+void NetworkInterfaceVC::generateFlitsForPacket(Packet *p)
 {
     int flitsPerPacket = globalResources.flitsPerPacket;
     for (int i = 0; i<flitsPerPacket; i++) {
@@ -81,26 +97,11 @@ void NetworkInterfaceVC::preparePacket(Packet* p)
     }
 }
 
-void NetworkInterfaceVC::initialize()
-{
-    flitPortContainer->portValidOut.write(false);
-    flitPortContainer->portFlowControlOut.write(flowControlOut);
-}
-
-void NetworkInterfaceVC::bind(Connection* con, SignalContainer* sigContIn, SignalContainer* sigContOut)
-{
-    if (con==nullptr)
-        packetPortContainer->bind(sigContIn, sigContOut);
-    else
-        flitPortContainer->bind(sigContIn, sigContOut);
-}
-
 void NetworkInterfaceVC::thread()
 {
     LOG(globalReport.verbose_pe_function_calls, "NI" << this->id << "(Node" << node.id << ")\t- send_data_process()");
     if (clk.posedge()) {
         if (!packet_send_queue.empty()) {
-            //cout << "PE " << id << " reads data from queue @ " << sc_time_stamp() << endl;
             if (creditCounter!=0) {
                 Packet* p = packet_send_queue.front();
                 flitID_t f_id = p->toTransmit.front();
@@ -146,15 +147,15 @@ void NetworkInterfaceVC::thread()
     }
 }
 
-void NetworkInterfaceVC::receiveFlit()
+void NetworkInterfaceVC::receiveFlitFromRouter()
 {
     LOG(globalReport.verbose_pe_function_calls,
-            "NI" << this->id << "(Node" << node.id << ")\t- receive_data_process()");
+        "NI" << this->id << "(Node" << node.id << ")\t- receive_data_process()");
     if (flitPortContainer->portValidIn.posedge()) {
-        //if no flit was send: ABP or with NULL-check?
         Flit* received_flit = flitPortContainer->portDataIn.read();
         Packet* p = received_flit->packet;
         double time = sc_time_stamp().to_double();
+
         // generate packet statistics. in case of synthetic traffic only for run phase
         if ((float) globalResources.synthetic_start_measurement_time
                 <=(time/1000)) {
@@ -165,10 +166,12 @@ void NetworkInterfaceVC::receiveFlit()
                 globalReport.latencyNetwork.sample((float) (time-received_flit->headFlit->injectionTime));
             }
         }
+
         auto position = std::find(p->inTransmit.begin(), p->inTransmit.end(), received_flit->id);
         if (position!=p->inTransmit.end())
             p->inTransmit.erase(position);
         p->transmitted.push_back(received_flit->id);
+
         rep.reportEvent(dbid, "pe_receive_flit", std::to_string(received_flit->id));
         LOG((globalReport.verbose_pe_receive_tail_flit && received_flit->type==TAIL)
                 || globalReport.verbose_pe_receive_flit,
@@ -176,23 +179,10 @@ void NetworkInterfaceVC::receiveFlit()
         LOG(received_flit->type==TAIL && (!p->toTransmit.empty() || !p->inTransmit.empty()),
                 "NI" << this->id << "(Node" << node.id << ")\t- Received Tail Flit, but still missing flits! "
                      << *received_flit);
-        //if a complete packet is recieved, notify tasks
-        if (p->toTransmit.empty() && p->inTransmit.empty()) {
-/*				NetracePacket* np = dynamic_cast<NetracePacket*>(p);
 
-				if (np && np->dst != id) {
-					cout << "RECIEVED WRONG FLIT" << endl;
-				}
-				if (np && globalResources.verbose_netrace_router_receive) {
-					cout << "PE " << id << " recieved a packet @ " << sc_time_stamp() << ":";
-					Netrace netrace;
-					netrace.nt_print_packet(np->netracePacket);
-				}*/
-            //TODO trafficPool->receive(p);
+        if (p->toTransmit.empty() && p->inTransmit.empty())
             packet_recv_queue.push(p);
-        }
     }
-    // build packet from flit, send packet to application (via TLM?)
 }
 
 NetworkInterfaceVC::~NetworkInterfaceVC()
@@ -200,4 +190,10 @@ NetworkInterfaceVC::~NetworkInterfaceVC()
     delete flowControlOut;
     delete flitPortContainer;
     delete packetPortContainer;
+}
+
+void NetworkInterfaceVC::receiveFlowControlCreditFromRouter() {
+    auto flowControlStatus = flitPortContainer->portFlowControlIn.read();
+    if (flowControlStatus->at(0)) // only check VC 0 since NI does not send on other VC
+        creditCounter++;
 }

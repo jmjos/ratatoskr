@@ -63,6 +63,11 @@ RouterVC::RouterVC(sc_module_name nm, Node &node)
     for (int conPos = 0; conPos < node.connections.size(); conPos++) {
         sensitive << classicPortContainer.at(conPos).portValidIn.pos();
     }
+
+    SC_METHOD(receiveFlowControlCredit);
+    for (int conPos = 0; conPos < node.connections.size(); conPos++) {
+        sensitive << classicPortContainer.at(conPos).portFlowControlValidIn.pos();
+    }
 }
 
 void RouterVC::bind(Connection *con, SignalContainer *sigContIn, SignalContainer *sigContOut) {
@@ -109,6 +114,7 @@ void RouterVC::thread() {
         // although it is not physically accurate.
         for (unsigned int con = 0; con < node.connections.size(); con++) {
             classicPortContainer.at(con).portValidOut.write(false);
+            classicPortContainer.at(con).portFlowControlValidOut.write(false);
         }
     }
 }
@@ -267,7 +273,6 @@ std::map<Channel, std::vector<Channel>> RouterVC::switchAllocation_generateReque
     return requests;
 }
 
-
 void RouterVC::switchAllocation_generateAck(const std::map<Channel, std::vector<Channel>> &requests) {
     for (auto &request:requests) {
         Channel requested_out = request.first;
@@ -295,7 +300,6 @@ std::vector<int> RouterVC::getAllocatedVCsOfOutDir(int conPos) {
     return vcs;
 }
 
-
 void RouterVC::send() {
     for (auto &entry:switchTable) {
         Channel in = entry.first;
@@ -311,12 +315,14 @@ void RouterVC::send() {
             for (auto e:*flowControlOut.at(in.conPos)) {
                 e = false;
             }
+            auto ch = in;
             flowControlOut.at(in.conPos)->at(in.vc) = true;
             classicPortContainer.at(in.conPos).portFlowControlOut.write(flowControlOut.at(in.conPos));
-            creditCounter.at(out)--;
+            classicPortContainer.at(in.conPos).portFlowControlValidOut.write(true);
+            if (DIR::Local !=node.getDirOfConPos(out.conPos)) // NI has infinite buffers
+                creditCounter.at(out)--;
             if (flit->type == TAIL) {
                 routingTable.erase(in);
-
             }
             LOG(
                     (globalReport.verbose_router_send_head_flit && flit->type == HEAD) ||
@@ -324,10 +330,31 @@ void RouterVC::send() {
                     "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(out.conPos)) << out.vc
                              << "]\t- Send Flit "
                              << *flit);
+        } else {
+            LOG(globalReport.verbose_router_throttle,
+                "Router" << this->id << "(Node" << node.id << ")\t- Waiting for downstream Router!");
         }
     }
     switchTable.clear();
 }
+
+void RouterVC::receiveFlowControlCredit() {
+    for (int conPos = 0; conPos < node.connections.size(); conPos++) {
+        if (classicPortContainer.at(conPos).portFlowControlValidIn.read()) {
+            auto flowControlStatusOfVCs = classicPortContainer.at(conPos).portFlowControlIn.read();
+            int vc = 0;
+            for (auto flowControlStatusOfVC : *flowControlStatusOfVCs) {
+                if(flowControlStatusOfVC){
+                    Channel ch{conPos, vc};
+                    creditCounter.at(ch)++;
+                    break;
+                }
+                vc++;
+            }
+        }
+    }
+}
+
 
 RouterVC::~RouterVC() {
     for (auto &fc:flowControlOut)

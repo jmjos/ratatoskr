@@ -57,6 +57,11 @@ bool Channel::operator!=(const Channel &a) const {
     return !operator==(a);
 }
 
+ostream &operator<<(ostream &os, const Channel &ch) {
+    os << "dir: " << ch.conPos << " vc: " << ch.vc;
+    return os;
+}
+
 NodeType::NodeType(nodeTypeID_t id, const std::string& model, const std::string& routing,
         const std::string& selection, int clk, const std::string& arbiterType)
         :

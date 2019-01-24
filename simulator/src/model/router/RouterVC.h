@@ -58,6 +58,8 @@ public:
 
     void switchAllocation_generateAck(const std::map<Channel, std::vector<Channel>> &requests);
 
+    void receiveFlowControlCredit();
+
 private:
 
     std::vector<int> getAllocatedVCsOfInDir(int conPos);
