@@ -57,6 +57,4 @@ public:
     virtual void receive() = 0;
 
     virtual void updateUsageStats() = 0;
-
-    virtual void route() = 0;
 };

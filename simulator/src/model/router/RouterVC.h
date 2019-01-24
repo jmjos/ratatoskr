@@ -46,8 +46,6 @@ public:
 
     void updateUsageStats() override;
 
-    void route() override;
-
     void send();
 
     std::map<int, std::vector<Channel>> VCAllocation_generateRequests();

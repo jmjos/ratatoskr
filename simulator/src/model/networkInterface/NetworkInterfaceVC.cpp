@@ -138,6 +138,9 @@ void NetworkInterfaceVC::thread()
         }
     }
     else if (clk.negedge()) {
+        //The negative edge of the clock is used to model the asynchronous communication. Otherwise, the clock of the
+        // would need to be fed to the downstream router, which is rather complicated. Therefore, we chose this approach
+        // although it is not physically accurate.
         flitPortContainer->portValidOut.write(false);
         packetPortContainer->portValidOut.write(false);
     }

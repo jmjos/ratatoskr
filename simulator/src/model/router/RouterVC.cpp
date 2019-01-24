@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2018 joseph
+ * Copyright (C) 2019 jmjos
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -50,9 +50,7 @@ RouterVC::RouterVC(sc_module_name nm, Node &node)
             rep.reportAttribute(buf->dbid, "dir", std::to_string(conPos));
             rep.reportAttribute(buf->dbid, "vc", std::to_string(vc));
         }
-
     }
-
     lastReceivedFlits.resize(conCount);
 
     SC_METHOD(thread);
@@ -69,84 +67,6 @@ RouterVC::RouterVC(sc_module_name nm, Node &node)
 
 void RouterVC::bind(Connection *con, SignalContainer *sigContIn, SignalContainer *sigContOut) {
     classicPortContainer.at(node.getConnPosition(con->id)).bind(sigContIn, sigContOut);
-}
-
-void RouterVC::thread() {
-    if (clk.posedge()) {
-        //route();
-        // key: connection position of output, value: the requesting inputs.
-        send();
-
-        std::map<Channel, std::vector<Channel>> switch_requests = switchAllocation_generateRequests();
-        switchAllocation_generateAck(switch_requests);
-
-        std::map<int, std::vector<Channel>> vc_requests = VCAllocation_generateRequests();
-        VCAllocation_generateAck(vc_requests);
-    } else if (clk.negedge()) {
-        for (unsigned int con = 0; con < node.connections.size(); con++) {
-            classicPortContainer.at(con).portValidOut.write(false);
-        }
-    }
-}
-
-// VC and buffer usage statistics
-void RouterVC::updateUsageStats() {
-    for (unsigned int dirIn = 0; dirIn < node.connections.size(); dirIn++) {
-        int numVCs = buffers.at(dirIn)->size();
-        int numberActiveVCs = 0;
-
-        for (unsigned int vcIn = 0; vcIn < numVCs; vcIn++) {
-            BufferFIFO<Flit *> *buf = buffers.at(dirIn)->at(vcIn);
-            if (!buf->empty()) {
-                numberActiveVCs++;
-                globalReport.updateBuffUsagePerVCHist(globalReport.bufferUsagePerVCHist, this->id, dirIn,
-                                                      vcIn, static_cast<int>(buf->occupied()), numVCs);
-            }
-        }
-        /* this 1 is added to create a column for numberOfActiveVCs=0.
-           yes it's an extra column but it allow us to use the same function to update both buffer stats and VC stats.
-        */
-        globalReport.updateUsageHist(globalReport.VCsUsageHist, this->id, node.getDirOfConPos(dirIn),
-                                     numberActiveVCs, numVCs + 1);
-    }
-}
-
-void RouterVC::route() {
-}
-
-void RouterVC::receive() {
-    for (unsigned int conPos = 0; conPos < node.connections.size(); conPos++) {
-        if (classicPortContainer.at(conPos).portValidIn.read()) {
-            Flit *flit = classicPortContainer.at(conPos).portDataIn.read();
-            int vc = classicPortContainer.at(conPos).portVcIn.read();
-            BufferFIFO<Flit *> *buf = buffers.at(conPos)->at(vc);
-            Channel c = Channel(conPos, vc);
-
-            // prevents double writing of data, which occurs for asynchronous buffers.
-            // problem: this function is executed for all buffers if new data arrive. If some directions are clocked at different data rate, the slower data rates are duplicated.
-
-            Flit *lrFlit = lastReceivedFlits.at(conPos);
-            if (!lrFlit || lrFlit->id != flit->id) {
-                if (buf->enqueue(flit)) {
-                    rep.reportEvent(buf->dbid, "buffer_enqueue_flit", std::to_string(flit->id));
-                    lastReceivedFlits[conPos] = flit;
-                } else {
-                    LOG(globalReport.verbose_router_buffer_overflow,
-                        "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
-                                 << "]\t- Buffer Overflow " << *flit);
-                }
-                if (flit->type == HEAD) {
-                    LOG(globalReport.verbose_router_receive_head_flit,
-                        "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
-                                 << "]\t- Receive Flit " << *flit);
-                } else {
-                    LOG(globalReport.verbose_router_receive_flit,
-                        "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
-                                 << "]\t- Receive Flit " << *flit);
-                }
-            }
-        }
-    }
 }
 
 void RouterVC::initialize() {
@@ -172,10 +92,83 @@ void RouterVC::initialize() {
     }
 }
 
-RouterVC::~RouterVC() {
-    for (auto &fc:flowControlOut)
-        delete fc;
-    flowControlOut.clear();
+void RouterVC::thread() {
+    if (clk.posedge()) {
+        //route();
+        // key: connection position of output, value: the requesting inputs.
+        send();
+
+        std::map<Channel, std::vector<Channel>> switch_requests = switchAllocation_generateRequests();
+        switchAllocation_generateAck(switch_requests);
+
+        std::map<int, std::vector<Channel>> vc_requests = VCAllocation_generateRequests();
+        VCAllocation_generateAck(vc_requests);
+    } else if (clk.negedge()) {
+        //The negative edge of the clock is used to model the asynchronous communication. Otherwise, the clock of the
+        // would need to be fed to the downstream router, which is rather complicated. Therefore, we chose this approach
+        // although it is not physically accurate.
+        for (unsigned int con = 0; con < node.connections.size(); con++) {
+            classicPortContainer.at(con).portValidOut.write(false);
+        }
+    }
+}
+
+void RouterVC::receive() {
+    for (unsigned int conPos = 0; conPos < node.connections.size(); conPos++) {
+        if (classicPortContainer.at(conPos).portValidIn.read()) {
+            Flit *flit = classicPortContainer.at(conPos).portDataIn.read();
+            int vc = classicPortContainer.at(conPos).portVcIn.read();
+            BufferFIFO<Flit *> *buf = buffers.at(conPos)->at(vc);
+            Channel c = Channel(conPos, vc);
+
+            // Prevents double writing of data, which occurs for asynchronous buffers.
+            // Problem: This function is executed for all buffers if new data arrive. If some directions are clocked
+            // at different data rate, the slower data rates are duplicated.
+
+            Flit *lrFlit = lastReceivedFlits.at(conPos);
+            if (!lrFlit || lrFlit->id != flit->id) {
+                if (buf->enqueue(flit)) {
+                    rep.reportEvent(buf->dbid, "buffer_enqueue_flit", std::to_string(flit->id));
+                    lastReceivedFlits[conPos] = flit;
+                } else {
+                    LOG(globalReport.verbose_router_buffer_overflow,
+                        "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
+                                 << "]\t- Buffer Overflow " << *flit);
+                }
+                if (flit->type == HEAD) {
+                    LOG(globalReport.verbose_router_receive_head_flit,
+                        "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
+                                 << "]\t- Receive Flit " << *flit);
+                } else {
+                    LOG(globalReport.verbose_router_receive_flit,
+                        "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
+                                 << "]\t- Receive Flit " << *flit);
+                }
+            }
+        }
+    }
+}
+
+// VC and buffer usage statistics
+void RouterVC::updateUsageStats() {
+    for (unsigned int dirIn = 0; dirIn < node.connections.size(); dirIn++) {
+        int numVCs = buffers.at(dirIn)->size();
+        int numberActiveVCs = 0;
+
+        for (unsigned int vcIn = 0; vcIn < numVCs; vcIn++) {
+            BufferFIFO<Flit *> *buf = buffers.at(dirIn)->at(vcIn);
+            if (!buf->empty()) {
+                numberActiveVCs++;
+                globalReport.updateBuffUsagePerVCHist(globalReport.bufferUsagePerVCHist, this->id, dirIn,
+                                                      vcIn, static_cast<int>(buf->occupied()), numVCs);
+            }
+        }
+        /* this 1 is added to create a column for numberOfActiveVCs=0.
+           yes it's an extra column but it allow us to use the same function to update both buffer stats and VC stats.
+        */
+        globalReport.updateUsageHist(globalReport.VCsUsageHist, this->id, node.getDirOfConPos(dirIn),
+                                     numberActiveVCs, numVCs + 1);
+    }
 }
 
 std::map<int, std::vector<Channel>> RouterVC::VCAllocation_generateRequests() {
@@ -334,4 +327,10 @@ void RouterVC::send() {
         }
     }
     switchTable.clear();
+}
+
+RouterVC::~RouterVC() {
+    for (auto &fc:flowControlOut)
+        delete fc;
+    flowControlOut.clear();
 }
