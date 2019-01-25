@@ -69,4 +69,6 @@ private:
     std::vector<int> getAllocatedVCsOfInDir(int conPos);
 
     std::vector<int> getAllocatedVCsOfOutDir(int conPos);
+
+    std::vector<int> generateVCsFromPtr(int direction, std::map<int, int> VCPtr);
 };

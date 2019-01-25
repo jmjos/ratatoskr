@@ -272,17 +272,32 @@ std::map<int, std::vector<Channel>> RouterVC::switchAllocation_generateRequests(
             requests.at(out.conPos).push_back(in);
     };
     for (int in_conPos = 0; in_conPos<node.connections.size(); in_conPos++) {
-        std::vector<int> vcs = getAllocatedVCsOfInDir(in_conPos);
-        for (int in_vc:vcs) {
+        std::vector<int> allocated_vcs = getAllocatedVCsOfInDir(in_conPos);
+        for (int in_vc:allocated_vcs) {
             BufferFIFO<Flit*>* buf = buffers.at(in_conPos)->at(in_vc);
             Flit* flit = buf->front();
             if (!flit) {
-                auto it = std::find(vcs.begin(), vcs.end(), in_vc);
-                vcs.erase(it);
+                auto it = std::find(allocated_vcs.begin(), allocated_vcs.end(), in_vc);
+                allocated_vcs.erase(it);
             }
         }
-        if (!vcs.empty()) {
-            int in_vc = vcs.front(); //TODO round_robin
+        if (!allocated_vcs.empty()) {
+            auto vcs = generateVCsFromPtr(in_conPos, switchAllocation_inputVCPtr);
+
+            bool found = false;
+            int in_vc = -1;
+            for (auto vc : vcs) {
+                if (!found) {
+                    for (auto allocated_vc : allocated_vcs) {
+                        if (allocated_vc==vc) {
+                            found = true;
+                            in_vc = allocated_vc;
+                            break;
+                        }
+                    }
+                }
+            }
+
             Channel in{in_conPos, in_vc};
             Channel out = routingTable.at(in);
             insert_request(out, in);
@@ -297,15 +312,7 @@ void RouterVC::switchAllocation_generateAck(const std::map<int, std::vector<Chan
         int requested_out_dir = request.first;
         std::vector<Channel> requesting_ins = request.second;
 
-        // get all vcs starting from VCAllocation_inputVCPtr.
-        connID_t con_id = node.connections.at(requested_out_dir);
-        Connection con = globalResources.connections.at(con_id);
-        int vcCount = con.getVCCountForNode(node.id);
-        std::vector<int> vcs(vcCount);
-        //this generates a list staring from the ptr (e.g. [2 3 4 5])
-        std::iota(vcs.begin(), vcs.end(), switchAllocation_outputVCPtr.at(requested_out_dir));
-        // this generates a list under round robin, i.e. convert [2 3 4 5] to [2 3 0 1]
-        std::for_each(vcs.begin(), vcs.end(), [&vcCount](int& vc) { vc = vc%vcCount; });
+        auto vcs = generateVCsFromPtr(requested_out_dir, switchAllocation_outputVCPtr);
 
         bool found = false;
         Channel selected_in{};
@@ -402,15 +409,7 @@ RouterVC::~RouterVC()
 
 int RouterVC::VCAllocation_getNextVCToBeAllocated(int in, std::map<int, int> inputVCPtr)
 {
-    // get all vcs starting from VCAllocation_inputVCPtr.
-    connID_t con_id = node.connections.at(in);
-    Connection con = globalResources.connections.at(con_id);
-    int vcCount = con.getVCCountForNode(node.id);
-    std::vector<int> vcs(vcCount);
-    //this generates a list staring from the ptr (e.g. [2 3 4 5])
-    std::iota(vcs.begin(), vcs.end(), inputVCPtr.at(in));
-    // this generates a list under round robin, i.e. convert [2 3 4 5] to [2 3 0 1]
-    std::for_each(vcs.begin(), vcs.end(), [&vcCount](int& vc) { vc = vc%vcCount; });
+    auto vcs = generateVCsFromPtr(in, inputVCPtr);
 
     // subtract used vcs from all vcs, because they are already allocated.
     std::vector<int> used_vcs = getAllocatedVCsOfInDir(in);
@@ -420,6 +419,9 @@ int RouterVC::VCAllocation_getNextVCToBeAllocated(int in, std::map<int, int> inp
 
     // subtract empty vcs, because they don't hold data.
     std::vector<int> empty_vcs{};
+    connID_t con_id = node.connections.at(in);
+    Connection con = globalResources.connections.at(con_id);
+    int vcCount = con.getVCCountForNode(node.id);
     for (int vc = 0; vc<vcCount; vc++) {
         BufferFIFO<Flit*>* buf = buffers.at(in)->at(vc);
         Flit* flit = buf->front();
@@ -438,4 +440,17 @@ int RouterVC::VCAllocation_getNextVCToBeAllocated(int in, std::map<int, int> inp
         return -1;
     else
         return vcs.front();
+}
+
+std::vector<int> RouterVC::generateVCsFromPtr(int direction, std::map<int, int> VCPtr){
+    // get all vcs starting from VCAllocation_inputVCPtr.
+    connID_t con_id = node.connections.at(direction);
+    Connection con = globalResources.connections.at(con_id);
+    int vcCount = con.getVCCountForNode(node.id);
+    std::vector<int> vcs(vcCount);
+    //this generates a list staring from the ptr (e.g. [2 3 4 5])
+    std::iota(vcs.begin(), vcs.end(), VCPtr.at(direction));
+    // this generates a list under round robin, i.e. convert [2 3 4 5] to [2 3 0 1]
+    std::for_each(vcs.begin(), vcs.end(), [&vcCount](int& vc) { vc = vc%vcCount; });
+    return vcs;
 }
