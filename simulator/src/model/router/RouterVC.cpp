@@ -103,8 +103,6 @@ void RouterVC::initialize()
 void RouterVC::thread()
 {
     if (clk.posedge()) {
-        //route();
-        // key: connection position of output, value: the requesting inputs.
         send();
 
         std::map<int, std::vector<Channel>> switch_requests = switchAllocation_generateRequests();
@@ -403,10 +401,6 @@ void RouterVC::receiveFlowControlCredit()
     }
 }
 
-RouterVC::~RouterVC()
-{
-}
-
 int RouterVC::VCAllocation_getNextVCToBeAllocated(int in, std::map<int, int> inputVCPtr)
 {
     auto vcs = generateVCsFromPtr(in, inputVCPtr);
@@ -453,4 +447,8 @@ std::vector<int> RouterVC::generateVCsFromPtr(int direction, std::map<int, int> 
     // this generates a list under round robin, i.e. convert [2 3 4 5] to [2 3 0 1]
     std::for_each(vcs.begin(), vcs.end(), [&vcCount](int& vc) { vc = vc%vcCount; });
     return vcs;
+}
+
+RouterVC::~RouterVC()
+{
 }
