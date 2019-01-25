@@ -297,7 +297,7 @@ std::map<int, std::vector<Channel>> RouterVC::switchAllocation_generateRequests(
                     }
                 }
             }
-
+            assert(in_vc != -1);
             Channel in{in_conPos, in_vc};
             Channel out = routingTable.at(in);
             insert_request(out, in);
