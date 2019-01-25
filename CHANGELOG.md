@@ -116,3 +116,16 @@ All notable changes to this project will be documented in this file.
 
 ### Known Issues
 - segmentation faults might happen randomly
+
+## [2.0] - 2019-01-25
+
+### Features
+- Very large update with completly new data structures
+- New data structures without with reduced complexity
+- Many thanks to @imadhajjar
+
+### Known Issues
+- Performance not measured
+- Still have to verify the VHDL model
+- Scripts not finished
+- lots more testing required
