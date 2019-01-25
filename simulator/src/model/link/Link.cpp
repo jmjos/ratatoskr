@@ -56,7 +56,6 @@ Link::~Link() {
 
 void Link::passthrough_thread() {
 
-==== BASE ====
 	while (true) {
 		wait();
 		wait(0, SC_NS);
@@ -100,7 +99,6 @@ void Link::passthrough_thread() {
 						+ offset;
 			}
 		}
-==== BASE ====
 
 //		rawDataOutput->write(outputToFile.c_str(), 3);
 //		rawDataOutput->flush();
