@@ -29,10 +29,11 @@
 #include "utils/Report.h"
 #include "model/NoC.h"
 
-int sc_main(int arg_num, char *arg_vec[]) {
-    GlobalResources &globalResources = GlobalResources::getInstance();
-    GlobalReport globalReport = GlobalReport::getInstance();
-    Report &rep = Report::getInstance();  // database report
+int sc_main(int arg_num, char* arg_vec[])
+{
+    GlobalResources& globalResources = GlobalResources::getInstance();
+    GlobalReport& globalReport = GlobalReport::getInstance();
+    Report& rep = Report::getInstance();  // database report
     srand(time(nullptr));
     sleep(1);  // wait for the systemC branding
     cout << endl << "A-3D-NoC Simulator Copyright(C) 2014-2019" << endl;
@@ -44,9 +45,10 @@ int sc_main(int arg_num, char *arg_vec[]) {
     sc_report_handler::set_verbosity_level(SC_DEBUG);
     sc_report_handler::set_actions(SC_ID_INSTANCE_EXISTS_, SC_DO_NOTHING); //disable renaming warnings
 
-    if (arg_num == 2) {
+    if (arg_num==2) {
         globalResources.readConfigFile(arg_vec[1]);
-    } else {
+    }
+    else {
         std::string config_path = "config/tests/1/config.xml";
         globalResources.readConfigFile(config_path);
         globalReport.readConfigFile(config_path);
@@ -54,6 +56,8 @@ int sc_main(int arg_num, char *arg_vec[]) {
     globalResources.readNoCLayout(globalResources.noc_file);
     if (!globalResources.data_file.empty() && !globalResources.map_file.empty())
         globalResources.readTaskAndMapFiles(globalResources.data_file, globalResources.map_file);
+
+    globalReport.resizeMatrices();
 
     rep.connect("127.0.0.1", "10000");
     rep.startRun("name");
@@ -70,9 +74,9 @@ int sc_main(int arg_num, char *arg_vec[]) {
     }
     globalReport.reportPerformance(cout);
     auto duration = std::chrono::duration_cast<std::chrono::seconds>(
-            std::chrono::high_resolution_clock::now() - t1).count();
+            std::chrono::high_resolution_clock::now()-t1).count();
     auto durationmin = std::chrono::duration_cast<std::chrono::minutes>(
-            std::chrono::high_resolution_clock::now() - t1).count();
+            std::chrono::high_resolution_clock::now()-t1).count();
     cout << "Execution time: " << durationmin << " minutes and " << duration << " seconds" << std::endl;
     rep.close();
 

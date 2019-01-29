@@ -55,10 +55,10 @@ RouterVC::RouterVC(sc_module_name nm, Node& node)
 
     SC_METHOD(thread);
     sensitive << clk.pos() << clk.neg();
-/*
+
     SC_METHOD(updateUsageStats);
     sensitive << clk.pos();
-*/
+
     SC_METHOD(receive);
     for (int conPos = 0; conPos<node.connections.size(); conPos++) {
         sensitive << classicPortContainer.at(conPos).portValidIn.pos();
@@ -164,23 +164,22 @@ void RouterVC::receive()
 // VC and buffer usage statistics
 void RouterVC::updateUsageStats()
 {
-    for (unsigned int dirIn = 0; dirIn<node.connections.size(); dirIn++) {
-        int numVCs = buffers.at(dirIn)->size();
+    for (int conPos = 0; conPos<node.connections.size(); conPos++) {
+        Connection conn = globalResources.connections.at(node.connections.at(conPos));
+        int numVCs = conn.getVCCountForNode(node.id);
         int numberActiveVCs = 0;
 
-        for (unsigned int vcIn = 0; vcIn<numVCs; vcIn++) {
-            BufferFIFO<Flit*>* buf = buffers.at(dirIn)->at(vcIn);
+        for (int vc = 0; vc<numVCs; vc++) {
+            BufferFIFO<Flit*>* buf = buffers.at(conPos)->at(vc);
             if (!buf->empty()) {
                 numberActiveVCs++;
-                globalReport.updateBuffUsagePerVCHist(globalReport.bufferUsagePerVCHist, this->id, dirIn,
-                        vcIn, static_cast<int>(buf->occupied()), numVCs);
+                globalReport.updateBuffUsagePerVCHist(this->id, conPos, vc, static_cast<int>(buf->occupied()), numVCs);
             }
         }
         /* this 1 is added to create a column for numberOfActiveVCs=0.
            yes it's an extra column but it allow us to use the same function to update both buffer stats and VC stats.
         */
-        globalReport.updateUsageHist(globalReport.VCsUsageHist, this->id, node.getDirOfConPos(dirIn),
-                numberActiveVCs, numVCs+1);
+        globalReport.updateVCUsageHist(this->id, node.getDirOfConPos(conPos), numberActiveVCs, numVCs+1);
     }
 }
 

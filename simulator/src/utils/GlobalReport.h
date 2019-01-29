@@ -47,13 +47,13 @@ public:
     int averageNetworkLatencySystemLevelInstances = 0;
     double maxNetworkLatency = 0;
 
+    int numRouters;
     /* 1st dimension is all routers.
      * 2nd dimension is all ports (directions) of a router.
-     * 3rd dimension is all possible number of active VCs/average of buffer utilization.
+     * 3rd dimension is all possible number of active VCs.
      */
     std::vector<std::vector<std::vector<long>>> VCsUsageHist;
-    std::vector<std::vector<std::vector<long>>> bufferUsageHist;
-
+    // 4th dimension is all buffer positions of a VC.
     std::vector<std::vector<std::vector<std::vector<long>>>> bufferUsagePerVCHist;
 
     void readConfigFile(const std::string& config_path);
@@ -125,19 +125,17 @@ public:
 
     void reportMaxNetworkLatencySystemLevel();
 
-    void updateUsageHist(std::vector<std::vector<std::vector<long>>>& histVec,
-            int routerId, int dir, int value, int thirdDimensionSize);
+    void updateVCUsageHist(int routerId, int dir, int value, int thirdDimensionSize);
 
-    void reportUsageHist(std::vector<std::vector<std::vector<long>>>& histVec,
-            std::string& csvFileName, int routerId);
+    void reportVCUsageHist(std::string& csvFileName, int routerId);
 
-    void updateBuffUsagePerVCHist(std::vector<std::vector<std::vector<std::vector<long>>>>& histVec,
-            int routerId, int dir, int vc, int bufferOccupation, int numVCs);
+    void updateBuffUsagePerVCHist(int routerId, int dir, int vc, int bufferOccupation, int numVCs);
 
-    void reportBuffUsageHist(std::vector<std::vector<std::vector<std::vector<long>>>>& histVec,
-            std::string& csvFileName, int routerId, int dir);
+    void reportBuffPerVCUsageHist(std::string& csvFileName, int routerId, int dir);
 
     void reportAllRoutersUsageHist();
+
+    void resizeMatrices();
 
 private:
     GlobalResources& globalResources = GlobalResources::getInstance();
@@ -177,8 +175,6 @@ private:
     const int MAX_BUFFER_DEPTH = 50;
     // Generate VC and buffer histograms for only these routers
     const std::vector<int> INNER_ROUTERS = {5, 6, 9, 10, 21, 22, 25, 26, 37, 38, 41, 42};
-
-
 
     GlobalReport();
 };

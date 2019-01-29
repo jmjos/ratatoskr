@@ -42,11 +42,6 @@ GlobalReport::GlobalReport()
         latencyFlit("flit latency"),
         latencyPacket("packet latency ")
 {
-    auto numRouters = static_cast<unsigned int>(globalResources.nodes.size()/2);
-    this->VCsUsageHist.resize(numRouters);
-    this->bufferUsageHist.resize(numRouters);
-    this->bufferUsagePerVCHist.resize(numRouters);
-    this->linkTransmissionsMatrixNumberOfStates = (2*globalResources.numberOfTrafficTypes)+3;
 }
 
 void GlobalReport::reportComplete(const std::string& filename)
@@ -87,7 +82,7 @@ void GlobalReport::reportComplete(const std::string& filename)
     reportPerformanceCSV(csvfile);
     csvfile.close();
 
-    //TODO reportAllRoutersUsageHist();
+    reportAllRoutersUsageHist();
 }
 
 void GlobalReport::reportPerformance(ostream& stream)
@@ -136,14 +131,14 @@ void GlobalReport::issueLinkMatrixUpdate(int id, int currentTransmissionState, i
         linkTransmissionMatrices.insert(std::make_pair(id, matrix));
     }
 
-    linkTransmissionMatrices.at(id).at(currentTransmissionState+linkTransmissionsMatrixNumberOfStates*lastTransmissionState)++;
+    linkTransmissionMatrices.at(id).at(
+            currentTransmissionState+linkTransmissionsMatrixNumberOfStates*lastTransmissionState)++;
 }
 
 void GlobalReport::reportLinkMatrix(int id, ostream& stream)
 {
     auto transmissionMatrix = linkTransmissionMatrices.at(id);
-    int clockCyclesOfLink = std::accumulate(transmissionMatrix.begin(), transmissionMatrix.end(),
-            0);
+    int clockCyclesOfLink = std::accumulate(transmissionMatrix.begin(), transmissionMatrix.end(), 0);
     stream << boost::format("Transmission matrix of links %i:\n")%id;
     int colit = 0, rowit = 0;
     stream << boost::format("from\\to     IDLE     HEAD     HID");
@@ -250,46 +245,44 @@ void GlobalReport::reportMaxNetworkLatencySystemLevel()
     cout << "The maximum network latency was: " << maxNetworkLatency << endl;
 }
 
-void GlobalReport::updateUsageHist(std::vector<std::vector<std::vector<long>>>& histVec, int routerId, int dir,
-        int thirdDimensionIndex, int thirdDimensionSize)
+void GlobalReport::updateVCUsageHist(int routerId, int dir,
+        int value, int thirdDimensionSize)
 {
-    if (!histVec.at(routerId).empty()) {
-        int counter = histVec.at(routerId).at(dir).at(thirdDimensionIndex);
-        histVec[routerId][dir][thirdDimensionIndex] = ++counter;
+    if (!VCsUsageHist.at(routerId).empty()) {
+        int counter = VCsUsageHist.at(routerId).at(dir).at(value);
+        VCsUsageHist[routerId][dir][value] = ++counter;
     }
     else {
         std::vector<std::vector<long>> vec_2d(DIR::size);
         for (auto& vec : vec_2d) {
             vec.assign(thirdDimensionSize, 0);
         }
-        histVec[routerId] = vec_2d;
-        histVec[routerId][dir][thirdDimensionIndex] = 1;
+        VCsUsageHist[routerId] = vec_2d;
+        VCsUsageHist[routerId][dir][value] = 1;
     }
 }
 
-void GlobalReport::reportUsageHist(std::vector<std::vector<std::vector<long>>>& histVec, std::string& csvFileName,
-        int routerId)
+void GlobalReport::reportVCUsageHist(std::string& csvFileName, int routerId)
 {
     ofstream csvFile;
     csvFile.open(csvFileName);
-    for (unsigned int dir = 0; dir<histVec[routerId].size(); dir++) {
+    for (unsigned int dir = 0; dir<VCsUsageHist[routerId].size(); dir++) {
         csvFile << DIR::toString(dir) << ",";
-        for (unsigned int value = 0; value<histVec[routerId][dir].size(); value++) {
-            if (value<histVec[routerId][dir].size()-1)
-                csvFile << histVec[routerId][dir][value] << ",";
+        for (unsigned int value = 0; value<VCsUsageHist[routerId][dir].size(); value++) {
+            if (value<VCsUsageHist[routerId][dir].size()-1)
+                csvFile << VCsUsageHist[routerId][dir][value] << ",";
             else
-                csvFile << histVec[routerId][dir][value] << "\n";
+                csvFile << VCsUsageHist[routerId][dir][value] << "\n";
         }
     }
     csvFile.close();
 }
 
-void GlobalReport::updateBuffUsagePerVCHist(std::vector<std::vector<std::vector<std::vector<long>>>>& histVec,
-        int routerId, int dir, int vc, int bufferOccupation, int numVCs)
+void GlobalReport::updateBuffUsagePerVCHist(int routerId, int dir, int vc, int bufferOccupation, int numVCs)
 {
-    if (!histVec.at(routerId).empty()) {
-        long counter = histVec.at(routerId).at(dir).at(vc).at(bufferOccupation);
-        histVec[routerId][dir][vc][bufferOccupation] = ++counter;
+    if (!bufferUsagePerVCHist.at(routerId).empty()) {
+        long counter = bufferUsagePerVCHist.at(routerId).at(dir).at(vc).at(bufferOccupation);
+        bufferUsagePerVCHist[routerId][dir][vc][bufferOccupation] = ++counter;
     }
     else {
         std::vector<std::vector<std::vector<long>>> vec_3d(DIR::size);
@@ -300,22 +293,21 @@ void GlobalReport::updateBuffUsagePerVCHist(std::vector<std::vector<std::vector<
             }
             temp_vec = vec_2d;
         }
-        histVec[routerId] = vec_3d;
-        histVec[routerId][dir][vc][bufferOccupation] = 1;
+        bufferUsagePerVCHist[routerId] = vec_3d;
+        bufferUsagePerVCHist[routerId][dir][vc][bufferOccupation] = 1;
     }
 }
 
-void GlobalReport::reportBuffUsageHist(std::vector<std::vector<std::vector<std::vector<long>>>>& histVec,
-        std::string& csvFileName, int routerId, int dir)
+void GlobalReport::reportBuffPerVCUsageHist(std::string& csvFileName, int routerId, int dir)
 {
     ofstream csvFile;
     csvFile.open(csvFileName);
 
     // Write the header
     csvFile << "Buffer\\VC,";
-    for (unsigned int vc = 0; vc<histVec[routerId][dir].size(); vc++) { // foreach vc
+    for (unsigned int vc = 0; vc<bufferUsagePerVCHist[routerId][dir].size(); vc++) { // foreach vc
         csvFile << vc;
-        if (vc<histVec[routerId][dir].size()-1)
+        if (vc<bufferUsagePerVCHist[routerId][dir].size()-1)
             csvFile << ",";
         else
             csvFile << "\n";
@@ -323,12 +315,12 @@ void GlobalReport::reportBuffUsageHist(std::vector<std::vector<std::vector<std::
 
     // Write the matrix
     for (unsigned int buffer = 1; buffer<=50; buffer++) { // foreach buffer
-        for (unsigned int column = 0; column<=histVec[routerId][dir].size(); column++) { // foreach column
+        for (unsigned int column = 0; column<=bufferUsagePerVCHist[routerId][dir].size(); column++) { // foreach column
             if (column==0)
                 csvFile << buffer << ", ";
             else {
-                csvFile << histVec[routerId][dir][column-1][buffer];
-                if (column<histVec[routerId][dir].size())
+                csvFile << bufferUsagePerVCHist[routerId][dir][column-1][buffer];
+                if (column<bufferUsagePerVCHist[routerId][dir].size())
                     csvFile << ",";
                 else
                     csvFile << "\n";
@@ -351,18 +343,20 @@ void GlobalReport::reportAllRoutersUsageHist()
                 std::exit(EXIT_FAILURE);
             }
             csvFileName = "VCUsage/"+std::to_string(i)+".csv";
-            reportUsageHist(VCsUsageHist, csvFileName, i);
+            reportVCUsageHist(csvFileName, i);
 
             isFolderCreated = system("mkdir -p ./BuffUsage");
             if (isFolderCreated!=0) {
                 std::cerr << "VCUsage folder was not created!" << std::endl;
                 std::exit(EXIT_FAILURE);
             }
-            for (unsigned int conPos = 0; conPos<globalResources.nodes[i].connections.size(); conPos++) {
-                csvFileName = "BuffUsage/"+std::to_string(i)+"_"+
-                        DIR::toString(globalResources.nodes[i].getDirOfConPos(conPos))+".csv";
-                reportBuffUsageHist(bufferUsagePerVCHist, csvFileName, i, conPos);
-            }
+            if (!bufferUsagePerVCHist.at(i).empty())
+                for (unsigned int conPos = 0; conPos<globalResources.nodes[i].connections.size(); conPos++) {
+                    int dir_int = globalResources.nodes[i].getDirOfConPos(conPos);
+                    std::string dir_str = DIR::toString(globalResources.nodes[i].getDirOfConPos(conPos));
+                    csvFileName = "BuffUsage/"+std::to_string(i)+"_"+dir_str+".csv";
+                    reportBuffPerVCUsageHist(csvFileName, i, dir_int);
+                }
         }
     }
 }
@@ -373,52 +367,60 @@ void GlobalReport::readConfigFile(const std::string& config_path)
     pugi::xml_parse_result result = doc.load_file(config_path.c_str());
     assert(result && "Failed to read simulator config file!");
 
-    GlobalReport& globalResourcesReport = GlobalReport::getInstance();
-
     //	PE Verbosity
     pugi::xml_node verbose_node = doc.child("configuration").child("verbose").child("processingElements");
-    globalResourcesReport.verbose_pe_function_calls = verbose_node.child("function_calls").attribute("value").as_bool();
-    globalResourcesReport.verbose_pe_send_flit = verbose_node.child("send_flit").attribute("value").as_bool();
-    globalResourcesReport.verbose_pe_send_head_flit = verbose_node.child("send_head_flit").attribute("value").as_bool();
-    globalResourcesReport.verbose_pe_receive_flit = verbose_node.child("receive_flit").attribute("value").as_bool();
-    globalResourcesReport.verbose_pe_receive_tail_flit = verbose_node.child("receive_tail_flit").attribute(
+    this->verbose_pe_function_calls = verbose_node.child("function_calls").attribute("value").as_bool();
+    this->verbose_pe_send_flit = verbose_node.child("send_flit").attribute("value").as_bool();
+    this->verbose_pe_send_head_flit = verbose_node.child("send_head_flit").attribute("value").as_bool();
+    this->verbose_pe_receive_flit = verbose_node.child("receive_flit").attribute("value").as_bool();
+    this->verbose_pe_receive_tail_flit = verbose_node.child("receive_tail_flit").attribute(
             "value").as_bool();
-    globalResourcesReport.verbose_pe_throttle = verbose_node.child("throttle").attribute("value").as_bool();
-    globalResourcesReport.verbose_pe_reset = verbose_node.child("reset").attribute("value").as_bool();
+    this->verbose_pe_throttle = verbose_node.child("throttle").attribute("value").as_bool();
+    this->verbose_pe_reset = verbose_node.child("reset").attribute("value").as_bool();
 
     //	Router Verbosity
     verbose_node = doc.child("configuration").child("verbose").child("router");
-    globalResourcesReport.verbose_router_function_calls = verbose_node.child("function_calls").attribute(
+    this->verbose_router_function_calls = verbose_node.child("function_calls").attribute(
             "value").as_bool();
-    globalResourcesReport.verbose_router_send_flit = verbose_node.child("send_flit").attribute("value").as_bool();
-    globalResourcesReport.verbose_router_send_head_flit = verbose_node.child("send_head_flit").attribute(
+    this->verbose_router_send_flit = verbose_node.child("send_flit").attribute("value").as_bool();
+    this->verbose_router_send_head_flit = verbose_node.child("send_head_flit").attribute(
             "value").as_bool();
-    globalResourcesReport.verbose_router_receive_flit = verbose_node.child("receive_flit").attribute("value").as_bool();
-    globalResourcesReport.verbose_router_receive_head_flit = verbose_node.child("receive_head_flit").attribute(
+    this->verbose_router_receive_flit = verbose_node.child("receive_flit").attribute("value").as_bool();
+    this->verbose_router_receive_head_flit = verbose_node.child("receive_head_flit").attribute(
             "value").as_bool();
-    globalResourcesReport.verbose_router_assign_channel = verbose_node.child("assign_channel").attribute(
+    this->verbose_router_assign_channel = verbose_node.child("assign_channel").attribute(
             "value").as_bool();
-    globalResourcesReport.verbose_router_throttle = verbose_node.child("throttle").attribute("value").as_bool();
-    globalResourcesReport.verbose_router_buffer_overflow = verbose_node.child("buffer_overflow").attribute(
+    this->verbose_router_throttle = verbose_node.child("throttle").attribute("value").as_bool();
+    this->verbose_router_buffer_overflow = verbose_node.child("buffer_overflow").attribute(
             "value").as_bool();
-    globalResourcesReport.verbose_router_reset = verbose_node.child("reset").attribute("value").as_bool();
+    this->verbose_router_reset = verbose_node.child("reset").attribute("value").as_bool();
 
     //	Netrace Verbosity
     verbose_node = doc.child("configuration").child("verbose").child("netrace");
-    globalResourcesReport.verbose_netrace_inject = verbose_node.child("inject").attribute("value").as_bool();
-    globalResourcesReport.verbose_netrace_eject = verbose_node.child("eject").attribute("value").as_bool();
-    globalResourcesReport.verbose_netrace_router_receive = verbose_node.child("router_receive").attribute(
+    this->verbose_netrace_inject = verbose_node.child("inject").attribute("value").as_bool();
+    this->verbose_netrace_eject = verbose_node.child("eject").attribute("value").as_bool();
+    this->verbose_netrace_router_receive = verbose_node.child("router_receive").attribute(
             "value").as_bool();
 
     //	Task Verbosity
     verbose_node = doc.child("configuration").child("verbose").child("tasks");
-    globalResourcesReport.verbose_task_xml_parse = verbose_node.child("xml_parse").attribute("value").as_bool();
-    globalResourcesReport.verbose_task_data_receive = verbose_node.child("data_receive").attribute("value").as_bool();
-    globalResourcesReport.verbose_task_data_send = verbose_node.child("data_send").attribute("value").as_bool();
-    globalResourcesReport.verbose_task_source_execute = verbose_node.child("source_execute").attribute(
+    this->verbose_task_xml_parse = verbose_node.child("xml_parse").attribute("value").as_bool();
+    this->verbose_task_data_receive = verbose_node.child("data_receive").attribute("value").as_bool();
+    this->verbose_task_data_send = verbose_node.child("data_send").attribute("value").as_bool();
+    this->verbose_task_source_execute = verbose_node.child("source_execute").attribute(
             "value").as_bool();
-    globalResourcesReport.verbose_task_function_calls = verbose_node.child("function_calls").attribute(
+    this->verbose_task_function_calls = verbose_node.child("function_calls").attribute(
             "value").as_bool();
+
+
+}
+
+void GlobalReport::resizeMatrices()
+{
+    this->numRouters = static_cast<unsigned int>(globalResources.nodes.size()/2);
+    this->VCsUsageHist.resize(numRouters);
+    this->bufferUsagePerVCHist.resize(numRouters);
+    this->linkTransmissionsMatrixNumberOfStates = (2*globalResources.numberOfTrafficTypes)+3;
 }
 
 
