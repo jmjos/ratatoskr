@@ -78,9 +78,10 @@ public:
 
     std::vector<Node*> getNodesByPos(const Vec3D<float>& pos);
 
-private:
-    std::random_device* rd;
+    long long rd_seed;
     std::mt19937_64* rand;
+
+private:
 
     GlobalResources();
 

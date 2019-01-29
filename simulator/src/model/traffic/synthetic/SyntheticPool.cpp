@@ -104,24 +104,24 @@ SyntheticPool::uniform(taskID_t& taskId, int& phaseId, dataTypeID_t& dataTypeId,
     dataTypeId++;
 
     for (unsigned int i = 0; i<processingElements.size(); i++) {
-        Task* task = new Task(taskId, processingElements.at(i)->node.id);
-        task->minStart = sp.minStart;
-        task->maxStart = sp.maxStart;
-        task->minDuration = sp.minDuration;
-        task->maxDuration = sp.maxDuration;
-        task->syntheticPhase = sp.id;
+        Task task = Task(taskId, processingElements.at(i)->node.id);
+        task.minStart = sp.minStart;
+        task.maxStart = sp.maxStart;
+        task.minDuration = sp.minDuration;
+        task.maxDuration = sp.maxDuration;
+        task.syntheticPhase = sp.id;
 
         int minInterval = static_cast<int>(std::floor((float) maxClockDelay/sp.injectionRate));
         int maxInterval = static_cast<int>(std::floor((float) maxClockDelay/sp.injectionRate));
         if (sp.minRepeat==-1 && sp.maxRepeat==-1) {
-            task->minRepeat = static_cast<int>(std::floor(
-                    (float) (task->minDuration-task->minStart)/(float) minInterval));
-            task->maxRepeat = static_cast<int>(std::floor(
-                    (float) (task->maxDuration-task->minStart)/(float) maxInterval));
+            task.minRepeat = static_cast<int>(std::floor(
+                    (float) (task.minDuration-task.minStart)/(float) minInterval));
+            task.maxRepeat = static_cast<int>(std::floor(
+                    (float) (task.maxDuration-task.minStart)/(float) maxInterval));
         }
         else {
-            task->minRepeat = sp.minRepeat;
-            task->maxRepeat = sp.maxRepeat;
+            task.minRepeat = sp.minRepeat;
+            task.maxRepeat = sp.maxRepeat;
         }
 
         std::vector<DataSendPossibility> possibilities{};
@@ -144,11 +144,11 @@ SyntheticPool::uniform(taskID_t& taskId, int& phaseId, dataTypeID_t& dataTypeId,
                 dataDestId++;
             }
         }
-        task->possibilities = possibilities;
-        tasks.push_back(task);
+        task.possibilities = possibilities;
+        globalResources.tasks.push_back(task);
         taskId++;
     }
-    shuffle_execute_tasks(tasks, phaseId);
+    shuffle_execute_tasks(phaseId);
     phaseId++;
 
     return std::map<int, int>();
@@ -236,23 +236,20 @@ void SyntheticPool::clear(Task*)
 {
 }
 
-void SyntheticPool::shuffle_execute_tasks(std::vector<Task*>& tasks, int phaseId)
+void SyntheticPool::shuffle_execute_tasks(int phaseId)
 {
     // Execute the tasks in random order
     int offset = phaseId*processingElements.size();
-    auto start = tasks.begin()+offset;
-    auto end = tasks.end();
-    std::vector<Task*> phaseTasks(start, end);
+    auto start = globalResources.tasks.begin()+offset;
+    auto end = globalResources.tasks.end();
+    std::vector<Task> phaseTasks(start, end);
 
-    std::shuffle(phaseTasks.begin(), phaseTasks.end(), std::mt19937(std::random_device()()));
-    for (Task* task : phaseTasks) {
-        processingElements.at(task->nodeID%processingElements.size())->execute(*task);
+    std::shuffle(phaseTasks.begin(), phaseTasks.end(), *globalResources.rand);
+    for (Task& task : phaseTasks) {
+        processingElements.at(task.nodeID%processingElements.size())->execute(task);
     }
 }
 
 SyntheticPool::~SyntheticPool()
 {
-    for (auto& task:tasks)
-        delete task;
-    tasks.clear();
 }

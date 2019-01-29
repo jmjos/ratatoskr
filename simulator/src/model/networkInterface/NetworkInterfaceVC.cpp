@@ -72,14 +72,14 @@ void NetworkInterfaceVC::bind(Connection* con, SignalContainer* sigContIn, Signa
 void NetworkInterfaceVC::receivePacketFromPE()
 {
     if (packetPortContainer->portValidIn.posedge()) {
-        LOG(globalReport.verbose_pe_function_calls, "NI" << this->id << "(Node" << node.id << ")t- receive()");
+        LOG(globalReport.verbose_pe_function_calls, "NI" << this->id << "(Node" << node.id << ")\t\t- receive()");
         Packet* p = packetPortContainer->portDataIn.read();
         generateFlitsForPacket(p);
         packet_send_queue.push(p);
     }
 }
 
-void NetworkInterfaceVC::generateFlitsForPacket(Packet *p)
+void NetworkInterfaceVC::generateFlitsForPacket(Packet* p)
 {
     int flitsPerPacket = globalResources.flitsPerPacket;
     for (int i = 0; i<flitsPerPacket; i++) {
@@ -99,7 +99,7 @@ void NetworkInterfaceVC::generateFlitsForPacket(Packet *p)
 
 void NetworkInterfaceVC::thread()
 {
-    LOG(globalReport.verbose_pe_function_calls, "NI" << this->id << "(Node" << node.id << ")\t- send_data_process()");
+    LOG(globalReport.verbose_pe_function_calls, "NI" << this->id << "(Node" << node.id << ")\t\t- send_data_process()");
     if (clk.posedge()) {
         if (!packet_send_queue.empty()) {
             if (creditCounter!=0) {
@@ -122,11 +122,11 @@ void NetworkInterfaceVC::thread()
                 creditCounter--;
                 LOG((globalReport.verbose_pe_send_head_flit && current_flit->type==HEAD)
                         || globalReport.verbose_pe_send_flit,
-                        "NI" << this->id << "(Node" << node.id << ")\t- Send Flit " << *current_flit);
+                        "NI" << this->id << "(Node" << node.id << ")\t\t- Send Flit " << *current_flit);
             }
             else {
                 LOG(globalReport.verbose_pe_throttle,
-                        "NI" << this->id << "(Node" << node.id << ")\t- Waiting for Router!");
+                        "NI" << this->id << "(Node" << node.id << ")\t\t- Waiting for Router!");
             }
         }
         if (!packet_recv_queue.empty()) {
@@ -150,17 +150,15 @@ void NetworkInterfaceVC::thread()
 void NetworkInterfaceVC::receiveFlitFromRouter()
 {
     LOG(globalReport.verbose_pe_function_calls,
-        "NI" << this->id << "(Node" << node.id << ")\t- receive_data_process()");
+            "NI" << this->id << "(Node" << node.id << ")\t- receive_data_process()");
     if (flitPortContainer->portValidIn.posedge()) {
         Flit* received_flit = flitPortContainer->portDataIn.read();
         Packet* p = received_flit->packet;
         double time = sc_time_stamp().to_double();
 
         // generate packet statistics. in case of synthetic traffic only for run phase
-        if ((float) globalResources.synthetic_start_measurement_time
-                <=(time/1000)) {
-            globalReport.latencyFlit.sample(
-                    static_cast<float>(time-received_flit->injectionTime));
+        if ((float) globalResources.synthetic_start_measurement_time<=(time/1000)) {
+            globalReport.latencyFlit.sample((float)(time-received_flit->injectionTime));
             if (received_flit->type==TAIL) {
                 globalReport.latencyPacket.sample((float) (time-received_flit->headFlit->generationTime));
                 globalReport.latencyNetwork.sample((float) (time-received_flit->headFlit->injectionTime));
@@ -175,9 +173,9 @@ void NetworkInterfaceVC::receiveFlitFromRouter()
         rep.reportEvent(dbid, "pe_receive_flit", std::to_string(received_flit->id));
         LOG((globalReport.verbose_pe_receive_tail_flit && received_flit->type==TAIL)
                 || globalReport.verbose_pe_receive_flit,
-                "NI" << this->id << "(Node" << node.id << ")\t- Receive Flit " << *received_flit);
+                "NI" << this->id << "(Node" << node.id << ")\t\t- Receive Flit " << *received_flit);
         LOG(received_flit->type==TAIL && (!p->toTransmit.empty() || !p->inTransmit.empty()),
-                "NI" << this->id << "(Node" << node.id << ")\t- Received Tail Flit, but still missing flits! "
+                "NI" << this->id << "(Node" << node.id << ")\t\t- Received Tail Flit, but still missing flits! "
                      << *received_flit);
 
         if (p->toTransmit.empty() && p->inTransmit.empty())
@@ -191,10 +189,13 @@ NetworkInterfaceVC::~NetworkInterfaceVC()
     delete packetPortContainer;
 }
 
-void NetworkInterfaceVC::receiveFlowControlCreditFromRouter() {
-    auto credit = flitPortContainer->portFlowControlIn.read();
-    assert(credit.vc == 0);
-    if (lastReceivedCreditID != credit.id){
-        creditCounter++;
+void NetworkInterfaceVC::receiveFlowControlCreditFromRouter()
+{
+    if (flitPortContainer->portFlowControlValidIn.posedge()) {
+        auto credit = flitPortContainer->portFlowControlIn.read();
+        assert(credit.vc==0);
+        if (lastReceivedCreditID!=credit.id) {
+            creditCounter++;
+        }
     }
 }

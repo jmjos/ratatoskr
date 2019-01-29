@@ -27,7 +27,7 @@ NoC::NoC(sc_module_name nm)
 {
     dbid = rep.registerElement("NoC", 0);
     networkParticipants.resize(globalResources.nodes.size());
-    flitSignalContainers.resize(globalResources.connections.size() * 2);
+    flitSignalContainers.resize(globalResources.connections.size()*2);
     links.resize(globalResources.connections.size()*2);
 
     createTrafficPool();
@@ -43,7 +43,7 @@ void NoC::createClocks()
     clocks.resize(globalResources.nodeTypes.size());
     for (const auto& nodeType : globalResources.nodeTypes) {
         clocks.at(nodeType->id) = std::make_unique<sc_clock>(("NodeType"+std::to_string(nodeType->id)+"Clock").c_str(),
-                                                             nodeType->clockDelay, SC_NS);
+                nodeType->clockDelay, SC_NS);
     }
 }
 
@@ -67,32 +67,32 @@ void NoC::createNetworkParticipants()
 
     for (Node& n : globalResources.nodes) {
         if (n.type->model=="RouterVC") {
-           std::string name = "router_"+std::to_string(n.id);
-           RouterVC* r = new RouterVC(name.c_str(), n);
-           r->clk(*clocks.at(n.type->id));
-           networkParticipants.at(n.id) = dynamic_cast<NetworkParticipant*>(r);
-       }
-       else if (n.type->model=="ProcessingElement") {
-           // Creating an network interface.
-           std::string ni_name = "ni_"+std::to_string(n.id%tp->processingElements.size());
-           NetworkInterfaceVC* ni = new NetworkInterfaceVC(ni_name.c_str(), n);
-           ni->clk(*clocks.at(n.type->id));
-           networkParticipants.at(n.id) = dynamic_cast<NetworkParticipant*>(ni);
+            std::string name = "router_"+std::to_string(n.id);
+            RouterVC* r = new RouterVC(name.c_str(), n);
+            r->clk(*clocks.at(n.type->id));
+            networkParticipants.at(n.id) = dynamic_cast<NetworkParticipant*>(r);
+        }
+        else if (n.type->model=="ProcessingElement") {
+            // Creating an network interface.
+            std::string ni_name = "ni_"+std::to_string(n.id%tp->processingElements.size());
+            NetworkInterfaceVC* ni = new NetworkInterfaceVC(ni_name.c_str(), n);
+            ni->clk(*clocks.at(n.type->id));
+            networkParticipants.at(n.id) = dynamic_cast<NetworkParticipant*>(ni);
 
-           std::string pe_name = "pe_"+std::to_string(n.id%tp->processingElements.size());
-           ProcessingElementVC* pe = new ProcessingElementVC(pe_name.c_str(), n, tp.get());
-           std::unique_ptr<PacketSignalContainer> sig1 =  std::make_unique<PacketSignalContainer>(
-                  ("packetSigCon1_"+std::to_string(n.id)).c_str());
+            std::string pe_name = "pe_"+std::to_string(n.id%tp->processingElements.size());
+            ProcessingElementVC* pe = new ProcessingElementVC(pe_name.c_str(), n, tp.get());
+            std::unique_ptr<PacketSignalContainer> sig1 = std::make_unique<PacketSignalContainer>(
+                    ("packetSigCon1_"+std::to_string(n.id)).c_str());
             std::unique_ptr<PacketSignalContainer> sig2 = std::make_unique<PacketSignalContainer>(
-                   ("packetSigCon2_"+std::to_string(n.id)).c_str());
-           ni->bind(nullptr, sig1.get(), sig2.get());
-           pe->bind(nullptr, sig2.get(), sig1.get());
-           networkParticipants.push_back(dynamic_cast<NetworkParticipant*>(pe));
-           packetSignalContainers.push_back(move(sig1));
-           packetSignalContainers.push_back(move(sig2));
-           tp->processingElements.at(n.id%tp->processingElements.size()) =  pe;
-       }
-   }
+                    ("packetSigCon2_"+std::to_string(n.id)).c_str());
+            ni->bind(nullptr, sig1.get(), sig2.get());
+            pe->bind(nullptr, sig2.get(), sig1.get());
+            networkParticipants.push_back(dynamic_cast<NetworkParticipant*>(pe));
+            packetSignalContainers.push_back(move(sig1));
+            packetSignalContainers.push_back(move(sig2));
+            tp->processingElements.at(n.id%tp->processingElements.size()) = pe;
+        }
+    }
 }
 
 void NoC::createSigContainers()
@@ -127,7 +127,7 @@ void NoC::createLinks(const std::vector<std::unique_ptr<sc_clock>>& clocks)
             links.at(link_id+1)->classicPortContainer->bindOpen(flitSignalContainers.at(link_id+1).get());
             links.at(link_id)->clk(*clocks.at(node1.type->id));
             links.at(link_id+1)->clk(*clocks.at(node2.type->id));
-            link_id +=2;
+            link_id += 2;
         }
         else {
             FATAL("Unsupported number of endpoints in connection " << c.id);
