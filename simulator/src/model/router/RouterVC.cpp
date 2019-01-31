@@ -173,7 +173,8 @@ void RouterVC::updateUsageStats()
             BufferFIFO<Flit*>* buf = buffers.at(conPos)->at(vc);
             if (!buf->empty()) {
                 numberActiveVCs++;
-                globalReport.updateBuffUsagePerVCHist(this->id, conPos, vc, static_cast<int>(buf->occupied()), numVCs);
+                globalReport.updateBuffUsagePerVCHist(this->id, node.getDirOfConPos(conPos), vc,
+                        static_cast<int>(buf->occupied()), numVCs);
             }
         }
         /* this 1 is added to create a column for numberOfActiveVCs=0.
