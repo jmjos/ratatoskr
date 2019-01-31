@@ -49,7 +49,7 @@ int sc_main(int arg_num, char* arg_vec[])
         globalResources.readConfigFile(arg_vec[1]);
     }
     else {
-        std::string config_path = "config/tests/2/config.xml";
+        std::string config_path = "config/config.xml";
         globalResources.readConfigFile(config_path);
         globalReport.readConfigFile(config_path);
     }
