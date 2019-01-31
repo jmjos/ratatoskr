@@ -74,7 +74,7 @@ void NetworkInterfaceVC::receivePacketFromPE()
     if (packetPortContainer->portValidIn.posedge()) {
         LOG(globalReport.verbose_pe_function_calls, "NI" << this->id << "(Node" << node.id << ")\t\t- receive()");
         Packet* p = packetPortContainer->portDataIn.read();
-        generateFlitsForPacket(p);
+        //generateFlitsForPacket(p);
         packet_send_queue.push(p);
     }
 }
@@ -104,6 +104,8 @@ void NetworkInterfaceVC::thread()
         if (!packet_send_queue.empty()) {
             if (creditCounter!=0) {
                 Packet* p = packet_send_queue.front();
+                if (p->flits.empty())
+                    generateFlitsForPacket(p);
                 flitID_t f_id = p->toTransmit.front();
                 auto iter = std::find_if(p->flits.begin(), p->flits.end(),
                         [&f_id](Flit* f) { return f->id==f_id; });
