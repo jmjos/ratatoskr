@@ -1,5 +1,4 @@
 simulator/sim.cbp
-simulator/sim
 simulator/somefile
 simulator/report.txt
 simulator/log.txt
@@ -12,3 +11,7 @@ simulator/VCUsage/
 simulator/BuffUsage/
 simulator/.idea/
 simulator/CMakeFiles/
+*.pkl
+sim
+virtualenv/
+__pycahce__/
