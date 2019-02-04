@@ -286,12 +286,12 @@ void GlobalReport::updateBuffUsagePerVCHist(int routerId, int dir, int vc, int b
     }
     else {
         std::vector<std::vector<std::vector<long>>> vec_3d(DIR::size);
-        for (auto& temp_vec : vec_3d) {
-            std::vector<std::vector<long>> vec_2d(numVCs);
-            for (auto& vec_1d : vec_2d) {
-                vec_1d.assign(MAX_BUFFER_DEPTH, 0);
+        for (auto& vec_2d : vec_3d) {
+            std::vector<std::vector<long>> temp_vec_2d(numVCs);
+            for (auto& vec_1d : temp_vec_2d) {
+                vec_1d.assign(MAX_BUFFER_DEPTH+1, 0);
             }
-            temp_vec = vec_2d;
+            vec_2d = temp_vec_2d;
         }
         bufferUsagePerVCHist[routerId] = vec_3d;
         bufferUsagePerVCHist[routerId][dir][vc][bufferOccupation] = 1;
@@ -314,7 +314,7 @@ void GlobalReport::reportBuffPerVCUsageHist(std::string& csvFileName, int router
     }
 
     // Write the matrix
-    for (unsigned int buffer = 1; buffer<=50; buffer++) { // foreach buffer
+    for (unsigned int buffer = 1; buffer<=MAX_BUFFER_DEPTH; buffer++) { // foreach buffer
         for (unsigned int column = 0; column<=bufferUsagePerVCHist[routerId][dir].size(); column++) { // foreach column
             if (column==0)
                 csvFile << buffer << ", ";
