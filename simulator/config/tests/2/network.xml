@@ -4,27 +4,24 @@
 	<nodeTypes>
 		<nodeType id="0">
 			<model value="RouterVC" />
-			<routing value="HeteroXYZ" />
-			<!--<selection value="RoundRobin" />-->
+			<routing value="HeteroXYZ" /> <!-- XYZ, HeteroXYZ, RandomXYZ, RandomHeteroXYZ -->
 			<selection value="1stFreeVC" />
 			<clockDelay value="1" />
-			<arbiterType value="fair" /> <!-- rrVC, fair -->
+			<arbiterType value="fair" />
 		</nodeType>
         <nodeType id="1">
 			<model value="RouterVC" />
-			<routing value="HeteroXYZ" />
-			<!--<selection value="RoundRobin" />-->
+			<routing value="HeteroXYZ" /> <!-- XYZ, HeteroXYZ, RandomXYZ, RandomHeteroXYZ -->
 			<selection value="1stFreeVC" />
 			<clockDelay value="2" />
-			<arbiterType value="fair" /> <!-- rrVC, fair -->
+			<arbiterType value="fair" />
 		</nodeType>
         <nodeType id="2">
 			<model value="RouterVC" />
-			<routing value="HeteroXYZ" />
-			<!--<selection value="RoundRobin" />-->
+			<routing value="HeteroXYZ" /> <!-- XYZ, HeteroXYZ, RandomXYZ, RandomHeteroXYZ -->
 			<selection value="1stFreeVC" />
 			<clockDelay value="4" />
-			<arbiterType value="fair" /> <!-- rrVC, fair -->
+			<arbiterType value="fair" />
 		</nodeType>
 		<nodeType id="3">
 			<model value="ProcessingElement" />
