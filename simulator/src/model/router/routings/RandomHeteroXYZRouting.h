@@ -23,11 +23,11 @@
 
 #include "BaseRouting.h"
 
-class HeteroXYZRouting : public BaseRouting {
+class RandomHeteroXYZRouting : public BaseRouting {
 public:
-    HeteroXYZRouting() = default;
+    RandomHeteroXYZRouting() = default;
 
-    ~HeteroXYZRouting() = default;
+    ~RandomHeteroXYZRouting() = default;
 
     int route(int src_node_id, int dst_node_id) override;
 };

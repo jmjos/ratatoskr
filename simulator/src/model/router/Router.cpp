@@ -21,6 +21,8 @@
  ******************************************************************************/
 #include <model/router/routings/XYZRouting.h>
 #include <model/router/routings/HeteroXYZRouting.h>
+#include <model/router/routings/RandomXYZRouting.h>
+#include <model/router/routings/RandomHeteroXYZRouting.h>
 #include "Router.h"
 
 Router::Router(sc_module_name nm, Node& node)
@@ -41,6 +43,10 @@ Router::Router(sc_module_name nm, Node& node)
         routingAlg = std::make_unique<XYZRouting>();
     else if(node.type->routing=="HeteroXYZ")
         routingAlg = std::make_unique<HeteroXYZRouting>();
+    else if(node.type->routing=="RandomXYZ")
+        routingAlg = std::make_unique<RandomXYZRouting>();
+    else if(node.type->routing=="RandomHeteroXYZ")
+        routingAlg = std::make_unique<RandomHeteroXYZRouting>();
 }
 
 Router::~Router()
