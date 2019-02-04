@@ -33,8 +33,7 @@ int sc_main(int arg_num, char* arg_vec[])
 {
     GlobalResources& globalResources = GlobalResources::getInstance();
     GlobalReport& globalReport = GlobalReport::getInstance();
-    //Report& rep = Report::getInstance();  // database report
-    //srand(0);
+    Report& rep = Report::getInstance();  // database report
     sleep(1);  // wait for the systemC branding
     cout << endl << "A-3D-NoC Simulator Copyright(C) 2014-2019" << endl;
     cout << "   Jan Moritz Joseph (jan.joseph@ovgu.de) " << endl;
@@ -59,8 +58,8 @@ int sc_main(int arg_num, char* arg_vec[])
 
     globalReport.resizeMatrices();
 
-    //rep.connect("127.0.0.1", "10000");
-    //rep.startRun("name");
+    rep.connect("127.0.0.1", "10000");
+    rep.startRun("name");
 
     std::unique_ptr<NoC> noc = std::make_unique<NoC>("Layer");
     std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
@@ -80,7 +79,7 @@ int sc_main(int arg_num, char* arg_vec[])
     auto durationmin = std::chrono::duration_cast<std::chrono::minutes>(
             std::chrono::high_resolution_clock::now()-t1).count();
     cout << "Execution time: " << durationmin << " minutes and " << duration << " seconds" << std::endl;
-    //rep.close();
+    rep.close();
 
     return 0;
 }
