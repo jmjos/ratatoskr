@@ -354,6 +354,7 @@ void GlobalReport::reportAllRoutersUsageHist()
                 for (unsigned int conPos = 0; conPos<globalResources.nodes[i].connections.size(); conPos++) {
                     int dir_int = globalResources.nodes[i].getDirOfConPos(conPos);
                     std::string dir_str = DIR::toString(globalResources.nodes[i].getDirOfConPos(conPos));
+                    boost::trim(dir_str);
                     csvFileName = "BuffUsage/"+std::to_string(i)+"_"+dir_str+".csv";
                     reportBuffPerVCUsageHist(csvFileName, i, dir_int);
                 }

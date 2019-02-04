@@ -24,6 +24,7 @@
 #include "systemc.h"
 #include <map>
 #include <boost/format.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include "GlobalResources.h"
 #include "Statistics.h"
