@@ -16,12 +16,12 @@
     <outputToFile value="true">report</outputToFile>
   </general>
   <noc>
-    <nocFile>config/tests/2/working.xml</nocFile>
+    <nocFile>config/tests/2/network.xml</nocFile>
     <flitsPerPacket value="10" />
     <Vdd value="5" />
   </noc>
   <application>
-    <benchmark>synthetic</benchmark>
+    <benchmark>task</benchmark>
     <!--task, netrace, synthetic -->
     
     <synthetic>
@@ -51,10 +51,10 @@
 
     </synthetic>
  
-      <!--
+
       <dataFile>config/tests/2/data.xml</dataFile>
       <mapFile>config/tests/2/map.xml</mapFile>
-      -->
+
       <simulationFile>traffic/pipelinePerformance_2D/PipelineResetTB.xml</simulationFile>
       <mappingFile>traffic/pipelinePerformance_2D/PipelineResetTBMapping.xml</mappingFile>
       <netraceFile>traffic/netrace/example.tra.bz2</netraceFile>

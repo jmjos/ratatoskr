@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <network-on-chip xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-<bufferDepthType value="perVC" /> <!-- single, perVC-->
+<bufferDepthType value="single" /> <!-- single, perVC-->
 	<nodeTypes>
 		<nodeType id="0">
 			<model value="RouterVC" />
@@ -15,7 +15,7 @@
 			<routing value="XYZ" />
 			<!--<selection value="RoundRobin" />-->
 			<selection value="1stFreeVC" />
-			<clockDelay value="2" />
+			<clockDelay value="1" />
 			<arbiterType value="fair" /> <!-- rrVC, fair -->
 		</nodeType>
         <nodeType id="2">
@@ -23,7 +23,7 @@
 			<routing value="XYZ" />
 			<!--<selection value="RoundRobin" />-->
 			<selection value="1stFreeVC" />
-			<clockDelay value="4" />
+			<clockDelay value="1" />
 			<arbiterType value="fair" /> <!-- rrVC, fair -->
 		</nodeType>
 		<nodeType id="3">
@@ -32,11 +32,11 @@
 		</nodeType>
        <nodeType id="4">
 			<model value="ProcessingElement" />
-			<clockDelay value="2" />
+			<clockDelay value="1" />
 		</nodeType>
        <nodeType id="5">
 			<model value="ProcessingElement" />
-			<clockDelay value="4" />
+			<clockDelay value="1" />
 		</nodeType>
 	</nodeTypes>
 
@@ -820,7 +820,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -829,16 +829,14 @@
 			<ports>
 				<port id="0">
 					<node value="0" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="48" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -851,7 +849,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -860,16 +858,14 @@
 			<ports>
 				<port id="0">
 					<node value="0" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="1" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -882,7 +878,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -891,16 +887,14 @@
 			<ports>
 				<port id="0">
 					<node value="0" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="4" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -913,7 +907,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -922,16 +916,14 @@
 			<ports>
 				<port id="0">
 					<node value="0" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="16" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -944,7 +936,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -953,16 +945,14 @@
 			<ports>
 				<port id="0">
 					<node value="1" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="49" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -975,7 +965,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -984,16 +974,14 @@
 			<ports>
 				<port id="0">
 					<node value="1" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="2" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1006,7 +994,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1015,16 +1003,14 @@
 			<ports>
 				<port id="0">
 					<node value="1" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="5" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1037,7 +1023,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1046,16 +1032,14 @@
 			<ports>
 				<port id="0">
 					<node value="1" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="17" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1068,7 +1052,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1077,16 +1061,14 @@
 			<ports>
 				<port id="0">
 					<node value="2" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="50" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1099,7 +1081,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1108,16 +1090,14 @@
 			<ports>
 				<port id="0">
 					<node value="2" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="3" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1130,7 +1110,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1139,16 +1119,14 @@
 			<ports>
 				<port id="0">
 					<node value="2" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="6" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1161,7 +1139,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1170,16 +1148,14 @@
 			<ports>
 				<port id="0">
 					<node value="2" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="18" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1192,7 +1168,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1201,16 +1177,14 @@
 			<ports>
 				<port id="0">
 					<node value="3" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="51" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1223,7 +1197,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1232,16 +1206,14 @@
 			<ports>
 				<port id="0">
 					<node value="3" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="7" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1254,7 +1226,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1263,16 +1235,14 @@
 			<ports>
 				<port id="0">
 					<node value="3" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="19" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1285,7 +1255,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1294,16 +1264,14 @@
 			<ports>
 				<port id="0">
 					<node value="4" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="52" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1316,7 +1284,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1325,16 +1293,14 @@
 			<ports>
 				<port id="0">
 					<node value="4" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="5" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1347,7 +1313,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1356,16 +1322,14 @@
 			<ports>
 				<port id="0">
 					<node value="4" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="8" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1378,7 +1342,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1387,16 +1351,14 @@
 			<ports>
 				<port id="0">
 					<node value="4" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="20" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1409,7 +1371,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1418,16 +1380,14 @@
 			<ports>
 				<port id="0">
 					<node value="5" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="53" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1440,7 +1400,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1449,16 +1409,14 @@
 			<ports>
 				<port id="0">
 					<node value="5" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="6" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1471,7 +1429,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1480,16 +1438,14 @@
 			<ports>
 				<port id="0">
 					<node value="5" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="9" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1502,7 +1458,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1511,16 +1467,14 @@
 			<ports>
 				<port id="0">
 					<node value="5" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="21" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1533,7 +1487,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1542,16 +1496,14 @@
 			<ports>
 				<port id="0">
 					<node value="6" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="54" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1564,7 +1516,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1573,16 +1525,14 @@
 			<ports>
 				<port id="0">
 					<node value="6" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="7" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1595,7 +1545,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1604,16 +1554,14 @@
 			<ports>
 				<port id="0">
 					<node value="6" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="10" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1626,7 +1574,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1635,16 +1583,14 @@
 			<ports>
 				<port id="0">
 					<node value="6" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="22" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1657,7 +1603,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1666,16 +1612,14 @@
 			<ports>
 				<port id="0">
 					<node value="7" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="55" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1688,7 +1632,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1697,16 +1641,14 @@
 			<ports>
 				<port id="0">
 					<node value="7" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="11" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1719,7 +1661,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1728,16 +1670,14 @@
 			<ports>
 				<port id="0">
 					<node value="7" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="23" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1750,7 +1690,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1759,16 +1699,14 @@
 			<ports>
 				<port id="0">
 					<node value="8" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="56" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1781,7 +1719,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1790,16 +1728,14 @@
 			<ports>
 				<port id="0">
 					<node value="8" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="9" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1812,7 +1748,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1821,16 +1757,14 @@
 			<ports>
 				<port id="0">
 					<node value="8" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="12" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1843,7 +1777,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1852,16 +1786,14 @@
 			<ports>
 				<port id="0">
 					<node value="8" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="24" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1874,7 +1806,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1883,16 +1815,14 @@
 			<ports>
 				<port id="0">
 					<node value="9" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="57" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1905,7 +1835,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1914,16 +1844,14 @@
 			<ports>
 				<port id="0">
 					<node value="9" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="10" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1936,7 +1864,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1945,16 +1873,14 @@
 			<ports>
 				<port id="0">
 					<node value="9" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="13" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1967,7 +1893,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -1976,16 +1902,14 @@
 			<ports>
 				<port id="0">
 					<node value="9" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="25" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -1998,7 +1922,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2007,16 +1931,14 @@
 			<ports>
 				<port id="0">
 					<node value="10" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="58" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2029,7 +1951,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2038,16 +1960,14 @@
 			<ports>
 				<port id="0">
 					<node value="10" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="11" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2060,7 +1980,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2069,16 +1989,14 @@
 			<ports>
 				<port id="0">
 					<node value="10" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="14" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2091,7 +2009,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2100,16 +2018,14 @@
 			<ports>
 				<port id="0">
 					<node value="10" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="26" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2122,7 +2038,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2131,16 +2047,14 @@
 			<ports>
 				<port id="0">
 					<node value="11" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="59" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2153,7 +2067,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2162,16 +2076,14 @@
 			<ports>
 				<port id="0">
 					<node value="11" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="15" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2184,7 +2096,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2193,16 +2105,14 @@
 			<ports>
 				<port id="0">
 					<node value="11" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="27" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2215,7 +2125,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2224,16 +2134,14 @@
 			<ports>
 				<port id="0">
 					<node value="12" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="60" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2246,7 +2154,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2255,16 +2163,14 @@
 			<ports>
 				<port id="0">
 					<node value="12" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="13" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2277,7 +2183,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2286,16 +2192,14 @@
 			<ports>
 				<port id="0">
 					<node value="12" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="28" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2308,7 +2212,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2317,16 +2221,14 @@
 			<ports>
 				<port id="0">
 					<node value="13" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="61" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2339,7 +2241,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2348,16 +2250,14 @@
 			<ports>
 				<port id="0">
 					<node value="13" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="14" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2370,7 +2270,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2379,16 +2279,14 @@
 			<ports>
 				<port id="0">
 					<node value="13" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="29" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2401,7 +2299,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2410,16 +2308,14 @@
 			<ports>
 				<port id="0">
 					<node value="14" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="62" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2432,7 +2328,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2441,16 +2337,14 @@
 			<ports>
 				<port id="0">
 					<node value="14" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="15" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2463,7 +2357,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2472,16 +2366,14 @@
 			<ports>
 				<port id="0">
 					<node value="14" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="30" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2494,7 +2386,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2503,16 +2395,14 @@
 			<ports>
 				<port id="0">
 					<node value="15" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="63" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2525,7 +2415,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2534,16 +2424,14 @@
 			<ports>
 				<port id="0">
 					<node value="15" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="31" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2556,7 +2444,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2565,16 +2453,14 @@
 			<ports>
 				<port id="0">
 					<node value="16" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="64" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2587,7 +2473,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2596,16 +2482,14 @@
 			<ports>
 				<port id="0">
 					<node value="16" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="17" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2618,7 +2502,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2627,16 +2511,14 @@
 			<ports>
 				<port id="0">
 					<node value="16" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="20" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2649,7 +2531,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2658,16 +2540,14 @@
 			<ports>
 				<port id="0">
 					<node value="16" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="32" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2680,7 +2560,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2689,16 +2569,14 @@
 			<ports>
 				<port id="0">
 					<node value="17" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="65" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2711,7 +2589,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2720,16 +2598,14 @@
 			<ports>
 				<port id="0">
 					<node value="17" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="18" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2742,7 +2618,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2751,16 +2627,14 @@
 			<ports>
 				<port id="0">
 					<node value="17" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="21" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2773,7 +2647,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2782,16 +2656,14 @@
 			<ports>
 				<port id="0">
 					<node value="17" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="33" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2804,7 +2676,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2813,16 +2685,14 @@
 			<ports>
 				<port id="0">
 					<node value="18" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="66" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2835,7 +2705,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2844,16 +2714,14 @@
 			<ports>
 				<port id="0">
 					<node value="18" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="19" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2866,7 +2734,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2875,16 +2743,14 @@
 			<ports>
 				<port id="0">
 					<node value="18" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="22" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2897,7 +2763,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2906,16 +2772,14 @@
 			<ports>
 				<port id="0">
 					<node value="18" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="34" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2928,7 +2792,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2937,16 +2801,14 @@
 			<ports>
 				<port id="0">
 					<node value="19" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="67" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2959,7 +2821,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2968,16 +2830,14 @@
 			<ports>
 				<port id="0">
 					<node value="19" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="23" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -2990,7 +2850,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -2999,16 +2859,14 @@
 			<ports>
 				<port id="0">
 					<node value="19" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="35" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3021,7 +2879,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3030,16 +2888,14 @@
 			<ports>
 				<port id="0">
 					<node value="20" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="68" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3052,7 +2908,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3061,16 +2917,14 @@
 			<ports>
 				<port id="0">
 					<node value="20" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="21" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3083,7 +2937,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3092,16 +2946,14 @@
 			<ports>
 				<port id="0">
 					<node value="20" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="24" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3114,7 +2966,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3123,16 +2975,14 @@
 			<ports>
 				<port id="0">
 					<node value="20" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="36" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3145,7 +2995,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3154,16 +3004,14 @@
 			<ports>
 				<port id="0">
 					<node value="21" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="69" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3176,7 +3024,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3185,16 +3033,14 @@
 			<ports>
 				<port id="0">
 					<node value="21" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="22" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3207,7 +3053,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3216,16 +3062,14 @@
 			<ports>
 				<port id="0">
 					<node value="21" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="25" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3238,7 +3082,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3247,16 +3091,14 @@
 			<ports>
 				<port id="0">
 					<node value="21" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="37" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3269,7 +3111,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3278,16 +3120,14 @@
 			<ports>
 				<port id="0">
 					<node value="22" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="70" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3300,7 +3140,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3309,16 +3149,14 @@
 			<ports>
 				<port id="0">
 					<node value="22" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="23" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3331,7 +3169,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3340,16 +3178,14 @@
 			<ports>
 				<port id="0">
 					<node value="22" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="26" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3362,7 +3198,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3371,16 +3207,14 @@
 			<ports>
 				<port id="0">
 					<node value="22" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="38" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3393,7 +3227,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3402,16 +3236,14 @@
 			<ports>
 				<port id="0">
 					<node value="23" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="71" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3424,7 +3256,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3433,16 +3265,14 @@
 			<ports>
 				<port id="0">
 					<node value="23" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="27" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3455,7 +3285,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3464,16 +3294,14 @@
 			<ports>
 				<port id="0">
 					<node value="23" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="39" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3486,7 +3314,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3495,16 +3323,14 @@
 			<ports>
 				<port id="0">
 					<node value="24" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="72" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3517,7 +3343,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3526,16 +3352,14 @@
 			<ports>
 				<port id="0">
 					<node value="24" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="25" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3548,7 +3372,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3557,16 +3381,14 @@
 			<ports>
 				<port id="0">
 					<node value="24" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="28" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3579,7 +3401,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3588,16 +3410,14 @@
 			<ports>
 				<port id="0">
 					<node value="24" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="40" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3610,7 +3430,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3619,16 +3439,14 @@
 			<ports>
 				<port id="0">
 					<node value="25" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="73" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3641,7 +3459,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3650,16 +3468,14 @@
 			<ports>
 				<port id="0">
 					<node value="25" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="26" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3672,7 +3488,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3681,16 +3497,14 @@
 			<ports>
 				<port id="0">
 					<node value="25" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="29" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3703,7 +3517,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3712,16 +3526,14 @@
 			<ports>
 				<port id="0">
 					<node value="25" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="41" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3734,7 +3546,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3743,16 +3555,14 @@
 			<ports>
 				<port id="0">
 					<node value="26" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="74" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3765,7 +3575,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3774,16 +3584,14 @@
 			<ports>
 				<port id="0">
 					<node value="26" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="27" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3796,7 +3604,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3805,16 +3613,14 @@
 			<ports>
 				<port id="0">
 					<node value="26" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="30" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3827,7 +3633,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3836,16 +3642,14 @@
 			<ports>
 				<port id="0">
 					<node value="26" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="42" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3858,7 +3662,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3867,16 +3671,14 @@
 			<ports>
 				<port id="0">
 					<node value="27" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="75" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3889,7 +3691,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3898,16 +3700,14 @@
 			<ports>
 				<port id="0">
 					<node value="27" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="31" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3920,7 +3720,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3929,16 +3729,14 @@
 			<ports>
 				<port id="0">
 					<node value="27" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="43" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3951,7 +3749,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3960,16 +3758,14 @@
 			<ports>
 				<port id="0">
 					<node value="28" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="76" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -3982,7 +3778,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -3991,16 +3787,14 @@
 			<ports>
 				<port id="0">
 					<node value="28" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="29" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4013,7 +3807,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4022,16 +3816,14 @@
 			<ports>
 				<port id="0">
 					<node value="28" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="44" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4044,7 +3836,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4053,16 +3845,14 @@
 			<ports>
 				<port id="0">
 					<node value="29" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="77" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4075,7 +3865,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4084,16 +3874,14 @@
 			<ports>
 				<port id="0">
 					<node value="29" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="30" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4106,7 +3894,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4115,16 +3903,14 @@
 			<ports>
 				<port id="0">
 					<node value="29" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="45" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4137,7 +3923,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4146,16 +3932,14 @@
 			<ports>
 				<port id="0">
 					<node value="30" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="78" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4168,7 +3952,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4177,16 +3961,14 @@
 			<ports>
 				<port id="0">
 					<node value="30" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="31" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4199,7 +3981,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4208,16 +3990,14 @@
 			<ports>
 				<port id="0">
 					<node value="30" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="46" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4230,7 +4010,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4239,16 +4019,14 @@
 			<ports>
 				<port id="0">
 					<node value="31" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="79" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4261,7 +4039,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4270,16 +4048,14 @@
 			<ports>
 				<port id="0">
 					<node value="31" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="47" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4292,7 +4068,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4301,16 +4077,14 @@
 			<ports>
 				<port id="0">
 					<node value="32" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="80" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4323,7 +4097,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4332,16 +4106,14 @@
 			<ports>
 				<port id="0">
 					<node value="32" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="33" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4354,7 +4126,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4363,16 +4135,14 @@
 			<ports>
 				<port id="0">
 					<node value="32" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="36" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4385,7 +4155,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4394,16 +4164,14 @@
 			<ports>
 				<port id="0">
 					<node value="33" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="81" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4416,7 +4184,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4425,16 +4193,14 @@
 			<ports>
 				<port id="0">
 					<node value="33" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="34" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4447,7 +4213,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4456,16 +4222,14 @@
 			<ports>
 				<port id="0">
 					<node value="33" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="37" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4478,7 +4242,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4487,16 +4251,14 @@
 			<ports>
 				<port id="0">
 					<node value="34" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="82" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4509,7 +4271,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4518,16 +4280,14 @@
 			<ports>
 				<port id="0">
 					<node value="34" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="35" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4540,7 +4300,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4549,16 +4309,14 @@
 			<ports>
 				<port id="0">
 					<node value="34" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="38" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4571,7 +4329,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4580,16 +4338,14 @@
 			<ports>
 				<port id="0">
 					<node value="35" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="83" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4602,7 +4358,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4611,16 +4367,14 @@
 			<ports>
 				<port id="0">
 					<node value="35" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="39" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4633,7 +4387,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4642,16 +4396,14 @@
 			<ports>
 				<port id="0">
 					<node value="36" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="84" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4664,7 +4416,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4673,16 +4425,14 @@
 			<ports>
 				<port id="0">
 					<node value="36" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="37" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4695,7 +4445,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4704,16 +4454,14 @@
 			<ports>
 				<port id="0">
 					<node value="36" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="40" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4726,7 +4474,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4735,16 +4483,14 @@
 			<ports>
 				<port id="0">
 					<node value="37" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="85" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4757,7 +4503,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4766,16 +4512,14 @@
 			<ports>
 				<port id="0">
 					<node value="37" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="38" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4788,7 +4532,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4797,16 +4541,14 @@
 			<ports>
 				<port id="0">
 					<node value="37" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="41" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4819,7 +4561,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4828,16 +4570,14 @@
 			<ports>
 				<port id="0">
 					<node value="38" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="86" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4850,7 +4590,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4859,16 +4599,14 @@
 			<ports>
 				<port id="0">
 					<node value="38" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="39" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4881,7 +4619,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4890,16 +4628,14 @@
 			<ports>
 				<port id="0">
 					<node value="38" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="42" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4912,7 +4648,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4921,16 +4657,14 @@
 			<ports>
 				<port id="0">
 					<node value="39" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="87" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4943,7 +4677,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4952,16 +4686,14 @@
 			<ports>
 				<port id="0">
 					<node value="39" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="43" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -4974,7 +4706,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -4983,16 +4715,14 @@
 			<ports>
 				<port id="0">
 					<node value="40" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="88" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5005,7 +4735,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -5014,16 +4744,14 @@
 			<ports>
 				<port id="0">
 					<node value="40" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="41" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5036,7 +4764,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -5045,16 +4773,14 @@
 			<ports>
 				<port id="0">
 					<node value="40" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="44" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5067,7 +4793,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -5076,16 +4802,14 @@
 			<ports>
 				<port id="0">
 					<node value="41" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="89" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5098,7 +4822,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -5107,16 +4831,14 @@
 			<ports>
 				<port id="0">
 					<node value="41" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="42" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5129,7 +4851,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -5138,16 +4860,14 @@
 			<ports>
 				<port id="0">
 					<node value="41" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="45" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5160,7 +4880,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -5169,16 +4889,14 @@
 			<ports>
 				<port id="0">
 					<node value="42" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="90" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5191,7 +4909,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -5200,16 +4918,14 @@
 			<ports>
 				<port id="0">
 					<node value="42" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="43" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5222,7 +4938,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -5231,16 +4947,14 @@
 			<ports>
 				<port id="0">
 					<node value="42" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="46" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5253,7 +4967,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -5262,16 +4976,14 @@
 			<ports>
 				<port id="0">
 					<node value="43" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="91" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5284,7 +4996,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -5293,16 +5005,14 @@
 			<ports>
 				<port id="0">
 					<node value="43" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="47" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5315,7 +5025,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -5324,16 +5034,14 @@
 			<ports>
 				<port id="0">
 					<node value="44" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="92" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5346,7 +5054,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -5355,16 +5063,14 @@
 			<ports>
 				<port id="0">
 					<node value="44" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="45" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5377,7 +5083,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -5386,16 +5092,14 @@
 			<ports>
 				<port id="0">
 					<node value="45" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="93" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5408,7 +5112,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -5417,16 +5121,14 @@
 			<ports>
 				<port id="0">
 					<node value="45" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="46" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5439,7 +5141,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -5448,16 +5150,14 @@
 			<ports>
 				<port id="0">
 					<node value="46" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="94" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5470,7 +5170,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -5479,16 +5179,14 @@
 			<ports>
 				<port id="0">
 					<node value="46" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="47" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>
@@ -5501,7 +5199,7 @@
 			<wireCouplingCapacitanceCc value="1.0" />
 			<wireSelfCapacitanceCg value="1.0" />
 			<wireSelfCapacitancePerUnitLengthCg
-				value="1.0" />
+					value="1.0" />
 			<tsvarraySelfCapacitanceC0 value="1.0" />
 			<tsvarrayNeighbourCapacitanceCd value="1.0" />
 			<tsvarrayDiagonalCapacitanceCn value="1.0" />
@@ -5510,16 +5208,14 @@
 			<ports>
 				<port id="0">
 					<node value="47" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 				<port id="1">
 					<node value="95" />
-==== BASE ====
 					<bufferDepth value="10" />
-==== BASE ====
+					<buffersDepths value="10, 15, 20, 25"/>
 					<vcCount value="4" />
 				</port>
 			</ports>

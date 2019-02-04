@@ -26,30 +26,35 @@ int HeteroXYZRouting::route(int src_node_id, int dst_node_id)
     Node src_node = globalResources.nodes.at(src_node_id);
     Vec3D<float> src_pos = src_node.pos;
     Vec3D<float> dst_pos = globalResources.nodes.at(dst_node_id).pos;
-    int con_pos = -1;
+    int x_axis = -1, y_axis = -1, z_axis;
+    std::vector<int> possible_conPositions{};
 
     if (dst_pos==src_pos) {
-        con_pos = src_node.getConPosOfDir(DIR::Local);
+        return src_node.getConPosOfDir(DIR::Local);
     }
     else if (dst_pos.z<src_pos.z) {
-        con_pos = src_node.getConPosOfDir(DIR::Down);
+        return src_node.getConPosOfDir(DIR::Down);
     }
     else if (dst_pos.z>=src_pos.z) {
         if (dst_pos.x<src_pos.x) {
-            con_pos = src_node.getConPosOfDir(DIR::West);
+            x_axis = src_node.getConPosOfDir(DIR::West);
         }
         else if (dst_pos.x>src_pos.x) {
-            con_pos = src_node.getConPosOfDir(DIR::East);
+            x_axis = src_node.getConPosOfDir(DIR::East);
         }
-        else if (dst_pos.y<src_pos.y) {
-            con_pos = src_node.getConPosOfDir(DIR::South);
+        if (dst_pos.y<src_pos.y) {
+            y_axis = src_node.getConPosOfDir(DIR::South);
         }
         else if (dst_pos.y>src_pos.y) {
-            con_pos = src_node.getConPosOfDir(DIR::North);
+            y_axis = src_node.getConPosOfDir(DIR::North);
         }
-        else
-            con_pos = src_node.getConPosOfDir(DIR::Up);
+        z_axis = src_node.getConPosOfDir(DIR::Up);
+        if (x_axis!=-1)
+            possible_conPositions.push_back(x_axis);
+        if (y_axis!=-1)
+            possible_conPositions.push_back(y_axis);
+        if (z_axis!=-1)
+            possible_conPositions.push_back(z_axis);
+        return possible_conPositions.at(globalResources.getRandomIntBetween(0, possible_conPositions.size()-1));
     }
-
-    return con_pos;
 }

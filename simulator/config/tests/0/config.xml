@@ -16,7 +16,7 @@
     <outputToFile value="true">report</outputToFile>
   </general>
   <noc>
-    <nocFile>config/working.xml</nocFile>
+    <nocFile>config/tests/0/network.xml</nocFile>
     <flitsPerPacket value="10" />
     <Vdd value="5" />
   </noc>
@@ -51,8 +51,8 @@
 
     </synthetic>
  
-      <dataFile>config/data.xml</dataFile>
-      <mapFile>config/map.xml</mapFile>
+      <dataFile>config/config/tests/0/data.xml</dataFile>
+      <mapFile>config/config/tests/0/map.xml</mapFile>
 
       <simulationFile>traffic/pipelinePerformance_2D/PipelineResetTB.xml</simulationFile>
       <mappingFile>traffic/pipelinePerformance_2D/PipelineResetTBMapping.xml</mappingFile>

@@ -16,7 +16,7 @@
     <outputToFile value="true">report</outputToFile>
   </general>
   <noc>
-    <nocFile>config/tests/1/working.xml</nocFile>
+    <nocFile>config/tests/1/network.xml</nocFile>
     <flitsPerPacket value="10" />
     <Vdd value="5" />
   </noc>
