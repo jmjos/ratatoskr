@@ -110,29 +110,9 @@ void RouterVC::thread()
         send();
 
         std::map<int, std::vector<Channel>> switch_requests = switchAllocation_generateRequests();
-        if (id==25 && sc_time_stamp()==sc_time(9264, SC_NS)) {
-            for (auto it : switch_requests) {
-                cout << DIR::toString(this->node.getDirOfConPos(it.first)) << endl;
-                for (auto it2 : it.second) {
-                    cout << "dir: " << DIR::toString(this->node.getDirOfConPos(it2.conPos)) << " vc  " << it2.vc
-                         << endl;
-                    //cout << it2;
-                }
-            }
-        }
         switchAllocation_generateAck(switch_requests);
 
         std::map<int, std::vector<Channel>> vc_requests = VCAllocation_generateRequests();
-        if (id==25 && sc_time_stamp()==sc_time(9264, SC_NS)) {
-            for (auto it : vc_requests) {
-                cout << DIR::toString(this->node.getDirOfConPos(it.first)) << endl;
-                for (auto it2 : it.second) {
-                    cout << "dir: " << DIR::toString(this->node.getDirOfConPos(it2.conPos)) << " vc  " << it2.vc
-                         << endl;
-                    //cout << it2;
-                }
-            }
-        }
         VCAllocation_generateAck(vc_requests);
     }
     else if (clk.negedge()) {

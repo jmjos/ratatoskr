@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <network-on-chip xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-<bufferDepthType value="perVC" /> <!-- single, perVC-->
+<bufferDepthType value="single" /> <!-- single, perVC-->
 	<nodeTypes>
 		<nodeType id="0">
 			<model value="RouterVC" />
