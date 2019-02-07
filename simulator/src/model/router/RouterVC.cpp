@@ -77,6 +77,8 @@ void RouterVC::bind(Connection* con, SignalContainer* sigContIn, SignalContainer
 
 void RouterVC::initialize()
 {
+    LOG(globalReport.verbose_router_function_calls,
+            "Router" << this->id << "in initialize()");
     for (int conPos = 0; conPos<node.connections.size(); conPos++) {
         classicPortContainer.at(conPos).portValidOut.write(false);
         classicPortContainer.at(conPos).portFlowControlValidOut.write(false);
@@ -102,13 +104,35 @@ void RouterVC::initialize()
 
 void RouterVC::thread()
 {
+    LOG(globalReport.verbose_router_function_calls,
+            "Router" << this->id << "in tread() @ " << sc_time_stamp());
     if (clk.posedge()) {
         send();
 
         std::map<int, std::vector<Channel>> switch_requests = switchAllocation_generateRequests();
+        if (id==25 && sc_time_stamp()==sc_time(9264, SC_NS)) {
+            for (auto it : switch_requests) {
+                cout << DIR::toString(this->node.getDirOfConPos(it.first)) << endl;
+                for (auto it2 : it.second) {
+                    cout << "dir: " << DIR::toString(this->node.getDirOfConPos(it2.conPos)) << " vc  " << it2.vc
+                         << endl;
+                    //cout << it2;
+                }
+            }
+        }
         switchAllocation_generateAck(switch_requests);
 
         std::map<int, std::vector<Channel>> vc_requests = VCAllocation_generateRequests();
+        if (id==25 && sc_time_stamp()==sc_time(9264, SC_NS)) {
+            for (auto it : vc_requests) {
+                cout << DIR::toString(this->node.getDirOfConPos(it.first)) << endl;
+                for (auto it2 : it.second) {
+                    cout << "dir: " << DIR::toString(this->node.getDirOfConPos(it2.conPos)) << " vc  " << it2.vc
+                         << endl;
+                    //cout << it2;
+                }
+            }
+        }
         VCAllocation_generateAck(vc_requests);
     }
     else if (clk.negedge()) {
@@ -124,6 +148,8 @@ void RouterVC::thread()
 
 void RouterVC::receive()
 {
+    LOG(globalReport.verbose_router_function_calls,
+            "Router" << this->id << "in receive() @ " << sc_time_stamp());
     for (unsigned int conPos = 0; conPos<node.connections.size(); conPos++) {
         if (classicPortContainer.at(conPos).portValidIn.read()) {
             Flit* flit = classicPortContainer.at(conPos).portDataIn.read();
@@ -140,21 +166,21 @@ void RouterVC::receive()
                 if (buf->enqueue(flit)) {
                     rep.reportEvent(buf->dbid, "buffer_enqueue_flit", std::to_string(flit->id));
                     lastReceivedFlits[conPos] = flit;
+                    if (flit->type==HEAD) {
+                        LOG(globalReport.verbose_router_receive_head_flit,
+                                "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
+                                         << "]\t- Receive Flit " << *flit);
+                    }
+                    else {
+                        LOG(globalReport.verbose_router_receive_flit,
+                                "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
+                                         << "]\t- Receive Flit " << *flit);
+                    }
                 }
                 else {
                     LOG(globalReport.verbose_router_buffer_overflow,
                             "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
                                      << "]\t- Buffer Overflow " << *flit);
-                }
-                if (flit->type==HEAD) {
-                    LOG(globalReport.verbose_router_receive_head_flit,
-                            "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
-                                     << "]\t- Receive Flit " << *flit);
-                }
-                else {
-                    LOG(globalReport.verbose_router_receive_flit,
-                            "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
-                                     << "]\t- Receive Flit " << *flit);
                 }
             }
         }
@@ -164,6 +190,8 @@ void RouterVC::receive()
 // VC and buffer usage statistics
 void RouterVC::updateUsageStats()
 {
+    LOG(globalReport.verbose_router_function_calls,
+            "Router" << this->id << "in updateUsageStats() @ " << sc_time_stamp());
     for (int conPos = 0; conPos<node.connections.size(); conPos++) {
         Connection conn = globalResources.connections.at(node.connections.at(conPos));
         int numVCs = conn.getVCCountForNode(node.id);
@@ -186,15 +214,9 @@ void RouterVC::updateUsageStats()
 
 std::map<int, std::vector<Channel>> RouterVC::VCAllocation_generateRequests()
 {
+    LOG(globalReport.verbose_router_function_calls,
+            "Router" << this->id << "in VCAllocation_generateRequests() @ " << sc_time_stamp());
     std::map<int, std::vector<Channel>> requests{};
-    auto insert_request = [&requests](int out, Channel in) {
-        if (!requests.count(out)) {
-            auto entry = std::make_pair(out, std::vector<Channel>{in});
-            requests.insert(entry);
-        }
-        else
-            requests.at(out).push_back(in);
-    };
     for (int in_conPos = 0; in_conPos<node.connections.size(); in_conPos++) {
         int in_vc = VCAllocation_getNextVCToBeAllocated(in_conPos, VCAllocation_inputVCPtr);
         if (in_vc!=-1) {
@@ -207,7 +229,8 @@ std::map<int, std::vector<Channel>> RouterVC::VCAllocation_generateRequests()
                 int chosen_conPos = routingAlg->route(src_node_id, dst_node_id);
                 if (chosen_conPos==-1)
                     std::cerr << "Bad routing" << std::endl;
-                insert_request(chosen_conPos, {in_conPos, in_vc});
+                Channel in{in_conPos, in_vc};
+                insert_request(chosen_conPos, in, requests);
             }
         }
     }
@@ -216,6 +239,8 @@ std::map<int, std::vector<Channel>> RouterVC::VCAllocation_generateRequests()
 
 void RouterVC::VCAllocation_generateAck(const std::map<int, std::vector<Channel>>& requests)
 {
+    LOG(globalReport.verbose_router_function_calls,
+            "Router" << this->id << "in VCAllocation_generateAck() @ " << sc_time_stamp());
     for (auto& request:requests) {
         int requested_out = request.first;
         std::vector<Channel> requesting_ins = request.second;
@@ -236,6 +261,8 @@ void RouterVC::VCAllocation_generateAck(const std::map<int, std::vector<Channel>
 
 int RouterVC::VCAllocation_getNextFreeVC(int out)
 {
+    LOG(globalReport.verbose_router_function_calls,
+            "Router" << this->id << "in VCAllocation_getNextFreeVC() @ " << sc_time_stamp());
     std::vector<int> used_vcs = getAllocatedVCsOfOutDir(out);
     std::sort(used_vcs.begin(), used_vcs.end());
 
@@ -261,17 +288,13 @@ int RouterVC::VCAllocation_getNextFreeVC(int out)
 
 std::map<int, std::vector<Channel>> RouterVC::switchAllocation_generateRequests()
 {
+    LOG(globalReport.verbose_router_function_calls,
+            "Router" << this->id << "in switchAllocation_generateRequests() @ " << sc_time_stamp());
     std::map<int, std::vector<Channel>> requests{};
-    auto insert_request = [&requests](Channel out, Channel in) {
-        if (!requests.count(out.conPos)) {
-            auto entry = std::make_pair(out.conPos, std::vector<Channel>{in});
-            requests.insert(entry);
-        }
-        else
-            requests.at(out.conPos).push_back(in);
-    };
     for (int in_conPos = 0; in_conPos<node.connections.size(); in_conPos++) {
         std::vector<int> allocated_vcs = getAllocatedVCsOfInDir(in_conPos);
+
+        // subtract empty_vcs from allocated_vcs
         std::vector<int> empty_vcs{};
         for (int in_vc:allocated_vcs) {
             BufferFIFO<Flit*>* buf = buffers.at(in_conPos)->at(in_vc);
@@ -286,24 +309,18 @@ std::map<int, std::vector<Channel>> RouterVC::switchAllocation_generateRequests(
 
         if (!allocated_vcs.empty()) {
             auto vcs = generateVCsFromPtr(in_conPos, switchAllocation_inputVCPtr);
-
-            bool found = false;
             int in_vc = -1;
-            for (auto vc : vcs) {
-                if (!found) {
-                    for (auto allocated_vc : allocated_vcs) {
-                        if (allocated_vc==vc) {
-                            found = true;
-                            in_vc = allocated_vc;
-                            break;
-                        }
-                    }
+            for (auto& vc:vcs) {
+                auto result = std::find(allocated_vcs.begin(), allocated_vcs.end(), vc);
+                if (result!=allocated_vcs.end()) {
+                    in_vc = vc;
+                    break;
                 }
             }
             assert(in_vc!=-1);
             Channel in{in_conPos, in_vc};
             Channel out = routingTable.at(in);
-            insert_request(out, in);
+            insert_request(out.conPos, in, requests);
         }
     }
     return requests;
@@ -311,7 +328,8 @@ std::map<int, std::vector<Channel>> RouterVC::switchAllocation_generateRequests(
 
 void RouterVC::switchAllocation_generateAck(const std::map<int, std::vector<Channel>>& requests)
 {
-
+    LOG(globalReport.verbose_router_function_calls,
+            "Router" << this->id << "in switchAllocation_generateAck() @ " << sc_time_stamp());
     for (auto& request:requests) {
         int requested_out_dir = request.first;
         std::vector<Channel> requesting_ins = request.second;
@@ -362,6 +380,8 @@ std::vector<int> RouterVC::getAllocatedVCsOfOutDir(int conPos)
 
 void RouterVC::send()
 {
+    LOG(globalReport.verbose_router_function_calls,
+            "Router" << this->id << "in send() @ " << sc_time_stamp());
     for (auto& entry:switchTable) {
         Channel in = entry.first;
         Channel out = entry.second;
@@ -399,6 +419,8 @@ void RouterVC::send()
 
 void RouterVC::receiveFlowControlCredit()
 {
+    LOG(globalReport.verbose_router_function_calls,
+            "Router" << this->id << "in VCAllocation_generateRequests() @ " << sc_time_stamp());
     for (int conPos = 0; conPos<node.connections.size(); conPos++) {
         if (classicPortContainer.at(conPos).portFlowControlValidIn.posedge()) {
             if (classicPortContainer.at(conPos).portFlowControlValidIn.read()) {
@@ -413,6 +435,8 @@ void RouterVC::receiveFlowControlCredit()
 
 int RouterVC::VCAllocation_getNextVCToBeAllocated(int in, std::map<int, int> inputVCPtr)
 {
+    LOG(globalReport.verbose_router_function_calls,
+            "Router" << this->id << "in VCAllocation_getNextVCToBeAllocated() @ " << sc_time_stamp());
     auto vcs = generateVCsFromPtr(in, inputVCPtr);
 
     // subtract used vcs from all vcs, because they are already allocated.
@@ -448,6 +472,8 @@ int RouterVC::VCAllocation_getNextVCToBeAllocated(int in, std::map<int, int> inp
 
 std::vector<int> RouterVC::generateVCsFromPtr(int direction, std::map<int, int> VCPtr)
 {
+    LOG(globalReport.verbose_router_function_calls,
+            "Router" << this->id << "in generateVCsFromPtr() @ " << sc_time_stamp());
     // get all vcs starting from VCAllocation_inputVCPtr.
     connID_t con_id = node.connections.at(direction);
     Connection con = globalResources.connections.at(con_id);
@@ -462,4 +488,14 @@ std::vector<int> RouterVC::generateVCsFromPtr(int direction, std::map<int, int> 
 
 RouterVC::~RouterVC()
 {
+}
+
+void RouterVC::insert_request(int out_conPos, Channel in, std::map<int, std::vector<Channel>>& requests)
+{
+    if (!requests.count(out_conPos)) {
+        auto entry = std::make_pair(out_conPos, std::vector<Channel>{in});
+        requests.insert(entry);
+    }
+    else
+        requests.at(out_conPos).push_back(in);
 }
