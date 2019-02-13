@@ -129,3 +129,12 @@ All notable changes to this project will be documented in this file.
 - Still have to verify the VHDL model
 - Scripts not finished
 - lots more testing required
+
+## [2.0.1] - 2019-02-13
+
+### Features
+- Fixed Heisenbug. 
+- Added some statistics, not finished.
+
+### Known Issues
+- all of version 2.0
