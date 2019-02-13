@@ -23,12 +23,11 @@
 
 #include "NoC.h"
 
-NoC::NoC(sc_module_name nm)
-{
+NoC::NoC(sc_module_name nm) {
     dbid = rep.registerElement("NoC", 0);
     networkParticipants.resize(globalResources.nodes.size());
-    flitSignalContainers.resize(globalResources.connections.size()*2);
-    links.resize(globalResources.connections.size()*2);
+    flitSignalContainers.resize(globalResources.connections.size() * 2);
+    links.resize(globalResources.connections.size() * 2);
 
     createTrafficPool();
     createClocks();
@@ -36,116 +35,153 @@ NoC::NoC(sc_module_name nm)
     createSigContainers();
     createLinks(clocks);
     runNoC();
+
+    SC_THREAD(checkFlowControl);
 }
 
-void NoC::createClocks()
-{
+void NoC::createClocks() {
     clocks.resize(globalResources.nodeTypes.size());
-    for (const auto& nodeType : globalResources.nodeTypes) {
-        clocks.at(nodeType->id) = std::make_unique<sc_clock>(("NodeType"+std::to_string(nodeType->id)+"Clock").c_str(),
+    for (const auto &nodeType : globalResources.nodeTypes) {
+        clocks.at(nodeType->id) = std::make_unique<sc_clock>(
+                ("NodeType" + std::to_string(nodeType->id) + "Clock").c_str(),
                 nodeType->clockDelay, SC_NS);
     }
 }
 
-void NoC::createTrafficPool()
-{
-    unsigned long numOfPEs = globalResources.nodes.size()/2;
-    if (globalResources.benchmark=="task") {
+void NoC::createTrafficPool() {
+    unsigned long numOfPEs = globalResources.nodes.size() / 2;
+    if (globalResources.benchmark == "task") {
         tp = std::make_unique<TaskPool>();
-    }
-    else if (globalResources.benchmark=="synthetic") {
+    } else if (globalResources.benchmark == "synthetic") {
         tp = std::make_unique<SyntheticPool>();
-    }
-    else {
+    } else {
         FATAL("Please specify correct benchmark type");
     }
     tp->processingElements.resize(numOfPEs);
 }
 
-void NoC::createNetworkParticipants()
-{
+void NoC::createNetworkParticipants() {
 
-    for (Node& n : globalResources.nodes) {
-        if (n.type->model=="RouterVC") {
-            std::string name = "router_"+std::to_string(n.id);
-            RouterVC* r = new RouterVC(name.c_str(), n);
+    for (Node &n : globalResources.nodes) {
+        if (n.type->model == "RouterVC") {
+            std::string name = "router_" + std::to_string(n.id);
+            RouterVC *r = new RouterVC(name.c_str(), n);
             r->clk(*clocks.at(n.type->id));
-            networkParticipants.at(n.id) = dynamic_cast<NetworkParticipant*>(r);
-        }
-        else if (n.type->model=="ProcessingElement") {
+            networkParticipants.at(n.id) = dynamic_cast<NetworkParticipant *>(r);
+        } else if (n.type->model == "ProcessingElement") {
             // Creating an network interface.
-            std::string ni_name = "ni_"+std::to_string(n.id%tp->processingElements.size());
-            NetworkInterfaceVC* ni = new NetworkInterfaceVC(ni_name.c_str(), n);
+            std::string ni_name = "ni_" + std::to_string(n.id % tp->processingElements.size());
+            NetworkInterfaceVC *ni = new NetworkInterfaceVC(ni_name.c_str(), n);
             ni->clk(*clocks.at(n.type->id));
-            networkParticipants.at(n.id) = dynamic_cast<NetworkParticipant*>(ni);
+            networkParticipants.at(n.id) = dynamic_cast<NetworkParticipant *>(ni);
 
-            std::string pe_name = "pe_"+std::to_string(n.id%tp->processingElements.size());
-            ProcessingElementVC* pe = new ProcessingElementVC(pe_name.c_str(), n, tp.get());
+            std::string pe_name = "pe_" + std::to_string(n.id % tp->processingElements.size());
+            ProcessingElementVC *pe = new ProcessingElementVC(pe_name.c_str(), n, tp.get());
             std::unique_ptr<PacketSignalContainer> sig1 = std::make_unique<PacketSignalContainer>(
-                    ("packetSigCon1_"+std::to_string(n.id)).c_str());
+                    ("packetSigCon1_" + std::to_string(n.id)).c_str());
             std::unique_ptr<PacketSignalContainer> sig2 = std::make_unique<PacketSignalContainer>(
-                    ("packetSigCon2_"+std::to_string(n.id)).c_str());
+                    ("packetSigCon2_" + std::to_string(n.id)).c_str());
             ni->bind(nullptr, sig1.get(), sig2.get());
             pe->bind(nullptr, sig2.get(), sig1.get());
-            networkParticipants.push_back(dynamic_cast<NetworkParticipant*>(pe));
+            networkParticipants.push_back(dynamic_cast<NetworkParticipant *>(pe));
             packetSignalContainers.push_back(move(sig1));
             packetSignalContainers.push_back(move(sig2));
-            tp->processingElements.at(n.id%tp->processingElements.size()) = pe;
+            tp->processingElements.at(n.id % tp->processingElements.size()) = pe;
         }
     }
 }
 
-void NoC::createSigContainers()
-{
-    for (int i = 0; i<flitSignalContainers.size(); i++) {
+void NoC::createSigContainers() {
+    for (int i = 0; i < flitSignalContainers.size(); i++) {
         flitSignalContainers.at(i) = std::make_unique<FlitSignalContainer>(
-                ("flitSigCont_"+std::to_string(i)).c_str());
+                ("flitSigCont_" + std::to_string(i)).c_str());
     }
 }
 
-void NoC::createLinks(const std::vector<std::unique_ptr<sc_clock>>& clocks)
-{
+void NoC::createLinks(const std::vector<std::unique_ptr<sc_clock>> &clocks) {
     int link_id = 0;
-    for (auto& c : globalResources.connections) {
-        if (c.nodes.size()==2) { //might extend to bus architecture
+    for (auto &c : globalResources.connections) {
+        if (c.nodes.size() == 2) { //might extend to bus architecture
             links.at(link_id) = std::make_unique<Link>(
-                    ("link_"+std::to_string(link_id)+"_Conn_"+std::to_string(c.id)).c_str(), c, link_id);
-            links.at(link_id+1) = std::make_unique<Link>(
-                    ("link_"+std::to_string(link_id+1)+"_Conn_"+std::to_string(c.id)).c_str(), c,
-                    link_id+1);
+                    ("link_" + std::to_string(link_id) + "_Conn_" + std::to_string(c.id)).c_str(), c, link_id);
+            links.at(link_id + 1) = std::make_unique<Link>(
+                    ("link_" + std::to_string(link_id + 1) + "_Conn_" + std::to_string(c.id)).c_str(), c,
+                    link_id + 1);
 
-            Node& node1 = globalResources.nodes.at(c.nodes.at(0));
-            Node& node2 = globalResources.nodes.at(c.nodes.at(1));
+            Node &node1 = globalResources.nodes.at(c.nodes.at(0));
+            Node &node2 = globalResources.nodes.at(c.nodes.at(1));
 
             std::unique_ptr<Connection> c_ptr = std::make_unique<Connection>(c);
             networkParticipants.at(node1.id)->bind(c_ptr.get(), flitSignalContainers.at(link_id).get(),
-                    flitSignalContainers.at(link_id+1).get());
-            networkParticipants.at(node2.id)->bind(c_ptr.get(), flitSignalContainers.at(link_id+1).get(),
-                    flitSignalContainers.at(link_id).get());
+                                                   flitSignalContainers.at(link_id + 1).get());
+            networkParticipants.at(node2.id)->bind(c_ptr.get(), flitSignalContainers.at(link_id + 1).get(),
+                                                   flitSignalContainers.at(link_id).get());
 
             links.at(link_id)->classicPortContainer->bindOpen(flitSignalContainers.at(link_id).get());
-            links.at(link_id+1)->classicPortContainer->bindOpen(flitSignalContainers.at(link_id+1).get());
+            links.at(link_id + 1)->classicPortContainer->bindOpen(flitSignalContainers.at(link_id + 1).get());
             links.at(link_id)->clk(*clocks.at(node1.type->id));
-            links.at(link_id+1)->clk(*clocks.at(node2.type->id));
+            links.at(link_id + 1)->clk(*clocks.at(node2.type->id));
             link_id += 2;
-        }
-        else {
+        } else {
             FATAL("Unsupported number of endpoints in connection " << c.id);
         }
     }
 }
 
-void NoC::runNoC()
-{
-    for (auto& r : networkParticipants) {
+void NoC::checkFlowControl() {
+    cout << "HERE" << endl;
+    while (1) {
+        wait(1, SC_NS);
+        wait(SC_ZERO_TIME);
+        wait(SC_ZERO_TIME);//last thing that's executed!
+        for (auto &c : globalResources.connections) {
+            if (c.nodes.size() == 2) { //might extend to bus architecture
+                Node &node1 = globalResources.nodes.at(c.nodes.at(0));
+                Node &node2 = globalResources.nodes.at(c.nodes.at(1));
+                if (node1.type->model == "RouterVC" && node2.type->model == "RouterVC") {
+                    RouterVC *router1 = dynamic_cast<RouterVC *>(networkParticipants.at(node1.id));
+                    RouterVC *router2 = dynamic_cast<RouterVC *>(networkParticipants.at(node2.id));
+
+                    int conPos1 = node1.getConPosOfId(c.id);
+                    int conPos2 = node2.getConPosOfId(c.id);
+
+                    for (int vc = 0; vc < c.vcsCount.at(0); vc++) {
+                        Channel out = Channel(conPos1, vc);
+                        auto credits = router1->creditCounter.at(out);
+                        BufferFIFO<Flit *> *buf = router2->buffers.at(conPos2)->at(vc);
+                        auto bufferFill = buf->free();
+                        if (credits != bufferFill) {
+                            cout << "Error in " << node1.id << " vc " << vc << "(CC: " << credits << ") to " << node2.id << "(buf:"
+                                 << bufferFill << ")" << endl;
+                        }
+                    }
+
+                    for (int vc = 0; vc < c.vcsCount.at(1); vc++) {
+                        Channel out = Channel(conPos2, vc);
+                        auto credits = router2->creditCounter.at(out);
+                        BufferFIFO<Flit *> *buf = router1->buffers.at(conPos1)->at(vc);
+                        auto bufferFill = buf->free();
+                        if (credits != bufferFill) {
+                            cout << "Error in " << node2.id << " vc " << vc << "(CC: " << credits << ") to " << node1.id << "(buf:"
+                                 << bufferFill << ")" << endl;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+void NoC::runNoC() {
+    for (auto &r : networkParticipants) {
         r->initialize();
     }
     tp->start();
 }
 
-NoC::~NoC()
-{
-    for (auto& r : networkParticipants)
+NoC::~NoC() {
+    for (auto &r : networkParticipants)
         delete r;
     networkParticipants.clear();
 }

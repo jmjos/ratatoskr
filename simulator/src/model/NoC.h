@@ -57,6 +57,8 @@ public:
 
     ~NoC() override;
 
+    void checkFlowControl();
+
 private:
     GlobalResources& globalResources = GlobalResources::getInstance();
     Report& rep = Report::getInstance();

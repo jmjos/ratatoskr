@@ -26,7 +26,6 @@
 
 class RouterVC : public Router {
 public:
-
     std::map<Channel, int> creditCounter;
     std::map<Channel, int> lastReceivedCreditID;
     std::map<int, int> VCAllocation_inputVCPtr;

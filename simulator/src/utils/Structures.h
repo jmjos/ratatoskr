@@ -260,6 +260,8 @@ public:
 
     DIR::TYPE getDirOfConPos(int conPos) const;
 
+    int getConPosOfId(connID_t connID) const;
+
     void setDirOfConn(connID_t connID, DIR::TYPE dir);
 
     connID_t getConnWithNode(const Node& connectedNode);
