@@ -51,7 +51,6 @@ RouterVC::RouterVC(sc_module_name nm, Node& node)
             rep.reportAttribute(buf->dbid, "vc", std::to_string(vc));
         }
     }
-    lastReceivedFlits.resize(conCount);
 
     SC_METHOD(thread);
     sensitive << clk.pos() << clk.neg();
@@ -98,6 +97,7 @@ void RouterVC::initialize()
                 buf_size = conn.getBufferDepthForNodeAndVC(connectedRouter.id, vc);
             creditCounter.insert({ch, buf_size});
             lastReceivedCreditID.insert({ch, -1});
+            lastReceivedFlitsID.insert({ch, -1});
         }
     }
 }
@@ -143,17 +143,16 @@ void RouterVC::receive()
             Flit* flit = classicPortContainer.at(conPos).portDataIn.read();
             int vc = classicPortContainer.at(conPos).portVcIn.read();
             BufferFIFO<Flit*>* buf = buffers.at(conPos)->at(vc);
-            Channel c = Channel(conPos, vc);
+            Channel in = Channel(conPos, vc);
 
             // Prevents double writing of data, which occurs for asynchronous buffers.
             // Problem: This function is executed for all buffers if new data arrive. If some directions are clocked
             // at different data rate, the slower data rates are duplicated.
 
-            Flit* lrFlit = lastReceivedFlits.at(conPos);
-            if (!lrFlit || lrFlit->id!=flit->id) {
+            if (lastReceivedFlitsID.at(in)!=flit->id) {
                 if (buf->enqueue(flit)) {
                     rep.reportEvent(buf->dbid, "buffer_enqueue_flit", std::to_string(flit->id));
-                    lastReceivedFlits[conPos] = flit;
+                    lastReceivedFlitsID.at(in) = flit->id;
                     if (flit->type==HEAD) {
                         LOG(globalReport.verbose_router_receive_head_flit,
                                 "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
@@ -416,6 +415,7 @@ void RouterVC::receiveFlowControlCredit()
                 Channel ch{conPos, credit.vc};
                 if (lastReceivedCreditID.at(ch)!=credit.id)
                     creditCounter.at(ch)++;
+                    lastReceivedFlitsID.at(ch) = credit.id;
             }
         }
     }

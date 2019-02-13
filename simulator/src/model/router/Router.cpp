@@ -57,5 +57,4 @@ Router::~Router()
         dir_buf->clear();
     }
     buffers.clear();
-    lastReceivedFlits.clear();
 }

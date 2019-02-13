@@ -36,7 +36,7 @@ NoC::NoC(sc_module_name nm) {
     createLinks(clocks);
     runNoC();
 
-    SC_THREAD(checkFlowControl);
+    //SC_THREAD(verifyFlowControl);
 }
 
 void NoC::createClocks() {
@@ -128,8 +128,9 @@ void NoC::createLinks(const std::vector<std::unique_ptr<sc_clock>> &clocks) {
     }
 }
 
-void NoC::checkFlowControl() {
-    cout << "HERE" << endl;
+//This function was used to verify the credit counter. It works!
+/*
+void NoC::verifyFlowControl() {
     while (1) {
         wait(1, SC_NS);
         wait(SC_ZERO_TIME);
@@ -151,7 +152,10 @@ void NoC::checkFlowControl() {
                         BufferFIFO<Flit *> *buf = router2->buffers.at(conPos2)->at(vc);
                         auto bufferFill = buf->free();
                         if (credits != bufferFill) {
-                            cout << "Error in " << node1.id << " vc " << vc << "(CC: " << credits << ") to " << node2.id << "(buf:"
+                            cout << bufferFill << endl;
+                            cout << credits << endl;
+                            cout << "Error in " << node1.id << " vc " << vc << "(CC: " << credits << ") to " << node2.id
+                                 << "(buf:"
                                  << bufferFill << ")" << endl;
                         }
                     }
@@ -162,16 +166,37 @@ void NoC::checkFlowControl() {
                         BufferFIFO<Flit *> *buf = router1->buffers.at(conPos1)->at(vc);
                         auto bufferFill = buf->free();
                         if (credits != bufferFill) {
-                            cout << "Error in " << node2.id << " vc " << vc << "(CC: " << credits << ") to " << node1.id << "(buf:"
+                            cout << "Error in " << node2.id << " vc " << vc << "(CC: " << credits << ") to " << node1.id
+                                 << "(buf:"
                                  << bufferFill << ")" << endl;
                         }
+                    }
+                } else if (node1.type->model == "ProcessingElement") {
+                    //ProcessingElementVC* pe = dynamic_cast<ProcessingElementVC *>(networkParticipants.at(node1.id));
+                    RouterVC *router2 = dynamic_cast<RouterVC *>(networkParticipants.at(node2.id));
+                    int conPos2 = node2.getConPosOfId(c.id);
+                    int vc = 0;
+                    Channel out = Channel(conPos2, vc);
+                    auto credits = router2->creditCounter.at(out);
+                    if (credits == 0) {
+                        cout << "Error in " << node2.id << "Local hat 0 credits" << endl;
+                    }
+                } else if (node2.type->model == "ProcessingElement") {
+                    //ProcessingElementVC* pe = dynamic_cast<ProcessingElementVC *>(networkParticipants.at(node1.id));
+                    RouterVC *router = dynamic_cast<RouterVC *>(networkParticipants.at(node1.id));
+                    int conPos = node1.getConPosOfId(c.id);
+                    int vc = 0;
+                    Channel out = Channel(conPos, vc);
+                    auto credits = router->creditCounter.at(out);
+                    if (credits == 0) {
+                        cout << "Error in " << node1.id << "Local hat 0 credits" << endl;
                     }
                 }
             }
         }
     }
 }
-
+*/
 
 void NoC::runNoC() {
     for (auto &r : networkParticipants) {
