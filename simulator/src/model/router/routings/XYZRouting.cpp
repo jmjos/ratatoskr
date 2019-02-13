@@ -52,4 +52,3 @@ int XYZRouting::route(int src_node_id, int dst_node_id)
 
     return con_pos;
 }
-

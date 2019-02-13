@@ -37,7 +37,7 @@ public:
     sc_vector<FlitPortContainer> classicPortContainer;
     std::vector<std::vector<BufferFIFO<Flit*>*>*> buffers;
     sc_in<bool> clk;
-    std::vector<Flit*> lastReceivedFlits;
+    std::map<Channel, int> lastReceivedFlitsID;
     std::map<Channel, Channel> routingTable; // key:in, value:out
     std::map<Channel, Channel> switchTable;  // key:in, value:out
     std::unique_ptr<BaseRouting> routingAlg;

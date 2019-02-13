@@ -67,13 +67,10 @@ void ProcessingElementVC::thread()
             destWait.erase(dest);
         }
 
-        for (auto const& tw : destWait) {
-            DataDestination dest = tw.first;
+        for (auto const& pair : destWait) {
+            DataDestination dest = pair.first;
 
-            if (destWait.at(dest)<=timeStamp) {
-                //TODO restructure
-                // Packet *p = new Packet(this->node, globalResources.nodes.at(dest->destinationTask), 1, sc_time_stamp().to_double(), dest->dataType);
-                // p->dataType = dest->type;
+            if (pair.second<=timeStamp) {
                 Task t = globalResources.tasks.at(dest.destinationTask);
                 Node dstNode = globalResources.nodes.at(t.nodeID);
                 Packet* p = packetFactory.createPacket(this->node, dstNode, 1, sc_time_stamp().to_double(),

@@ -38,10 +38,9 @@ public:
 
     void start() override;
 
-    void shuffle_execute_tasks(std::vector<Task*>& tasks, int phaseId);
+    void shuffle_execute_tasks(int phaseId);
 
 private:
-    std::vector<Task*> tasks;
 
     std::map<int, int>
     uniform(taskID_t& taskId, int& phaseId, dataTypeID_t& dataTypeId, dataDestID_t& dataDestId, int maxClockDelay,

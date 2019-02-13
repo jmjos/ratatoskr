@@ -12,16 +12,16 @@
 	If not, see <http://www.gnu.org/licenses/>. -->
 <configuration>
   <general>
-    <simulationTime value="10000" />
+    <simulationTime value="100000" />
     <outputToFile value="true">report</outputToFile>
   </general>
   <noc>
-    <nocFile>config/working.xml</nocFile>
+    <nocFile>config/network.xml</nocFile>
     <flitsPerPacket value="10" />
     <Vdd value="5" />
   </noc>
   <application>
-    <benchmark>task</benchmark>
+    <benchmark>synthetic</benchmark>
     <!--task, netrace, synthetic -->
     
     <synthetic>
@@ -40,7 +40,7 @@
       <phase name="run">
         <distribution value="uniform" />
         <start max="2100" min="2100" />
-        <duration max="5000" min="5000" />
+        <duration max="100000" min="100000" />
         <repeat max="-1" min="-1" />
         <delay max="0" min="0" />
         <!-- <interval max="33" min="33" /> -->
@@ -50,10 +50,10 @@
       </phase>
 
     </synthetic>
- 
+      <!--
       <dataFile>config/data.xml</dataFile>
       <mapFile>config/map.xml</mapFile>
-
+      -->
       <simulationFile>traffic/pipelinePerformance_2D/PipelineResetTB.xml</simulationFile>
       <mappingFile>traffic/pipelinePerformance_2D/PipelineResetTBMapping.xml</mappingFile>
       <netraceFile>traffic/netrace/example.tra.bz2</netraceFile>
@@ -73,13 +73,13 @@
       </processingElements>
       <router>
         <function_calls value="false" />
-        <send_flit value="false" />
+        <send_flit value="true" />
         <send_head_flit value="true" />
         <receive_flit value="true" />
         <receive_head_flit value="true" />
         <assign_channel value="false" />
         <throttle value="false" />
-        <buffer_overflow value="false" />
+        <buffer_overflow value="true" />
         <reset value="false" />
       </router>
       <netrace>

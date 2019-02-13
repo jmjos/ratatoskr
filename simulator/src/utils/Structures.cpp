@@ -117,6 +117,10 @@ DIR::TYPE Node::getDirOfConPos(int conPos) const {
     return dirOfConPos.at(conPos);
 }
 
+int Node::getConPosOfId(connID_t connID) const{
+    return std::find(connections.begin(), connections.end(), connID) - connections.begin();
+}
+
 Node *Node::getNodeByPos(const Vec3D<float> &pos) {
     if (this->pos == pos)
         return this;
