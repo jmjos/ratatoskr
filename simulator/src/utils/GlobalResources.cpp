@@ -33,7 +33,7 @@ GlobalResources::GlobalResources()
         synthetic_start_measurement_time(-1)
 {
     rand = new std::mt19937_64();
-    int seed = 4085793378;
+    auto seed = 319189657;
     //auto seed = std::random_device{}();
     rand->seed(seed);
     rd_seed = seed;
