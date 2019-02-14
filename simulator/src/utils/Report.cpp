@@ -121,7 +121,7 @@ void Report::addToSendBuffer(const std::string& str)
 void Report::send()
 {
     try {
-        ::send(socketfd, sendBuffer.c_str(), sendBuffer.length(), 0);
+        //::send(socketfd, sendBuffer.c_str(), sendBuffer.length(), 0);
     }
     catch (std::exception&) {
         std::cout << "Can't send the report!" << std::endl;
