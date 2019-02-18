@@ -104,7 +104,7 @@ void Report::log(bool qualifier, const std::string& message, int type)
                     << std::endl;
         }
         if (type & Logtype::DB) {
-            reportEvent(dbid, "log", message);
+            //reportEvent(dbid, "log", message);
         }
     }
 }

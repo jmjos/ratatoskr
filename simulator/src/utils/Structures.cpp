@@ -164,17 +164,17 @@ Connection::Connection(connID_t id, const std::vector<nodeID_t> &nodes, const st
 }
 
 int Connection::getBufferDepthForNode(nodeID_t nodeID) {
-    int pos = std::find(nodes.begin(), nodes.end(), nodeID) - nodes.begin();
+    int pos = getNodePos(nodeID);
     return buffersDepth.at(pos);
 }
 
 int Connection::getBufferDepthForNodeAndVC(nodeID_t nodeID, int vcID) {
-    int pos = std::find(nodes.begin(), nodes.end(), nodeID) - nodes.begin();
+    int pos = getNodePos(nodeID);
     return buffersDepths.at(pos).at(vcID);
 }
 
 int Connection::getVCCountForNode(nodeID_t nodeID) {
-    int pos = std::find(nodes.begin(), nodes.end(), nodeID) - nodes.begin();
+    int pos = getNodePos(nodeID);
     return vcsCount.at(pos);
 }
 

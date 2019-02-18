@@ -31,8 +31,8 @@ NetworkInterfaceVC::NetworkInterfaceVC(sc_module_name nm, Node& node)
         this->dbid = rep.registerElement("ProcessingElement", this->id);
         this->node = node;
         Node connectedRouter = globalResources.nodes.at(node.connectedNodes.at(0));
-        Connection conn = globalResources.connections.at(node.getConnWithNode(connectedRouter));
-        this->creditCounter = conn.getBufferDepthForNode(connectedRouter.id);
+        Connection* conn = &globalResources.connections.at(node.getConnWithNode(connectedRouter));
+        this->creditCounter = conn->getBufferDepthForNode(connectedRouter.id);
         this->flitPortContainer = new FlitPortContainer(
                 ("NI_FLIT_CONTAINER"+std::to_string(this->id)).c_str());
         this->packetPortContainer = new PacketPortContainer(
@@ -114,7 +114,7 @@ void NetworkInterfaceVC::thread()
                 auto toDelete_pos = std::find(p->toTransmit.begin(), p->toTransmit.end(), current_flit->id);
                 p->toTransmit.erase(toDelete_pos);
                 p->inTransmit.push_back(current_flit->id);
-                rep.reportEvent(dbid, "pe_send_flit", std::to_string(current_flit->id));
+                //rep.reportEvent(dbid, "pe_send_flit", std::to_string(current_flit->id));
                 if (p->toTransmit.empty()) {
                     packet_send_queue.pop();
                 }
@@ -172,7 +172,7 @@ void NetworkInterfaceVC::receiveFlitFromRouter()
             p->inTransmit.erase(position);
         p->transmitted.push_back(received_flit->id);
 
-        rep.reportEvent(dbid, "pe_receive_flit", std::to_string(received_flit->id));
+        //rep.reportEvent(dbid, "pe_receive_flit", std::to_string(received_flit->id));
         LOG((globalReport.verbose_pe_receive_tail_flit && received_flit->type==TAIL)
                 || globalReport.verbose_pe_receive_flit,
                 "NI" << this->id << "(Node" << node.id << ")\t\t- Receive Flit " << *received_flit);

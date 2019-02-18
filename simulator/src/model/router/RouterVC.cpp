@@ -34,15 +34,15 @@ RouterVC::RouterVC(sc_module_name nm, Node& node)
         switchAllocation_inputVCPtr.insert({conPos, 0});
         switchAllocation_outputVCPtr.insert({conPos, 0});
         connID_t con_id = node.connections.at(conPos);
-        Connection con = globalResources.connections.at(con_id);
-        int vcCount = con.getVCCountForNode(node.id);
+        Connection* con = &globalResources.connections.at(con_id);
+        int vcCount = con->getVCCountForNode(node.id);
         buffers.at(conPos) = new std::vector<BufferFIFO<Flit*>*>(vcCount);
         for (int vc = 0; vc<vcCount; vc++) {
             int vc_buf_size = 0;
             if (globalResources.bufferDepthType=="single")
-                vc_buf_size = con.getBufferDepthForNode(node.id);
+                vc_buf_size = con->getBufferDepthForNode(node.id);
             else if (globalResources.bufferDepthType=="perVC")
-                vc_buf_size = con.getBufferDepthForNodeAndVC(node.id, vc);
+                vc_buf_size = con->getBufferDepthForNodeAndVC(node.id, vc);
             else FATAL("The type of buffer depth is not defined!");
             auto* buf = new BufferFIFO<Flit*>(vc_buf_size);
             buffers.at(conPos)->insert(buffers.at(conPos)->begin()+vc, buf);
@@ -86,15 +86,15 @@ void RouterVC::initialize()
     // Setting credits according to the buffer depth of the downstream routers.
     for (auto& n_id:node.connectedNodes) {
         Node connectedRouter = globalResources.nodes.at(n_id);
-        Connection conn = globalResources.connections.at(node.getConnWithNode(connectedRouter));
-        for (int vc = 0; vc<conn.getVCCountForNode(connectedRouter.id); vc++) {
-            int conPos = node.getConnPosition(conn.id);
+        Connection* conn = &globalResources.connections.at(node.getConnWithNode(connectedRouter));
+        for (int vc = 0; vc<conn->getVCCountForNode(connectedRouter.id); vc++) {
+            int conPos = node.getConnPosition(conn->id);
             Channel ch{conPos, vc};
             int buf_size = 0;
             if (globalResources.bufferDepthType=="single")
-                buf_size = conn.getBufferDepthForNode(connectedRouter.id);
+                buf_size = conn->getBufferDepthForNode(connectedRouter.id);
             else if (globalResources.bufferDepthType=="perVC")
-                buf_size = conn.getBufferDepthForNodeAndVC(connectedRouter.id, vc);
+                buf_size = conn->getBufferDepthForNodeAndVC(connectedRouter.id, vc);
             creditCounter.insert({ch, buf_size});
             lastReceivedCreditID.insert({ch, -1});
             lastReceivedFlitsID.insert({ch, -1});
@@ -151,7 +151,7 @@ void RouterVC::receive()
 
             if (lastReceivedFlitsID.at(in)!=flit->id) {
                 if (buf->enqueue(flit)) {
-                    rep.reportEvent(buf->dbid, "buffer_enqueue_flit", std::to_string(flit->id));
+                    //rep.reportEvent(buf->dbid, "buffer_enqueue_flit", std::to_string(flit->id));
                     lastReceivedFlitsID.at(in) = flit->id;
                     if (flit->type==HEAD) {
                         LOG(globalReport.verbose_router_receive_head_flit,
@@ -180,22 +180,22 @@ void RouterVC::updateUsageStats()
     LOG(globalReport.verbose_router_function_calls,
             "Router" << this->id << "in updateUsageStats() @ " << sc_time_stamp());
     for (int conPos = 0; conPos<node.connections.size(); conPos++) {
-        Connection conn = globalResources.connections.at(node.connections.at(conPos));
-        int numVCs = conn.getVCCountForNode(node.id);
+        Connection* con = &globalResources.connections.at(node.connections.at(conPos));
+        int vcCount = con->getVCCountForNode(node.id);
         int numberActiveVCs = 0;
 
-        for (int vc = 0; vc<numVCs; vc++) {
+        for (int vc = 0; vc<vcCount; vc++) {
             BufferFIFO<Flit*>* buf = buffers.at(conPos)->at(vc);
             if (!buf->empty()) {
                 numberActiveVCs++;
                 globalReport.updateBuffUsagePerVCHist(this->id, node.getDirOfConPos(conPos), vc,
-                        static_cast<int>(buf->occupied()), numVCs);
+                        static_cast<int>(buf->occupied()), vcCount);
             }
         }
         /* this 1 is added to create a column for numberOfActiveVCs=0.
            yes it's an extra column but it allow us to use the same function to update both buffer stats and VC stats.
         */
-        globalReport.updateVCUsageHist(this->id, node.getDirOfConPos(conPos), numberActiveVCs, numVCs+1);
+        globalReport.updateVCUsageHist(this->id, node.getDirOfConPos(conPos), numberActiveVCs, vcCount+1);
     }
 }
 
@@ -257,8 +257,8 @@ int RouterVC::VCAllocation_getNextFreeVC(int out)
         return 0;
     else {
         connID_t con_id = node.connections.at(out);
-        Connection con = globalResources.connections.at(con_id);
-        int vcCount = con.getVCCountForNode(node.id);
+        Connection* con = &globalResources.connections.at(con_id);
+        int vcCount = con->getVCCountForNode(node.id);
         if (used_vcs.size()==vcCount)   // if all vcs are used.
             return -1;
         else {
@@ -438,8 +438,8 @@ int RouterVC::VCAllocation_getNextVCToBeAllocated(int in, std::map<int, int> inp
     // subtract empty vcs, because they don't hold data.
     std::vector<int> empty_vcs{};
     connID_t con_id = node.connections.at(in);
-    Connection con = globalResources.connections.at(con_id);
-    int vcCount = con.getVCCountForNode(node.id);
+    Connection* con = &globalResources.connections.at(con_id);
+    int vcCount = con->getVCCountForNode(node.id);
     for (int vc = 0; vc<vcCount; vc++) {
         BufferFIFO<Flit*>* buf = buffers.at(in)->at(vc);
         Flit* flit = buf->front();
@@ -466,8 +466,8 @@ std::vector<int> RouterVC::generateVCsFromPtr(int direction, std::map<int, int> 
             "Router" << this->id << "in generateVCsFromPtr() @ " << sc_time_stamp());
     // get all vcs starting from VCAllocation_inputVCPtr.
     connID_t con_id = node.connections.at(direction);
-    Connection con = globalResources.connections.at(con_id);
-    int vcCount = con.getVCCountForNode(node.id);
+    Connection* con = &globalResources.connections.at(con_id);
+    int vcCount = con->getVCCountForNode(node.id);
     std::vector<int> vcs(vcCount);
     //this generates a list staring from the ptr (e.g. [2 3 4 5])
     std::iota(vcs.begin(), vcs.end(), VCPtr.at(direction));

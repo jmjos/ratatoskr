@@ -333,7 +333,6 @@ void GlobalResources::readConnections(const pugi::xml_node& noc_node)
 
         int nodesSize = nodesOfConnection.size();
         con.bufferUtilization.resize(nodesSize);
-        con.bufferCongestion.resize(nodesSize);
         for (nodeID_t nID : con.nodes) {
             // Now that we know the nodes of each connection, we should reflect this info to the nodes themselves.
             for (nodeID_t dstNodeID: con.nodes) {

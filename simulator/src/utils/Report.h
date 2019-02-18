@@ -36,7 +36,7 @@
 #include "systemc.h"
 
 #define MAX_BUFFER_SIZE 1000    //Max Buffer Size in Bytes
-#define LOG(x, y) { std::ostringstream oss; oss<<y; Report::getInstance().log(x,oss.str());}
+#define LOG(x, y) { if(x) {std::ostringstream oss; oss<<y; Report::getInstance().log(x,oss.str());}}
 #define FATAL(x) { LOG(true,x); std::cout<<"Terminating"<<std::endl; Report::getInstance().close(); exit(EXIT_FAILURE);}
 
 enum Logtype {

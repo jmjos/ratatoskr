@@ -277,7 +277,7 @@ private:
 
 struct Connection {
     connID_t id;
-    std::vector<nodeID_t> nodes; //TODO restructure Node* to int
+    std::vector<nodeID_t> nodes;
     std::vector<int> vcsCount;  // vc count for each end.
     std::vector<int> buffersDepth;  // one buffer depth for all ends of a connection.
     std::vector<std::vector<int>> buffersDepths;  // one buffer depth per end.
@@ -285,9 +285,8 @@ struct Connection {
     int width;
     int depth;
 
+
     std::vector<int> bufferUtilization;
-    std::vector<float> bufferCongestion;
-    //std::map<Node*, int> nodePos; // get position of node inside the above vectors TODO restructure
 
     Connection(connID_t id, const std::vector<nodeID_t>& nodes, const std::vector<int>& vcsCount,
             const std::vector<int>& buffersDepth,
