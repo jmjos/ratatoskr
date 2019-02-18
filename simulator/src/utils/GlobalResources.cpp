@@ -218,6 +218,7 @@ void GlobalResources::readNodeTypes(const pugi::xml_node& noc_node)
     for (pugi::xml_node node : noc_node.child("nodeTypes").children("nodeType")) {
         dataTypeID_t typeID = node.attribute("id").as_int();
         std::string model = node.child("model").attribute("value").as_string();
+        if (model.empty()) cout << "Model not set properly for nodeType with id " << typeID << endl;
         std::string routing = node.child("routing").attribute("value").as_string();
         std::string selection = node.child("selection").attribute("value").as_string();
         int clkDelay = node.child("clockDelay").attribute("value").as_int();

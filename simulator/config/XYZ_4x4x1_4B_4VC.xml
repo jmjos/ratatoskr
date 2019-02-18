@@ -1,0 +1,1039 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<network-on-chip xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<bufferDepthType value="single"/>
+	<nodeTypes>
+		<nodeType id="0">
+			<model value="RouterVC" />
+			<routing value="XYZ" />
+			<selection value="RoundRobin" />
+			<clockDelay value="1" />
+			<arbiterType value="fair" /> <!-- rrVC, fair -->
+		</nodeType>
+		<nodeType id="1">
+			<model value="ProcessingElement" />
+			<clockDelay value="1" />
+		</nodeType>
+	</nodeTypes>
+
+	<nodes>
+		<node id="0">
+			<xPos value="0" />
+			<yPos value="0" />
+			<zPos value="0" />
+			<nodeType value="0" />
+			<idType value="0" />
+			<layerType value="0" />
+		</node>
+		<node id="1">
+			<xPos value="0.33" />
+			<yPos value="0" />
+			<zPos value="0" />
+			<nodeType value="0" />
+			<idType value="1" />
+			<layerType value="0" />
+		</node>
+		<node id="2">
+			<xPos value="0.66" />
+			<yPos value="0" />
+			<zPos value="0" />
+			<nodeType value="0" />
+			<idType value="2" />
+			<layerType value="0" />
+		</node>
+		<node id="3">
+			<xPos value="1.00" />
+			<yPos value="0" />
+			<zPos value="0" />
+			<nodeType value="0" />
+			<idType value="3" />
+			<layerType value="0" />
+		</node>
+		<node id="4">
+			<xPos value="0" />
+			<yPos value="0.33" />
+			<zPos value="0" />
+			<nodeType value="0" />
+			<idType value="4" />
+			<layerType value="0" />
+		</node>
+		<node id="5">
+			<xPos value="0.33" />
+			<yPos value="0.33" />
+			<zPos value="0" />
+			<nodeType value="0" />
+			<idType value="5" />
+			<layerType value="0" />
+		</node>
+		<node id="6">
+			<xPos value="0.66" />
+			<yPos value="0.33" />
+			<zPos value="0" />
+			<nodeType value="0" />
+			<idType value="6" />
+			<layerType value="0" />
+		</node>
+		<node id="7">
+			<xPos value="1.00" />
+			<yPos value="0.33" />
+			<zPos value="0" />
+			<nodeType value="0" />
+			<idType value="7" />
+			<layerType value="0" />
+		</node>
+		<node id="8">
+			<xPos value="0" />
+			<yPos value="0.66" />
+			<zPos value="0" />
+			<nodeType value="0" />
+			<idType value="8" />
+			<layerType value="0" />
+		</node>
+		<node id="9">
+			<xPos value="0.33" />
+			<yPos value="0.66" />
+			<zPos value="0" />
+			<nodeType value="0" />
+			<idType value="9" />
+			<layerType value="0" />
+		</node>
+		<node id="10">
+			<xPos value="0.66" />
+			<yPos value="0.66" />
+			<zPos value="0" />
+			<nodeType value="0" />
+			<idType value="10" />
+			<layerType value="0" />
+		</node>
+		<node id="11">
+			<xPos value="1.00" />
+			<yPos value="0.66" />
+			<zPos value="0" />
+			<nodeType value="0" />
+			<idType value="11" />
+			<layerType value="0" />
+		</node>
+		<node id="12">
+			<xPos value="0" />
+			<yPos value="1.00" />
+			<zPos value="0" />
+			<nodeType value="0" />
+			<idType value="12" />
+			<layerType value="0" />
+		</node>
+		<node id="13">
+			<xPos value="0.33" />
+			<yPos value="1.00" />
+			<zPos value="0" />
+			<nodeType value="0" />
+			<idType value="13" />
+			<layerType value="0" />
+		</node>
+		<node id="14">
+			<xPos value="0.66" />
+			<yPos value="1.00" />
+			<zPos value="0" />
+			<nodeType value="0" />
+			<idType value="14" />
+			<layerType value="0" />
+		</node>
+		<node id="15">
+			<xPos value="1.00" />
+			<yPos value="1.00" />
+			<zPos value="0" />
+			<nodeType value="0" />
+			<idType value="15" />
+			<layerType value="0" />
+		</node>
+		<node id="16">
+			<xPos value="0" />
+			<yPos value="0" />
+			<zPos value="0" />
+			<nodeType value="1" />
+			<idType value="0" />
+			<layerType value="0" />
+		</node>
+		<node id="17">
+			<xPos value="0.33" />
+			<yPos value="0" />
+			<zPos value="0" />
+			<nodeType value="1" />
+			<idType value="1" />
+			<layerType value="0" />
+		</node>
+		<node id="18">
+			<xPos value="0.66" />
+			<yPos value="0" />
+			<zPos value="0" />
+			<nodeType value="1" />
+			<idType value="2" />
+			<layerType value="0" />
+		</node>
+		<node id="19">
+			<xPos value="1.00" />
+			<yPos value="0" />
+			<zPos value="0" />
+			<nodeType value="1" />
+			<idType value="3" />
+			<layerType value="0" />
+		</node>
+		<node id="20">
+			<xPos value="0" />
+			<yPos value="0.33" />
+			<zPos value="0" />
+			<nodeType value="1" />
+			<idType value="4" />
+			<layerType value="0" />
+		</node>
+		<node id="21">
+			<xPos value="0.33" />
+			<yPos value="0.33" />
+			<zPos value="0" />
+			<nodeType value="1" />
+			<idType value="5" />
+			<layerType value="0" />
+		</node>
+		<node id="22">
+			<xPos value="0.66" />
+			<yPos value="0.33" />
+			<zPos value="0" />
+			<nodeType value="1" />
+			<idType value="6" />
+			<layerType value="0" />
+		</node>
+		<node id="23">
+			<xPos value="1.00" />
+			<yPos value="0.33" />
+			<zPos value="0" />
+			<nodeType value="1" />
+			<idType value="7" />
+			<layerType value="0" />
+		</node>
+		<node id="24">
+			<xPos value="0" />
+			<yPos value="0.66" />
+			<zPos value="0" />
+			<nodeType value="1" />
+			<idType value="8" />
+			<layerType value="0" />
+		</node>
+		<node id="25">
+			<xPos value="0.33" />
+			<yPos value="0.66" />
+			<zPos value="0" />
+			<nodeType value="1" />
+			<idType value="9" />
+			<layerType value="0" />
+		</node>
+		<node id="26">
+			<xPos value="0.66" />
+			<yPos value="0.66" />
+			<zPos value="0" />
+			<nodeType value="1" />
+			<idType value="10" />
+			<layerType value="0" />
+		</node>
+		<node id="27">
+			<xPos value="1.00" />
+			<yPos value="0.66" />
+			<zPos value="0" />
+			<nodeType value="1" />
+			<idType value="11" />
+			<layerType value="0" />
+		</node>
+		<node id="28">
+			<xPos value="0" />
+			<yPos value="1.00" />
+			<zPos value="0" />
+			<nodeType value="1" />
+			<idType value="12" />
+			<layerType value="0" />
+		</node>
+		<node id="29">
+			<xPos value="0.33" />
+			<yPos value="1.00" />
+			<zPos value="0" />
+			<nodeType value="1" />
+			<idType value="13" />
+			<layerType value="0" />
+		</node>
+		<node id="30">
+			<xPos value="0.66" />
+			<yPos value="1.00" />
+			<zPos value="0" />
+			<nodeType value="1" />
+			<idType value="14" />
+			<layerType value="0" />
+		</node>
+		<node id="31">
+			<xPos value="1.00" />
+			<yPos value="1.00" />
+			<zPos value="0" />
+			<nodeType value="1" />
+			<idType value="15" />
+			<layerType value="0" />
+		</node>
+	</nodes>
+
+	<connections>
+		<con id="0">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="0" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="16" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+		<con id="1">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="0" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="1" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+		<con id="2">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="0" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="4" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+		<con id="3">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="1" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="17" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="4">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="1" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="2" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="5">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="1" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="5" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="6">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="2" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="18" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="7">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="2" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="3" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="8">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="2" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="6" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="9">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="3" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="19" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="10">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="3" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="7" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="11">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="4" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="20" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="12">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="4" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="5" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="13">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="4" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="8" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="14">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="5" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="21" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="15">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="5" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="6" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="16">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="5" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="9" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="17">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="6" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="22" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="18">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="6" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="7" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>		
+        <con id="19">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="6" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="10" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="20">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="7" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="23" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="21">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="7" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="11" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="22">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="8" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="24" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="23">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="8" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="9" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="24">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="8" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="12" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="25">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="9" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="25" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="26">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="9" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="10" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="27">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="9" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="13" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="28">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="10" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="26" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="29">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="10" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="11" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="30">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="10" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="14" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="31">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="11" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="27" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="32">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="11" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="15" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="33">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="12" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="28" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="34">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="12" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="13" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="35">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="13" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="29" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="36">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="13" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="14" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="37">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="14" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="30" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="38">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="14" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="15" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+        <con id="39">
+			<length value="900" />
+			<width value="3" />
+			<depth value="1" />
+			
+			<interface value="0" />
+			<ports>
+				<port id="0">
+					<node value="15" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+				<port id="1">
+					<node value="31" />
+					<bufferDepth value="4" />
+					<vcCount value="4" />
+				</port>
+			</ports>
+		</con>
+	</connections>
+</network-on-chip>
