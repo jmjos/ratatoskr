@@ -30,12 +30,16 @@ RouterVC::RouterVC(sc_module_name nm, Node& node)
     classicPortContainer.init(conCount);
     buffers.resize(conCount);
     for (int conPos = 0; conPos<node.connections.size(); conPos++) {
-        VCAllocation_inputVCPtr.insert({conPos, 0});
-        switchAllocation_inputVCPtr.insert({conPos, 0});
         switchAllocation_outputVCPtr.insert({conPos, 0});
         connID_t con_id = node.connections.at(conPos);
         Connection* con = &globalResources.connections.at(con_id);
         int vcCount = con->getVCCountForNode(node.id);
+        std::vector<int> vcs2(vcCount); //TODO make this nice please
+        std::iota(vcs2.begin(), vcs2.end(), 0);
+        VCAllocation_inputVC_rrList.insert({conPos, vcs2});
+        std::vector<int> vcs(vcCount);
+        std::iota(vcs.begin(), vcs.end(), 0);
+        switchAllocation_inputVC_rrList.insert({conPos, vcs});
         buffers.at(conPos) = new std::vector<BufferFIFO<Flit*>*>(vcCount);
         for (int vc = 0; vc<vcCount; vc++) {
             int vc_buf_size = 0;
@@ -205,7 +209,7 @@ std::map<int, std::vector<Channel>> RouterVC::VCAllocation_generateRequests()
             "Router" << this->id << "in VCAllocation_generateRequests() @ " << sc_time_stamp());
     std::map<int, std::vector<Channel>> requests{};
     for (int in_conPos = 0; in_conPos<node.connections.size(); in_conPos++) {
-        int in_vc = VCAllocation_getNextVCToBeAllocated(in_conPos, VCAllocation_inputVCPtr);
+        int in_vc = VCAllocation_getNextVCToBeAllocated(in_conPos);
         if (in_vc!=-1) {
             BufferFIFO<Flit*>* buf = buffers.at(in_conPos)->at(in_vc);
             Flit* flit = buf->front();
@@ -235,7 +239,11 @@ void RouterVC::VCAllocation_generateAck(const std::map<int, std::vector<Channel>
             int out_vc = VCAllocation_getNextFreeVC(requested_out);
             if (out_vc!=-1) {// no VC is available at the moment
                 routingTable[requesting_in] = {requested_out, out_vc};
-                VCAllocation_inputVCPtr.at(requesting_in.conPos)++;
+                //VCAllocation_inputVCPtr.at(requesting_in.conPos)++;
+                auto vcList = &VCAllocation_inputVC_rrList.at(requesting_in.conPos);
+                auto vcCount = vcList->size();
+                std::for_each(vcList->begin(), vcList->end(), [&vcCount](int& vc) { vc = (vc+1)%vcCount; });
+
                 BufferFIFO<Flit*>* buf = buffers.at(requesting_in.conPos)->at(requesting_in.vc);
                 Flit* flit = buf->front();
                 assert(flit);
@@ -295,9 +303,9 @@ std::map<int, std::vector<Channel>> RouterVC::switchAllocation_generateRequests(
         }
 
         if (!allocated_vcs.empty()) {
-            auto vcs = generateVCsFromPtr(in_conPos, switchAllocation_inputVCPtr);
+            auto vcs = &switchAllocation_inputVC_rrList.at(in_conPos);
             int in_vc = -1;
-            for (auto& vc:vcs) {
+            for (auto& vc:*vcs) {
                 auto result = std::find(allocated_vcs.begin(), allocated_vcs.end(), vc);
                 if (result!=allocated_vcs.end()) {
                     in_vc = vc;
@@ -340,7 +348,10 @@ void RouterVC::switchAllocation_generateAck(const std::map<int, std::vector<Chan
 
         int requested_out_vc = routingTable.at(selected_in).vc;
         switchTable[selected_in] = {requested_out_dir, requested_out_vc};
-        switchAllocation_inputVCPtr.at(selected_in.conPos)++;
+        auto vcList = &switchAllocation_inputVC_rrList.at(selected_in.conPos);
+        auto vcCount = vcList->size();
+        std::for_each(vcList->begin(), vcList->end(), [&vcCount](int& vc) { vc = (vc+1)%vcCount; });
+
         switchAllocation_outputVCPtr.at(requested_out_dir) = requested_out_vc+1;
     }
 }
@@ -421,11 +432,11 @@ void RouterVC::receiveFlowControlCredit()
     }
 }
 
-int RouterVC::VCAllocation_getNextVCToBeAllocated(int in, std::map<int, int> inputVCPtr)
+int RouterVC::VCAllocation_getNextVCToBeAllocated(int in)
 {
     LOG(globalReport.verbose_router_function_calls,
             "Router" << this->id << "in VCAllocation_getNextVCToBeAllocated() @ " << sc_time_stamp());
-    auto vcs = generateVCsFromPtr(in, inputVCPtr);
+    auto vcs = VCAllocation_inputVC_rrList.at(in);
 
     // subtract used vcs from all vcs, because they are already allocated.
     std::vector<int> used_vcs = getAllocatedVCsOfInDir(in);
@@ -460,7 +471,7 @@ int RouterVC::VCAllocation_getNextVCToBeAllocated(int in, std::map<int, int> inp
         return vcs.front();
 }
 
-std::vector<int> RouterVC::generateVCsFromPtr(int direction, std::map<int, int> VCPtr)
+std::vector<int> RouterVC::generateVCsFromPtr(int direction, std::map<int, int> vcOffset)
 {
     LOG(globalReport.verbose_router_function_calls,
             "Router" << this->id << "in generateVCsFromPtr() @ " << sc_time_stamp());
@@ -470,7 +481,7 @@ std::vector<int> RouterVC::generateVCsFromPtr(int direction, std::map<int, int> 
     int vcCount = con->getVCCountForNode(node.id);
     std::vector<int> vcs(vcCount);
     //this generates a list staring from the ptr (e.g. [2 3 4 5])
-    std::iota(vcs.begin(), vcs.end(), VCPtr.at(direction));
+    std::iota(vcs.begin(), vcs.end(), vcOffset.at(direction));
     // this generates a list under round robin, i.e. convert [2 3 4 5] to [2 3 0 1]
     std::for_each(vcs.begin(), vcs.end(), [&vcCount](int& vc) { vc = vc%vcCount; });
     return vcs;

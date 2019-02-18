@@ -28,8 +28,8 @@ class RouterVC : public Router {
 public:
     std::map<Channel, int> creditCounter;
     std::map<Channel, int> lastReceivedCreditID;
-    std::map<int, int> VCAllocation_inputVCPtr;
-    std::map<int, int> switchAllocation_inputVCPtr;
+    std::map<int, std::vector<int> > VCAllocation_inputVC_rrList;
+    std::map<int, std::vector<int> > switchAllocation_inputVC_rrList;
     std::map<int, int> switchAllocation_outputVCPtr;
 
     RouterVC(sc_module_name nm, Node &node);
@@ -54,7 +54,7 @@ public:
 
     int VCAllocation_getNextFreeVC(int out);
 
-    int VCAllocation_getNextVCToBeAllocated(int in, std::map<int, int> inputPtr);
+    int VCAllocation_getNextVCToBeAllocated(int in);
 
     std::map<int, std::vector<Channel>> switchAllocation_generateRequests();
 
@@ -68,7 +68,7 @@ private:
 
     std::vector<int> getAllocatedVCsOfOutDir(int conPos);
 
-    std::vector<int> generateVCsFromPtr(int direction, std::map<int, int> VCPtr);
+    std::vector<int> generateVCsFromPtr(int direction, std::map<int, int> vcOffset);
 
     void insert_request(int out_conPos, Channel in, std::map<int, std::vector<Channel>>& requests);
 };
