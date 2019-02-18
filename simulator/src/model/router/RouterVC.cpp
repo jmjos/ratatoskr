@@ -436,18 +436,41 @@ int RouterVC::VCAllocation_getNextVCToBeAllocated(int in)
 {
     LOG(globalReport.verbose_router_function_calls,
             "Router" << this->id << "in VCAllocation_getNextVCToBeAllocated() @ " << sc_time_stamp());
+
+    std::vector <int> vcs;
+    auto vcSourceList = &VCAllocation_inputVC_rrList.at(in);
+
+
+    for (auto vc : *vcSourceList){
+        // ignore allocated vcs
+        Channel possiblyAllocated = {in, vc};
+        auto allocation = routingTable.find(possiblyAllocated);
+        if (allocation != routingTable.end()){
+            continue;
+        }
+        //ignore empty vcs
+        BufferFIFO<Flit*>* buf = buffers.at(in)->at(vc);
+        Flit* flit = buf->front();
+        if (!flit) {
+            continue;
+        }
+        vcs.emplace_back(vc);
+    }
+
+    // Replaced with reversed lookup for better performance. Old code kept for reference.
+    /*
     auto vcs = VCAllocation_inputVC_rrList.at(in);
 
     // subtract used vcs from all vcs, because they are already allocated.
-    std::vector<int> used_vcs = getAllocatedVCsOfInDir(in);
-    for (auto& v:used_vcs) {
-        auto result = std::find(vcs.begin(), vcs.end(), v);
-        if(result!=vcs.end())
-            vcs.erase(result);
+    for (auto& entry:routingTable) {
+        if (in==entry.first.conPos) {
+            auto result = std::find(vcs.begin(), vcs.end(), entry.first.vc);
+            if(result!=vcs.end())
+                vcs.erase(result);
+        }
     }
 
     // subtract empty vcs, because they don't hold data.
-    std::vector<int> empty_vcs{};
     connID_t con_id = node.connections.at(in);
     Connection* con = &globalResources.connections.at(con_id);
     int vcCount = con->getVCCountForNode(node.id);
@@ -455,14 +478,11 @@ int RouterVC::VCAllocation_getNextVCToBeAllocated(int in)
         BufferFIFO<Flit*>* buf = buffers.at(in)->at(vc);
         Flit* flit = buf->front();
         if (!flit) {
-            empty_vcs.push_back(vc);
+            auto it = std::find(vcs.begin(), vcs.end(), vc);
+            if (it!=vcs.end())
+                vcs.erase(it);
         }
-    }
-    for (auto& v:empty_vcs) {
-        auto it = std::find(vcs.begin(), vcs.end(), v);
-        if (it!=vcs.end())
-            vcs.erase(it);
-    }
+    }*/
 
     // return next vc to be allocated.
     if (vcs.empty())
