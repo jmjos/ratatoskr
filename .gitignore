@@ -15,4 +15,4 @@ simulator/CMakeFiles/
 sim
 virtualenv/
 __pycahce__/
-/bin/network.xml
+/bin/*.xml
