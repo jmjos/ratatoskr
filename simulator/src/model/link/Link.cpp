@@ -44,15 +44,13 @@ Link::Link(sc_module_name nm, const Connection& c, int globalID)
         }
     }
     // this->rawDataOutput = new ofstream((std::string) nm + ".txt");
-   /* SC_THREAD(passthrough_thread);
-    sensitive << clk.pos();*/
+    SC_THREAD(passthrough_thread);
+    sensitive << clk.pos();
 }
 
 Link::~Link()
 {
     delete classicPortContainer;
-    delete previousFlit;
-    delete currentFlit;
     // rawDataOutput->close();
     // delete rawDataOutput;
 }
@@ -78,18 +76,15 @@ void Link::passthrough_thread()
             }
             else if (currentFlit->type==HEAD) {
                 // a head flit traversed previously
-                outputToFile = std::to_string(currentFlit->dataType)
-                        +"_;";
+                outputToFile = std::to_string(currentFlit->dataType) + "_;";
                 currentTransmissionState = HEADIDLESTATE;
             }
             else {
                 // a flit already traversed the links
-                outputToFile = std::to_string(currentFlit->dataType)
-                        +"_;";
+                outputToFile = std::to_string(currentFlit->dataType) + "_;";
                 if (currentFlit->type!=HEAD && currentFlit->type!=BODY && currentFlit->type!=TAIL)
                     continue;
-                currentTransmissionState = (2*currentFlit->dataType)
-                        +offset+1;
+                currentTransmissionState = (2*currentFlit->dataType) + offset + 1;
             }
         }
         else {
@@ -102,19 +97,16 @@ void Link::passthrough_thread()
             }
             else {
                 // received data flit
-                outputToFile = std::to_string(currentFlit->dataType)
-                        +"D;";
+                outputToFile = std::to_string(currentFlit->dataType) + "D;";
                 if (currentFlit->type!=HEAD && currentFlit->type!=BODY && currentFlit->type!=TAIL)
                     continue;
-                currentTransmissionState = (2*currentFlit->dataType)
-                        +offset;
+                currentTransmissionState = (2*currentFlit->dataType) + offset;
             }
         }
 
         //rawDataOutput->write(outputToFile.c_str(), 3);
         //rawDataOutput->flush();
-        report.issueLinkMatrixUpdate(globalID, currentTransmissionState,
-                previousTransmissionState);
+        report.issueLinkMatrixUpdate(globalID, currentTransmissionState, previousTransmissionState);
 
         previousTransmissionState = currentTransmissionState;
         previousFlit = currentFlit;

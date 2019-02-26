@@ -156,15 +156,15 @@ void GlobalReport::reportLinkMatrix(int id, ostream& stream)
                 stream << boost::format("HEAD\t");
             }
             else if (rowit==2) {
-                stream << boost::format("HID\t\t");
+                stream << boost::format("HID\t");
             }
             else if (rowit%2==0) {
                 int trafficType = (rowit-3)/2;
-                stream << boost::format("%iID\t\t")%trafficType;
+                stream << boost::format("%iID\t")%trafficType;
             }
             else if (rowit%2==1) {
                 int trafficType = (rowit-3)/2;
-                stream << boost::format("%iD\t\t")%trafficType;
+                stream << boost::format("%iD\t")%trafficType;
             }
             rowit++;
             stream << boost::format("[%7.4f, ")%field;

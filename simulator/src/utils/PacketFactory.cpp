@@ -30,7 +30,7 @@ PacketFactory& PacketFactory::getInstance()
 
 Packet* PacketFactory::createPacket(Node& src, Node& dst, int size, double generationTime, dataTypeID_t dataType)
 {
-    auto p = new Packet(src, dst, 1, sc_time_stamp().to_double(), dst.type->id);
+    auto p = new Packet(src, dst, 1, sc_time_stamp().to_double(), dataType);
     packets.push_back(p);
     return p;
 }
