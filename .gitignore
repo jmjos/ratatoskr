@@ -16,3 +16,4 @@ sim
 virtualenv/
 __pycahce__/
 /bin/*.xml
+/bin/sim_folder/
