@@ -273,7 +273,7 @@ class NetworkWriter(Writer):
             nodeType_node.set('id', str(i))
             model_node = ET.SubElement(nodeType_node, 'model')
             model_node.set('value', 'RouterVC')
-            routing_node = ET.SubElement(nodeType_node, 'router')
+            routing_node = ET.SubElement(nodeType_node, 'routing')
             routing_node.set('value', self.config.router)
             selection_node = ET.SubElement(nodeType_node, 'selection')
             selection_node.set('value', '1stFreeVC')
@@ -285,7 +285,7 @@ class NetworkWriter(Writer):
             nodeType_node = ET.SubElement(nodeTypes_node, 'nodeType')
             nodeType_node.set('id', str(i))
             model_node = ET.SubElement(nodeType_node, 'model')
-            model_node.set('value', 'ProcessingElementVC')
+            model_node.set('value', 'ProcessingElement')
             clockDelay_node = ET.SubElement(nodeType_node, 'clockDelay')
             clockDelay_node.set('value', '1')
 
@@ -362,8 +362,8 @@ class NetworkWriter(Writer):
     def construct_con(self, connections_node, con_id, src_node, dst_node):
         con_node = ET.SubElement(connections_node, 'con')
         con_node.set('id', str(con_id))
-        interface_node = ET.SubElement(con_node, 'interface')
-        interface_node.set('value', str(0))
+        #interface_node = ET.SubElement(con_node, 'interface')
+        #interface_node.set('value', str(0))
         ports_node = ET.SubElement(con_node, 'ports')
         self.make_port(ports_node, 0, src_node)
         self.make_port(ports_node, 1, dst_node)
@@ -379,15 +379,15 @@ class NetworkWriter(Writer):
                     con_id = self.make_con(connections_node, con_id, node_id, node_id+(self.config.x*self.config.y*self.config.z))
                     if xi > 0:  # create West
                         con_id = self.make_con(connections_node, con_id, node_id, node_id-1)
-                    if xi < 1:  # create East
+                    if xi < 0.9:  # create East
                         con_id = self.make_con(connections_node, con_id, node_id, node_id+1)
                     if yi > 0:  # create South
                         con_id = self.make_con(connections_node, con_id, node_id, node_id-self.config.x)
-                    if yi < 1:  # create North
+                    if yi < 0.9:  # create North
                         con_id = self.make_con(connections_node, con_id, node_id, node_id+self.config.x)
                     if zi > 0:  # create Down
                         con_id = self.make_con(connections_node, con_id, node_id, node_id-(self.config.x*self.config.y))
-                    if zi < 1:  # create Up
+                    if zi < 0.9:  # create Up
                         con_id = self.make_con(connections_node, con_id, node_id, node_id+(self.config.x*self.config.y))
                     node_id += 1
 
