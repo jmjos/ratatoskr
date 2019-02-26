@@ -22,37 +22,16 @@
 
 # This script generates simple topology files for 2D or 3D meshes
 ###############################################################################
-import configparser
-import xml_writers as writers
-import plot_network
+import os
 ###############################################################################
 
-
-class Configuration:
-    """ The main configuration """
-    def __init__(self, path):
-        self.path = path
-        self.config = configparser.ConfigParser()
-
-        try:
-            self.config.read(self.path)
-        except Exception:
-            raise
-
-        self.x = int(self.config['Network']['x'])
-        self.y = int(self.config['Network']['y'])
-        self.z = int(self.config['Network']['z'])
-        self.router = self.config['Network']['routing']
-        self.clockDelay = int(self.config['Network']['clockDelay'])
-        self.bufferDepthType = self.config['Network']['bufferDepthType']
-        self.bufferDepth = int(self.config['Network']['bufferDepth'])
-        self.buffersDepths = self.config['Network']['buffersDepths']
-        self.buffersDepths = self.buffersDepths[1:len(self.buffersDepths)-1]
-        self.vcCount = int(self.config['Network']['vcCount'])
-###############################################################################
-
-
-config = Configuration('config.ini')
-writer = writers.NetworkWriter(config)
-writer.write_network('network.xml')
-plot_network.main()
+os.system('rm -rf sim_folder')
+os.system('mkdir -p sim_folder/config')
+os.system('cp ../config.xml ../network.xml sim_folder/config')
+os.chdir('../../simulator')
+os.system('cmake .')
+os.system('make -j')
+os.system('cp sim ../bin/individual_simulation/sim_folder')
+os.system('pwd')
+os.chdir('../bin/individual_simulation/sim_folder')
+os.system('./sim')

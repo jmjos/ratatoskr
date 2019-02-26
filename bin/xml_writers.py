@@ -399,3 +399,135 @@ class NetworkWriter(Writer):
         self.write_nodes(nodes_node, 'ProcessingElement')
         self.write_connections()
         self.write_file(file_name)
+###############################################################################
+
+
+class ConfigkWriter(Writer):
+    """ The Config writer class """
+
+    def __init__(self, config):
+        Writer.__init__(self, 'configuration')
+        self.config = config
+
+    def write_general(self):
+        general_node = ET.SubElement(self.root_node, 'general')
+        simulationTime_node = ET.SubElement(general_node, 'simulationTime')
+        simulationTime_node.set('value', str(100000))
+        outputToFile_node = ET.SubElement(general_node, 'outputToFile')
+        outputToFile_node.set('value', 'true')
+        outputToFile_node.text = 'report'
+
+    def write_noc(self):
+        nocFile_node = ET.SubElement(self.root_node, 'nocFile')
+        nocFile_node.text = 'config/network.xml'
+        flitsPerPacket_node = ET.SubElement(nocFile_node, 'flitsPerPacket')
+        flitsPerPacket_node.set('value', '10')
+        Vdd_node = ET.SubElement(nocFile_node, 'Vdd')
+        Vdd_node.set('value', '5')
+
+    def write_phase(self, synthetic_node, name):
+        phase_node = ET.SubElement(synthetic_node, 'phase')
+        phase_node.set('name', name)
+        distribution_node = ET.SubElement(synthetic_node, 'distribution')
+        distribution_node.set('value', 'uniform')
+        start_node = ET.SubElement(synthetic_node, 'start')
+        start_node.set('min', '100')
+        start_node.set('max', '100')
+        duration_node = ET.SubElement(synthetic_node, 'duration')
+        duration_node.set('min', '1090')
+        duration_node.set('max', '1090')
+        repeat_node = ET.SubElement(synthetic_node, 'repeat')
+        repeat_node.set('min', '-1')
+        repeat_node.set('max', '-1')
+        delay_node = ET.SubElement(synthetic_node, 'delay')
+        delay_node.set('min', '0')
+        delay_node.set('max', '0')
+        injectionRate_node = ET.SubElement(synthetic_node, 'injectionRate')
+        injectionRate_node.set('value', '0.002')
+        count_node = ET.SubElement(synthetic_node, 'count')
+        count_node.set('min', '1')
+        count_node.set('max', '1')
+        hotspot_node = ET.SubElement(synthetic_node, 'hotspot')
+        hotspot_node.set('value', '0')
+
+    def write_synthetic(self, application_node):
+        synthetic_node = ET.SubElement(application_node, 'synthetic')
+        # write two phases as a template
+        self.write_phase(synthetic_node, 'warmup')
+        self.write_phase(synthetic_node, 'run')
+
+    def write_application(self):
+        application_node = ET.SubElement(self.root_node, 'application')
+        benchmark_node = ET.SubElement(application_node, 'benchmark')
+        benchmark_node.text = 'synthetic'
+        self.write_synthetic(application_node)
+        simulationFile_node = ET.SubElement(application_node, 'simulationFile')
+        simulationFile_node.text = 'traffic/pipelinePerformance_2D/PipelineResetTB.xml'
+        mappingFile_node = ET.SubElement(application_node, 'mappingFile')
+        mappingFile_node.text = 'traffic/pipelinePerformance_2D/PipelineResetTBMapping.xml'
+        netraceFile_node = ET.SubElement(application_node, 'netraceFile')
+        netraceFile_node.text = 'traffic/netrace/example.tra.bz2'
+        netraceStartRegion_node = ET.SubElement(application_node, 'netraceStartRegion')
+        netraceStartRegion_node.set('value', '0')
+        isUniform_node = ET.SubElement(application_node, 'isUniform')
+        isUniform_node.set('value', 'false')
+        numberOfTrafficTypes_node = ET.SubElement(application_node, 'numberOfTrafficTypes')
+        numberOfTrafficTypes_node.set('value', '5')
+
+    def write_node_verbose(self, verbose_node, node_name):
+        node = ET.SubElement(verbose_node, node_name)
+        function_calls_node = ET.SubElement(node, 'function_calls')
+        function_calls_node.set('value', 'false')
+        send_flit_node = ET.SubElement(node, 'send_flit')
+        send_flit_node.set('value', 'false')
+        send_head_flit_node = ET.SubElement(node, 'send_head_flit')
+        receive_flit_node = ET.SubElement(node, 'receive_flit')
+        receive_flit_node.set('value', 'false')
+        receive_tail_flit_node = ET.SubElement(node, 'receive_tail_flit')
+        receive_tail_flit_node.set('value', 'true')
+        throttle_node = ET.SubElement(node, 'throttle')
+        throttle_node.set('value', 'false')
+        reset_node = ET.SubElement(node, 'reset')
+        reset_node.set('value', 'true')
+        if node_name == 'router':
+            assign_channel_node = ET.SubElement(node, 'assign_channel')
+            assign_channel_node.set('value', 'false')
+            buffer_overflow_node = ET.SubElement(node, 'buffer_overflow')
+            buffer_overflow_node.set('value', 'true')
+        send_head_flit_node.set('value', 'true')
+
+    def write_netrace_verbose(self, verbose_node):
+        netrace_node = ET.SubElement(verbose_node, 'netrace')
+        inject_node = ET.SubElement(netrace_node, 'inject')
+        inject_node.set('value', 'true')
+        eject_node = ET.SubElement(netrace_node, 'eject')
+        eject_node.set('value', 'true')
+        router_receive_node = ET.SubElement(netrace_node, 'router_receive')
+        router_receive_node.set('value', 'true')
+
+    def write_tasks_verbose(self, verbose_node):
+        tasks_node = ET.SubElement(verbose_node, 'tasks')
+        function_calls_node = ET.SubElement(tasks_node, 'function_calls')
+        function_calls_node.set('value', 'true')
+        xml_parse_node = ET.SubElement(tasks_node, 'xml_parse')
+        xml_parse_node.set('value', 'false')
+        data_receive_node = ET.SubElement(tasks_node, 'data_receive')
+        data_receive_node.set('value', 'true')
+        data_send_node = ET.SubElement(tasks_node, 'data_send')
+        data_send_node.set('value', 'true')
+        source_execute_node = ET.SubElement(tasks_node, 'source_execute')
+        source_execute_node.set('value', 'false')
+
+    def write_verbose(self):
+        verbose_node = ET.SubElement(self.root_node, 'verbose')
+        self.write_node_verbose(verbose_node, 'processingElements')
+        self.write_node_verbose(verbose_node, 'router')
+        self.write_netrace_verbose(verbose_node)
+        self.write_tasks_verbose(verbose_node)
+
+    def write_config(self, file_name):
+        self.write_general()
+        self.write_noc()
+        self.write_application()
+        self.write_verbose()
+        self.write_file(file_name)
