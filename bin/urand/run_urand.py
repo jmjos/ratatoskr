@@ -6,53 +6,24 @@ import xml.etree.ElementTree as ET
 import csv
 import numpy as np
 from joblib import Parallel, delayed
-import multiprocessing
 import pickle
-import configparser
 import pandas as pd
 from combine_hists import combine_VC_hists, combine_Buff_hists,\
 init_data_structure
+import sys
+sys.path.insert(0, '..')
+from configure import Configuration
 ###############################################################################
 
 
-class Configuration:
-    """
-    The main configuration for all of the individual simulations.
-    """
-    def __init__(self, path):
-        self.path = path
-        self.config = configparser.ConfigParser()
-
-        try:
-            self.config.read(self.path)
-        except Exception:
-            raise
-
-        self.topologyFile = self.config['URAND']['topologyFile']
-
-        self.libdir = self.config['URAND']['libdir']
-        self.simdir = self.config['URAND']['simdir']
-        self.basedir = os.getcwd()
-
-        self.simulation_time = int(self.config['URAND']['simulation_time'])
-        self.restarts = int(self.config['URAND']['restarts'])
-
-        self.warmup_start = int(self.config['URAND']['warmup_start'])
-        self.warmup_duration = int(self.config['URAND']['warmup_duration'])
-        self.warmup_rate = float(self.config['URAND']['warmup_rate'])
-
-        self.run_rate_min = float(self.config['URAND']['run_rate_min'])
-        self.run_rate_max = float(self.config['URAND']['run_rate_max'])
-        self.run_rate_step = float(self.config['URAND']['run_rate_step'])
-
-        self.run_start_after_warmup = int(self.config['URAND']['run_start_after_warmup'])
-        self.run_start = self.warmup_start + self.warmup_duration + self.run_start_after_warmup
-        self.run_duration = int(self.config['URAND']['run_duration'])
-        self.num_cores = int(self.config['URAND']['num_cores'])
-        if (self.num_cores == -1):
-            self.num_cores = multiprocessing.cpu_count()
-        os.system('cp ../config.xml config/config.xml')
-        os.system('cp ../network.xml config/network.xml')
+def main():
+    """ Run the script """
+    os.system('cp ../config.xml config/config.xml')
+    os.system('cp ../network.xml config/network.xml')
+    with open('config.pkl', 'rb') as f:
+        config = pickle.load(f)
+        results = begin_all_sims(config)
+    save_results(results, 'rawResults.pkl')
 ###############################################################################
 
 
@@ -297,10 +268,5 @@ def save_results(results, results_file):
 ###############################################################################
 
 
-""" Main point of execution """
-
-config = Configuration('../config.ini')
-
-results = begin_all_sims(config)
-
-save_results(results, 'rawResults.pkl')
+if __name__ == '__main__':
+    main()

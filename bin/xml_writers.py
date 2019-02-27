@@ -412,55 +412,69 @@ class ConfigkWriter(Writer):
     def write_general(self):
         general_node = ET.SubElement(self.root_node, 'general')
         simulationTime_node = ET.SubElement(general_node, 'simulationTime')
-        simulationTime_node.set('value', str(100000))
+        simulationTime_node.set('value', str(self.config.simulationTime))
         outputToFile_node = ET.SubElement(general_node, 'outputToFile')
         outputToFile_node.set('value', 'true')
         outputToFile_node.text = 'report'
 
     def write_noc(self):
-        nocFile_node = ET.SubElement(self.root_node, 'nocFile')
+        noc_node = ET.SubElement(self.root_node, 'noc')
+        nocFile_node = ET.SubElement(noc_node, 'nocFile')
         nocFile_node.text = 'config/network.xml'
-        flitsPerPacket_node = ET.SubElement(nocFile_node, 'flitsPerPacket')
-        flitsPerPacket_node.set('value', '10')
-        Vdd_node = ET.SubElement(nocFile_node, 'Vdd')
+        flitsPerPacket_node = ET.SubElement(noc_node, 'flitsPerPacket')
+        flitsPerPacket_node.set('value', str(self.config.flitsPerPacket))
+        Vdd_node = ET.SubElement(noc_node, 'Vdd')
         Vdd_node.set('value', '5')
 
-    def write_phase(self, synthetic_node, name):
+    def write_phase(self, synthetic_node, name, start, duration):
         phase_node = ET.SubElement(synthetic_node, 'phase')
         phase_node.set('name', name)
-        distribution_node = ET.SubElement(synthetic_node, 'distribution')
+        distribution_node = ET.SubElement(phase_node, 'distribution')
         distribution_node.set('value', 'uniform')
-        start_node = ET.SubElement(synthetic_node, 'start')
-        start_node.set('min', '100')
-        start_node.set('max', '100')
-        duration_node = ET.SubElement(synthetic_node, 'duration')
-        duration_node.set('min', '1090')
-        duration_node.set('max', '1090')
-        repeat_node = ET.SubElement(synthetic_node, 'repeat')
+        start_node = ET.SubElement(phase_node, 'start')
+        start_node.set('min', str(start[0]))
+        start_node.set('max', str(start[1]))
+        duration_node = ET.SubElement(phase_node, 'duration')
+        duration_node.set('min', str(duration[0]))
+        duration_node.set('max', str(duration[1]))
+        repeat_node = ET.SubElement(phase_node, 'repeat')
         repeat_node.set('min', '-1')
         repeat_node.set('max', '-1')
-        delay_node = ET.SubElement(synthetic_node, 'delay')
+        delay_node = ET.SubElement(phase_node, 'delay')
         delay_node.set('min', '0')
         delay_node.set('max', '0')
-        injectionRate_node = ET.SubElement(synthetic_node, 'injectionRate')
+        injectionRate_node = ET.SubElement(phase_node, 'injectionRate')
         injectionRate_node.set('value', '0.002')
-        count_node = ET.SubElement(synthetic_node, 'count')
+        count_node = ET.SubElement(phase_node, 'count')
         count_node.set('min', '1')
         count_node.set('max', '1')
-        hotspot_node = ET.SubElement(synthetic_node, 'hotspot')
+        hotspot_node = ET.SubElement(phase_node, 'hotspot')
         hotspot_node.set('value', '0')
 
     def write_synthetic(self, application_node):
         synthetic_node = ET.SubElement(application_node, 'synthetic')
         # write two phases as a template
-        self.write_phase(synthetic_node, 'warmup')
-        self.write_phase(synthetic_node, 'run')
+        self.write_phase(synthetic_node, 'warmup', [100, 100], [1090, 1090])
+        self.write_phase(synthetic_node, 'run', [1100, 1100], [101100, 101100])
+
+    def write_task(self, application_node):
+        dataFile_node = ET.SubElement(application_node, 'dataFile')
+        dataFile_node.text = 'config/data.xml'
+        mapFile_node = ET.SubElement(application_node, 'mapFile')
+        mapFile_node.text = 'config/map.xml'
 
     def write_application(self):
         application_node = ET.SubElement(self.root_node, 'application')
         benchmark_node = ET.SubElement(application_node, 'benchmark')
-        benchmark_node.text = 'synthetic'
-        self.write_synthetic(application_node)
+        benchmark_node.text = self.config.benchmark
+        if self.config.benchmark == 'synthetic':
+            self.write_synthetic(application_node)
+        elif self.config.benchmark == 'task':
+            self.write_task(application_node)
+            # data_writer = DataWriter('data')
+            # data_writer.write_file('data.xml')
+            # map_writer = MapWriter('map')
+            # map_writer.write_file('map.xml')
         simulationFile_node = ET.SubElement(application_node, 'simulationFile')
         simulationFile_node.text = 'traffic/pipelinePerformance_2D/PipelineResetTB.xml'
         mappingFile_node = ET.SubElement(application_node, 'mappingFile')
@@ -488,7 +502,7 @@ class ConfigkWriter(Writer):
         throttle_node = ET.SubElement(node, 'throttle')
         throttle_node.set('value', 'false')
         reset_node = ET.SubElement(node, 'reset')
-        reset_node.set('value', 'true')
+        reset_node.set('value', 'false')
         if node_name == 'router':
             assign_channel_node = ET.SubElement(node, 'assign_channel')
             assign_channel_node.set('value', 'false')

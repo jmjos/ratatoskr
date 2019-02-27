@@ -66,7 +66,7 @@ def init_script(mesh_file):
         # Find the id of the ProcessingElements
         proc_elemnt_ids = []
         for nodeType in root.find('nodeTypes').iter('nodeType'):
-            if nodeType.find('model').attrib['value'] == 'ProcessingElementVC':
+            if nodeType.find('model').attrib['value'] == 'ProcessingElement':
                 proc_elemnt_ids.append(int(nodeType.attrib['id']))
 
         # Points is a list of tuples
@@ -112,7 +112,7 @@ def create_fig():
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
-################################################################################
+###############################################################################
 
 
 def vertical_horizontal_connection(p1_ix, p2_ix):
@@ -189,8 +189,6 @@ def plot_connections():
             solve_diagonal_connection(p1, p2)
         else:
             vertical_horizontal_connection(p1_ix, p2_ix)
-
-
 ###############################################################################
 
 
@@ -267,19 +265,18 @@ def main():
     """
     Main Execution Point
     """
-    mesh_file = sys.argv[1]
+    network_file = 'network.xml'
     try:
-        init_script(mesh_file)
+        network_file = sys.argv[1]
     except IndexError:
-        print("Please provide the path of the netwrok file.")
-        exit()
-    else:
-        create_fig()
-        plot_connections()
-        annotate_points()
-        create_faces()
-        plot_faces()
-        plt.show()
+        pass
+    init_script(network_file)
+    create_fig()
+    plot_connections()
+    annotate_points()
+    create_faces()
+    plot_faces()
+    plt.show()
 ###############################################################################
 
 
