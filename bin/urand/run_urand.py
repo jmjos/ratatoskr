@@ -41,9 +41,8 @@ def main():
     """ Run the script """
     os.system('cp ../config.xml config/config.xml')
     os.system('cp ../network.xml config/network.xml')
-    with open('config.pkl', 'rb') as f:
-        config = pickle.load(f)
-        results = begin_all_sims(config)
+    config = Configuration('../config.ini')
+    results = begin_all_sims(config)
     save_results(results, 'rawResults.pkl')
 ###############################################################################
 

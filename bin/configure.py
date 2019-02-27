@@ -25,7 +25,6 @@ import xml_writers as writers
 import plot_network
 import os
 import multiprocessing
-import pickle
 ###############################################################################
 
 
@@ -33,44 +32,59 @@ class Configuration:
     """ The main configuration """
     def __init__(self, path):
         self.path = path
-        self.config = configparser.ConfigParser()
+        config = configparser.ConfigParser()
         try:
-            self.config.read(self.path)
+            config.read(self.path)
         except Exception:
             raise
-        self.simulationTime = int(self.config['CONFIG']['simulationTime'])
-        self.flitsPerPacket = int(self.config['CONFIG']['flitsPerPacket'])
-        self.benchmark = self.config['CONFIG']['benchmark']
+        self.simulationTime = int(config['CONFIG']['simulationTime'])
+        self.flitsPerPacket = int(config['CONFIG']['flitsPerPacket'])
+        self.benchmark = config['CONFIG']['benchmark']
 
-        self.x = int(self.config['Network']['x'])
-        self.y = int(self.config['Network']['y'])
-        self.z = int(self.config['Network']['z'])
-        self.router = self.config['Network']['routing']
-        self.clockDelay = int(self.config['Network']['clockDelay'])
-        self.bufferDepthType = self.config['Network']['bufferDepthType']
-        self.bufferDepth = int(self.config['Network']['bufferDepth'])
-        self.buffersDepths = self.config['Network']['buffersDepths']
+        self.x = int(config['Network']['x'])
+        self.y = int(config['Network']['y'])
+        self.z = int(config['Network']['z'])
+        self.router = config['Network']['routing']
+        self.clockDelay = int(config['Network']['clockDelay'])
+        self.bufferDepthType = config['Network']['bufferDepthType']
+        self.bufferDepth = int(config['Network']['bufferDepth'])
+        self.buffersDepths = config['Network']['buffersDepths']
         self.buffersDepths = self.buffersDepths[1:len(self.buffersDepths)-1]
-        self.vcCount = int(self.config['Network']['vcCount'])
+        self.vcCount = int(config['Network']['vcCount'])
 
-        self.topologyFile = self.config['URAND']['topologyFile']
-        self.libdir = self.config['URAND']['libdir']
-        self.simdir = self.config['URAND']['simdir']
+        self.topologyFile = config['URAND']['topologyFile']
+        self.libdir = config['URAND']['libdir']
+        self.simdir = config['URAND']['simdir']
         self.basedir = os.getcwd() + '/urand'
-        self.simulation_time = int(self.config['URAND']['simulation_time'])
-        self.restarts = int(self.config['URAND']['restarts'])
-        self.warmup_start = int(self.config['URAND']['warmup_start'])
-        self.warmup_duration = int(self.config['URAND']['warmup_duration'])
-        self.warmup_rate = float(self.config['URAND']['warmup_rate'])
-        self.run_rate_min = float(self.config['URAND']['run_rate_min'])
-        self.run_rate_max = float(self.config['URAND']['run_rate_max'])
-        self.run_rate_step = float(self.config['URAND']['run_rate_step'])
-        self.run_start_after_warmup = int(self.config['URAND']['run_start_after_warmup'])
+        self.simulation_time = int(config['URAND']['simulation_time'])
+        self.restarts = int(config['URAND']['restarts'])
+        self.warmup_start = int(config['URAND']['warmup_start'])
+        self.warmup_duration = int(config['URAND']['warmup_duration'])
+        self.warmup_rate = float(config['URAND']['warmup_rate'])
+        self.run_rate_min = float(config['URAND']['run_rate_min'])
+        self.run_rate_max = float(config['URAND']['run_rate_max'])
+        self.run_rate_step = float(config['URAND']['run_rate_step'])
+        self.run_start_after_warmup = int(config['URAND']['run_start_after_warmup'])
         self.run_start = self.warmup_start + self.warmup_duration + self.run_start_after_warmup
-        self.run_duration = int(self.config['URAND']['run_duration'])
-        self.num_cores = int(self.config['URAND']['num_cores'])
+        self.run_duration = int(config['URAND']['run_duration'])
+        self.num_cores = int(config['URAND']['num_cores'])
         if (self.num_cores == -1):
             self.num_cores = multiprocessing.cpu_count()
+
+        self.flit_size = int(config['NOC_3D_PACKAGE']['flit_size'])
+        self.max_vc_num = int(config['NOC_3D_PACKAGE']['max_vc_num'])
+        self.max_x_dim = int(config['NOC_3D_PACKAGE']['max_x_dim'])
+        self.max_y_dim = int(config['NOC_3D_PACKAGE']['max_y_dim'])
+        self.max_z_dim = int(config['NOC_3D_PACKAGE']['max_z_dim'])
+        self.max_packet_len = int(config['NOC_3D_PACKAGE']['max_packet_len'])
+
+        self.port_num = int(config['router']['port_num'])
+        self.Xis = int(config['router']['Xis'])
+        self.Yis = int(config['router']['Yis'])
+        self.Zis = int(config['router']['Zis'])
+        self.rout_algo = config['router']['rout_algo']
+
+        self.pl_rout_algo = config['router_pl']['rout_algo']
 ###############################################################################
 
 
@@ -83,9 +97,6 @@ def main():
     writer = writers.NetworkWriter(config)
     writer.write_network('network.xml')
     plot_network.main()
-
-    with open('urand/config.pkl', 'wb') as f:
-        pickle.dump(config, f)
 ###############################################################################
 
 
