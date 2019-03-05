@@ -28,7 +28,7 @@ from configure import Configuration
 
 
 def copy_folders(source_folder, destination_folder, folders):
-    """ Copy the vhdl folders """
+    """ Copy the vhdl folders from source to destination """
     copy = 'cp -r'
     for folder in folders:
         os.system(copy + ' ' + source_folder + folder + ' ' +
@@ -44,12 +44,14 @@ def replace_brackets(string):
 
 
 def increasing_vec(length):
+    """ Create a vector starting with values from 0 to length-1 """
     string = str(list(range(0, length)))
     return replace_brackets(string)
 ###############################################################################
 
 
 def repeat_value(value, length, filename):
+    """ Create a vector of length-1 with a repeated value """
     if filename == 'router_pl.vhd':
         lst = [value] * length
         lst[0] = 1
@@ -60,6 +62,7 @@ def repeat_value(value, length, filename):
 
 
 def depth_mtx(rows, columns, value):
+    """ Create a matrix of rows and columns with a repeated value """
     row = [value] * columns
     mtx = [row] * rows
     return replace_brackets(str(mtx))
@@ -81,6 +84,101 @@ def write_content(content, path):
 ###############################################################################
 
 
+def update_NOC_vhd(content, path, config):
+    if 'constant flit_size      : positive := 64' in content:
+        content = content.replace('64', str(config.flit_size))
+    if 'constant max_vc_num     : positive := 2' in content:
+        content = content.replace('2', str(config.max_vc_num))
+    if 'constant max_x_dim      : positive := 4' in content:
+        content = content.replace('4', str(config.max_x_dim))
+    if 'constant max_y_dim      : positive := 4' in content:
+        content = content.replace('4', str(config.max_y_dim))
+    if 'constant max_z_dim      : positive := 4' in content:
+        content = content.replace('4', str(config.max_z_dim))
+    if 'constant max_packet_len : positive := 15' in content:
+        content = content.replace('15', str(config.max_packet_len))
+    write_content(content, path)
+###############################################################################
+
+
+def update_router_vhd(content, path, config, filename):
+    if 'port_num                     : integer       := 7' in content:
+        content = content.replace('7', str(config.port_num))
+    if 'Xis                          : natural       := 1' in content:
+        content = content.replace('1', str(config.Xis))
+    if 'Yis                          : natural       := 1' in content:
+        content = content.replace('1', str(config.Yis))
+    if 'Zis                          : natural       := 1' in content:
+        content = content.replace('1', str(config.Zis))
+    if 'port_exist                   : integer_vec   := (0, 1, 2, 3, 4, 5, 6)' in content:
+        content = content.replace('(0, 1, 2, 3, 4, 5, 6)', increasing_vec(config.port_num))
+    if 'vc_num_vec                   : integer_vec   := (2, 2, 2, 2, 2, 2, 2)' in content:
+        repated_str = repeat_value(config.max_vc_num, config.port_num, filename)
+        content = content.replace('(2, 2, 2, 2, 2, 2, 2)', repated_str)
+    if 'vc_num_out_vec               : integer_vec   := (2, 2, 2, 2, 2, 2, 2)' in content:
+        content = content.replace('(2, 2, 2, 2, 2, 2, 2)', repated_str)
+    if 'vc_depth_array               : vc_prop_int_array := ((4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4))' in content:
+        depth_str = depth_mtx(config.port_num, config.max_vc_num, config.bufferDepth)
+        content = content.replace('((4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4))', depth_str)
+    if 'vc_depth_out_array           : vc_prop_int_array := ((4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4));' in content:
+        content = content.replace('((4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4))', depth_str)
+    if 'rout_algo                    : string        := "XYZ_ref"' in content:
+        content = content.replace('XYZ_ref', config.rout_algo)
+    write_content(content, path)
+###############################################################################
+
+
+def update_routerpl_vhd(content, path, config, filename):
+    if 'port_num                     : integer       := 7' in content:
+        content = content.replace('7', str(config.port_num))
+    if 'Xis                          : natural       := 1' in content:
+        content = content.replace('1', str(config.Xis))
+    if 'Yis                          : natural       := 1' in content:
+        content = content.replace('1', str(config.Yis))
+    if 'Zis                          : natural       := 1' in content:
+        content = content.replace('1', str(config.Zis))
+    if 'port_exist                   : integer_vec   := (0, 1, 2, 3, 4, 5, 6)' in content:
+        content = content.replace('(0, 1, 2, 3, 4, 5, 6)', increasing_vec(config.port_num))
+    if 'vc_num_vec                   : integer_vec   := (1, 2, 2, 2, 2, 2, 2)' in content:
+        repated_str = repeat_value(config.max_vc_num, config.port_num, filename)
+        content = content.replace('(1, 2, 2, 2, 2, 2, 2)', repated_str)
+    if 'vc_num_out_vec               : integer_vec   := (2, 2, 2, 2, 2, 2, 2)' in content:
+        content = content.replace('(1, 2, 2, 2, 2, 2, 2)', repated_str)
+    if 'vc_depth_array               : vc_prop_int_array := ((2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2))' in content:
+        depth_str = depth_mtx(config.port_num, config.max_vc_num, config.max_vc_num)
+        content = content.replace('((2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2))', depth_str)
+    if 'vc_depth_out_array           : vc_prop_int_array := ((2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2))' in content:
+        content = content.replace('((2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2))', depth_str)
+    if 'rout_algo                    : string        := "DXYU"' in content:
+        content = content.replace('DXYU', config.pl_rout_algo)
+    write_content(content, path)
+###############################################################################
+
+
+def update_routingcalc_vhd(content, path, config):
+    if 'Xis       : natural := 1' in content:
+        content = content.replace('1', str(config.Xis))
+    if 'Yis       : natural := 1' in content:
+        content = content.replace('1', str(config.Yis))
+    if 'Zis       : natural := 1' in content:
+        content = content.replace('1', str(config.Zis))
+    if 'rout_algo : string  := "DXYU"' in content:
+        content = content.replace('DXYU', config.rout_algo)
+    write_content(content, path)
+###############################################################################
+
+
+def update_routing(content, path, config):
+    if 'Xis : natural := 1' in content:
+        content = content.replace('1', str(config.Xis))
+    if 'Yis : natural := 1' in content:
+        content = content.replace('1', str(config.Yis))
+    if 'Zis : natural := 1' in content:
+        content = content.replace('1', str(config.Zis))
+    write_content(content, path)
+###############################################################################
+
+
 def setup(destination_folder, folders, config):
     """ Setup the vhdl files """
     for folder in folders:
@@ -88,83 +186,39 @@ def setup(destination_folder, folders, config):
             path = destination_folder + folder + '/' + filename
             content = read_content(path)
             if filename == 'NOC_3D_PACKAGE.vhd':
-                if 'constant flit_size      : positive := 64' in content:
-                    content = content.replace('64', str(config.flit_size))
-                if 'constant max_vc_num     : positive := 2' in content:
-                    content = content.replace('2', str(config.max_vc_num))
-                if 'constant max_x_dim      : positive := 4' in content:
-                    content = content.replace('4', str(config.max_x_dim))
-                if 'constant max_y_dim      : positive := 4' in content:
-                    content = content.replace('4', str(config.max_y_dim))
-                if 'constant max_z_dim      : positive := 4' in content:
-                    content = content.replace('4', str(config.max_z_dim))
-                if 'constant max_packet_len : positive := 15' in content:
-                    content = content.replace('15', str(config.max_packet_len))
-                write_content(content, path)
+                update_NOC_vhd(content, path, config)
                 continue
             if filename == 'router.vhd':
-                if 'port_num                     : integer       := 7' in content:
-                    content = content.replace('7', str(config.port_num))
-                if 'Xis                          : natural       := 1' in content:
-                    content = content.replace('1', str(config.Xis))
-                if 'Yis                          : natural       := 1' in content:
-                    content = content.replace('1', str(config.Yis))
-                if 'Zis                          : natural       := 1' in content:
-                    content = content.replace('1', str(config.Zis))
-                if 'port_exist                   : integer_vec   := (0, 1, 2, 3, 4, 5, 6)' in content:
-                    content = content.replace('(0, 1, 2, 3, 4, 5, 6)', increasing_vec(config.port_num))
-                if 'vc_num_vec                   : integer_vec   := (2, 2, 2, 2, 2, 2, 2)' in content:
-                    repated_str = repeat_value(config.vcCount, config.port_num, filename)
-                    content = content.replace('(2, 2, 2, 2, 2, 2, 2)', repated_str)
-                if 'vc_num_out_vec               : integer_vec   := (2, 2, 2, 2, 2, 2, 2)' in content:
-                    content = content.replace('(2, 2, 2, 2, 2, 2, 2)', repated_str)
-                if 'vc_depth_array               : vc_prop_int_array := ((4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4))' in content:
-                    depth_str = depth_mtx(config.port_num, config.vcCount, config.bufferDepth)
-                    content = content.replace('((4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4))', depth_str)
-                if 'vc_depth_out_array           : vc_prop_int_array := ((4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4));' in content:
-                    content = content.replace('((4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4))', depth_str)
-                if 'rout_algo                    : string        := "XYZ_ref"' in content:
-                    content = content.replace('XYZ_ref', config.rout_algo)
-                write_content(content, path)
+                update_router_vhd(content, path, config, filename)
                 continue
             if filename == 'router_pl.vhd':
-                if 'port_num                     : integer       := 7' in content:
-                    content = content.replace('7', str(config.port_num))
-                if 'Xis                          : natural       := 1' in content:
-                    content = content.replace('1', str(config.Xis))
-                if 'Yis                          : natural       := 1' in content:
-                    content = content.replace('1', str(config.Yis))
-                if 'Zis                          : natural       := 1' in content:
-                    content = content.replace('1', str(config.Zis))
-                if 'port_exist                   : integer_vec   := (0, 1, 2, 3, 4, 5, 6)' in content:
-                    content = content.replace('(0, 1, 2, 3, 4, 5, 6)', increasing_vec(config.port_num))
-                if 'vc_num_vec                   : integer_vec   := (1, 2, 2, 2, 2, 2, 2)' in content:
-                    repated_str = repeat_value(config.vcCount, config.port_num, filename)
-                    content = content.replace('(1, 2, 2, 2, 2, 2, 2)', repated_str)
-                if 'vc_num_out_vec               : integer_vec   := (2, 2, 2, 2, 2, 2, 2)' in content:
-                    content = content.replace('(1, 2, 2, 2, 2, 2, 2)', repated_str)
-                if 'vc_depth_array               : vc_prop_int_array := ((2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2))' in content:
-                    depth_str = depth_mtx(config.port_num, config.vcCount, config.bufferDepth)
-                    content = content.replace('((2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2))', depth_str)
-                if 'vc_depth_out_array           : vc_prop_int_array := ((2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2))' in content:
-                    content = content.replace('((4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4))', depth_str)
-                if 'rout_algo                    : string        := "DXYU"' in content:
-                    content = content.replace('DXYU', config.pl_rout_algo)
-                write_content(content, path)
+                update_routerpl_vhd(content, path, config, filename)
+                continue
+            if filename == 'routing_calc':
+                update_routingcalc_vhd(content, path, config)
+                continue
+            if filename in ['dxyu_routing.vhd', 'uxyd_routing.vhd',
+                            'xy_routing.vhd', 'xyz_routing.vhd',
+                            'zxy_routing.vhd']:
+                update_routing(content, path, config)
                 continue
 ###############################################################################
 
 
-def main(source_folder, destination_folder, folders):
+def main():
     """ Main execution point """
-    config = Configuration('../config.ini')
-    copy_folders(source_folder, destination_folder, folders)
-    #setup(destination_folder, folders, config)
+    try:
+        source_folder = sys.argv[1]
+        destination_folder = sys.argv[2]
+    except Exception:
+        print('Please provide the path to source and destination folders.')
+    else:
+        folders = ['packages', 'router', 'routing_algos']
+        config = Configuration('../config.ini')
+        copy_folders(source_folder, destination_folder, folders)
+        setup(destination_folder, folders, config)
 ###############################################################################
 
 
-source_folder = '/home/hajjar/Downloads/impl_3d_noc-master/rtl/'
-destination_folder = '/home/hajjar/Desktop/copy_folder/'
-folders = ['packages', 'router', 'routing_algos']
 if __name__ == '__main__':
-    main(source_folder, destination_folder, folders)
+    main()
