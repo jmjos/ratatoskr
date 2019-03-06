@@ -13,6 +13,6 @@ simulator/CMakeFiles/
 *.pkl
 sim
 virtualenv/
-__pycahce__/
+__pycache__/
 /bin/*.xml
 /bin/sim_folder/
