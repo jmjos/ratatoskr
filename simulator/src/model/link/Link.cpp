@@ -26,7 +26,9 @@ Link::Link(sc_module_name nm, const Connection& c, int globalID)
         id(c.id),
         globalID(globalID),
         previousFlit(nullptr),
-        currentFlit(nullptr)
+        currentFlit(nullptr),
+        previousTransmissionState(0),
+        currentTransmissionState(0)
 {
     classicPortContainer = new FlitPortContainer(
             ("link_portCont_"+std::to_string(this->id)).c_str());

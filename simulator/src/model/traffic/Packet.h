@@ -31,9 +31,9 @@
 #include "utils/Report.h"
 
 struct Packet {
-	static int idcnt;
-	int id;
-	int dbid;
+	static long long idcnt;
+	long long id;
+	long long dbid;
 	Node src;
 	Node dst;
 	int size;

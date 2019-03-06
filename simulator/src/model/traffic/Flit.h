@@ -27,7 +27,7 @@
 
 #include "utils/Structures.h"
 
-using flitID_t = int;
+using flitID_t = long long;
 
 class Packet;
 
@@ -41,7 +41,7 @@ public:
     static flitID_t idcnt;
     flitID_t id;
     flitID_t dbid;
-    int seq_nb;
+    long long seq_nb;
     FlitType type;
     Packet* packet;
     Flit* headFlit;
@@ -49,9 +49,9 @@ public:
     double injectionTime;
     double generationTime;
 
-    Flit(FlitType type, int seq_nb, Packet* p);
+    Flit(FlitType type, long long seq_nb, Packet* p);
 
-    Flit(FlitType type, int seq_nb, Packet* p, dataTypeID_t dataType, double generationTime);
+    Flit(FlitType type, long long seq_nb, Packet* p, dataTypeID_t dataType, double generationTime);
 
     friend ostream& operator<<(ostream& os, const Flit& flit);
 

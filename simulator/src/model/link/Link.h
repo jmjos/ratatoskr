@@ -41,8 +41,8 @@ public:
     int id, globalID;
     Flit* previousFlit;
     Flit* currentFlit;
-    int previousTransmissionState = 0;
-    int currentTransmissionState = 0;
+    int previousTransmissionState;
+    int currentTransmissionState;
     LinkType linkType;
     int linkWidth;
     int linkDepth;
