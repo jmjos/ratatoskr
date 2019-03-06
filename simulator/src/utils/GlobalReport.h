@@ -138,20 +138,40 @@ public:
 
     void resizeMatrices();
 
+    void increaseClockCount(int layer);
+
+    void reportClockCount(ostream& stream);
+
+    void increaseBufferPush(int router_id);
+
+    void increaseBufferPop(int router_id);
+
+    void increaseBufferPushFront(int router_id);
+
+    void increaseRouting(int router_id);
+
+    void increaseCrossbar(int router_id);
+
+    void increaseNI(int ni_id);
+
+    void reportRoutersPowerCSV(ostream& csvfile);
+
+    void reportNIsPowerCSV(ostream& csvfile);
+
 private:
     GlobalResources& globalResources = GlobalResources::getInstance();
 
     double total_power_s;               //unused
 
     //Buffer consumption (power per event is determined by a LUT of buffer depth and flit size)
-    double buffer_router_push_pwr_d;    // per flit pushed on buffer
-    double buffer_router_pop_pwr_d;     // per flit popped of buffer (not for lookup)
-    double buffer_router_front_pwr_d;   // per flit data received from buffer (only count if flit exists)
-    double buffer_router_pwr_s;         // leakage per router cycle per buffer
+    std::vector<double> buffer_router_push_pwr_d;    // per flit pushed on buffer
+    std::vector<double> buffer_router_pop_pwr_d;     // per flit popped of buffer (not for lookup)
+    std::vector<double> buffer_router_front_pwr_d;   // per flit data received from buffer (only count if flit exists)
+    std::vector<double> buffer_router_pwr_s;         // leakage per router cycle per buffer
 
     //Power consumption of routing Algorithm (determined by routing algorithm)
-    double routing_pwr_d;                //per routing function called
-    double routing_pwr_s;                //Leakage per Router Cycle
+    std::vector<double> routing_pwr_d;                //per routing function called
+    std::vector<double> routing_pwr_s;                //Leakage per Router Cycle
 
     //Routing function gives vector of possible directions/VCs
     //Selection function selects direction/VC
@@ -161,21 +181,23 @@ private:
     // not implemented!
 
     //Power consumption of Crossbar (determined by IOs (5) and Flit size)
-    double crossbar_pwr_d;              // per sent flit
-    double crossbar_pwr_s;              // Leakage per Router Cycle
+    std::vector<double> crossbar_pwr_d;              // per sent flit
+    std::vector<double> crossbar_pwr_s;              // Leakage per Router Cycle
 
     //Power consumption of data links (determined by router to router distance)
-    double link_r2r_pwr_d;              // per sent flit
-    double link_r2r_pwr_s;              // unused
+    std::vector<double> link_r2r_pwr_d;              // per sent flit
+    std::vector<double> link_r2r_pwr_s;              // unused
 
     //Power consumption of Network Interface (determined by flit size)
-    double ni_pwr_d;                    // per local flit sent or received
-    double ni_pwr_s;                    // Leakage per Router Cycle
+    std::vector<double> ni_pwr_d;                    // per local flit sent or received
+    std::vector<double> ni_pwr_s;                    // Leakage per Router Cycle
 
     // Used to create the buffer axes in the histogram of buffer usage
     const int MAX_BUFFER_DEPTH = 50;
     // Generate VC and buffer histograms for only these routers
     const std::vector<int> INNER_ROUTERS = {5, 6, 9, 10, 21, 22, 25, 26, 37, 38, 41, 42};
+
+    std::vector<double> clockCounts;
 
     GlobalReport();
 };

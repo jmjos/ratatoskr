@@ -64,6 +64,9 @@ public:
     std::vector<DataType> dataTypes;
     std::vector<SyntheticPhase> syntheticPhases;
 
+    long long rd_seed;
+    std::mt19937_64* rand;
+
     static GlobalResources& getInstance();
 
     int getRandomIntBetween(int, int);
@@ -78,11 +81,7 @@ public:
 
     std::vector<Node*> getNodesByPos(const Vec3D<float>& pos);
 
-    long long rd_seed;
-    std::mt19937_64* rand;
-
 private:
-
     GlobalResources();
 
     ~GlobalResources();

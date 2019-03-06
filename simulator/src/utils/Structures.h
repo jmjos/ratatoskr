@@ -209,7 +209,8 @@ struct Vec3D {
         return output;
     }
 
-    bool isZero() const{
+    bool isZero() const
+    {
         return x==0 && y==0 && z==0;
     }
 };
@@ -240,13 +241,14 @@ public:
     float congestion; // crossbar utilization 0-1
     std::vector<nodeID_t> connectedNodes;
     std::vector<connID_t> connections;
+    int layer;
 
     /* int idType; TODO restructure
      LayerType* layer;
      std::map<Node *, std::vector<int>> connectionsToNode; //get connection by connected node
      std::map<connID_t, int> conToPos; // get position of connection inside array
      */
-    Node(nodeID_t id, Vec3D<float> pos, const std::shared_ptr<NodeType>& type);
+    Node(nodeID_t id, Vec3D<float> pos, const std::shared_ptr<NodeType>& type, int layer);
 
     Node();
 
@@ -284,7 +286,6 @@ struct Connection {
     float length;
     int width;
     int depth;
-
 
     std::vector<int> bufferUtilization;
 
@@ -391,7 +392,7 @@ struct SyntheticPhase {
     SyntheticPhase(synthID_t id, const std::string& name, const std::string& distribution, float injectionRate);
 };
 
-class Credit{
+class Credit {
 public:
     int id;
     static int idcnt;
@@ -407,9 +408,10 @@ public:
 
     Credit& operator=(const Credit& credit);
 
-    friend ostream& operator<<(ostream& os, const Credit& credit) {
+    friend ostream& operator<<(ostream& os, const Credit& credit)
+    {
         return os;
     }
 
-    friend void sc_trace(sc_trace_file*& tf, const Credit& credit, std::string nm){};
+    friend void sc_trace(sc_trace_file*& tf, const Credit& credit, std::string nm) { };
 };

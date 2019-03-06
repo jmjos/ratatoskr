@@ -33,7 +33,6 @@ GlobalResources::GlobalResources()
         synthetic_start_measurement_time(-1)
 {
     rand = new std::mt19937_64();
-    //auto seed = 2230868204;
     auto seed = std::random_device{}();
     rand->seed(seed);
     rd_seed = seed;
@@ -241,7 +240,8 @@ void GlobalResources::readNodes(const pugi::xml_node& noc_node)
         zPositions.push_back(z);
         nodeTypeID_t nodeTypeID = xmlnode.child("nodeType").attribute("value").as_int();
         std::shared_ptr<NodeType> nodeType = nodeTypes.at(nodeTypeID);
-        nodes.emplace_back(nodeID, Vec3D<float>(x, y, z), nodeType);
+        int layer = xmlnode.child("layer").attribute("value").as_int();
+        nodes.emplace_back(nodeID, Vec3D<float>(x, y, z), nodeType, layer);
     }
     sortNodesPositions();
 }

@@ -78,7 +78,7 @@ def init_script(mesh_file):
                 x = float(node.find('xPos').attrib['value'])
                 y = float(node.find('yPos').attrib['value'])
                 z = float(node.find('zPos').attrib['value'])
-                layer = int(node.find('layerType').attrib['value'])
+                layer = int(node.find('layer').attrib['value'])
                 points.append(([x, y, z], layer))
                 i = i + 1
             else:

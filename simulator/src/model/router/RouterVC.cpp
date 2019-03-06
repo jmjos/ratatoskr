@@ -111,6 +111,9 @@ void RouterVC::thread()
     LOG(globalReport.verbose_router_function_calls,
             "Router" << this->id << "in tread() @ " << sc_time_stamp());
     if (clk.posedge()) {
+
+        globalReport.increaseClockCount(node.layer);
+
         send();
 
         std::map<int, std::vector<Channel>> switch_requests = switchAllocation_generateRequests();
@@ -148,8 +151,10 @@ void RouterVC::receive()
             if (lastReceivedFlitsID.at(in)!=flit->id) {
                 if (buf->enqueue(flit)) {
                     //rep.reportEvent(buf->dbid, "buffer_enqueue_flit", std::to_string(flit->id));
+                    globalReport.increaseBufferPush(this->id);
                     lastReceivedFlitsID.at(in) = flit->id;
                     if (flit->type==HEAD) {
+                        globalReport.increaseBufferPushFront(this->id);
                         LOG(globalReport.verbose_router_receive_head_flit,
                                 "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
                                          << "]\t- Receive Flit " << *flit);
@@ -241,6 +246,7 @@ void RouterVC::VCAllocation_generateAck(const std::map<int, std::vector<Channel>
                 assert(flit);
                 flit->packet->numhops++;
                 flit->packet->traversedRouters.push_back(this->id);
+                globalReport.increaseRouting(this->id);
             }
         }
     }
@@ -343,8 +349,8 @@ void RouterVC::switchAllocation_generateAck(const std::map<int, std::vector<Chan
         auto vcList = &switchAllocation_inputVC_rrList.at(selected_in.conPos);
         auto vcCount = vcList->size();
         std::for_each(vcList->begin(), vcList->end(), [&vcCount](int& vc) { vc = (vc+1)%vcCount; });
-
         switchAllocation_outputVCPtr.at(requested_out_dir) = requested_out_vc+1;
+        globalReport.increaseCrossbar(this->id);
     }
 }
 
@@ -381,6 +387,7 @@ void RouterVC::send()
             Flit* flit = buf->front();
             assert(flit);
             buf->dequeue();
+            globalReport.increaseBufferPop(this->id);
             classicPortContainer.at(out.conPos).portValidOut.write(true);
             classicPortContainer.at(out.conPos).portDataOut.write(flit);
             classicPortContainer.at(out.conPos).portVcOut.write(out.vc);

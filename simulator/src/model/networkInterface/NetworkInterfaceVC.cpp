@@ -76,6 +76,7 @@ void NetworkInterfaceVC::receivePacketFromPE()
         Packet* p = packetPortContainer->portDataIn.read();
         //generateFlitsForPacket(p);
         packet_send_queue.push(p);
+        globalReport.increaseNI(this->id);
     }
 }
 
@@ -125,6 +126,7 @@ void NetworkInterfaceVC::thread()
                 LOG((globalReport.verbose_pe_send_head_flit && current_flit->type==HEAD)
                         || globalReport.verbose_pe_send_flit,
                         "NI" << this->id << "(Node" << node.id << ")\t\t- Send Flit " << *current_flit);
+                globalReport.increaseNI(this->id);
             }
             else {
                 LOG(globalReport.verbose_pe_throttle,
@@ -137,6 +139,7 @@ void NetworkInterfaceVC::thread()
                 packet_recv_queue.pop();
                 packetPortContainer->portValidOut.write(true);
                 packetPortContainer->portDataOut.write(p);
+                globalReport.increaseNI(this->id);
             }
         }
     }
@@ -179,6 +182,7 @@ void NetworkInterfaceVC::receiveFlitFromRouter()
         LOG(received_flit->type==TAIL && (!p->toTransmit.empty() || !p->inTransmit.empty()),
                 "NI" << this->id << "(Node" << node.id << ")\t\t- Received Tail Flit, but still missing flits! "
                      << *received_flit);
+        globalReport.increaseNI(this->id);
 
         if (p->toTransmit.empty() && p->inTransmit.empty())
             packet_recv_queue.push(p);

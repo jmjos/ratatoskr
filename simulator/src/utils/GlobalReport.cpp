@@ -26,18 +26,6 @@
 GlobalReport::GlobalReport()
         :
         total_power_s(0.0),
-        buffer_router_push_pwr_d(0.0),
-        buffer_router_pop_pwr_d(0.0),
-        buffer_router_front_pwr_d(0.0),
-        buffer_router_pwr_s(0.0),
-        routing_pwr_d(0.0),
-        routing_pwr_s(0.0),
-        crossbar_pwr_d(0.0),
-        crossbar_pwr_s(0.0),
-        link_r2r_pwr_d(0.0),
-        link_r2r_pwr_s(0.0),
-        ni_pwr_d(0.0),
-        ni_pwr_s(0.0),
         latencyNetwork("network latency"),
         latencyFlit("flit latency"),
         latencyPacket("packet latency ")
@@ -52,8 +40,9 @@ void GlobalReport::reportComplete(const std::string& filename)
     myfile << boost::format("Report file of this simulation run. \n\n");
     myfile << "----------------------------------------------------" << endl;
     myfile << "General Information:" << endl;
-    myfile << "----------------------------------------------------" << endl;\
+    myfile << "----------------------------------------------------" << endl;
     reportPerformance(myfile);
+    reportClockCount(myfile);
 
     // Writing router routing calculations
     myfile << "----------------------------------------------------" << endl;
@@ -80,6 +69,18 @@ void GlobalReport::reportComplete(const std::string& filename)
     csvFilename = filename+"_Performance.csv";
     csvfile.open(csvFilename);
     reportPerformanceCSV(csvfile);
+    csvfile.close();
+
+    // Generate csv for routers power statistics
+    csvFilename = filename+"_Routers_Power.csv";
+    csvfile.open(csvFilename);
+    reportRoutersPowerCSV(csvfile);
+    csvfile.close();
+
+    // Generate csv for NIs power statistics
+    csvFilename = filename+"_NI_Power.csv";
+    csvfile.open(csvFilename);
+    reportNIsPowerCSV(csvfile);
     csvfile.close();
 
     reportAllRoutersUsageHist();
@@ -412,16 +413,93 @@ void GlobalReport::readConfigFile(const std::string& config_path)
             "value").as_bool();
     this->verbose_task_function_calls = verbose_node.child("function_calls").attribute(
             "value").as_bool();
-
-
 }
 
 void GlobalReport::resizeMatrices()
 {
-    this->numRouters = static_cast<unsigned int>(globalResources.nodes.size()/2);
-    this->VCsUsageHist.resize(numRouters);
-    this->bufferUsagePerVCHist.resize(numRouters);
-    this->linkTransmissionsMatrixNumberOfStates = (2*globalResources.numberOfTrafficTypes)+3;
+    numRouters = static_cast<unsigned int>(globalResources.nodes.size()/2);
+    VCsUsageHist.resize(numRouters);
+    bufferUsagePerVCHist.resize(numRouters);
+    linkTransmissionsMatrixNumberOfStates = (2*globalResources.numberOfTrafficTypes)+3;
+    clockCounts.resize(globalResources.nodeTypes.size()/2, 0.0);
+    buffer_router_push_pwr_d.resize(numRouters, 0.0);
+    buffer_router_pop_pwr_d.resize(numRouters, 0.0);
+    buffer_router_front_pwr_d.resize(numRouters, 0.0);
+    buffer_router_pwr_s.resize(numRouters, 0.0);
+    routing_pwr_d.resize(numRouters, 0.0);
+    routing_pwr_s.resize(numRouters, 0.0);
+    crossbar_pwr_d.resize(numRouters, 0.0);
+    crossbar_pwr_s.resize(numRouters, 0.0);
+    link_r2r_pwr_d.resize(numRouters, 0.0);
+    link_r2r_pwr_s.resize(numRouters, 0.0);
+    ni_pwr_d.resize(numRouters, 0.0);
+    ni_pwr_s.resize(numRouters, 0.0);
+}
+
+void GlobalReport::reportClockCount(ostream& stream)
+{
+    stream << "Clock Counts: [";
+    for (int i = 0; i<clockCounts.size(); i++) {
+        stream << clockCounts.at(i);
+        if (i<clockCounts.size()-1)
+            stream << ", ";
+        else
+            stream << "]\n";
+    }
+}
+
+void GlobalReport::increaseClockCount(int layer)
+{
+    this->clockCounts.at(layer) += 1;
+}
+
+void GlobalReport::increaseBufferPush(int router_id)
+{
+    buffer_router_push_pwr_d.at(router_id) += 1;
+}
+
+void GlobalReport::increaseBufferPop(int router_id)
+{
+    buffer_router_pop_pwr_d.at(router_id) += 1;
+}
+
+void GlobalReport::increaseBufferPushFront(int router_id)
+{
+    buffer_router_front_pwr_d.at(router_id) += 1;
+}
+
+void GlobalReport::increaseRouting(int router_id)
+{
+    routing_pwr_d.at(router_id) += 1;
+}
+
+void GlobalReport::increaseCrossbar(int router_id)
+{
+    crossbar_pwr_d.at(router_id) += 1;
+}
+
+void GlobalReport::increaseNI(int ni_id)
+{
+    ni_pwr_d.at(ni_id) += 1;
+}
+
+void GlobalReport::reportRoutersPowerCSV(ostream& csvfile)
+{
+    csvfile << "router_id," << "buffer_push," << "buffer_pop," << "buffer_read_front," << "routing," << "crossbar,"
+            << "\n";
+    for (int id = 0; id<buffer_router_push_pwr_d.size(); id++) {
+        csvfile << id << "," << buffer_router_push_pwr_d.at(id) << "," << buffer_router_pop_pwr_d.at(id)
+                << "," << buffer_router_front_pwr_d.at(id) << "," << routing_pwr_d.at(id) << ","
+                << crossbar_pwr_d.at(id) << "\n";
+    }
+}
+
+void GlobalReport::reportNIsPowerCSV(ostream& csvfile)
+{
+    csvfile << "NI_id," << "Power" << "\n";
+    for (int id = 0; id<ni_pwr_d.size(); id++) {
+        csvfile << id << "," << ni_pwr_d.at(id) << "\n";
+    }
 }
 
 

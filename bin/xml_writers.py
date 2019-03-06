@@ -317,7 +317,7 @@ class NetworkWriter(Writer):
                         nodeType_node.set('value', str(self.config.z+nodeType_id))
                     idType_node = ET.SubElement(node_node, 'idType')
                     idType_node.set('value', str(idType))
-                    layerType_node = ET.SubElement(node_node, 'layerType')
+                    layerType_node = ET.SubElement(node_node, 'layer')
                     layerType_node.set('value', str(int(zi*(self.config.z-1))))
                     node_id += 1
                     idType += 1
