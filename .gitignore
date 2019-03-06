@@ -4,13 +4,12 @@ simulator/report.txt
 simulator/log.txt
 simulator/CMakeCache.txt
 simulator/Makefile
-simulator/report_Performance.csv
-simulator/report_Links.csv
 simulator/cmake_install.cmake
 simulator/VCUsage/
 simulator/BuffUsage/
 simulator/.idea/
 simulator/CMakeFiles/
+*.csv
 *.pkl
 sim
 virtualenv/
