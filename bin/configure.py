@@ -72,11 +72,6 @@ class Configuration:
             self.num_cores = multiprocessing.cpu_count()
 
         self.flit_size = int(config['NOC_3D_PACKAGE']['flit_size'])
-        self.max_vc_num = int(config['NOC_3D_PACKAGE']['max_vc_num'])
-        self.max_x_dim = int(config['NOC_3D_PACKAGE']['max_x_dim'])
-        self.max_y_dim = int(config['NOC_3D_PACKAGE']['max_y_dim'])
-        self.max_z_dim = int(config['NOC_3D_PACKAGE']['max_z_dim'])
-        self.max_packet_len = int(config['NOC_3D_PACKAGE']['max_packet_len'])
 
         self.port_num = int(config['router']['port_num'])
         self.Xis = int(config['router']['Xis'])

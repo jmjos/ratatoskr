@@ -88,15 +88,15 @@ def update_NOC_vhd(content, path, config):
     if 'constant flit_size      : positive := 64' in content:
         content = content.replace('64', str(config.flit_size))
     if 'constant max_vc_num     : positive := 2' in content:
-        content = content.replace('2', str(config.max_vc_num))
+        content = content.replace('2', str(config.vcCount))
     if 'constant max_x_dim      : positive := 4' in content:
-        content = content.replace('4', str(config.max_x_dim))
+        content = content.replace('4', str(config.x))
     if 'constant max_y_dim      : positive := 4' in content:
-        content = content.replace('4', str(config.max_y_dim))
+        content = content.replace('4', str(config.y))
     if 'constant max_z_dim      : positive := 4' in content:
-        content = content.replace('4', str(config.max_z_dim))
+        content = content.replace('4', str(config.z))
     if 'constant max_packet_len : positive := 15' in content:
-        content = content.replace('15', str(config.max_packet_len))
+        content = content.replace('15', str(config.flitsPerPacket))
     write_content(content, path)
 ###############################################################################
 
@@ -113,12 +113,12 @@ def update_router_vhd(content, path, config, filename):
     if 'port_exist                   : integer_vec   := (0, 1, 2, 3, 4, 5, 6)' in content:
         content = content.replace('(0, 1, 2, 3, 4, 5, 6)', increasing_vec(config.port_num))
     if 'vc_num_vec                   : integer_vec   := (2, 2, 2, 2, 2, 2, 2)' in content:
-        repated_str = repeat_value(config.max_vc_num, config.port_num, filename)
+        repated_str = repeat_value(config.vcCount, config.port_num, filename)
         content = content.replace('(2, 2, 2, 2, 2, 2, 2)', repated_str)
     if 'vc_num_out_vec               : integer_vec   := (2, 2, 2, 2, 2, 2, 2)' in content:
         content = content.replace('(2, 2, 2, 2, 2, 2, 2)', repated_str)
     if 'vc_depth_array               : vc_prop_int_array := ((4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4))' in content:
-        depth_str = depth_mtx(config.port_num, config.max_vc_num, config.bufferDepth)
+        depth_str = depth_mtx(config.port_num, config.vcCount, config.bufferDepth)
         content = content.replace('((4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4))', depth_str)
     if 'vc_depth_out_array           : vc_prop_int_array := ((4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4));' in content:
         content = content.replace('((4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4))', depth_str)
@@ -140,12 +140,12 @@ def update_routerpl_vhd(content, path, config, filename):
     if 'port_exist                   : integer_vec   := (0, 1, 2, 3, 4, 5, 6)' in content:
         content = content.replace('(0, 1, 2, 3, 4, 5, 6)', increasing_vec(config.port_num))
     if 'vc_num_vec                   : integer_vec   := (1, 2, 2, 2, 2, 2, 2)' in content:
-        repated_str = repeat_value(config.max_vc_num, config.port_num, filename)
+        repated_str = repeat_value(config.vcCount, config.port_num, filename)
         content = content.replace('(1, 2, 2, 2, 2, 2, 2)', repated_str)
     if 'vc_num_out_vec               : integer_vec   := (2, 2, 2, 2, 2, 2, 2)' in content:
         content = content.replace('(1, 2, 2, 2, 2, 2, 2)', repated_str)
     if 'vc_depth_array               : vc_prop_int_array := ((2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2))' in content:
-        depth_str = depth_mtx(config.port_num, config.max_vc_num, config.max_vc_num)
+        depth_str = depth_mtx(config.port_num, config.vcCount, config.vcCount)
         content = content.replace('((2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2))', depth_str)
     if 'vc_depth_out_array           : vc_prop_int_array := ((2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2))' in content:
         content = content.replace('((2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2))', depth_str)
