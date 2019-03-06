@@ -154,7 +154,6 @@ void RouterVC::receive()
                     globalReport.increaseBufferPush(this->id);
                     lastReceivedFlitsID.at(in) = flit->id;
                     if (flit->type==HEAD) {
-                        globalReport.increaseBufferPushFront(this->id);
                         LOG(globalReport.verbose_router_receive_head_flit,
                                 "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
                                          << "]\t- Receive Flit " << *flit);
@@ -210,11 +209,13 @@ std::map<int, std::vector<Channel>> RouterVC::VCAllocation_generateRequests()
         if (in_vc!=-1) {
             BufferFIFO<Flit*>* buf = buffers.at(in_conPos)->at(in_vc);
             Flit* flit = buf->front();
+            globalReport.increaseBufferPushFront(id);
 
             if (flit && flit->type==HEAD && !routingTable.count({in_conPos, in_vc})) {
                 int src_node_id = this->id;
                 int dst_node_id = flit->packet->dst.id;
                 int chosen_conPos = routingAlg->route(src_node_id, dst_node_id);
+                globalReport.increaseRouting(this->id);
                 if (chosen_conPos==-1)
                     std::cerr << "Bad routing" << std::endl;
                 Channel in{in_conPos, in_vc};
@@ -246,7 +247,6 @@ void RouterVC::VCAllocation_generateAck(const std::map<int, std::vector<Channel>
                 assert(flit);
                 flit->packet->numhops++;
                 flit->packet->traversedRouters.push_back(this->id);
-                globalReport.increaseRouting(this->id);
             }
         }
     }
@@ -350,7 +350,6 @@ void RouterVC::switchAllocation_generateAck(const std::map<int, std::vector<Chan
         auto vcCount = vcList->size();
         std::for_each(vcList->begin(), vcList->end(), [&vcCount](int& vc) { vc = (vc+1)%vcCount; });
         switchAllocation_outputVCPtr.at(requested_out_dir) = requested_out_vc+1;
-        globalReport.increaseCrossbar(this->id);
     }
 }
 
@@ -394,6 +393,7 @@ void RouterVC::send()
             Credit credit{in.vc};
             classicPortContainer.at(in.conPos).portFlowControlOut.write(credit);
             classicPortContainer.at(in.conPos).portFlowControlValidOut.write(true);
+            globalReport.increaseCrossbar(this->id);
             if (DIR::Local!=node.getDirOfConPos(out.conPos)) // NI has infinite buffers
                 creditCounter.at(out)--;
             if (flit->type==TAIL) {
