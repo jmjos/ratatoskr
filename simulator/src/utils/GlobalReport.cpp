@@ -472,7 +472,7 @@ void GlobalReport::increaseCrossbar(int router_id)
 
 void GlobalReport::reportRoutersPowerCSV(ostream& csvfile)
 {
-    csvfile << "router_id," << "buffer_push," << "buffer_pop," << "buffer_read_front," << "routing," << "crossbar,"
+    csvfile << "router_id," << "buffer_push," << "buffer_pop," << "buffer_read_front," << "routing," << "crossbar"
             << "\n";
     for (int id = 0; id<buffer_router_push_pwr_d.size(); id++) {
         csvfile << id << "," << buffer_router_push_pwr_d.at(id) << "," << buffer_router_pop_pwr_d.at(id)
