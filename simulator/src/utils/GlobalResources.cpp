@@ -343,39 +343,6 @@ void GlobalResources::readConnections(const pugi::xml_node& noc_node)
         }
 
         connections.push_back(con);
-
-        // TODO restructuring..this part is not needed anymore.
-        /*// add Connected nodes and connections to nodes list
-        int i = 0;
-        for (pugi::xml_node nodeNum : connection.child("ports").children("port")) {
-            Node *currentNode = nodes.at(nodeNum.child("node").attribute("value").as_int());
-            connections.at(id)->nodePos.insert({currentNode, i});
-            i++;
-
-            if (connection.child("ports").select_nodes("port").size() == 2) {
-                for (pugi::xml_node nodeNum : connection.child("ports").children("port")) {
-                    Node *conNode = nodes.at(nodeNum.child("node").attribute("value").as_int());
-
-                    if (conNode != currentNode) {
-                        if (std::find(currentNode->connectedNodes.begin(), currentNode->connectedNodes.end(),
-                                      conNode) == currentNode->connectedNodes.end()) {
-
-                            currentNode->connectedNodes.push_back(conNode);
-                            std::vector<int> v;
-                            v.push_back(currentNode->connections.size());
-                            currentNode->connectionsToNode.insert({conNode, v});
-                        }
-                        currentNode->connectionsToNode.at(conNode).push_back(currentNode->connections.size());
-                        currentNode->conToNode[currentNode->connections.size()] = conNode;
-                    }
-                }
-
-                currentNode->conToPos[connections.at(id)] = currentNode->connections.size();
-                currentNode->connections.push_back(connections.at(id));
-            } else {
-                std::cerr << "ERROR: Other than 2 Nodes inside Connection ID:" << id << endl;
-            }
-        }*/
     }
 }
 

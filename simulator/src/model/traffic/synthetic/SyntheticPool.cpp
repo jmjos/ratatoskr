@@ -33,7 +33,7 @@ void SyntheticPool::start()
 {
     taskID_t taskId = 0;
     int phaseId = 0;
-    dataTypeID_t dataTypeId = 0;
+    //dataTypeID_t dataTypeId = 0;
     dataDestID_t dataDestId = 0;
     int maxClockDelay = 1;
     for (auto const& nodeType: globalResources.nodeTypes) {
@@ -47,7 +47,7 @@ void SyntheticPool::start()
 
         std::map<int, int> srcToDst;
         if (sp.distribution=="uniform") {
-            srcToDst = uniform(taskId, phaseId, dataTypeId, dataDestId, maxClockDelay, sp);
+            srcToDst = uniform(taskId, phaseId, dataDestId, maxClockDelay, sp);
         }
         else if (sp.distribution=="bitComplement") {
             srcToDst = bitComplement();
@@ -97,11 +97,10 @@ void SyntheticPool::start()
 }
 
 std::map<int, int>
-SyntheticPool::uniform(taskID_t& taskId, int& phaseId, dataTypeID_t& dataTypeId,
+SyntheticPool::uniform(taskID_t& taskId, int& phaseId,
         dataDestID_t& dataDestId, int maxClockDelay, const SyntheticPhase& sp)
 {
-    DataType dataType = DataType(dataTypeId, std::to_string(dataTypeId));
-    dataTypeId++;
+
 
     for (unsigned int i = 0; i<processingElements.size(); i++) {
         Task task = Task(taskId, processingElements.at(i)->node.id);
@@ -126,6 +125,8 @@ SyntheticPool::uniform(taskID_t& taskId, int& phaseId, dataTypeID_t& dataTypeId,
 
         std::vector<DataSendPossibility> possibilities{};
         possID_t poss_id = 0;
+        int dataTypeId = globalResources.getRandomIntBetween(0, globalResources.numberOfTrafficTypes-1);
+        DataType dataType = DataType(dataTypeId, std::to_string(dataTypeId));
         for (unsigned int j = 0; j<processingElements.size(); j++) {
             if (i!=j) { // a PE should not send data to itself.
                 Node n = processingElements.at(j)->node;

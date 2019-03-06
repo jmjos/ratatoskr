@@ -43,7 +43,7 @@ public:
 private:
 
     std::map<int, int>
-    uniform(taskID_t& taskId, int& phaseId, dataTypeID_t& dataTypeId, dataDestID_t& dataDestId, int maxClockDelay,
+    uniform(taskID_t& taskId, int& phaseId, dataDestID_t& dataDestId, int maxClockDelay,
             const SyntheticPhase& sp);
 
     std::map<int, int> transpose();
