@@ -430,8 +430,6 @@ void GlobalReport::resizeMatrices()
     routing_pwr_s.resize(numRouters, 0.0);
     crossbar_pwr_d.resize(numRouters, 0.0);
     crossbar_pwr_s.resize(numRouters, 0.0);
-    link_r2r_pwr_d.resize(numRouters, 0.0);
-    link_r2r_pwr_s.resize(numRouters, 0.0);
     ni_pwr_d.resize(numRouters, 0.0);
     ni_pwr_s.resize(numRouters, 0.0);
 }
@@ -440,7 +438,7 @@ void GlobalReport::reportClockCount(ostream& stream)
 {
     stream << "Clock Counts: [";
     for (int i = 0; i<clockCounts.size(); i++) {
-        stream << clockCounts.at(i);
+        stream << std::fixed << (clockCounts.at(i));
         if (i<clockCounts.size()-1)
             stream << ", ";
         else

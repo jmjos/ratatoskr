@@ -184,10 +184,6 @@ private:
     std::vector<double> crossbar_pwr_d;              // per sent flit
     std::vector<double> crossbar_pwr_s;              // Leakage per Router Cycle
 
-    //Power consumption of data links (determined by router to router distance)
-    std::vector<double> link_r2r_pwr_d;              // per sent flit
-    std::vector<double> link_r2r_pwr_s;              // unused
-
     //Power consumption of Network Interface (determined by flit size)
     std::vector<double> ni_pwr_d;                    // per local flit sent or received
     std::vector<double> ni_pwr_s;                    // Leakage per Router Cycle
@@ -197,7 +193,7 @@ private:
     // Generate VC and buffer histograms for only these routers
     const std::vector<int> INNER_ROUTERS = {5, 6, 9, 10, 21, 22, 25, 26, 37, 38, 41, 42};
 
-    std::vector<double> clockCounts;
+    std::vector<long long> clockCounts;
 
     GlobalReport();
 };
