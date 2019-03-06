@@ -146,17 +146,13 @@ public:
 
     void increaseBufferPop(int router_id);
 
-    void increaseBufferPushFront(int router_id);
+    void increaseBufferFront(int router_id);
 
     void increaseRouting(int router_id);
 
     void increaseCrossbar(int router_id);
 
-    void increaseNI(int ni_id);
-
     void reportRoutersPowerCSV(ostream& csvfile);
-
-    void reportNIsPowerCSV(ostream& csvfile);
 
 private:
     GlobalResources& globalResources = GlobalResources::getInstance();

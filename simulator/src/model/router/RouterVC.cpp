@@ -209,7 +209,7 @@ std::map<int, std::vector<Channel>> RouterVC::VCAllocation_generateRequests()
         if (in_vc!=-1) {
             BufferFIFO<Flit*>* buf = buffers.at(in_conPos)->at(in_vc);
             Flit* flit = buf->front();
-            globalReport.increaseBufferPushFront(id);
+            globalReport.increaseBufferFront(id);
 
             if (flit && flit->type==HEAD && !routingTable.count({in_conPos, in_vc})) {
                 int src_node_id = this->id;

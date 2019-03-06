@@ -77,12 +77,6 @@ void GlobalReport::reportComplete(const std::string& filename)
     reportRoutersPowerCSV(csvfile);
     csvfile.close();
 
-    // Generate csv for NIs power statistics
-    csvFilename = filename+"_NI_Power.csv";
-    csvfile.open(csvFilename);
-    reportNIsPowerCSV(csvfile);
-    csvfile.close();
-
     reportAllRoutersUsageHist();
 }
 
@@ -461,7 +455,7 @@ void GlobalReport::increaseBufferPop(int router_id)
     buffer_router_pop_pwr_d.at(router_id) += 1;
 }
 
-void GlobalReport::increaseBufferPushFront(int router_id)
+void GlobalReport::increaseBufferFront(int router_id)
 {
     buffer_router_front_pwr_d.at(router_id) += 1;
 }
@@ -476,11 +470,6 @@ void GlobalReport::increaseCrossbar(int router_id)
     crossbar_pwr_d.at(router_id) += 1;
 }
 
-void GlobalReport::increaseNI(int ni_id)
-{
-    ni_pwr_d.at(ni_id) += 1;
-}
-
 void GlobalReport::reportRoutersPowerCSV(ostream& csvfile)
 {
     csvfile << "router_id," << "buffer_push," << "buffer_pop," << "buffer_read_front," << "routing," << "crossbar,"
@@ -489,14 +478,6 @@ void GlobalReport::reportRoutersPowerCSV(ostream& csvfile)
         csvfile << id << "," << buffer_router_push_pwr_d.at(id) << "," << buffer_router_pop_pwr_d.at(id)
                 << "," << buffer_router_front_pwr_d.at(id) << "," << routing_pwr_d.at(id) << ","
                 << crossbar_pwr_d.at(id) << "\n";
-    }
-}
-
-void GlobalReport::reportNIsPowerCSV(ostream& csvfile)
-{
-    csvfile << "NI_id," << "Power" << "\n";
-    for (int id = 0; id<ni_pwr_d.size(); id++) {
-        csvfile << id << "," << ni_pwr_d.at(id) << "\n";
     }
 }
 
