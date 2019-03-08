@@ -179,23 +179,28 @@ void RouterVC::updateUsageStats()
 {
     LOG(globalReport.verbose_router_function_calls,
             "Router" << this->id << "in updateUsageStats() @ " << sc_time_stamp());
-    for (int conPos = 0; conPos<node.connections.size(); conPos++) {
-        Connection* con = &globalResources.connections.at(node.connections.at(conPos));
-        int vcCount = con->getVCCountForNode(node.id);
-        int numberActiveVCs = 0;
 
-        for (int vc = 0; vc<vcCount; vc++) {
-            BufferFIFO<Flit*>* buf = buffers.at(conPos)->at(vc);
-            if (!buf->empty()) {
-                numberActiveVCs++;
-                globalReport.updateBuffUsagePerVCHist(this->id, node.getDirOfConPos(conPos), vc,
-                        static_cast<int>(buf->occupied()), vcCount);
+    auto findInListit = std::find(globalReport.INNER_ROUTERS.begin(), globalReport.INNER_ROUTERS.end(), this->id);
+
+    if (findInListit != globalReport.INNER_ROUTERS.end()) {
+        for (int conPos = 0; conPos < node.connections.size(); conPos++) {
+            Connection *con = &globalResources.connections.at(node.connections.at(conPos));
+            int vcCount = con->getVCCountForNode(node.id);
+            int numberActiveVCs = 0;
+
+            for (int vc = 0; vc < vcCount; vc++) {
+                BufferFIFO<Flit *> *buf = buffers.at(conPos)->at(vc);
+                if (!buf->empty()) {
+                    numberActiveVCs++;
+                    globalReport.updateBuffUsagePerVCHist(this->id, node.getDirOfConPos(conPos), vc,
+                                                          static_cast<int>(buf->occupied()), vcCount);
+                }
             }
+            /* this 1 is added to create a column for numberOfActiveVCs=0.
+               yes it's an extra column but it allow us to use the same function to update both buffer stats and VC stats.
+            */
+            globalReport.updateVCUsageHist(this->id, node.getDirOfConPos(conPos), numberActiveVCs, vcCount + 1);
         }
-        /* this 1 is added to create a column for numberOfActiveVCs=0.
-           yes it's an extra column but it allow us to use the same function to update both buffer stats and VC stats.
-        */
-        globalReport.updateVCUsageHist(this->id, node.getDirOfConPos(conPos), numberActiveVCs, vcCount+1);
     }
 }
 
