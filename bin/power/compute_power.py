@@ -76,7 +76,7 @@ class PowerCalculator:
         """Get the dynamic power of all routers."""
         self.df_power['power'] = self.df_power.apply(
                                                 self.get_router_power, axis=1)
-        self.df_power.to_csv('power_per_router.csv')
+        self.df_power.to_csv('power_per_router.csv', index=False)
         return self.df_power['power'].sum()
 
     def get_router_power(self, row):
@@ -84,9 +84,8 @@ class PowerCalculator:
         router_power = 0.0
         layer = int(get_layer(row['router_id'], self.num_of_routers,
                     self.num_of_layers))
-        for index, value in enumerate(row):
-            if index != 0:
-                router_power += value * self.router_d[layer]
+        # we slice sstarting @1, because @0 is the router_id
+        router_power = row[1:].sum() * self.router_d[layer]
         return router_power
 ###############################################################################
 
