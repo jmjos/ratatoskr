@@ -54,9 +54,6 @@ class PowerCalculator:
             self.df_power = pd.read_csv(self.power_path)
         except Exception:
             raise
-        self.ni_s = make_list(config['Static']['ni'])
-        self.router_s = make_list(config['Static']['router'])
-        self.router_d = make_list(config['Dynamic']['router'])
         for line in f:
             if 'Clock Counts' in line:
                 l1 = line.split(':')[1]
@@ -64,6 +61,12 @@ class PowerCalculator:
                 break
         self.num_of_layers = len(self.clocks)
         self.num_of_routers = len(self.df_power)
+
+        self.ni_s = make_list(config['Static']['ni'])
+        self.router_s = make_list(config['Static']['router'])
+        self.layers_d = []
+        for i in range(0, self.num_of_layers):
+            self.layers_d.append(make_list(config['Dynamic']['layer'+str(i)]))
 
     def get_static_power(self):
         """Get the static power of all routers."""
@@ -74,30 +77,31 @@ class PowerCalculator:
 
     def get_dynamic_power(self):
         """Get the dynamic power of all routers."""
-        self.df_power['power'] = self.df_power.apply(
+        self.df_power['dynamic_power'] = self.df_power.apply(
                                                 self.get_router_power, axis=1)
         self.df_power.to_csv('power_per_router.csv', index=False)
-        return self.df_power['power'].sum()
+        return self.df_power['dynamic_power'].sum()
 
     def get_router_power(self, row):
         """Get the dynamic power of one row(router)."""
         router_power = 0.0
         layer = int(get_layer(row['router_id'], self.num_of_routers,
                     self.num_of_layers))
-        # we slice sstarting @1, because @0 is the router_id
-        router_power = row[1:].sum() * self.router_d[layer]
+        for index, value in enumerate(row):
+            if index != 0:  # we don't consider 0, because it's router_id
+                router_power = value * self.layers_d[layer][index-1]
         return router_power
 ###############################################################################
 
 
 def main():
     """Entry Point."""
-    config_path = 'config.ini'
+    config_path = 'power_profile.ini'
     clocks_path = '../../simulator/report.txt'
     power_path = '../../simulator/report_Routers_Power.csv'
     calc = PowerCalculator(config_path, clocks_path, power_path)
-    print('Static Power:', calc.get_static_power())
-    print('Dynamic Power:', calc.get_dynamic_power())
+    print('Static Power:', calc.get_static_power(), 'pJ')
+    print('Dynamic Power:', calc.get_dynamic_power(), 'pJ')
 ###############################################################################
 
 
