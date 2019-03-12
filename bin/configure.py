@@ -55,7 +55,7 @@ class Configuration:
         self.topologyFile = config['URAND']['topologyFile']
         self.libdir = config['URAND']['libdir']
         self.simdir = config['URAND']['simdir']
-        self.basedir = os.getcwd() + '/urand'
+        self.basedir = os.getcwd()
         self.simulation_time = int(config['URAND']['simulation_time'])
         self.restarts = int(config['URAND']['restarts'])
         self.warmup_start = int(config['URAND']['warmup_start'])

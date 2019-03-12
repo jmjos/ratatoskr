@@ -41,6 +41,7 @@ def main():
     """ Run the script """
     os.system('cp ../config.xml config/config.xml')
     os.system('cp ../network.xml config/network.xml')
+    os.system('cp ../../simulator/sim .')
     config = Configuration('../config.ini')
     results = begin_all_sims(config)
     save_results(results, 'rawResults.pkl')

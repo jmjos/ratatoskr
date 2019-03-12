@@ -43,7 +43,7 @@
       <zPos value="0.0"/>
       <nodeType value="0"/>
       <idType value="0"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="1">
       <xPos value="0.3333333333333333"/>
@@ -51,7 +51,7 @@
       <zPos value="0.0"/>
       <nodeType value="0"/>
       <idType value="1"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="2">
       <xPos value="0.6666666666666666"/>
@@ -59,7 +59,7 @@
       <zPos value="0.0"/>
       <nodeType value="0"/>
       <idType value="2"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="3">
       <xPos value="1.0"/>
@@ -67,7 +67,7 @@
       <zPos value="0.0"/>
       <nodeType value="0"/>
       <idType value="3"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="4">
       <xPos value="0.0"/>
@@ -75,7 +75,7 @@
       <zPos value="0.0"/>
       <nodeType value="0"/>
       <idType value="4"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="5">
       <xPos value="0.3333333333333333"/>
@@ -83,7 +83,7 @@
       <zPos value="0.0"/>
       <nodeType value="0"/>
       <idType value="5"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="6">
       <xPos value="0.6666666666666666"/>
@@ -91,7 +91,7 @@
       <zPos value="0.0"/>
       <nodeType value="0"/>
       <idType value="6"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="7">
       <xPos value="1.0"/>
@@ -99,7 +99,7 @@
       <zPos value="0.0"/>
       <nodeType value="0"/>
       <idType value="7"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="8">
       <xPos value="0.0"/>
@@ -107,7 +107,7 @@
       <zPos value="0.0"/>
       <nodeType value="0"/>
       <idType value="8"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="9">
       <xPos value="0.3333333333333333"/>
@@ -115,7 +115,7 @@
       <zPos value="0.0"/>
       <nodeType value="0"/>
       <idType value="9"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="10">
       <xPos value="0.6666666666666666"/>
@@ -123,7 +123,7 @@
       <zPos value="0.0"/>
       <nodeType value="0"/>
       <idType value="10"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="11">
       <xPos value="1.0"/>
@@ -131,7 +131,7 @@
       <zPos value="0.0"/>
       <nodeType value="0"/>
       <idType value="11"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="12">
       <xPos value="0.0"/>
@@ -139,7 +139,7 @@
       <zPos value="0.0"/>
       <nodeType value="0"/>
       <idType value="12"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="13">
       <xPos value="0.3333333333333333"/>
@@ -147,7 +147,7 @@
       <zPos value="0.0"/>
       <nodeType value="0"/>
       <idType value="13"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="14">
       <xPos value="0.6666666666666666"/>
@@ -155,7 +155,7 @@
       <zPos value="0.0"/>
       <nodeType value="0"/>
       <idType value="14"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="15">
       <xPos value="1.0"/>
@@ -163,7 +163,7 @@
       <zPos value="0.0"/>
       <nodeType value="0"/>
       <idType value="15"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="16">
       <xPos value="0.0"/>
@@ -171,7 +171,7 @@
       <zPos value="0.5"/>
       <nodeType value="1"/>
       <idType value="0"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="17">
       <xPos value="0.3333333333333333"/>
@@ -179,7 +179,7 @@
       <zPos value="0.5"/>
       <nodeType value="1"/>
       <idType value="1"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="18">
       <xPos value="0.6666666666666666"/>
@@ -187,7 +187,7 @@
       <zPos value="0.5"/>
       <nodeType value="1"/>
       <idType value="2"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="19">
       <xPos value="1.0"/>
@@ -195,7 +195,7 @@
       <zPos value="0.5"/>
       <nodeType value="1"/>
       <idType value="3"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="20">
       <xPos value="0.0"/>
@@ -203,7 +203,7 @@
       <zPos value="0.5"/>
       <nodeType value="1"/>
       <idType value="4"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="21">
       <xPos value="0.3333333333333333"/>
@@ -211,7 +211,7 @@
       <zPos value="0.5"/>
       <nodeType value="1"/>
       <idType value="5"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="22">
       <xPos value="0.6666666666666666"/>
@@ -219,7 +219,7 @@
       <zPos value="0.5"/>
       <nodeType value="1"/>
       <idType value="6"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="23">
       <xPos value="1.0"/>
@@ -227,7 +227,7 @@
       <zPos value="0.5"/>
       <nodeType value="1"/>
       <idType value="7"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="24">
       <xPos value="0.0"/>
@@ -235,7 +235,7 @@
       <zPos value="0.5"/>
       <nodeType value="1"/>
       <idType value="8"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="25">
       <xPos value="0.3333333333333333"/>
@@ -243,7 +243,7 @@
       <zPos value="0.5"/>
       <nodeType value="1"/>
       <idType value="9"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="26">
       <xPos value="0.6666666666666666"/>
@@ -251,7 +251,7 @@
       <zPos value="0.5"/>
       <nodeType value="1"/>
       <idType value="10"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="27">
       <xPos value="1.0"/>
@@ -259,7 +259,7 @@
       <zPos value="0.5"/>
       <nodeType value="1"/>
       <idType value="11"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="28">
       <xPos value="0.0"/>
@@ -267,7 +267,7 @@
       <zPos value="0.5"/>
       <nodeType value="1"/>
       <idType value="12"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="29">
       <xPos value="0.3333333333333333"/>
@@ -275,7 +275,7 @@
       <zPos value="0.5"/>
       <nodeType value="1"/>
       <idType value="13"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="30">
       <xPos value="0.6666666666666666"/>
@@ -283,7 +283,7 @@
       <zPos value="0.5"/>
       <nodeType value="1"/>
       <idType value="14"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="31">
       <xPos value="1.0"/>
@@ -291,7 +291,7 @@
       <zPos value="0.5"/>
       <nodeType value="1"/>
       <idType value="15"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="32">
       <xPos value="0.0"/>
@@ -299,7 +299,7 @@
       <zPos value="1.0"/>
       <nodeType value="2"/>
       <idType value="0"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="33">
       <xPos value="0.3333333333333333"/>
@@ -307,7 +307,7 @@
       <zPos value="1.0"/>
       <nodeType value="2"/>
       <idType value="1"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="34">
       <xPos value="0.6666666666666666"/>
@@ -315,7 +315,7 @@
       <zPos value="1.0"/>
       <nodeType value="2"/>
       <idType value="2"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="35">
       <xPos value="1.0"/>
@@ -323,7 +323,7 @@
       <zPos value="1.0"/>
       <nodeType value="2"/>
       <idType value="3"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="36">
       <xPos value="0.0"/>
@@ -331,7 +331,7 @@
       <zPos value="1.0"/>
       <nodeType value="2"/>
       <idType value="4"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="37">
       <xPos value="0.3333333333333333"/>
@@ -339,7 +339,7 @@
       <zPos value="1.0"/>
       <nodeType value="2"/>
       <idType value="5"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="38">
       <xPos value="0.6666666666666666"/>
@@ -347,7 +347,7 @@
       <zPos value="1.0"/>
       <nodeType value="2"/>
       <idType value="6"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="39">
       <xPos value="1.0"/>
@@ -355,7 +355,7 @@
       <zPos value="1.0"/>
       <nodeType value="2"/>
       <idType value="7"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="40">
       <xPos value="0.0"/>
@@ -363,7 +363,7 @@
       <zPos value="1.0"/>
       <nodeType value="2"/>
       <idType value="8"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="41">
       <xPos value="0.3333333333333333"/>
@@ -371,7 +371,7 @@
       <zPos value="1.0"/>
       <nodeType value="2"/>
       <idType value="9"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="42">
       <xPos value="0.6666666666666666"/>
@@ -379,7 +379,7 @@
       <zPos value="1.0"/>
       <nodeType value="2"/>
       <idType value="10"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="43">
       <xPos value="1.0"/>
@@ -387,7 +387,7 @@
       <zPos value="1.0"/>
       <nodeType value="2"/>
       <idType value="11"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="44">
       <xPos value="0.0"/>
@@ -395,7 +395,7 @@
       <zPos value="1.0"/>
       <nodeType value="2"/>
       <idType value="12"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="45">
       <xPos value="0.3333333333333333"/>
@@ -403,7 +403,7 @@
       <zPos value="1.0"/>
       <nodeType value="2"/>
       <idType value="13"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="46">
       <xPos value="0.6666666666666666"/>
@@ -411,7 +411,7 @@
       <zPos value="1.0"/>
       <nodeType value="2"/>
       <idType value="14"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="47">
       <xPos value="1.0"/>
@@ -419,7 +419,7 @@
       <zPos value="1.0"/>
       <nodeType value="2"/>
       <idType value="15"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="48">
       <xPos value="0.0"/>
@@ -427,7 +427,7 @@
       <zPos value="0.0"/>
       <nodeType value="3"/>
       <idType value="0"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="49">
       <xPos value="0.3333333333333333"/>
@@ -435,7 +435,7 @@
       <zPos value="0.0"/>
       <nodeType value="3"/>
       <idType value="1"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="50">
       <xPos value="0.6666666666666666"/>
@@ -443,7 +443,7 @@
       <zPos value="0.0"/>
       <nodeType value="3"/>
       <idType value="2"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="51">
       <xPos value="1.0"/>
@@ -451,7 +451,7 @@
       <zPos value="0.0"/>
       <nodeType value="3"/>
       <idType value="3"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="52">
       <xPos value="0.0"/>
@@ -459,7 +459,7 @@
       <zPos value="0.0"/>
       <nodeType value="3"/>
       <idType value="4"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="53">
       <xPos value="0.3333333333333333"/>
@@ -467,7 +467,7 @@
       <zPos value="0.0"/>
       <nodeType value="3"/>
       <idType value="5"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="54">
       <xPos value="0.6666666666666666"/>
@@ -475,7 +475,7 @@
       <zPos value="0.0"/>
       <nodeType value="3"/>
       <idType value="6"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="55">
       <xPos value="1.0"/>
@@ -483,7 +483,7 @@
       <zPos value="0.0"/>
       <nodeType value="3"/>
       <idType value="7"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="56">
       <xPos value="0.0"/>
@@ -491,7 +491,7 @@
       <zPos value="0.0"/>
       <nodeType value="3"/>
       <idType value="8"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="57">
       <xPos value="0.3333333333333333"/>
@@ -499,7 +499,7 @@
       <zPos value="0.0"/>
       <nodeType value="3"/>
       <idType value="9"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="58">
       <xPos value="0.6666666666666666"/>
@@ -507,7 +507,7 @@
       <zPos value="0.0"/>
       <nodeType value="3"/>
       <idType value="10"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="59">
       <xPos value="1.0"/>
@@ -515,7 +515,7 @@
       <zPos value="0.0"/>
       <nodeType value="3"/>
       <idType value="11"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="60">
       <xPos value="0.0"/>
@@ -523,7 +523,7 @@
       <zPos value="0.0"/>
       <nodeType value="3"/>
       <idType value="12"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="61">
       <xPos value="0.3333333333333333"/>
@@ -531,7 +531,7 @@
       <zPos value="0.0"/>
       <nodeType value="3"/>
       <idType value="13"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="62">
       <xPos value="0.6666666666666666"/>
@@ -539,7 +539,7 @@
       <zPos value="0.0"/>
       <nodeType value="3"/>
       <idType value="14"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="63">
       <xPos value="1.0"/>
@@ -547,7 +547,7 @@
       <zPos value="0.0"/>
       <nodeType value="3"/>
       <idType value="15"/>
-      <layerType value="0"/>
+      <layer value="0"/>
     </node>
     <node id="64">
       <xPos value="0.0"/>
@@ -555,7 +555,7 @@
       <zPos value="0.5"/>
       <nodeType value="4"/>
       <idType value="0"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="65">
       <xPos value="0.3333333333333333"/>
@@ -563,7 +563,7 @@
       <zPos value="0.5"/>
       <nodeType value="4"/>
       <idType value="1"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="66">
       <xPos value="0.6666666666666666"/>
@@ -571,7 +571,7 @@
       <zPos value="0.5"/>
       <nodeType value="4"/>
       <idType value="2"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="67">
       <xPos value="1.0"/>
@@ -579,7 +579,7 @@
       <zPos value="0.5"/>
       <nodeType value="4"/>
       <idType value="3"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="68">
       <xPos value="0.0"/>
@@ -587,7 +587,7 @@
       <zPos value="0.5"/>
       <nodeType value="4"/>
       <idType value="4"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="69">
       <xPos value="0.3333333333333333"/>
@@ -595,7 +595,7 @@
       <zPos value="0.5"/>
       <nodeType value="4"/>
       <idType value="5"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="70">
       <xPos value="0.6666666666666666"/>
@@ -603,7 +603,7 @@
       <zPos value="0.5"/>
       <nodeType value="4"/>
       <idType value="6"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="71">
       <xPos value="1.0"/>
@@ -611,7 +611,7 @@
       <zPos value="0.5"/>
       <nodeType value="4"/>
       <idType value="7"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="72">
       <xPos value="0.0"/>
@@ -619,7 +619,7 @@
       <zPos value="0.5"/>
       <nodeType value="4"/>
       <idType value="8"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="73">
       <xPos value="0.3333333333333333"/>
@@ -627,7 +627,7 @@
       <zPos value="0.5"/>
       <nodeType value="4"/>
       <idType value="9"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="74">
       <xPos value="0.6666666666666666"/>
@@ -635,7 +635,7 @@
       <zPos value="0.5"/>
       <nodeType value="4"/>
       <idType value="10"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="75">
       <xPos value="1.0"/>
@@ -643,7 +643,7 @@
       <zPos value="0.5"/>
       <nodeType value="4"/>
       <idType value="11"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="76">
       <xPos value="0.0"/>
@@ -651,7 +651,7 @@
       <zPos value="0.5"/>
       <nodeType value="4"/>
       <idType value="12"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="77">
       <xPos value="0.3333333333333333"/>
@@ -659,7 +659,7 @@
       <zPos value="0.5"/>
       <nodeType value="4"/>
       <idType value="13"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="78">
       <xPos value="0.6666666666666666"/>
@@ -667,7 +667,7 @@
       <zPos value="0.5"/>
       <nodeType value="4"/>
       <idType value="14"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="79">
       <xPos value="1.0"/>
@@ -675,7 +675,7 @@
       <zPos value="0.5"/>
       <nodeType value="4"/>
       <idType value="15"/>
-      <layerType value="1"/>
+      <layer value="1"/>
     </node>
     <node id="80">
       <xPos value="0.0"/>
@@ -683,7 +683,7 @@
       <zPos value="1.0"/>
       <nodeType value="5"/>
       <idType value="0"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="81">
       <xPos value="0.3333333333333333"/>
@@ -691,7 +691,7 @@
       <zPos value="1.0"/>
       <nodeType value="5"/>
       <idType value="1"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="82">
       <xPos value="0.6666666666666666"/>
@@ -699,7 +699,7 @@
       <zPos value="1.0"/>
       <nodeType value="5"/>
       <idType value="2"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="83">
       <xPos value="1.0"/>
@@ -707,7 +707,7 @@
       <zPos value="1.0"/>
       <nodeType value="5"/>
       <idType value="3"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="84">
       <xPos value="0.0"/>
@@ -715,7 +715,7 @@
       <zPos value="1.0"/>
       <nodeType value="5"/>
       <idType value="4"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="85">
       <xPos value="0.3333333333333333"/>
@@ -723,7 +723,7 @@
       <zPos value="1.0"/>
       <nodeType value="5"/>
       <idType value="5"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="86">
       <xPos value="0.6666666666666666"/>
@@ -731,7 +731,7 @@
       <zPos value="1.0"/>
       <nodeType value="5"/>
       <idType value="6"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="87">
       <xPos value="1.0"/>
@@ -739,7 +739,7 @@
       <zPos value="1.0"/>
       <nodeType value="5"/>
       <idType value="7"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="88">
       <xPos value="0.0"/>
@@ -747,7 +747,7 @@
       <zPos value="1.0"/>
       <nodeType value="5"/>
       <idType value="8"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="89">
       <xPos value="0.3333333333333333"/>
@@ -755,7 +755,7 @@
       <zPos value="1.0"/>
       <nodeType value="5"/>
       <idType value="9"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="90">
       <xPos value="0.6666666666666666"/>
@@ -763,7 +763,7 @@
       <zPos value="1.0"/>
       <nodeType value="5"/>
       <idType value="10"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="91">
       <xPos value="1.0"/>
@@ -771,7 +771,7 @@
       <zPos value="1.0"/>
       <nodeType value="5"/>
       <idType value="11"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="92">
       <xPos value="0.0"/>
@@ -779,7 +779,7 @@
       <zPos value="1.0"/>
       <nodeType value="5"/>
       <idType value="12"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="93">
       <xPos value="0.3333333333333333"/>
@@ -787,7 +787,7 @@
       <zPos value="1.0"/>
       <nodeType value="5"/>
       <idType value="13"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="94">
       <xPos value="0.6666666666666666"/>
@@ -795,7 +795,7 @@
       <zPos value="1.0"/>
       <nodeType value="5"/>
       <idType value="14"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
     <node id="95">
       <xPos value="1.0"/>
@@ -803,7 +803,7 @@
       <zPos value="1.0"/>
       <nodeType value="5"/>
       <idType value="15"/>
-      <layerType value="2"/>
+      <layer value="2"/>
     </node>
   </nodes>
   <connections>
