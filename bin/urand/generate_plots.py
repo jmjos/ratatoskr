@@ -197,7 +197,7 @@ def main():
 
     plot_BuffUsage_stats(results['BuffUsage'], results['injectionRates'])
 
-    merge_pdfs('all_reports.pdf')
+    merge_pdfs('performance_buffer_VCUsage_report.pdf')
 ###############################################################################
 
 
