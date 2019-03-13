@@ -16,4 +16,3 @@ virtualenv/
 __pycache__/
 /bin/*.xml
 /bin/sim_folder/
-/bin/urand/*.pdf
