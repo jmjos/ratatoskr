@@ -1,7 +1,32 @@
+#!/bin/python
+
+# Copyright 2018 Jan Moritz Joseph
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+###############################################################################
 import numpy as np
 import pickle
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
+from PyPDF2 import PdfFileMerger
+import glob as glob
+import os
 ###############################################################################
 
 
@@ -43,7 +68,8 @@ def plot_latencies(results):
 
     plt.legend(['Flit', 'Network', 'Packet'])
     fig.suptitle('Latencies', fontsize=16)
-    plt.show()
+    # plt.show()
+    fig.savefig('latencies.pdf')
 ###############################################################################
 
 
@@ -60,7 +86,7 @@ def plot_VCUsage_stats(inj_dfs, inj_rates):
     """
     for inj_df, inj_rate in zip(inj_dfs, inj_rates):
         for layer_id, df in enumerate(inj_df):
-            plt.figure()  # plot a figure for each injection rate and layer
+            fig = plt.figure()  # plot a figure for each inj_rate and layer
             plt.title('Layer ' + str(layer_id) +
                       ', Injection Rate = ' + str(inj_rate))
             plt.ylabel('Count', fontsize=11)
@@ -69,7 +95,8 @@ def plot_VCUsage_stats(inj_dfs, inj_rates):
                 plt.errorbar(df.index.values, df[col, 'mean'].values,
                              yerr=df[col, 'std'].values)
             plt.legend(df.columns.levels[0].values)
-            plt.show()
+            # plt.show()
+            fig.savefig('VC_' + str(layer_id) + '_' + str(inj_rate) + '.pdf')
 ###############################################################################
 
 
@@ -85,7 +112,7 @@ def plot_BuffUsage_stats(inj_dicts, inj_rates):
         - None.
     """
     for inj_dict, inj_rate in zip(inj_dicts, inj_rates):
-        for layer_name in inj_dict:
+        for layer_id, layer_name in enumerate(inj_dict):
             layer_dict = inj_dict[layer_name]
             fig = plt.figure()
             for it, d in enumerate(layer_dict):
@@ -115,8 +142,9 @@ def plot_BuffUsage_stats(inj_dicts, inj_rates):
                     ax.set_title('Direction:'+str(d))
 
             fig.suptitle('Layer: '+str(layer_name)+', Injection Rate = '
-                         +str(inj_rate), fontsize=16)
-            plt.show()
+                         + str(inj_rate), fontsize=16)
+            # plt.show()
+            fig.savefig('Buff_' + str(layer_id) + '_' + str(inj_rate) + '.pdf')
 ###############################################################################
 
 
@@ -137,11 +165,41 @@ def read_raw_results(results_file):
 ###############################################################################
 
 
-""" Main Point of Execution """
-results = read_raw_results('rawResults.pkl')
+def merge_pdfs(output_path):
+    """Merge the generated reports in one pdf."""
+    try:
+        os.remove(output_path)
+    except FileNotFoundError:
+        pass
 
-plot_latencies(results)
+    input_paths = glob.glob('*.pdf')
+    input_paths.sort()
+    pdf_merger = PdfFileMerger()
 
-plot_VCUsage_stats(results['VCUsage'], results['injectionRates'])
+    for path in input_paths:
+        pdf_merger.append(path)
 
-plot_BuffUsage_stats(results['BuffUsage'], results['injectionRates'])
+    with open(output_path, 'wb') as fileobj:
+        pdf_merger.write(fileobj)
+
+    for path in input_paths:
+        os.remove(path)
+###############################################################################
+
+
+def main():
+    """Main Point of Execution."""
+    results = read_raw_results('rawResults.pkl')
+
+    plot_latencies(results)
+
+    plot_VCUsage_stats(results['VCUsage'], results['injectionRates'])
+
+    plot_BuffUsage_stats(results['BuffUsage'], results['injectionRates'])
+
+    merge_pdfs('performance_buffer_VCUsage_report.pdf')
+###############################################################################
+
+
+if __name__ == '__main__':
+    main()

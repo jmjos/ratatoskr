@@ -9,6 +9,7 @@ but it is a lot of boring physical stuff.
 '''
 # # # # # # # 0 IMPORT MODULE CLASSES  # # # # # # # # # # # # #
 from interconnect import Interconnect, Driver, DataStream, DataStreamProb
+import pandas as pd
 
 # # # # # # # # # # 1 PARAMETERS YOU  CAN SET # # # # # # # # # # #
 # -----------------TECH DEPENDENT PARAMETERS-----------------------------------
@@ -162,10 +163,15 @@ print("DS2: Interconnect DS-2D consumes on average %.2f [fJ] per clock cycle"
 print("----------------------------------------------------------------------\n\n")
 
 
-mux = [[0.25832583, 0.14271427, 0.09540954, 0],  # DS1 --> DS1, DS3, H1, H3
-       [0.16891689, 0.14241424, 0, 0.03830383],  # DS3 --> DS1, DS3, H1, H3
-       [0.06450645, 0.03080308,  0.01050105, 0],  # H1 --> DS1, DS3, H1, H3
-       [0.00460046, 0.03370337, 0, 0.00980098]]  # H3 --> DS1, DS3, H1, H3
+# =============================================================================
+# mux = [[0.25832583, 0.14271427, 0.09540954, 0],  # DS1 --> DS1, DS3, H1, H3
+#        [0.16891689, 0.14241424, 0, 0.03830383],  # DS3 --> DS1, DS3, H1, H3
+#        [0.06450645, 0.03080308,  0.01050105, 0],  # H1 --> DS1, DS3, H1, H3
+#        [0.00460046, 0.03370337, 0, 0.00980098]]  # H3 --> DS1, DS3, H1, H3
+# =============================================================================
+
+mux = pd.read_csv('../../simulator/report_Links.csv').values.tolist()
+
 E_mean_mux_ds1_ds3 = interconnect_2D_ds_real.E([ds1, ds3], mux)
 print("-----------------ENERGY - MUX/HOLD - SPECIFIC DATA--------------------")
 print("DS1+DS3: Interconnect DS-2D consumes on average %.2f [fJ] per clock cycle"

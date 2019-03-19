@@ -3,4 +3,5 @@ scipy
 matplotlib
 joblib
 pandas
+PyPDF2
 #multiprocessing

@@ -154,6 +154,8 @@ public:
 
     void reportRoutersPowerCSV(ostream& csvfile);
 
+    const std::vector<int> INNER_ROUTERS = {5, 6, 9, 10, 21, 22, 25, 26, 37, 38, 41, 42};
+
 private:
     GlobalResources& globalResources = GlobalResources::getInstance();
 
@@ -187,7 +189,6 @@ private:
     // Used to create the buffer axes in the histogram of buffer usage
     const int MAX_BUFFER_DEPTH = 50;
     // Generate VC and buffer histograms for only these routers
-    const std::vector<int> INNER_ROUTERS = {5, 6, 9, 10, 21, 22, 25, 26, 37, 38, 41, 42};
 
     std::vector<long long> clockCounts;
 
