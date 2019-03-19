@@ -20,7 +20,6 @@
  * SOFTWARE.
  ******************************************************************************/
 #include <model/NoC.h>
-#include "ProcessingElementVC.h"
 
 ProcessingElementVC::ProcessingElementVC(sc_module_name mn, Node& node, TrafficPool* tp)
         :
