@@ -1,6 +1,6 @@
 <configuration>
   <general>
-    <simulationTime value="1" />
+    <simulationTime value="100000" />
     <outputToFile value="true">report</outputToFile>
   </general>
   <noc>
