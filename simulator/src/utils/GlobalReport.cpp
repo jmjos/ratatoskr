@@ -408,12 +408,6 @@ void GlobalReport::readConfigFile(const std::string& config_path)
     this->verbose_task_function_calls = verbose_node.child("function_calls").attribute(
             "value").as_bool();
 
-    // TODO lese bufferReportRouters ein und schreibe die daten nach INNER_ROUTERS
-    // Tipps: - pugixml ist die bibliothek für das einlesen des xml
-    //        - "1 2 3 4" wirst du als string bekommen, und dann nach " " split und dann "1" "2" "3" "4" und dann nach
-    //          integer umwandeln (cast, std::stoi()) und in innter routers speichern.
-    //        - mache direkt nach dem einlesen jeweils ausgaben auf die konsole mittels cout << "asdfasdf" << a << endl;
-
     std::string s = doc.child("configuration").child("report").child_value("bufferReportRouters");
     cout << " s ist " << s << endl;
     std::string delimiter = " ";
@@ -423,20 +417,14 @@ void GlobalReport::readConfigFile(const std::string& config_path)
         try {
             bufferReportRouters.push_back(std::stoi(s.substr(previous, current - previous)));
         }
-        catch (char*Fehlermeldung)
+        catch (char* error)
         {
-            cout<<"Error: "<<Fehlermeldung;
+            cout<<"Error: "<< error << endl;
         }
         previous = current + 1;
         current = s.find(delimiter, previous);
     }
     bufferReportRouters.push_back(std::stoi(s.substr(previous, current - previous)));
-    for (auto i : bufferReportRouters){
-        cout << i << ",";
-    }
-    cout << endl;
-    // TODO 2: bennene inner routers um in bufferReportRouters
-    // TODO 3: wenn ferig, erstelle einen pull-request auf github, um den code in das ursprungs repo zu bringen
 }
 
 void GlobalReport::resizeMatrices()
