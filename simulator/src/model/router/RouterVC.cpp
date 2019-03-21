@@ -180,9 +180,9 @@ void RouterVC::updateUsageStats()
     LOG(globalReport.verbose_router_function_calls,
             "Router" << this->id << "in updateUsageStats() @ " << sc_time_stamp());
 
-    auto findInListit = std::find(globalReport.INNER_ROUTERS.begin(), globalReport.INNER_ROUTERS.end(), this->id);
+    auto findInListit = std::find(globalReport.bufferReportRouters.begin(), globalReport.bufferReportRouters.end(), this->id);
 
-    if (findInListit != globalReport.INNER_ROUTERS.end()) {
+    if (findInListit != globalReport.bufferReportRouters.end()) {
         for (int conPos = 0; conPos < node.connections.size(); conPos++) {
             Connection *con = &globalResources.connections.at(node.connections.at(conPos));
             int vcCount = con->getVCCountForNode(node.id);

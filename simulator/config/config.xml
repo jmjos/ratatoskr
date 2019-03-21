@@ -1,6 +1,6 @@
 <configuration>
   <general>
-    <simulationTime value="100000" />
+    <simulationTime value="1" />
     <outputToFile value="true">report</outputToFile>
   </general>
   <noc>
@@ -80,4 +80,8 @@
         <source_execute value="false" />
       </tasks>
     </verbose>
+    <report>
+      <bufferReportRouters>1 2 3 4</bufferReportRouters>
+      <!-- <bufferReportRouters>1 2 d 4</bufferReportRouters> -->
+    </report>
   </configuration>

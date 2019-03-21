@@ -154,7 +154,7 @@ public:
 
     void reportRoutersPowerCSV(ostream& csvfile);
 
-    const std::vector<int> INNER_ROUTERS = {5, 6, 9, 10, 21, 22, 25, 26, 37, 38, 41, 42};
+    std::vector<int> bufferReportRouters;// TODO = {5, 6, 9, 10, 21, 22, 25, 26, 37, 38, 41, 42};
 
 private:
     GlobalResources& globalResources = GlobalResources::getInstance();
