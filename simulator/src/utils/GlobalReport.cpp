@@ -329,7 +329,7 @@ void GlobalReport::reportAllRoutersUsageHist()
 {
     for (unsigned int i = 0; i<globalResources.nodes.size(); i++) {
         if (globalResources.nodes[i].type->model=="RouterVC" &&
-                std::find(INNER_ROUTERS.begin(), INNER_ROUTERS.end(), i)!=INNER_ROUTERS.end()) {
+                std::find(bufferReportRouters.begin(), bufferReportRouters.end(), i)!=bufferReportRouters.end()) {
             std::string csvFileName;
 
             int isFolderCreated = system("mkdir -p ./VCUsage");
@@ -407,6 +407,36 @@ void GlobalReport::readConfigFile(const std::string& config_path)
             "value").as_bool();
     this->verbose_task_function_calls = verbose_node.child("function_calls").attribute(
             "value").as_bool();
+
+    // TODO lese bufferReportRouters ein und schreibe die daten nach INNER_ROUTERS
+    // Tipps: - pugixml ist die bibliothek für das einlesen des xml
+    //        - "1 2 3 4" wirst du als string bekommen, und dann nach " " split und dann "1" "2" "3" "4" und dann nach
+    //          integer umwandeln (cast, std::stoi()) und in innter routers speichern.
+    //        - mache direkt nach dem einlesen jeweils ausgaben auf die konsole mittels cout << "asdfasdf" << a << endl;
+
+    std::string s = doc.child("configuration").child("report").child_value("bufferReportRouters");
+    cout << " s ist " << s << endl;
+    std::string delimiter = " ";
+    std::size_t current, previous = 0;
+    current = s.find(delimiter);
+    while (current != std::string::npos) {
+        try {
+            bufferReportRouters.push_back(std::stoi(s.substr(previous, current - previous)));
+        }
+        catch (char*Fehlermeldung)
+        {
+            cout<<"Error: "<<Fehlermeldung;
+        }
+        previous = current + 1;
+        current = s.find(delimiter, previous);
+    }
+    bufferReportRouters.push_back(std::stoi(s.substr(previous, current - previous)));
+    for (auto i : bufferReportRouters){
+        cout << i << ",";
+    }
+    cout << endl;
+    // TODO 2: bennene inner routers um in bufferReportRouters
+    // TODO 3: wenn ferig, erstelle einen pull-request auf github, um den code in das ursprungs repo zu bringen
 }
 
 void GlobalReport::resizeMatrices()
