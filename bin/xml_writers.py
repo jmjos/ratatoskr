@@ -537,9 +537,15 @@ class ConfigkWriter(Writer):
         self.write_netrace_verbose(verbose_node)
         self.write_tasks_verbose(verbose_node)
 
+    def write_report(self):
+        report_node = ET.SubElement(self.root_node, 'report')
+        bufferReportRouters = ET.SubElement(report_node, 'bufferReportRouters')
+        bufferReportRouters.text = str(self.config.bufferReportRouters).replace(",", "")
+	
     def write_config(self, file_name):
         self.write_general()
         self.write_noc()
         self.write_application()
         self.write_verbose()
+        self.write_report()
         self.write_file(file_name)
