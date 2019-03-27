@@ -55,7 +55,10 @@ To use a subfolder and multi-thread build:
 
 #### Building with CLion
 
-Works out-of-the-box using "Open Existing Project" and then opening the CMakeLists.txt in the prject folder. Enjoy.
+Works out-of-the-box using "Open Existing Project" and then opening the CMakeLists.txt in the prject folder. You need to change one thing which is, the Generation path:
+- File -> Settings -> Build, Execuation, Deployment -> CMake. Now set the Generation path to the current folder i.e. '.'.
+
+Enjoy.
 
 #### Building with Eclipse
 
