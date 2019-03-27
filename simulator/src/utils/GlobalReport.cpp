@@ -118,14 +118,6 @@ void GlobalReport::reportRoutingCalculations(ostream& stream)
 
 void GlobalReport::issueLinkMatrixUpdate(int id, int currentTransmissionState, int lastTransmissionState)
 {
-    auto it = linkTransmissionMatrices.find(id);
-    if (it==linkTransmissionMatrices.end()) {
-        // not found, initialization
-        int numberElements = static_cast<int>(pow(linkTransmissionsMatrixNumberOfStates, 2));
-        std::vector<long> matrix(numberElements, 0);
-        linkTransmissionMatrices.insert(std::make_pair(id, matrix));
-    }
-
     linkTransmissionMatrices.at(id).at(
             currentTransmissionState+linkTransmissionsMatrixNumberOfStates*lastTransmissionState)++;
 }
@@ -240,21 +232,10 @@ void GlobalReport::reportMaxNetworkLatencySystemLevel()
     cout << "The maximum network latency was: " << maxNetworkLatency << endl;
 }
 
-void GlobalReport::updateVCUsageHist(int routerId, int dir,
-        int value, int thirdDimensionSize)
+void GlobalReport::updateVCUsageHist(int routerId, int dir, int numOfActiveVCs)
 {
-    if (!VCsUsageHist.at(routerId).empty()) {
-        int counter = VCsUsageHist.at(routerId).at(dir).at(value);
-        VCsUsageHist[routerId][dir][value] = ++counter;
-    }
-    else {
-        std::vector<std::vector<long>> vec_2d(DIR::size);
-        for (auto& vec : vec_2d) {
-            vec.assign(thirdDimensionSize, 0);
-        }
-        VCsUsageHist[routerId] = vec_2d;
-        VCsUsageHist[routerId][dir][value] = 1;
-    }
+    int counter = VCsUsageHist.at(routerId).at(dir).at(numOfActiveVCs);
+    VCsUsageHist[routerId][dir][numOfActiveVCs] = ++counter;
 }
 
 void GlobalReport::reportVCUsageHist(std::string& csvFileName, int routerId)
@@ -273,24 +254,10 @@ void GlobalReport::reportVCUsageHist(std::string& csvFileName, int routerId)
     csvFile.close();
 }
 
-void GlobalReport::updateBuffUsagePerVCHist(int routerId, int dir, int vc, int bufferOccupation, int numVCs)
+void GlobalReport::updateBuffUsagePerVCHist(int routerId, int dir, int vc, int bufferOccupation)
 {
-    if (!bufferUsagePerVCHist.at(routerId).empty()) {
-        long counter = bufferUsagePerVCHist.at(routerId).at(dir).at(vc).at(bufferOccupation);
-        bufferUsagePerVCHist[routerId][dir][vc][bufferOccupation] = ++counter;
-    }
-    else {
-        std::vector<std::vector<std::vector<long>>> vec_3d(DIR::size);
-        for (auto& vec_2d : vec_3d) {
-            std::vector<std::vector<long>> temp_vec_2d(numVCs);
-            for (auto& vec_1d : temp_vec_2d) {
-                vec_1d.assign(MAX_BUFFER_DEPTH+1, 0);
-            }
-            vec_2d = temp_vec_2d;
-        }
-        bufferUsagePerVCHist[routerId] = vec_3d;
-        bufferUsagePerVCHist[routerId][dir][vc][bufferOccupation] = 1;
-    }
+    long counter = bufferUsagePerVCHist.at(routerId).at(dir).at(vc).at(bufferOccupation);
+    bufferUsagePerVCHist[routerId][dir][vc][bufferOccupation] = ++counter;
 }
 
 void GlobalReport::reportBuffPerVCUsageHist(std::string& csvFileName, int routerId, int dir)
@@ -433,6 +400,14 @@ void GlobalReport::resizeMatrices()
     VCsUsageHist.resize(numRouters);
     bufferUsagePerVCHist.resize(numRouters);
     linkTransmissionsMatrixNumberOfStates = (2*globalResources.numberOfTrafficTypes)+3;
+
+    int numOfLinks = globalResources.connections.size()*2;
+    for (int link_id = 0; link_id<numOfLinks; link_id++) {
+        int numberElements = static_cast<int>(pow(linkTransmissionsMatrixNumberOfStates, 2));
+        std::vector<long> matrix(numberElements, 0);
+        linkTransmissionMatrices.insert(std::make_pair(link_id, matrix));
+    }
+
     clockCounts.resize(globalResources.nodeTypes.size()/2, 0.0);
     buffer_router_push_pwr_d.resize(numRouters, 0.0);
     buffer_router_pop_pwr_d.resize(numRouters, 0.0);
@@ -444,6 +419,26 @@ void GlobalReport::resizeMatrices()
     crossbar_pwr_s.resize(numRouters, 0.0);
     ni_pwr_d.resize(numRouters, 0.0);
     ni_pwr_s.resize(numRouters, 0.0);
+
+    Connection con = globalResources.connections.at(0);
+    int vcCount = con.vcsCount.at(0);
+    VCsUsageHist.resize(numRouters);
+    for (auto& vec_2d:VCsUsageHist) {
+        vec_2d.resize(DIR::size);
+        for (auto& vec:vec_2d) {
+            vec.resize(vcCount+1);
+        }
+    }
+    bufferUsagePerVCHist.resize(numRouters);
+    for (auto& vec_3d:bufferUsagePerVCHist) {
+        vec_3d.resize(DIR::size);
+        for (auto& vec_2d:vec_3d) {
+            vec_2d.resize(vcCount);
+            for (auto& vec:vec_2d) {
+                vec.resize(MAX_BUFFER_DEPTH+1);
+            }
+        }
+    }
 }
 
 void GlobalReport::reportClockCount(ostream& stream)
