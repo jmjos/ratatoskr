@@ -15,4 +15,4 @@ sim
 virtualenv/
 __pycache__/
 /bin/*.xml
-/bin/individual_simulation/sim_folder/
+/bin/individual_simulation/sim_folder/*
