@@ -144,10 +144,10 @@ void RouterVC::receive()
             BufferFIFO<Flit*>* buf = buffers.at(conPos)->at(vc);
             Channel in = Channel(conPos, vc);
 
-            // Prevents double writing of data, which occurs for asynchronous buffers.
-            // Problem: This function is executed for all buffers if new data arrive. If some directions are clocked
-            // at different data rate, the slower data rates are duplicated.
-
+            /* Prevents double writing of data, which occurs for asynchronous buffers.
+             * Problem: This function is executed for all buffers if new data arrive. If some directions are clocked
+             * at different data rate, the slower data rates are duplicated.
+             */
             if (lastReceivedFlitsID.at(in)!=flit->id) {
                 if (buf->enqueue(flit)) {
                     //rep.reportEvent(buf->dbid, "buffer_enqueue_flit", std::to_string(flit->id));
@@ -197,9 +197,6 @@ void RouterVC::updateUsageStats()
                             static_cast<int>(buf->occupied()));
                 }
             }
-            /* this 1 is added to create a column for numberOfActiveVCs=0.
-               yes it's an extra column but it allow us to use the same function to update both buffer stats and VC stats.
-            */
             globalReport.updateVCUsageHist(this->id, node.getDirOfConPos(conPos), numberActiveVCs);
         }
     }
