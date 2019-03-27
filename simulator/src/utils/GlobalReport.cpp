@@ -118,14 +118,6 @@ void GlobalReport::reportRoutingCalculations(ostream& stream)
 
 void GlobalReport::issueLinkMatrixUpdate(int id, int currentTransmissionState, int lastTransmissionState)
 {
-    auto it = linkTransmissionMatrices.find(id);
-    if (it==linkTransmissionMatrices.end()) {
-        // not found, initialization
-        int numberElements = static_cast<int>(pow(linkTransmissionsMatrixNumberOfStates, 2));
-        std::vector<long> matrix(numberElements, 0);
-        linkTransmissionMatrices.insert(std::make_pair(id, matrix));
-    }
-
     linkTransmissionMatrices.at(id).at(
             currentTransmissionState+linkTransmissionsMatrixNumberOfStates*lastTransmissionState)++;
 }
@@ -415,6 +407,14 @@ void GlobalReport::resizeMatrices()
     VCsUsageHist.resize(numRouters);
     bufferUsagePerVCHist.resize(numRouters);
     linkTransmissionsMatrixNumberOfStates = (2*globalResources.numberOfTrafficTypes)+3;
+
+    int numOfLinks = globalResources.connections.size()*2;
+    for (int link_id = 0; link_id<numOfLinks; link_id++) {
+        int numberElements = static_cast<int>(pow(linkTransmissionsMatrixNumberOfStates, 2));
+        std::vector<long> matrix(numberElements, 0);
+        linkTransmissionMatrices.insert(std::make_pair(link_id, matrix));
+    }
+
     clockCounts.resize(globalResources.nodeTypes.size()/2, 0.0);
     buffer_router_push_pwr_d.resize(numRouters, 0.0);
     buffer_router_pop_pwr_d.resize(numRouters, 0.0);
