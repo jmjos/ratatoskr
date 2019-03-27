@@ -182,24 +182,24 @@ void RouterVC::updateUsageStats()
 
     auto findInListit = std::find(globalReport.INNER_ROUTERS.begin(), globalReport.INNER_ROUTERS.end(), this->id);
 
-    if (findInListit != globalReport.INNER_ROUTERS.end()) {
-        for (int conPos = 0; conPos < node.connections.size(); conPos++) {
-            Connection *con = &globalResources.connections.at(node.connections.at(conPos));
+    if (findInListit!=globalReport.INNER_ROUTERS.end()) {
+        for (int conPos = 0; conPos<node.connections.size(); conPos++) {
+            Connection* con = &globalResources.connections.at(node.connections.at(conPos));
             int vcCount = con->getVCCountForNode(node.id);
             int numberActiveVCs = 0;
 
-            for (int vc = 0; vc < vcCount; vc++) {
-                BufferFIFO<Flit *> *buf = buffers.at(conPos)->at(vc);
+            for (int vc = 0; vc<vcCount; vc++) {
+                BufferFIFO<Flit*>* buf = buffers.at(conPos)->at(vc);
                 if (!buf->empty()) {
                     numberActiveVCs++;
                     globalReport.updateBuffUsagePerVCHist(this->id, node.getDirOfConPos(conPos), vc,
-                                                          static_cast<int>(buf->occupied()), vcCount);
+                            static_cast<int>(buf->occupied()));
                 }
             }
             /* this 1 is added to create a column for numberOfActiveVCs=0.
                yes it's an extra column but it allow us to use the same function to update both buffer stats and VC stats.
             */
-            globalReport.updateVCUsageHist(this->id, node.getDirOfConPos(conPos), numberActiveVCs, vcCount + 1);
+            globalReport.updateVCUsageHist(this->id, node.getDirOfConPos(conPos), numberActiveVCs);
         }
     }
 }
@@ -430,7 +430,7 @@ void RouterVC::receiveFlowControlCredit()
                 Channel ch{conPos, credit.vc};
                 if (lastReceivedCreditID.at(ch)!=credit.id)
                     creditCounter.at(ch)++;
-                    lastReceivedFlitsID.at(ch) = credit.id;
+                lastReceivedFlitsID.at(ch) = credit.id;
             }
         }
     }
@@ -441,15 +441,14 @@ int RouterVC::VCAllocation_getNextVCToBeAllocated(int in)
     LOG(globalReport.verbose_router_function_calls,
             "Router" << this->id << "in VCAllocation_getNextVCToBeAllocated() @ " << sc_time_stamp());
 
-    std::vector <int> vcs;
+    std::vector<int> vcs;
     auto vcSourceList = &VCAllocation_inputVC_rrList.at(in);
 
-
-    for (auto vc : *vcSourceList){
+    for (auto vc : *vcSourceList) {
         // ignore allocated vcs
         Channel possiblyAllocated = {in, vc};
         auto allocation = routingTable.find(possiblyAllocated);
-        if (allocation != routingTable.end()){
+        if (allocation!=routingTable.end()) {
             continue;
         }
         //ignore empty vcs

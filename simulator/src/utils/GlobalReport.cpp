@@ -232,21 +232,10 @@ void GlobalReport::reportMaxNetworkLatencySystemLevel()
     cout << "The maximum network latency was: " << maxNetworkLatency << endl;
 }
 
-void GlobalReport::updateVCUsageHist(int routerId, int dir,
-        int value, int thirdDimensionSize)
+void GlobalReport::updateVCUsageHist(int routerId, int dir, int numOfActiveVCs)
 {
-    if (!VCsUsageHist.at(routerId).empty()) {
-        int counter = VCsUsageHist.at(routerId).at(dir).at(value);
-        VCsUsageHist[routerId][dir][value] = ++counter;
-    }
-    else {
-        std::vector<std::vector<long>> vec_2d(DIR::size);
-        for (auto& vec : vec_2d) {
-            vec.assign(thirdDimensionSize, 0);
-        }
-        VCsUsageHist[routerId] = vec_2d;
-        VCsUsageHist[routerId][dir][value] = 1;
-    }
+    int counter = VCsUsageHist.at(routerId).at(dir).at(numOfActiveVCs);
+    VCsUsageHist[routerId][dir][numOfActiveVCs] = ++counter;
 }
 
 void GlobalReport::reportVCUsageHist(std::string& csvFileName, int routerId)
@@ -265,24 +254,10 @@ void GlobalReport::reportVCUsageHist(std::string& csvFileName, int routerId)
     csvFile.close();
 }
 
-void GlobalReport::updateBuffUsagePerVCHist(int routerId, int dir, int vc, int bufferOccupation, int numVCs)
+void GlobalReport::updateBuffUsagePerVCHist(int routerId, int dir, int vc, int bufferOccupation)
 {
-    if (!bufferUsagePerVCHist.at(routerId).empty()) {
-        long counter = bufferUsagePerVCHist.at(routerId).at(dir).at(vc).at(bufferOccupation);
-        bufferUsagePerVCHist[routerId][dir][vc][bufferOccupation] = ++counter;
-    }
-    else {
-        std::vector<std::vector<std::vector<long>>> vec_3d(DIR::size);
-        for (auto& vec_2d : vec_3d) {
-            std::vector<std::vector<long>> temp_vec_2d(numVCs);
-            for (auto& vec_1d : temp_vec_2d) {
-                vec_1d.assign(MAX_BUFFER_DEPTH+1, 0);
-            }
-            vec_2d = temp_vec_2d;
-        }
-        bufferUsagePerVCHist[routerId] = vec_3d;
-        bufferUsagePerVCHist[routerId][dir][vc][bufferOccupation] = 1;
-    }
+    long counter = bufferUsagePerVCHist.at(routerId).at(dir).at(vc).at(bufferOccupation);
+    bufferUsagePerVCHist[routerId][dir][vc][bufferOccupation] = ++counter;
 }
 
 void GlobalReport::reportBuffPerVCUsageHist(std::string& csvFileName, int routerId, int dir)
@@ -426,6 +401,26 @@ void GlobalReport::resizeMatrices()
     crossbar_pwr_s.resize(numRouters, 0.0);
     ni_pwr_d.resize(numRouters, 0.0);
     ni_pwr_s.resize(numRouters, 0.0);
+
+    Connection con = globalResources.connections.at(0);
+    int vcCount = con.vcsCount.at(0);
+    VCsUsageHist.resize(numRouters);
+    for (auto& vec_2d:VCsUsageHist) {
+        vec_2d.resize(DIR::size);
+        for (auto& vec:vec_2d) {
+            vec.resize(vcCount+1);
+        }
+    }
+    bufferUsagePerVCHist.resize(numRouters);
+    for (auto& vec_3d:bufferUsagePerVCHist) {
+        vec_3d.resize(DIR::size);
+        for (auto& vec_2d:vec_3d) {
+            vec_2d.resize(vcCount);
+            for (auto& vec:vec_2d) {
+                vec.resize(MAX_BUFFER_DEPTH+1);
+            }
+        }
+    }
 }
 
 void GlobalReport::reportClockCount(ostream& stream)
