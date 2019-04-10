@@ -80,6 +80,12 @@ class Configuration:
         self.rout_algo = config['router']['rout_algo']
 
         self.pl_rout_algo = config['router_pl']['rout_algo']
+
+        self.bufferReportRouters = config['Report']['bufferReportRouters']
+        try:
+                self.bufferReportRouters = self.bufferReportRouters[1:len(self.bufferReportRouters)-1]
+        except Exception:
+                raise
 ###############################################################################
 
 
