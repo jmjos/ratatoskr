@@ -376,7 +376,6 @@ void GlobalReport::readConfigFile(const std::string& config_path)
             "value").as_bool();
 
     std::string s = doc.child("configuration").child("report").child_value("bufferReportRouters");
-    cout << " s ist " << s << endl;
     std::string delimiter = " ";
     std::size_t current, previous = 0;
     current = s.find(delimiter);
