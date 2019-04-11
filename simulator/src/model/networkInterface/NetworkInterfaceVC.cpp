@@ -82,7 +82,7 @@ void NetworkInterfaceVC::receivePacketFromPE()
 void NetworkInterfaceVC::generateFlitsForPacket(Packet* p)
 {
     int flitsPerPacket = globalResources.flitsPerPacket;
-    for (int i = 0; i<flitsPerPacket; i++) {
+    for (int i = 0; i<flitsPerPacket; ++i) {
         FlitType flitType;
         if (i%flitsPerPacket==0)
             flitType = HEAD;
@@ -196,7 +196,7 @@ void NetworkInterfaceVC::receiveFlowControlCreditFromRouter()
         auto credit = flitPortContainer->portFlowControlIn.read();
         assert(credit.vc==0);
         if (lastReceivedCreditID!=credit.id) {
-            creditCounter++;
+            ++creditCounter;
         }
     }
 }

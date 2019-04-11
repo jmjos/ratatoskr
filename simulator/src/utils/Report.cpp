@@ -75,7 +75,7 @@ void Report::startRun(const std::string& name)
 int Report::registerElement(const std::string& type, int id)
 {
     addToSendBuffer("reg;"+std::to_string(element_count)+";"+type+";"+std::to_string(id));
-    return element_count++;
+    return ++element_count;
 }
 
 void Report::reportEvent(int element_id, const std::string& event, const std::string& data)

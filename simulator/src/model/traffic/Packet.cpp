@@ -32,7 +32,7 @@ Packet::Packet(Node& src, Node& dst, int size, double generationTime, dataTypeID
         dataType(dataType)
 {
     this->id = idcnt;
-    idcnt++;
+    ++idcnt;
     this->pkgclass = -1;
     this->numhops = 0;
     this->dbid = rep.registerElement("Packet", this->id);

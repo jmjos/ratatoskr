@@ -203,7 +203,7 @@ void ProcessingElementVC::receive()
             dataTypeID_t type = received_packet->dataType;
 
             if (receivedData.count(type)) {
-                receivedData.at(type)++;
+                ++receivedData.at(type);
             }
             else {
                 receivedData[type] = 1;
@@ -218,7 +218,7 @@ void ProcessingElementVC::startSending(Task& task)
 {
     float rn = globalResources.getRandomFloatBetween(0, 1);
 
-    for (unsigned int i = 0; i<task.possibilities.size(); i++) {
+    for (unsigned int i = 0; i<task.possibilities.size(); ++i) {
         if (task.possibilities.at(i).probability>rn) {
             std::vector<DataDestination> destVec = task.possibilities.at(i).dataDestinations;
             for (DataDestination& dest : destVec) {

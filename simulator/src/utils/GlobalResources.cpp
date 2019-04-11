@@ -170,7 +170,7 @@ void GlobalResources::readConfigFile(const std::string& configPath)
         std::string distribution = readRequiredStringAttribute(phase_node, "distribution", "value");
         float injectionRate = readRequiredFloatAttribute(phase_node, "injectionRate", "value");
         SyntheticPhase sp = SyntheticPhase(syntheticPhaseID, name, distribution, injectionRate);
-        syntheticPhaseID++;
+        ++syntheticPhaseID;
 
         readAttributeIfExists(phase_node, "start", "min", sp.minStart);
         readAttributeIfExists(phase_node, "start", "max", sp.maxStart);

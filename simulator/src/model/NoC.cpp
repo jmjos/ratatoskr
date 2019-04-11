@@ -92,7 +92,7 @@ void NoC::createNetworkParticipants() {
 }
 
 void NoC::createSigContainers() {
-    for (int i = 0; i < flitSignalContainers.size(); i++) {
+    for (int i = 0; i < flitSignalContainers.size(); ++i) {
         flitSignalContainers.at(i) = std::make_unique<FlitSignalContainer>(
                 ("flitSigCont_" + std::to_string(i)).c_str());
     }
@@ -146,7 +146,7 @@ void NoC::verifyFlowControl() {
                     int conPos1 = node1.getConPosOfId(c.id);
                     int conPos2 = node2.getConPosOfId(c.id);
 
-                    for (int vc = 0; vc < c.vcsCount.at(0); vc++) {
+                    for (int vc = 0; vc < c.vcsCount.at(0); ++vc) {
                         Channel out = Channel(conPos1, vc);
                         auto credits = router1->creditCounter.at(out);
                         BufferFIFO<Flit *> *buf = router2->buffers.at(conPos2)->at(vc);
@@ -160,7 +160,7 @@ void NoC::verifyFlowControl() {
                         }
                     }
 
-                    for (int vc = 0; vc < c.vcsCount.at(1); vc++) {
+                    for (int vc = 0; vc < c.vcsCount.at(1); ++vc) {
                         Channel out = Channel(conPos2, vc);
                         auto credits = router2->creditCounter.at(out);
                         BufferFIFO<Flit *> *buf = router1->buffers.at(conPos1)->at(vc);

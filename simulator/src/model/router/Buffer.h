@@ -44,7 +44,7 @@ public:
             depth(depth)
     {
         list = new std::list<T>;
-        id = buffer_idcnt++;
+        id = ++buffer_idcnt;
         dbid = rep.registerElement("Buffer", id);
     }
 

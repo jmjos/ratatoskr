@@ -30,7 +30,7 @@ Flit::Flit(FlitType type, long long seq_nb, Packet* p)
         type(type),
         seq_nb(seq_nb),
         packet(p),
-        id(idcnt++),
+        id(++idcnt),
         dataType(-1),
         injectionTime(0),
         headFlit(nullptr)

@@ -177,13 +177,13 @@ struct Vec3D {
     {
         int count = 0;
         if (x==v.x) {
-            count++;
+            ++count;
         }
         if (y==v.y) {
-            count++;
+            ++count;
         }
         if (z==v.z) {
-            count++;
+            ++count;
         }
         return count;
     }
@@ -192,13 +192,13 @@ struct Vec3D {
     {
         int count = 0;
         if (x!=v.x) {
-            count++;
+            ++count;
         }
         if (y!=v.y) {
-            count++;
+            ++count;
         }
         if (z!=v.z) {
-            count++;
+            ++count;
         }
         return count;
     }

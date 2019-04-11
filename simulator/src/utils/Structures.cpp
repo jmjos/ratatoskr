@@ -156,7 +156,7 @@ void Node::checkValid()
     int i = 0;
     for (std::pair<DIR::TYPE, int> pair : conPosOfDir) {
         assert(std::find(DIR::XYZ.begin(), DIR::XYZ.end(), pair.first)!=DIR::XYZ.end());
-        i++;
+        ++i;
     }
     assert(connections.size()==i);
 }

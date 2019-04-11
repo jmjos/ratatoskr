@@ -68,7 +68,7 @@ void SyntheticPool::start()
 
 /*		for (std::pair<const int, int> con : srcToDst) {
 			DataType* dataType = new DataType(dataTypeId, std::to_string(dataTypeId));
-			dataTypeId++;
+			++dataTypeId;
 
 			std::vector<DataDestination*> dests;
 			DataDestination* dest = new DataDestination(dataDestId, dataType, processingElements.at(con.second)->node, sp->minInterval, sp->maxInterval);
@@ -77,7 +77,7 @@ void SyntheticPool::start()
 			dest->minDelay = sp->minDelay;
 			dest->maxDelay = sp->maxDelay;
 			dests.push_back(dest);
-			dataDestId++;
+			++dataDestId;
 
 			std::vector<std::pair<float, std::vector<DataDestination*>>> possibilities;
 			possibilities.push_back(std::make_pair(1, dests));
@@ -92,7 +92,7 @@ void SyntheticPool::start()
 			task->possibilities = possibilities;
 
 			processingElements.at(con.first)->execute(task);
-			taskId++;
+			++taskId;
 		}*/
 }
 
@@ -102,7 +102,7 @@ SyntheticPool::uniform(taskID_t& taskId, int& phaseId,
 {
 
 
-    for (unsigned int i = 0; i<processingElements.size(); i++) {
+    for (unsigned int i = 0; i<processingElements.size(); ++i) {
         Task task = Task(taskId, processingElements.at(i)->node.id);
         task.minStart = sp.minStart;
         task.maxStart = sp.maxStart;
@@ -127,7 +127,7 @@ SyntheticPool::uniform(taskID_t& taskId, int& phaseId,
         possID_t poss_id = 0;
         int dataTypeId = globalResources.getRandomIntBetween(0, globalResources.numberOfTrafficTypes-1);
         DataType dataType = DataType(dataTypeId, std::to_string(dataTypeId));
-        for (unsigned int j = 0; j<processingElements.size(); j++) {
+        for (unsigned int j = 0; j<processingElements.size(); ++j) {
             if (i!=j) { // a PE should not send data to itself.
                 Node n = processingElements.at(j)->node;
                 int minInterval = std::floor((float) maxClockDelay/sp.injectionRate);
@@ -141,16 +141,16 @@ SyntheticPool::uniform(taskID_t& taskId, int& phaseId,
                 dest.maxDelay = sp.maxDelay;
                 dests.push_back(dest);
                 possibilities.emplace_back(poss_id, 1.f/(processingElements.size()-1), dests);
-                poss_id++;
-                dataDestId++;
+                ++poss_id;
+                ++dataDestId;
             }
         }
         task.possibilities = possibilities;
         globalResources.tasks.push_back(task);
-        taskId++;
+        ++taskId;
     }
     shuffle_execute_tasks(phaseId);
-    phaseId++;
+    ++phaseId;
 
     return std::map<int, int>();
 }
@@ -161,7 +161,7 @@ std::map<int, int> SyntheticPool::bitComplement()
 
     int nodes = processingElements.size();
 
-    for (int i = 0; i<nodes; i++) {
+    for (int i = 0; i<nodes; ++i) {
         srcToDst[i] = nodes-i-1;
     }
 
@@ -173,7 +173,7 @@ std::map<int, int> SyntheticPool::transpose()
     std::map<int, int> srcToDst{};
     int nodes = processingElements.size();
 
-    for (int i = 0; i<nodes; i++) {
+    for (int i = 0; i<nodes; ++i) {
         srcToDst[i] = (i << int(ceil(log2(nodes)/2)))%(nodes-1);
     }
 
@@ -189,7 +189,7 @@ std::map<int, int> SyntheticPool::tornado()
     std::vector<float>* zPos = &globalResources.zPositions;
 
     int nodes = processingElements.size();
-    for (int i = 0; i<nodes; i++) {
+    for (int i = 0; i<nodes; ++i) {
         Vec3D<float> srcPos = processingElements.at(i)->node.pos;
         Vec3D<float> dstPos;
         dstPos.x = xPos->at(((std::find(xPos->begin(), xPos->end(), srcPos.x)-xPos->begin())+(xPos->size() >> 1))%
@@ -227,7 +227,7 @@ std::map<int, int> SyntheticPool::hotSpot(int hotSpot)
     LOG(true, "\t\t Hotspot: " << hotSpot);
 
     std::map<int, int> srcToDst{};
-    for (int i = 0; i<nodes; i++) {
+    for (int i = 0; i<nodes; ++i) {
         srcToDst[i] = hotSpot;
     }
     return srcToDst;

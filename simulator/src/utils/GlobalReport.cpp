@@ -104,7 +104,7 @@ void GlobalReport::issueRoutingCalculation(int id)
 {
     auto it = routingCalculations.find(id);
     if (it!=routingCalculations.end())
-        it->second++;
+        ++it->second;
     else
         routingCalculations.insert(std::make_pair(id, 1));
 }
@@ -118,8 +118,8 @@ void GlobalReport::reportRoutingCalculations(ostream& stream)
 
 void GlobalReport::issueLinkMatrixUpdate(int id, int currentTransmissionState, int lastTransmissionState)
 {
-    linkTransmissionMatrices.at(id).at(
-            currentTransmissionState+linkTransmissionsMatrixNumberOfStates*lastTransmissionState)++;
+    ++linkTransmissionMatrices.at(id).at(
+            currentTransmissionState+linkTransmissionsMatrixNumberOfStates*lastTransmissionState);
 }
 
 void GlobalReport::reportLinkMatrix(int id, ostream& stream)
@@ -153,7 +153,7 @@ void GlobalReport::reportLinkMatrix(int id, ostream& stream)
                 int trafficType = (rowit-3)/2;
                 stream << boost::format("%iD\t")%trafficType;
             }
-            rowit++;
+            ++rowit;
             stream << boost::format("[%7.4f, ")%field;
         }
         else if (colit==linkTransmissionsMatrixNumberOfStates-1) {
@@ -162,7 +162,7 @@ void GlobalReport::reportLinkMatrix(int id, ostream& stream)
         else {
             stream << boost::format("%7.4f,")%field;
         }
-        colit++;
+        ++colit;
         if (colit==linkTransmissionsMatrixNumberOfStates) {
             colit = 0;
         }
@@ -187,7 +187,7 @@ void GlobalReport::reportLinkMatricesCSV(ostream& stream)
     stream << boost::format(", %i\n")%(numberOfElements-1);
     for (auto matrix : linkTransmissionMatrices) {
         stream << boost::format("%i, ")%matrix.first;
-        for (auto it = matrix.second.begin(); it!=matrix.second.end(); it++) {
+        for (auto it = matrix.second.begin(); it!=matrix.second.end(); ++it) {
             int value = static_cast<int>(matrix.second.at(it-matrix.second.begin()));
             if (std::next(it)==matrix.second.end()) {
                 stream << boost::format("%i\n")%value;
@@ -212,7 +212,7 @@ void GlobalReport::updateAverageNetworkLatencySystemLevel(double newLatency)
         double second = scalingSmall*newLatency;
         averageNetworkLatencySystemLevel = first+second;
     }
-    averageNetworkLatencySystemLevelInstances++;
+    ++averageNetworkLatencySystemLevelInstances;
 }
 
 void GlobalReport::reportAverageNetworkLatencySystemLevel()
@@ -242,9 +242,9 @@ void GlobalReport::reportVCUsageHist(std::string& csvFileName, int routerId)
 {
     ofstream csvFile;
     csvFile.open(csvFileName);
-    for (unsigned int dir = 0; dir<VCsUsageHist[routerId].size(); dir++) {
+    for (unsigned int dir = 0; dir<VCsUsageHist[routerId].size(); ++dir) {
         csvFile << DIR::toString(dir) << ",";
-        for (unsigned int value = 0; value<VCsUsageHist[routerId][dir].size(); value++) {
+        for (unsigned int value = 0; value<VCsUsageHist[routerId][dir].size(); ++value) {
             if (value<VCsUsageHist[routerId][dir].size()-1)
                 csvFile << VCsUsageHist[routerId][dir][value] << ",";
             else
@@ -267,7 +267,7 @@ void GlobalReport::reportBuffPerVCUsageHist(std::string& csvFileName, int router
 
     // Write the header
     csvFile << "Buffer\\VC,";
-    for (unsigned int vc = 0; vc<bufferUsagePerVCHist[routerId][dir].size(); vc++) { // foreach vc
+    for (unsigned int vc = 0; vc<bufferUsagePerVCHist[routerId][dir].size(); ++vc) { // foreach vc
         csvFile << vc;
         if (vc<bufferUsagePerVCHist[routerId][dir].size()-1)
             csvFile << ",";
@@ -276,8 +276,8 @@ void GlobalReport::reportBuffPerVCUsageHist(std::string& csvFileName, int router
     }
 
     // Write the matrix
-    for (unsigned int buffer = 1; buffer<=MAX_BUFFER_DEPTH; buffer++) { // foreach buffer
-        for (unsigned int column = 0; column<=bufferUsagePerVCHist[routerId][dir].size(); column++) { // foreach column
+    for (unsigned int buffer = 1; buffer<=MAX_BUFFER_DEPTH; ++buffer) { // foreach buffer
+        for (unsigned int column = 0; column<=bufferUsagePerVCHist[routerId][dir].size(); ++column) { // foreach column
             if (column==0)
                 csvFile << buffer << ", ";
             else {
@@ -294,7 +294,7 @@ void GlobalReport::reportBuffPerVCUsageHist(std::string& csvFileName, int router
 
 void GlobalReport::reportAllRoutersUsageHist()
 {
-    for (unsigned int i = 0; i<globalResources.nodes.size(); i++) {
+    for (unsigned int i = 0; i<globalResources.nodes.size(); ++i) {
         if (globalResources.nodes[i].type->model=="RouterVC" &&
                 std::find(bufferReportRouters.begin(), bufferReportRouters.end(), i)!=bufferReportRouters.end()) {
             std::string csvFileName;
@@ -313,7 +313,7 @@ void GlobalReport::reportAllRoutersUsageHist()
                 std::exit(EXIT_FAILURE);
             }
             if (!bufferUsagePerVCHist.at(i).empty())
-                for (unsigned int conPos = 0; conPos<globalResources.nodes[i].connections.size(); conPos++) {
+                for (unsigned int conPos = 0; conPos<globalResources.nodes[i].connections.size(); ++conPos) {
                     int dir_int = globalResources.nodes[i].getDirOfConPos(conPos);
                     std::string dir_str = DIR::toString(globalResources.nodes[i].getDirOfConPos(conPos));
                     boost::trim(dir_str);
@@ -401,7 +401,7 @@ void GlobalReport::resizeMatrices()
     linkTransmissionsMatrixNumberOfStates = (2*globalResources.numberOfTrafficTypes)+3;
 
     int numOfLinks = globalResources.connections.size()*2;
-    for (int link_id = 0; link_id<numOfLinks; link_id++) {
+    for (int link_id = 0; link_id<numOfLinks; ++link_id) {
         int numberElements = static_cast<int>(pow(linkTransmissionsMatrixNumberOfStates, 2));
         std::vector<long> matrix(numberElements, 0);
         linkTransmissionMatrices.insert(std::make_pair(link_id, matrix));
@@ -443,7 +443,7 @@ void GlobalReport::resizeMatrices()
 void GlobalReport::reportClockCount(ostream& stream)
 {
     stream << "Clock Counts: [";
-    for (int i = 0; i<clockCounts.size(); i++) {
+    for (int i = 0; i<clockCounts.size(); ++i) {
         stream << std::fixed << (clockCounts.at(i));
         if (i<clockCounts.size()-1)
             stream << ", ";
@@ -486,7 +486,7 @@ void GlobalReport::reportRoutersPowerCSV(ostream& csvfile)
 {
     csvfile << "router_id," << "buffer_push," << "buffer_pop," << "buffer_read_front," << "routing," << "crossbar"
             << "\n";
-    for (int id = 0; id<buffer_router_push_pwr_d.size(); id++) {
+    for (int id = 0; id<buffer_router_push_pwr_d.size(); ++id) {
         csvfile << id << "," << buffer_router_push_pwr_d.at(id) << "," << buffer_router_pop_pwr_d.at(id)
                 << "," << buffer_router_front_pwr_d.at(id) << "," << routing_pwr_d.at(id) << ","
                 << crossbar_pwr_d.at(id) << "\n";
