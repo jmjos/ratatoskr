@@ -219,8 +219,8 @@ def begin_all_sims(config):
     VCUsage = []
     BuffUsage = []
     for inj in injectionRates:
-        print('Starting Sims with ' + str(config.num_cores) + ' processes')
-        Parallel(n_jobs=config.num_cores)(delayed(begin_individual_sim)
+        print('Starting Sims with ' + str(config.numCores) + ' processes')
+        Parallel(n_jobs=config.numCores)(delayed(begin_individual_sim)
         (config, restart, injectionRates, injIter) for restart in range(config.restarts))
 
         VCUsage_inj = [pd.DataFrame() for i in range(3)]

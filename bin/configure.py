@@ -66,7 +66,7 @@ class Configuration:
         self.run_start_after_warmup = int(config['URAND']['run_start_after_warmup'])
         self.run_start = self.warmup_start + self.warmup_duration + self.run_start_after_warmup
         self.run_duration = int(config['URAND']['run_duration'])
-        self.num_cores = int(config['URAND']['num_cores'])
+        self.num_cores = int(config['URAND']['numCores'])
         if (self.num_cores == -1):
             self.num_cores = multiprocessing.cpu_count()
 
