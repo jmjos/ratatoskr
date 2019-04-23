@@ -78,8 +78,6 @@ class Configuration:
         self.Zis = int(config['router']['Zis'])
         self.routAlgo = config['router']['routAlgo']
 
-        self.pl_routAlgo = config['router_pl']['routAlgo']
-
         self.bufferReportRouters = config['Report']['bufferReportRouters']
         try:
                 self.bufferReportRouters = self.bufferReportRouters[1:len(self.bufferReportRouters)-1]
