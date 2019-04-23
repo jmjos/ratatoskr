@@ -37,52 +37,49 @@ class Configuration:
             config.read(self.path)
         except Exception:
             raise
-        self.simulationTime = int(config['CONFIG']['simulationTime'])
-        self.flitsPerPacket = int(config['CONFIG']['flitsPerPacket'])
-        self.benchmark = config['CONFIG']['benchmark']
-        self.libDir = config['CONFIG']['libDir']
+        self.simulationTime = int(config['Config']['simulationTime'])
+        self.flitsPerPacket = int(config['Config']['flitsPerPacket'])
+        self.benchmark = config['Config']['benchmark']
+        self.libDir = config['Config']['libDir']
 
-        self.x = int(config['Network']['x'])
-        self.y = int(config['Network']['y'])
-        self.z = int(config['Network']['z'])
-        self.router = config['Network']['routing']
-        self.clockDelay = int(config['Network']['clockDelay'])
-        self.bufferDepthType = config['Network']['bufferDepthType']
-        self.bufferDepth = int(config['Network']['bufferDepth'])
-        self.buffersDepths = config['Network']['buffersDepths']
-        self.buffersDepths = self.buffersDepths[1:len(self.buffersDepths)-1]
-        self.vcCount = int(config['Network']['vcCount'])
-        self.topologyFile = config['Network']['topologyFile']
-
-        self.simdir = config['URAND']['simdir']
+        self.simdir = config['Synthetic']['simdir']
         self.basedir = os.getcwd()
-        self.restarts = int(config['URAND']['restarts'])
-        self.warmupStart = int(config['URAND']['warmupStart'])
-        self.warmupDuration = int(config['URAND']['warmupDuration'])
-        self.warmupRate = float(config['URAND']['warmupRate'])
-        self.runRateMin = float(config['URAND']['runRateMin'])
-        self.runRateMax = float(config['URAND']['runRateMax'])
-        self.runRateStep = float(config['URAND']['runRateStep'])
-        self.runStartAfterWarmup = int(config['URAND']['runStartAfterWarmup'])
+        self.restarts = int(config['Synthetic']['restarts'])
+        self.warmupStart = int(config['Synthetic']['warmupStart'])
+        self.warmupDuration = int(config['Synthetic']['warmupDuration'])
+        self.warmupRate = float(config['Synthetic']['warmupRate'])
+        self.runRateMin = float(config['Synthetic']['runRateMin'])
+        self.runRateMax = float(config['Synthetic']['runRateMax'])
+        self.runRateStep = float(config['Synthetic']['runRateStep'])
+        self.runStartAfterWarmup = int(config['Synthetic']['runStartAfterWarmup'])
         self.runStart = self.warmupStart + self.warmupDuration + self.runStartAfterWarmup
-        self.runDuration = int(config['URAND']['runDuration'])
-        self.numCores = int(config['URAND']['numCores'])
+        self.runDuration = int(config['Synthetic']['runDuration'])
+        self.numCores = int(config['Synthetic']['numCores'])
         if (self.numCores == -1):
             self.numCores = multiprocessing.cpu_count()
-
-        self.flitSize = int(config['NOC']['flitSize'])
-
-        self.portNum = int(config['router']['portNum'])
-        self.Xis = int(config['router']['Xis'])
-        self.Yis = int(config['router']['Yis'])
-        self.Zis = int(config['router']['Zis'])
-        self.routAlgo = config['router']['routAlgo']
 
         self.bufferReportRouters = config['Report']['bufferReportRouters']
         try:
                 self.bufferReportRouters = self.bufferReportRouters[1:len(self.bufferReportRouters)-1]
         except Exception:
                 raise
+
+        self.x = int(config['Hardware']['x'])
+        self.y = int(config['Hardware']['y'])
+        self.z = int(config['Hardware']['z'])
+        self.routing = config['Hardware']['routing']
+        self.clockDelay = int(config['Hardware']['clockDelay'])
+        self.bufferDepthType = config['Hardware']['bufferDepthType']
+        self.bufferDepth = int(config['Hardware']['bufferDepth'])
+        self.buffersDepths = config['Hardware']['buffersDepths']
+        self.buffersDepths = self.buffersDepths[1:len(self.buffersDepths)-1]
+        self.vcCount = int(config['Hardware']['vcCount'])
+        self.topologyFile = config['Hardware']['topologyFile']
+        self.flitSize = int(config['Hardware']['flitSize'])
+        self.portNum = int(config['Hardware']['portNum'])
+        self.Xis = int(config['Hardware']['Xis'])
+        self.Yis = int(config['Hardware']['Yis'])
+        self.Zis = int(config['Hardware']['Zis'])
 ###############################################################################
 
 

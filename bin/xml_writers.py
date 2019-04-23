@@ -272,7 +272,7 @@ class NetworkWriter(Writer):
             model_node = ET.SubElement(nodeType_node, 'model')
             model_node.set('value', 'RouterVC')
             routing_node = ET.SubElement(nodeType_node, 'routing')
-            routing_node.set('value', self.config.router)
+            routing_node.set('value', self.config.routing)
             selection_node = ET.SubElement(nodeType_node, 'selection')
             selection_node.set('value', '1stFreeVC')
             clockDelay_node = ET.SubElement(nodeType_node, 'clockDelay')

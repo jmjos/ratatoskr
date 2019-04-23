@@ -62,7 +62,7 @@ def init_script(mesh_file):
         # Number of layers
         global num_of_layers
         # num_of_layers = len(root.find('layerTypes'))
-        num_of_layers = int(config['Network']['z'])
+        num_of_layers = int(config['Hardware']['z'])
         # Find the id of the ProcessingElements
         proc_elemnt_ids = []
         for nodeType in root.find('nodeTypes').iter('nodeType'):

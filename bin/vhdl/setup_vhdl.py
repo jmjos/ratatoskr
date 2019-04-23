@@ -123,7 +123,7 @@ def update_router_vhd(content, path, config, filename):
     if 'vc_depth_out_array           : vc_prop_int_array := ((4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4));' in content:
         content = content.replace('((4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4), (4, 4))', depth_str)
     if 'rout_algo                    : string        := "XYZ_ref"' in content:
-        content = content.replace('XYZ_ref', config.routAlgo)
+        content = content.replace('XYZ_ref', config.routing)
     write_content(content, path)
 ###############################################################################
 
@@ -150,7 +150,7 @@ def update_routerpl_vhd(content, path, config, filename):
     if 'vc_depth_out_array           : vc_prop_int_array := ((2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2))' in content:
         content = content.replace('((2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2), (2, 2))', depth_str)
     if 'rout_algo                    : string        := "DXYU"' in content:
-        content = content.replace('DXYU', config.routAlgo)
+        content = content.replace('DXYU', config.routing)
     write_content(content, path)
 ###############################################################################
 
@@ -163,7 +163,7 @@ def update_routingcalc_vhd(content, path, config):
     if 'Zis       : natural := 1' in content:
         content = content.replace('1', str(config.Zis))
     if 'rout_algo : string  := "DXYU"' in content:
-        content = content.replace('DXYU', config.routAlgo)
+        content = content.replace('DXYU', config.routing)
     write_content(content, path)
 ###############################################################################
 

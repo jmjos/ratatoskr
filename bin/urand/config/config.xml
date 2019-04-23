@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <general>
-    <simulationTime value="1000000"/>
+    <simulationTime value="100000"/>
     <outputToFile value="true">report</outputToFile>
   </general>
   <noc>
@@ -74,4 +74,7 @@
       <source_execute value="false"/>
     </tasks>
   </verbose>
+  <report>
+    <bufferReportRouters>1 2 3 4</bufferReportRouters>
+  </report>
 </configuration>
