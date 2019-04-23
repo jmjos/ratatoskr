@@ -104,12 +104,6 @@ def update_NOC_vhd(content, path, config):
 def update_router_vhd(content, path, config, filename):
     if 'port_num                     : integer       := 7' in content:
         content = content.replace('7', str(config.portNum))
-    if 'Xis                          : natural       := 1' in content:
-        content = content.replace('1', str(config.Xis))
-    if 'Yis                          : natural       := 1' in content:
-        content = content.replace('1', str(config.Yis))
-    if 'Zis                          : natural       := 1' in content:
-        content = content.replace('1', str(config.Zis))
     if 'port_exist                   : integer_vec   := (0, 1, 2, 3, 4, 5, 6)' in content:
         content = content.replace('(0, 1, 2, 3, 4, 5, 6)', increasing_vec(config.portNum))
     if 'vc_num_vec                   : integer_vec   := (2, 2, 2, 2, 2, 2, 2)' in content:
@@ -131,12 +125,6 @@ def update_router_vhd(content, path, config, filename):
 def update_routerpl_vhd(content, path, config, filename):
     if 'port_num                     : integer       := 7' in content:
         content = content.replace('7', str(config.portNum))
-    if 'Xis                          : natural       := 1' in content:
-        content = content.replace('1', str(config.Xis))
-    if 'Yis                          : natural       := 1' in content:
-        content = content.replace('1', str(config.Yis))
-    if 'Zis                          : natural       := 1' in content:
-        content = content.replace('1', str(config.Zis))
     if 'port_exist                   : integer_vec   := (0, 1, 2, 3, 4, 5, 6)' in content:
         content = content.replace('(0, 1, 2, 3, 4, 5, 6)', increasing_vec(config.portNum))
     if 'vc_num_vec                   : integer_vec   := (1, 2, 2, 2, 2, 2, 2)' in content:
@@ -156,25 +144,8 @@ def update_routerpl_vhd(content, path, config, filename):
 
 
 def update_routingcalc_vhd(content, path, config):
-    if 'Xis       : natural := 1' in content:
-        content = content.replace('1', str(config.Xis))
-    if 'Yis       : natural := 1' in content:
-        content = content.replace('1', str(config.Yis))
-    if 'Zis       : natural := 1' in content:
-        content = content.replace('1', str(config.Zis))
     if 'rout_algo : string  := "DXYU"' in content:
         content = content.replace('DXYU', config.routing)
-    write_content(content, path)
-###############################################################################
-
-
-def update_routing(content, path, config):
-    if 'Xis : natural := 1' in content:
-        content = content.replace('1', str(config.Xis))
-    if 'Yis : natural := 1' in content:
-        content = content.replace('1', str(config.Yis))
-    if 'Zis : natural := 1' in content:
-        content = content.replace('1', str(config.Zis))
     write_content(content, path)
 ###############################################################################
 
@@ -196,11 +167,6 @@ def setup(destination_folder, folders, config):
                 continue
             if filename == 'routing_calc':
                 update_routingcalc_vhd(content, path, config)
-                continue
-            if filename in ['dxyu_routing.vhd', 'uxyd_routing.vhd',
-                            'xy_routing.vhd', 'xyz_routing.vhd',
-                            'zxy_routing.vhd']:
-                update_routing(content, path, config)
                 continue
 ###############################################################################
 

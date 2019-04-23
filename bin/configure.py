@@ -77,9 +77,6 @@ class Configuration:
         self.topologyFile = config['Hardware']['topologyFile']
         self.flitSize = int(config['Hardware']['flitSize'])
         self.portNum = int(config['Hardware']['portNum'])
-        self.Xis = int(config['Hardware']['Xis'])
-        self.Yis = int(config['Hardware']['Yis'])
-        self.Zis = int(config['Hardware']['Zis'])
 ###############################################################################
 
 
