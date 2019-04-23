@@ -71,7 +71,7 @@ class Configuration:
         if (self.num_cores == -1):
             self.num_cores = multiprocessing.cpu_count()
 
-        self.flit_size = int(config['NOC_3D_PACKAGE']['flit_size'])
+        self.flit_size = int(config['NOC']['flit_size'])
 
         self.port_num = int(config['router']['port_num'])
         self.Xis = int(config['router']['Xis'])
