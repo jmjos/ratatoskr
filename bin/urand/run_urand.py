@@ -184,7 +184,7 @@ def begin_individual_sim(config, restart, injectionRates, injIter):
     """
     print('Simulation with injection rate: ' + str(injectionRates[injIter])
             + ' restart ' + str(restart))
-    currentSimDir = config.simdir + str(restart)
+    currentSimDir = config.simDir + str(restart)
     currentConfDir = currentSimDir + '/config'
     write_sim_files(config, currentSimDir)
     write_config_file(config, 'config/config.xml', currentConfDir + '/config.xml',

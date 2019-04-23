@@ -42,7 +42,7 @@ class Configuration:
         self.benchmark = config['Config']['benchmark']
         self.libDir = config['Config']['libDir']
 
-        self.simdir = config['Synthetic']['simdir']
+        self.simDir = config['Synthetic']['simDir']
         self.basedir = os.getcwd()
         self.restarts = int(config['Synthetic']['restarts'])
         self.warmupStart = int(config['Synthetic']['warmupStart'])
