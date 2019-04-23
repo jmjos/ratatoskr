@@ -57,28 +57,28 @@ class Configuration:
         self.simdir = config['URAND']['simdir']
         self.basedir = os.getcwd()
         self.restarts = int(config['URAND']['restarts'])
-        self.warmup_start = int(config['URAND']['warmup_start'])
-        self.warmup_duration = int(config['URAND']['warmup_duration'])
-        self.warmup_rate = float(config['URAND']['warmup_rate'])
-        self.run_rate_min = float(config['URAND']['run_rate_min'])
-        self.run_rate_max = float(config['URAND']['run_rate_max'])
-        self.run_rate_step = float(config['URAND']['run_rate_step'])
-        self.run_start_after_warmup = int(config['URAND']['run_start_after_warmup'])
-        self.run_start = self.warmup_start + self.warmup_duration + self.run_start_after_warmup
-        self.run_duration = int(config['URAND']['run_duration'])
-        self.num_cores = int(config['URAND']['numCores'])
-        if (self.num_cores == -1):
-            self.num_cores = multiprocessing.cpu_count()
+        self.warmupStart = int(config['URAND']['warmupStart'])
+        self.warmupDuration = int(config['URAND']['warmupDuration'])
+        self.warmupRate = float(config['URAND']['warmupRate'])
+        self.runRateMin = float(config['URAND']['runRateMin'])
+        self.runRateMax = float(config['URAND']['runRateMax'])
+        self.runRateStep = float(config['URAND']['runRateStep'])
+        self.runStartAfterWarmup = int(config['URAND']['runStartAfterWarmup'])
+        self.runStart = self.warmupStart + self.warmupDuration + self.runStartAfterWarmup
+        self.runDuration = int(config['URAND']['runDuration'])
+        self.numCores = int(config['URAND']['numCores'])
+        if (self.numCores == -1):
+            self.numCores = multiprocessing.cpu_count()
 
-        self.flit_size = int(config['NOC']['flit_size'])
+        self.flitSize = int(config['NOC']['flitSize'])
 
-        self.port_num = int(config['router']['port_num'])
+        self.portNum = int(config['router']['portNum'])
         self.Xis = int(config['router']['Xis'])
         self.Yis = int(config['router']['Yis'])
         self.Zis = int(config['router']['Zis'])
-        self.rout_algo = config['router']['rout_algo']
+        self.routAlgo = config['router']['routAlgo']
 
-        self.pl_rout_algo = config['router_pl']['rout_algo']
+        self.pl_routAlgo = config['router_pl']['routAlgo']
 
         self.bufferReportRouters = config['Report']['bufferReportRouters']
         try:

@@ -73,18 +73,18 @@ def write_config_file(config, configFileSrc, configFileDst, injectionRate):
 
     for elem in list(configTree.find('application/synthetic').iter()):
         if elem.get('name') == 'warmup':
-            elem.find('start').set('min', str(config.warmup_start))
-            elem.find('start').set('max', str(config.warmup_start))
+            elem.find('start').set('min', str(config.warmupStart))
+            elem.find('start').set('max', str(config.warmupStart))
             elem.find('duration').set('min',
-                     str(config.warmup_start + config.warmup_duration))
+                     str(config.warmupStart + config.warmupDuration))
             elem.find('duration').set('max',
-                     str(config.warmup_start + config.warmup_duration))
+                     str(config.warmupStart + config.warmupDuration))
             elem.find('injectionRate').set('value', str(injectionRate))
         if elem.get('name') == 'run':
-            elem.find('start').set('min', str(config.run_start))
-            elem.find('start').set('max', str(config.run_start))
-            elem.find('duration').set('min', str(config.run_start + config.run_duration))
-            elem.find('duration').set('max', str(config.run_start + config.run_duration))
+            elem.find('start').set('min', str(config.runStart))
+            elem.find('start').set('max', str(config.runStart))
+            elem.find('duration').set('min', str(config.runStart + config.runDuration))
+            elem.find('duration').set('max', str(config.runStart + config.runDuration))
             elem.find('injectionRate').set('value', str(injectionRate))
     configTree.write(configFileDst)
 ###############################################################################
@@ -204,11 +204,11 @@ def begin_all_sims(config):
         - results: a dictionary of the results.
     """
     print('Generating urand simulation with injection rate from ' +
-    str(config.run_rate_min) + ' to ' + str(config.run_rate_max) + ' steps ' +
-    str(config.run_rate_step))
+    str(config.runRateMin) + ' to ' + str(config.runRateMax) + ' steps ' +
+    str(config.runRateStep))
 
     # Initialze the latencies.
-    injectionRates = np.arange(config.run_rate_min, config.run_rate_max, config.run_rate_step)
+    injectionRates = np.arange(config.runRateMin, config.runRateMax, config.runRateStep)
     injectionRates = [round(elem, 4) for elem in injectionRates]
     latenciesFlit = -np.ones((len(injectionRates), config.restarts))
     latenciesPacket = -np.ones((len(injectionRates), config.restarts))
