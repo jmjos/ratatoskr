@@ -67,7 +67,7 @@ def write_config_file(config, configFileSrc, configFileDst, injectionRate):
         raise
 
     configTree.find('noc/nocFile').text = 'config/' + config.topologyFile + '.xml'
-    configTree.find('general/simulationTime').set('value', str(config.simulation_time))
+    configTree.find('general/simulationTime').set('value', str(config.simulationTime))
     configTree.find('general/outputToFile').set('value', 'true')
     configTree.find('general/outputToFile').text = 'report'
 
