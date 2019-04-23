@@ -40,6 +40,7 @@ class Configuration:
         self.simulationTime = int(config['CONFIG']['simulationTime'])
         self.flitsPerPacket = int(config['CONFIG']['flitsPerPacket'])
         self.benchmark = config['CONFIG']['benchmark']
+        self.libDir = config['CONFIG']['libDir']
 
         self.x = int(config['Network']['x'])
         self.y = int(config['Network']['y'])
@@ -51,9 +52,8 @@ class Configuration:
         self.buffersDepths = config['Network']['buffersDepths']
         self.buffersDepths = self.buffersDepths[1:len(self.buffersDepths)-1]
         self.vcCount = int(config['Network']['vcCount'])
+        self.topologyFile = config['Network']['topologyFile']
 
-        self.topologyFile = config['URAND']['topologyFile']
-        self.libdir = config['URAND']['libdir']
         self.simdir = config['URAND']['simdir']
         self.basedir = os.getcwd()
         self.simulation_time = int(config['URAND']['simulation_time'])

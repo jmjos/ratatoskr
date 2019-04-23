@@ -113,7 +113,7 @@ def write_sim_files(config, simdir):
             raise
 
     shutil.copy('sim', simdir)
-    shutil.copy(config.libdir + '/' + config.topologyFile + '.xml', confdir)
+    shutil.copy(config.libDir + '/' + config.topologyFile + '.xml', confdir)
 ###############################################################################
 
 
