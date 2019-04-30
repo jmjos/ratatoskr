@@ -77,8 +77,7 @@ void Link::passthrough_thread()
         }
         else {
             // this cycle active
-            Flit* currentFlit;
-            currentFlit = classicPortContainer->portDataIn.read();
+            Flit* currentFlit = classicPortContainer->portDataIn.read();
             flitType = currentFlit->type;
             flitDataType = currentFlit->dataType;
             flitID = currentFlit->id;
