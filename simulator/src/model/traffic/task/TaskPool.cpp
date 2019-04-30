@@ -34,8 +34,9 @@ TaskPool::TaskPool(int numOfElements)
 
 void TaskPool::start()
 {
+    int numOfPEs = processingElements.size();
     for (auto& task: globalResources.tasks) {
-        processingElements.at(task.nodeID%processingElements.size())->execute(task);
+        processingElements.at(task.nodeID%numOfPEs)->execute(task);
     }
 }
 

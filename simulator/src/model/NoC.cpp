@@ -62,6 +62,7 @@ void NoC::createTrafficPool() {
 
 void NoC::createNetworkParticipants() {
 
+    int numOfPEs = tp->processingElements.size();
     for (Node &n : globalResources.nodes) {
         if (n.type->model == "RouterVC") {
             std::string name = "router_" + std::to_string(n.id);
@@ -70,12 +71,12 @@ void NoC::createNetworkParticipants() {
             networkParticipants.at(n.id) = dynamic_cast<NetworkParticipant *>(r);
         } else if (n.type->model == "ProcessingElement") {
             // Creating an network interface.
-            std::string ni_name = "ni_" + std::to_string(n.id % tp->processingElements.size());
+            std::string ni_name = "ni_" + std::to_string(n.id % numOfPEs);
             NetworkInterfaceVC *ni = new NetworkInterfaceVC(ni_name.c_str(), n);
             ni->clk(*clocks.at(n.type->id));
             networkParticipants.at(n.id) = dynamic_cast<NetworkParticipant *>(ni);
 
-            std::string pe_name = "pe_" + std::to_string(n.id % tp->processingElements.size());
+            std::string pe_name = "pe_" + std::to_string(n.id % numOfPEs);
             ProcessingElementVC *pe = new ProcessingElementVC(pe_name.c_str(), n, tp.get());
             std::unique_ptr<PacketSignalContainer> sig1 = std::make_unique<PacketSignalContainer>(
                     ("packetSigCon1_" + std::to_string(n.id)).c_str());
@@ -86,13 +87,14 @@ void NoC::createNetworkParticipants() {
             networkParticipants.push_back(dynamic_cast<NetworkParticipant *>(pe));
             packetSignalContainers.push_back(move(sig1));
             packetSignalContainers.push_back(move(sig2));
-            tp->processingElements.at(n.id % tp->processingElements.size()) = pe;
+            tp->processingElements.at(n.id % numOfPEs) = pe;
         }
     }
 }
 
 void NoC::createSigContainers() {
-    for (int i = 0; i < flitSignalContainers.size(); ++i) {
+    int sizeOfFlitSignalContainers = flitSignalContainers.size();
+    for (int i = 0; i < sizeOfFlitSignalContainers; ++i) {
         flitSignalContainers.at(i) = std::make_unique<FlitSignalContainer>(
                 ("flitSigCont_" + std::to_string(i)).c_str());
     }
@@ -101,7 +103,8 @@ void NoC::createSigContainers() {
 void NoC::createLinks(const std::vector<std::unique_ptr<sc_clock>> &clocks) {
     int link_id = 0;
     for (auto &c : globalResources.connections) {
-        if (c.nodes.size() == 2) { //might extend to bus architecture
+        int connNodesSize = c.nodes.size();
+        if (connNodesSize == 2) { //might extend to bus architecture
             links.at(link_id) = std::make_unique<Link>(
                     ("link_" + std::to_string(link_id) + "_Conn_" + std::to_string(c.id)).c_str(), c, link_id);
             links.at(link_id + 1) = std::make_unique<Link>(

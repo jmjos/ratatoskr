@@ -242,10 +242,12 @@ void GlobalReport::reportVCUsageHist(std::string& csvFileName, int routerId)
 {
     ofstream csvFile;
     csvFile.open(csvFileName);
-    for (unsigned int dir = 0; dir<VCsUsageHist[routerId].size(); ++dir) {
+    int firstDim = VCsUsageHist[routerId].size();
+    for (unsigned int dir = 0; dir<firstDim; ++dir) {
         csvFile << DIR::toString(dir) << ",";
-        for (unsigned int value = 0; value<VCsUsageHist[routerId][dir].size(); ++value) {
-            if (value<VCsUsageHist[routerId][dir].size()-1)
+        int secondDim = VCsUsageHist[routerId][dir].size();
+        for (unsigned int value = 0; value<secondDim; ++value) {
+            if (value<secondDim-1)
                 csvFile << VCsUsageHist[routerId][dir][value] << ",";
             else
                 csvFile << VCsUsageHist[routerId][dir][value] << "\n";
@@ -267,9 +269,10 @@ void GlobalReport::reportBuffPerVCUsageHist(std::string& csvFileName, int router
 
     // Write the header
     csvFile << "Buffer\\VC,";
-    for (unsigned int vc = 0; vc<bufferUsagePerVCHist[routerId][dir].size(); ++vc) { // foreach vc
+    int secondDim = bufferUsagePerVCHist[routerId][dir].size();
+    for (unsigned int vc = 0; vc<secondDim; ++vc) { // foreach vc
         csvFile << vc;
-        if (vc<bufferUsagePerVCHist[routerId][dir].size()-1)
+        if (vc<secondDim-1)
             csvFile << ",";
         else
             csvFile << "\n";
@@ -277,12 +280,12 @@ void GlobalReport::reportBuffPerVCUsageHist(std::string& csvFileName, int router
 
     // Write the matrix
     for (unsigned int buffer = 1; buffer<=MAX_BUFFER_DEPTH; ++buffer) { // foreach buffer
-        for (unsigned int column = 0; column<=bufferUsagePerVCHist[routerId][dir].size(); ++column) { // foreach column
+        for (unsigned int column = 0; column<=secondDim; ++column) { // foreach column
             if (column==0)
                 csvFile << buffer << ", ";
             else {
                 csvFile << bufferUsagePerVCHist[routerId][dir][column-1][buffer];
-                if (column<bufferUsagePerVCHist[routerId][dir].size())
+                if (column<secondDim)
                     csvFile << ",";
                 else
                     csvFile << "\n";
@@ -294,7 +297,8 @@ void GlobalReport::reportBuffPerVCUsageHist(std::string& csvFileName, int router
 
 void GlobalReport::reportAllRoutersUsageHist()
 {
-    for (unsigned int i = 0; i<globalResources.nodes.size(); ++i) {
+    int nodesSize = globalResources.nodes.size();
+    for (unsigned int i = 0; i<nodesSize; ++i) {
         if (globalResources.nodes[i].type->model=="RouterVC" &&
                 std::find(bufferReportRouters.begin(), bufferReportRouters.end(), i)!=bufferReportRouters.end()) {
             std::string csvFileName;
@@ -312,14 +316,16 @@ void GlobalReport::reportAllRoutersUsageHist()
                 std::cerr << "VCUsage folder was not created!" << std::endl;
                 std::exit(EXIT_FAILURE);
             }
-            if (!bufferUsagePerVCHist.at(i).empty())
-                for (unsigned int conPos = 0; conPos<globalResources.nodes[i].connections.size(); ++conPos) {
+            if (!bufferUsagePerVCHist.at(i).empty()) {
+                int nodeConnsSize = globalResources.nodes[i].connections.size();
+                for (unsigned int conPos = 0; conPos<nodeConnsSize; ++conPos) {
                     int dir_int = globalResources.nodes[i].getDirOfConPos(conPos);
                     std::string dir_str = DIR::toString(globalResources.nodes[i].getDirOfConPos(conPos));
                     boost::trim(dir_str);
                     csvFileName = "BuffUsage/"+std::to_string(i)+"_"+dir_str+".csv";
                     reportBuffPerVCUsageHist(csvFileName, i, dir_int);
                 }
+            }
         }
     }
 }
@@ -379,18 +385,17 @@ void GlobalReport::readConfigFile(const std::string& config_path)
     std::string delimiter = " ";
     std::size_t current, previous = 0;
     current = s.find(delimiter);
-    while (current != std::string::npos) {
+    while (current!=std::string::npos) {
         try {
-            bufferReportRouters.push_back(std::stoi(s.substr(previous, current - previous)));
+            bufferReportRouters.push_back(std::stoi(s.substr(previous, current-previous)));
         }
-        catch (char* error)
-        {
-            cout<<"Error: "<< error << endl;
+        catch (char* error) {
+            cout << "Error: " << error << endl;
         }
-        previous = current + 1;
+        previous = current+1;
         current = s.find(delimiter, previous);
     }
-    bufferReportRouters.push_back(std::stoi(s.substr(previous, current - previous)));
+    bufferReportRouters.push_back(std::stoi(s.substr(previous, current-previous)));
 }
 
 void GlobalReport::resizeMatrices()
@@ -443,7 +448,8 @@ void GlobalReport::resizeMatrices()
 void GlobalReport::reportClockCount(ostream& stream)
 {
     stream << "Clock Counts: [";
-    for (int i = 0; i<clockCounts.size(); ++i) {
+    int numOfClocks = clockCounts.size();
+    for (int i = 0; i<numOfClocks; ++i) {
         stream << std::fixed << (clockCounts.at(i));
         if (i<clockCounts.size()-1)
             stream << ", ";

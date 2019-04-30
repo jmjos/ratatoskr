@@ -29,7 +29,8 @@ RouterVC::RouterVC(sc_module_name nm, Node& node)
     int conCount = node.connections.size();
     classicPortContainer.init(conCount);
     buffers.resize(conCount);
-    for (int conPos = 0; conPos<node.connections.size(); conPos++) {
+    int nodeConnsSize = node.connections.size();
+    for (int conPos = 0; conPos<nodeConnsSize; conPos++) {
         switchAllocation_outputVCPtr.insert({conPos, 0});
         connID_t con_id = node.connections.at(conPos);
         Connection* con = &globalResources.connections.at(con_id);
@@ -63,12 +64,12 @@ RouterVC::RouterVC(sc_module_name nm, Node& node)
     sensitive << clk.pos();
 
     SC_METHOD(receive);
-    for (int conPos = 0; conPos<node.connections.size(); conPos++) {
+    for (int conPos = 0; conPos<nodeConnsSize; conPos++) {
         sensitive << classicPortContainer.at(conPos).portValidIn.pos();
     }
 
     SC_METHOD(receiveFlowControlCredit);
-    for (int conPos = 0; conPos<node.connections.size(); conPos++) {
+    for (int conPos = 0; conPos<nodeConnsSize; conPos++) {
         sensitive << classicPortContainer.at(conPos).portFlowControlValidIn.pos();
     }
 }
@@ -82,7 +83,8 @@ void RouterVC::initialize()
 {
     LOG(globalReport.verbose_router_function_calls,
             "Router" << this->id << "in initialize()");
-    for (int conPos = 0; conPos<node.connections.size(); conPos++) {
+    int nodeConnsSize = node.connections.size();
+    for (int conPos = 0; conPos<nodeConnsSize; conPos++) {
         classicPortContainer.at(conPos).portValidOut.write(false);
         classicPortContainer.at(conPos).portFlowControlValidOut.write(false);
     }
@@ -126,7 +128,8 @@ void RouterVC::thread()
         //The negative edge of the clock is used to model the asynchronous communication. Otherwise, the clock of the
         // would need to be fed to the downstream router, which is rather complicated. Therefore, we chose this approach
         // although it is not physically accurate.
-        for (unsigned int con = 0; con<node.connections.size(); con++) {
+        int nodeConnsSize = node.connections.size();
+        for (unsigned int con = 0; con<nodeConnsSize; con++) {
             classicPortContainer.at(con).portValidOut.write(false);
             classicPortContainer.at(con).portFlowControlValidOut.write(false);
         }
@@ -137,7 +140,8 @@ void RouterVC::receive()
 {
     LOG(globalReport.verbose_router_function_calls,
             "Router" << this->id << "in receive() @ " << sc_time_stamp());
-    for (unsigned int conPos = 0; conPos<node.connections.size(); conPos++) {
+    int nodeConnsSize = node.connections.size();
+    for (unsigned int conPos = 0; conPos<nodeConnsSize; conPos++) {
         if (classicPortContainer.at(conPos).portValidIn.read()) {
             Flit* flit = classicPortContainer.at(conPos).portDataIn.read();
             int vc = classicPortContainer.at(conPos).portVcIn.read();
@@ -184,7 +188,8 @@ void RouterVC::updateUsageStats()
             this->id);
 
     if (findInListit!=globalReport.bufferReportRouters.end()) {
-        for (int conPos = 0; conPos<node.connections.size(); conPos++) {
+        int nodeConnsSize = node.connections.size();
+        for (int conPos = 0; conPos<nodeConnsSize; conPos++) {
             Connection* con = &globalResources.connections.at(node.connections.at(conPos));
             int vcCount = con->getVCCountForNode(node.id);
             int numberActiveVCs = 0;
@@ -207,7 +212,8 @@ std::map<int, std::vector<Channel>> RouterVC::VCAllocation_generateRequests()
     LOG(globalReport.verbose_router_function_calls,
             "Router" << this->id << "in VCAllocation_generateRequests() @ " << sc_time_stamp());
     std::map<int, std::vector<Channel>> requests{};
-    for (int in_conPos = 0; in_conPos<node.connections.size(); in_conPos++) {
+    int nodeConnsSize = node.connections.size();
+    for (int in_conPos = 0; in_conPos<nodeConnsSize; in_conPos++) {
         int in_vc = VCAllocation_getNextVCToBeAllocated(in_conPos);
         if (in_vc!=-1) {
             BufferFIFO<Flit*>* buf = buffers.at(in_conPos)->at(in_vc);
@@ -287,7 +293,8 @@ std::map<int, std::vector<Channel>> RouterVC::switchAllocation_generateRequests(
     LOG(globalReport.verbose_router_function_calls,
             "Router" << this->id << "in switchAllocation_generateRequests() @ " << sc_time_stamp());
     std::map<int, std::vector<Channel>> requests{};
-    for (int in_conPos = 0; in_conPos<node.connections.size(); in_conPos++) {
+    int nodeConnsSize = node.connections.size();
+    for (int in_conPos = 0; in_conPos<nodeConnsSize; in_conPos++) {
         std::vector<int> allocated_vcs = getAllocatedVCsOfInDir(in_conPos);
 
         // subtract empty_vcs from allocated_vcs
@@ -421,7 +428,8 @@ void RouterVC::receiveFlowControlCredit()
 {
     LOG(globalReport.verbose_router_function_calls,
             "Router" << this->id << "in VCAllocation_generateRequests() @ " << sc_time_stamp());
-    for (int conPos = 0; conPos<node.connections.size(); conPos++) {
+    int nodeConnsSize = node.connections.size();
+    for (int conPos = 0; conPos<nodeConnsSize; conPos++) {
         if (classicPortContainer.at(conPos).portFlowControlValidIn.posedge()) {
             if (classicPortContainer.at(conPos).portFlowControlValidIn.read()) {
                 auto credit = classicPortContainer.at(conPos).portFlowControlIn.read();

@@ -217,8 +217,8 @@ void ProcessingElementVC::receive()
 void ProcessingElementVC::startSending(Task& task)
 {
     float rn = globalResources.getRandomFloatBetween(0, 1);
-
-    for (unsigned int i = 0; i<task.possibilities.size(); ++i) {
+    int numOfPoss = task.possibilities.size();
+    for (unsigned int i = 0; i<numOfPoss; ++i) {
         if (task.possibilities.at(i).probability>rn) {
             std::vector<DataDestination> destVec = task.possibilities.at(i).dataDestinations;
             for (DataDestination& dest : destVec) {

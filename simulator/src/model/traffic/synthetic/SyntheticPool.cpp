@@ -101,8 +101,8 @@ SyntheticPool::uniform(taskID_t& taskId, int& phaseId,
         dataDestID_t& dataDestId, int maxClockDelay, const SyntheticPhase& sp)
 {
 
-
-    for (unsigned int i = 0; i<processingElements.size(); ++i) {
+    int numOfPEs = processingElements.size();
+    for (unsigned int i = 0; i<numOfPEs; ++i) {
         Task task = Task(taskId, processingElements.at(i)->node.id);
         task.minStart = sp.minStart;
         task.maxStart = sp.maxStart;
@@ -127,7 +127,7 @@ SyntheticPool::uniform(taskID_t& taskId, int& phaseId,
         possID_t poss_id = 0;
         int dataTypeId = globalResources.getRandomIntBetween(0, globalResources.numberOfTrafficTypes-1);
         DataType dataType = DataType(dataTypeId, std::to_string(dataTypeId));
-        for (unsigned int j = 0; j<processingElements.size(); ++j) {
+        for (unsigned int j = 0; j<numOfPEs; ++j) {
             if (i!=j) { // a PE should not send data to itself.
                 Node n = processingElements.at(j)->node;
                 int minInterval = std::floor((float) maxClockDelay/sp.injectionRate);
@@ -140,7 +140,7 @@ SyntheticPool::uniform(taskID_t& taskId, int& phaseId,
                 dest.minDelay = sp.minDelay;
                 dest.maxDelay = sp.maxDelay;
                 dests.push_back(dest);
-                possibilities.emplace_back(poss_id, 1.f/(processingElements.size()-1), dests);
+                possibilities.emplace_back(poss_id, 1.f/(numOfPEs-1), dests);
                 ++poss_id;
                 ++dataDestId;
             }
@@ -159,10 +159,10 @@ std::map<int, int> SyntheticPool::bitComplement()
 {
     std::map<int, int> srcToDst{};
 
-    int nodes = processingElements.size();
+    int numOfPEs = processingElements.size();
 
-    for (int i = 0; i<nodes; ++i) {
-        srcToDst[i] = nodes-i-1;
+    for (int i = 0; i<numOfPEs; ++i) {
+        srcToDst[i] = numOfPEs-i-1;
     }
 
     return srcToDst;
@@ -171,10 +171,10 @@ std::map<int, int> SyntheticPool::bitComplement()
 std::map<int, int> SyntheticPool::transpose()
 {
     std::map<int, int> srcToDst{};
-    int nodes = processingElements.size();
+    int numOfPEs = processingElements.size();
 
-    for (int i = 0; i<nodes; ++i) {
-        srcToDst[i] = (i << int(ceil(log2(nodes)/2)))%(nodes-1);
+    for (int i = 0; i<numOfPEs; ++i) {
+        srcToDst[i] = (i << int(ceil(log2(numOfPEs)/2)))%(numOfPEs-1);
     }
 
     return srcToDst;
@@ -188,8 +188,8 @@ std::map<int, int> SyntheticPool::tornado()
     std::vector<float>* yPos = &globalResources.yPositions;
     std::vector<float>* zPos = &globalResources.zPositions;
 
-    int nodes = processingElements.size();
-    for (int i = 0; i<nodes; ++i) {
+    int numOfPEs = processingElements.size();
+    for (int i = 0; i<numOfPEs; ++i) {
         Vec3D<float> srcPos = processingElements.at(i)->node.pos;
         Vec3D<float> dstPos;
         dstPos.x = xPos->at(((std::find(xPos->begin(), xPos->end(), srcPos.x)-xPos->begin())+(xPos->size() >> 1))%
@@ -218,16 +218,16 @@ std::map<int, int> SyntheticPool::tornado()
 
 std::map<int, int> SyntheticPool::hotSpot(int hotSpot)
 {
-    int nodes = processingElements.size();
+    int numOfPEs = processingElements.size();
 
     if (hotSpot==-1) {
-        hotSpot = globalResources.getRandomIntBetween(0, nodes-1);
+        hotSpot = globalResources.getRandomIntBetween(0, numOfPEs-1);
     }
 
     LOG(true, "\t\t Hotspot: " << hotSpot);
 
     std::map<int, int> srcToDst{};
-    for (int i = 0; i<nodes; ++i) {
+    for (int i = 0; i<numOfPEs; ++i) {
         srcToDst[i] = hotSpot;
     }
     return srcToDst;
@@ -240,14 +240,15 @@ void SyntheticPool::clear(Task*)
 void SyntheticPool::shuffle_execute_tasks(int phaseId)
 {
     // Execute the tasks in random order
-    int offset = phaseId*processingElements.size();
+    int numOfPEs = processingElements.size();
+    int offset = phaseId*numOfPEs;
     auto start = globalResources.tasks.begin()+offset;
     auto end = globalResources.tasks.end();
     std::vector<Task> phaseTasks(start, end);
 
     std::shuffle(phaseTasks.begin(), phaseTasks.end(), *globalResources.rand);
     for (Task& task : phaseTasks) {
-        processingElements.at(task.nodeID%processingElements.size())->execute(task);
+        processingElements.at(task.nodeID%numOfPEs)->execute(task);
     }
 }
 
