@@ -25,26 +25,12 @@ Link::Link(sc_module_name nm, const Connection& c, int globalID)
         :
         id(c.id),
         globalID(globalID),
-        previousFlit(nullptr),
-        currentFlit(nullptr),
         previousTransmissionState(0),
         currentTransmissionState(0)
 {
     classicPortContainer = new FlitPortContainer(
             ("link_portCont_"+std::to_string(this->id)).c_str());
-    if (c.nodes.size()==1) {
-        this->linkType = HORIZONTAL;
-    }
-    else {
-        Node node0 = globalResources.nodes.at(c.nodes.at(0));
-        Node node1 = globalResources.nodes.at(c.nodes.at(1));
-        if (node0.pos.z==node1.pos.z) {
-            this->linkType = HORIZONTAL;
-        }
-        else {
-            this->linkType = VERTICAL;
-        }
-    }
+   
     // this->rawDataOutput = new ofstream((std::string) nm + ".txt");
     SC_THREAD(passthrough_thread);
     sensitive << clk.pos();
@@ -76,33 +62,41 @@ void Link::passthrough_thread()
                 outputToFile = "__;";
                 currentTransmissionState = IDLESTATE;
             }
-            else if (currentFlit->type==HEAD) {
+            else if (flitType==HEAD) {
                 // a head flit traversed previously
-                outputToFile = std::to_string(currentFlit->dataType) + "_;";
+                outputToFile = std::to_string(flitDataType) + "_;";
                 currentTransmissionState = HEADIDLESTATE;
             }
             else {
                 // a flit already traversed the links
-                outputToFile = std::to_string(currentFlit->dataType) + "_;";
-                if (currentFlit->type!=HEAD && currentFlit->type!=BODY && currentFlit->type!=TAIL)
+                outputToFile = std::to_string(flitDataType) + "_;";
+                if (flitType!=HEAD && flitType!=BODY && flitType!=TAIL)
                     continue;
-                currentTransmissionState = (2*currentFlit->dataType) + offset + 1;
+                currentTransmissionState = (2*flitDataType) + offset + 1;
+                if (flitDataType < 0 || flitDataType > 12) {
+                    cout << "datatype: " << flitDataType << endl;
+                    cout << "flit id: " << flitID << endl;
+                }
             }
         }
         else {
             // this cycle active
+            Flit* currentFlit;
             currentFlit = classicPortContainer->portDataIn.read();
-            if (currentFlit->type==HEAD) {
+            flitType = currentFlit->type;
+            flitDataType = currentFlit->dataType;
+            flitID = currentFlit->id;
+            if (flitType==HEAD) {
                 //received head flit
                 outputToFile = "HD;";
                 currentTransmissionState = HEADSTATE;
             }
             else {
                 // received data flit
-                outputToFile = std::to_string(currentFlit->dataType) + "D;";
-                if (currentFlit->type!=HEAD && currentFlit->type!=BODY && currentFlit->type!=TAIL)
+                outputToFile = std::to_string(flitDataType) + "D;";
+                if (flitType!=HEAD && flitType!=BODY && flitType!=TAIL)
                     continue;
-                currentTransmissionState = (2*currentFlit->dataType) + offset;
+                currentTransmissionState = (2*flitDataType) + offset;
             }
         }
 
@@ -111,7 +105,6 @@ void Link::passthrough_thread()
         report.issueLinkMatrixUpdate(globalID, currentTransmissionState, previousTransmissionState);
 
         previousTransmissionState = currentTransmissionState;
-        previousFlit = currentFlit;
     }
 }
 

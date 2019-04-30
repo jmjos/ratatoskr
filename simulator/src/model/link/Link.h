@@ -26,26 +26,22 @@
 #include <fstream>
 
 #include "model/traffic/Flit.h"
+#include "model/traffic/Packet.h"
 #include "model/container/FlitContainer.h"
 #include "utils/GlobalResources.h"
 #include "utils/GlobalReport.h"
-
-enum LinkType {
-    HORIZONTAL = 10, VERTICAL = 11
-};
 
 class Link : public sc_module {
 public:
     GlobalResources& globalResources = GlobalResources::getInstance();
     GlobalReport& report = GlobalReport::getInstance();
     int id, globalID;
-    Flit* previousFlit;
-    Flit* currentFlit;
+    dataTypeID_t flitDataType;
+    flitID_t flitID;
+    FlitType flitType;
+
     int previousTransmissionState;
     int currentTransmissionState;
-    LinkType linkType;
-    int linkWidth;
-    int linkDepth;
     // UNCOMMENT FOR RAW DATA ON LINK (@Lennart)
     // ofstream *rawDataOutput;
     sc_in<bool> clk;
