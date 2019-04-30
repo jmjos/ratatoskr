@@ -73,10 +73,6 @@ void Link::passthrough_thread()
                 if (flitType!=HEAD && flitType!=BODY && flitType!=TAIL)
                     continue;
                 currentTransmissionState = (2*flitDataType) + offset + 1;
-                if (flitDataType < 0 || flitDataType > 12) {
-                    cout << "datatype: " << flitDataType << endl;
-                    cout << "flit id: " << flitID << endl;
-                }
             }
         }
         else {
