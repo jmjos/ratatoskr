@@ -436,7 +436,7 @@ void RouterVC::receiveFlowControlCredit()
                 Channel ch{conPos, credit.vc};
                 if (lastReceivedCreditID.at(ch)!=credit.id)
                     creditCounter.at(ch)++;
-                lastReceivedFlitsID.at(ch) = credit.id;
+                lastReceivedCreditID.at(ch) = credit.id;
             }
         }
     }
