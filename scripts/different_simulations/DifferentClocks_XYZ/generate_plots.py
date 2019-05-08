@@ -52,7 +52,7 @@ def plot_VCUsage_stats(inj_dfs, inj_rates):
     Plot the VC usage statistics.
 
     Parameteres:
-        - inj_dfs: the data frames of the one injection rate.
+        - inj_dfs: the data frames of an injection rate.
         - inj_rates: the number of injection rates.
 
     Return:
@@ -73,47 +73,50 @@ def plot_VCUsage_stats(inj_dfs, inj_rates):
 ###############################################################################
 
 
-def plot_BuffUsage_stats(BuffUsage):
+def plot_BuffUsage_stats(inj_dicts, inj_rates):
     """
     Plot the buffer usage statistics.
 
     Parameters:
-        - BuffUsage: a data structure which is a dictionary of dictionaries.
+        - inj_dicts: the data dictionaries of an injection rate.
+        - inj_rates: the number of injection rates.
 
     Return:
         - None.
     """
-    for layer_name in BuffUsage:
-        layer_dict = BuffUsage[layer_name]
-        fig = plt.figure()
-        for it, d in enumerate(layer_dict):
-            df = layer_dict[d]
-            if not df.empty:
-                ax = fig.add_subplot(3, 2, it+1, projection='3d')
-                lx = df.shape[0]
-                ly = df.shape[1]
-                xpos = np.arange(0, lx, 1)
-                ypos = np.arange(0, ly, 1)
-                xpos, ypos = np.meshgrid(xpos, ypos, indexing='ij')
+    for inj_dict, inj_rate in zip(inj_dicts, inj_rates):
+        for layer_name in inj_dict:
+            layer_dict = inj_dict[layer_name]
+            fig = plt.figure()
+            for it, d in enumerate(layer_dict):
+                df = layer_dict[d]
+                if not df.empty:
+                    ax = fig.add_subplot(3, 2, it+1, projection='3d')
+                    lx = df.shape[0]
+                    ly = df.shape[1]
+                    xpos = np.arange(0, lx, 1)
+                    ypos = np.arange(0, ly, 1)
+                    xpos, ypos = np.meshgrid(xpos, ypos, indexing='ij')
 
-                xpos = xpos.flatten()
-                ypos = ypos.flatten()
-                zpos = np.zeros(lx*ly)
+                    xpos = xpos.flatten()
+                    ypos = ypos.flatten()
+                    zpos = np.zeros(lx*ly)
 
-                dx = 1 * np.ones_like(zpos)
-                dy = dx.copy()
-                dz = df.values.flatten()
+                    dx = 1 * np.ones_like(zpos)
+                    dy = dx.copy()
+                    dz = df.values.flatten()
 
-                ax.bar3d(xpos, ypos, zpos, dx, dy, dz, color='b')
+                    ax.bar3d(xpos, ypos, zpos, dx, dy, dz, color='b')
 
-                ax.set_yticks(ypos)
-                ax.set_xlabel('Buffer Size')
-                ax.set_ylabel('VC Index')
-                ax.set_zlabel('Count')
-                ax.set_title('Direction:'+str(d))
+                    ax.set_yticks(ypos)
+                    ax.set_xlabel('Buffer Size')
+                    ax.set_ylabel('VC Index')
+                    ax.set_zlabel('Count')
+                    ax.set_title('Direction:'+str(d))
 
-        fig.suptitle('Buffer Usage for Layer: '+str(layer_name), fontsize=16)
-        plt.show()
+            fig.suptitle('Layer: '+str(layer_name)+', Injection Rate = '
+                         +str(inj_rate), fontsize=16)
+            plt.show()
 ###############################################################################
 
 
@@ -141,4 +144,4 @@ plot_latencies(results)
 
 plot_VCUsage_stats(results['VCUsage'], results['injectionRates'])
 
-plot_BuffUsage_stats(results['BuffUsage'])
+plot_BuffUsage_stats(results['BuffUsage'], results['injectionRates'])

@@ -141,11 +141,11 @@ def run_indivisual_sim(simdir, basedir):
     try:
         subprocess.run(args, stdout=outfile, check=True)
     except subprocess.CalledProcessError:
-        pass
-
-    outfile.flush()
-    outfile.close()
-    os.chdir(basedir)
+        raise 
+    finally:
+        outfile.flush()
+        outfile.close()
+        os.chdir(basedir)
 ###############################################################################
 
 

@@ -142,10 +142,10 @@ def run_indivisual_sim(simdir, basedir):
         subprocess.run(args, stdout=outfile, check=True)
     except subprocess.CalledProcessError:
         raise
-
-    outfile.flush()
-    outfile.close()
-    os.chdir(basedir)
+    finally:
+        outfile.flush()
+        outfile.close()
+        os.chdir(basedir)
 ###############################################################################
 
 
@@ -223,7 +223,7 @@ def begin_all_sims(config):
     # Run the full simulation (for all injection rates).
     injIter = 0
     VCUsage = []
-    BuffUsage = init_data_structure()  # a dict of dicts
+    BuffUsage = []
     for inj in injectionRates:
         print('Starting Sims with ' + str(config.num_cores) + ' processes')
         Parallel(n_jobs=config.num_cores)(delayed(begin_individual_sim)
@@ -259,17 +259,13 @@ def begin_all_sims(config):
         VCUsage.append(VCUsage_temp)
 
         # Average the buffer usage over restarts.
+        BuffUsage_temp = init_data_structure()  # a dict of dicts
         for l in BuffUsage_inj:
             for d in BuffUsage_inj[l]:
-                BuffUsage_inj[l][d] = np.ceil(BuffUsage_inj[l][d] / config.restarts)
-                BuffUsage[l][d] = BuffUsage[l][d].add(BuffUsage_inj[l][d], fill_value=0)
+                BuffUsage_temp[l][d] = np.ceil(BuffUsage_inj[l][d] / config.restarts)
+        BuffUsage.append(BuffUsage_temp)
 
         injIter += 1
-
-    # Average the buffer usage over injectionRates.
-    for l in BuffUsage:
-        for d in BuffUsage[l]:
-            BuffUsage[l][d] = np.ceil(BuffUsage[l][d] / len(injectionRates))
 
     print('Executed all sims of all injection rates.')
 

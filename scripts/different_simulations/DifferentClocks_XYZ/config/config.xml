@@ -1,59 +1,44 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--// AdaptNoCSimulator. Simulator for Network on Chip with Support for
-	Task Graph Modelling.// Copyright (C) 2014-2014 Jan Moritz Joseph (joseph(at)jmjoseph.de),
-	Universitaet zu Luebeck//// This program is free software: you can redistribute
-	it and/or modify// it under the terms of the GNU General Public License as
-	published by// the Free Software Foundation, either version 3 of the License,
-	or// (at your option) any later version.//// This program is distributed
-	in the hope that it will be useful,// but WITHOUT ANY WARRANTY; without even
-	the implied warranty of// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-	See the// GNU General Public License for more details.//// You should have
-	received a copy of the GNU General Public License// along with this program.
-	If not, see <http://www.gnu.org/licenses/>. -->
 <configuration>
   <general>
-    <simulationTime value="10000" />
+    <simulationTime value="100000" />
     <outputToFile value="true">report</outputToFile>
   </general>
   <noc>
     <nocFile>config/network.xml</nocFile>
-    <flitsPerPacket value="32" />
+    <flitsPerPacket value="10" />
     <Vdd value="5" />
   </noc>
   <application>
     <benchmark>synthetic</benchmark>
-    <!--task, netrace, synthetic -->
+    
     
     <synthetic>
       <phase name="warmup">
       <distribution value="uniform" />
-      <start min="100" max="100" />
-      <duration min="300" max="300" />
-      <repeat min="-1" max="-1" />
-      <delay min="0" max="0" />
-      <!-- <interval min="100" max="100" /> -->
-      <injectionRate value="0.03" />
-      <count min="1" max="1" />
+      <start max="100" min="100" />
+      <duration max="1090" min="1090" />
+      <repeat max="-1" min="-1" />
+      <delay max="0" min="0" />
+      
+      <injectionRate value="0.002" />
+      <count max="1" min="1" />
       <hotspot value="0" />
       </phase>
 
       <phase name="run">
         <distribution value="uniform" />
-        <start max="2100" min="2100" />
-        <duration max="5000" min="5000" />
+        <start max="1100" min="1100" />
+        <duration max="101100" min="101100" />
         <repeat max="-1" min="-1" />
         <delay max="0" min="0" />
-        <!-- <interval max="33" min="33" /> -->
-        <injectionRate value="0.03" />
+        
+        <injectionRate value="0.002" />
         <count max="1" min="1" />
         <hotspot value="0" />
       </phase>
 
     </synthetic>
-       <!--
-      <dataFile>config/data2.xml</dataFile>
-      <mapFile>config/map2.xml</mapFile>
-        -->
+      
       <simulationFile>traffic/pipelinePerformance_2D/PipelineResetTB.xml</simulationFile>
       <mappingFile>traffic/pipelinePerformance_2D/PipelineResetTBMapping.xml</mappingFile>
       <netraceFile>traffic/netrace/example.tra.bz2</netraceFile>
@@ -73,13 +58,13 @@
       </processingElements>
       <router>
         <function_calls value="false" />
-        <send_flit value="false" />
-        <send_head_flit value="false" />
-        <receive_flit value="false" />
-        <receive_head_flit value="false" />
+        <send_flit value="true" />
+        <send_head_flit value="true" />
+        <receive_flit value="true" />
+        <receive_head_flit value="true" />
         <assign_channel value="false" />
         <throttle value="false" />
-        <buffer_overflow value="false" />
+        <buffer_overflow value="true" />
         <reset value="false" />
       </router>
       <netrace>
@@ -95,4 +80,8 @@
         <source_execute value="false" />
       </tasks>
     </verbose>
+    <report>
+      <bufferReportRouters>5 6 9 10 21 22 25 26 37 38 41 42</bufferReportRouters>
+      <!-- <bufferReportRouters>1 2 d 4</bufferReportRouters> -->
+    </report>
   </configuration>
