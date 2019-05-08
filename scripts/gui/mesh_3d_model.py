@@ -33,12 +33,12 @@ def init_script(mesh_file):
 
         # Number of layers
         global num_of_layers
-        num_of_layers = len(root.find('layerTypes'))
+        num_of_layers = len(root.find('layers'))
 
         # Find the id of the ProcessingElement
         proc_elemnt_id = 0
         for nodeType in root.find('nodeTypes').iter('nodeType'):
-            if nodeType.find('routerModel').attrib['value'] == 'ProcessingElement':
+            if nodeType.find('model').attrib['value'] == 'ProcessingElement':
                 proc_elemnt_id = int(nodeType.attrib['id'])
 
         # Points is a list of tuples
@@ -50,7 +50,7 @@ def init_script(mesh_file):
                 x = float(node.find('xPos').attrib['value'])
                 y = float(node.find('yPos').attrib['value'])
                 z = float(node.find('zPos').attrib['value'])
-                layer = int(node.find('layerType').attrib['value'])
+                layer = int(node.find('layer').attrib['value'])
                 points.append(([x, y, z], layer))
                 i = i + 1
             else:

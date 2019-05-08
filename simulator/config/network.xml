@@ -1,6 +1,11 @@
 <?xml version="1.0" ?>
 <network-on-chip xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <bufferDepthType value="single"/>
+  <layers>
+	<layer value="1" />
+	<layer value="2" />
+	<layer value="3" />
+  </layers>
   <nodeTypes>
     <nodeType id="0">
       <model value="RouterVC"/>

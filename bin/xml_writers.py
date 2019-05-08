@@ -264,6 +264,12 @@ class NetworkWriter(Writer):
         bufferDepthType_node = ET.SubElement(self.root_node, 'bufferDepthType')
         bufferDepthType_node.set('value', self.config.bufferDepthType)
 
+    def write_layers(self):
+        layers_node = ET.SubElement(self.root_node, 'layers')
+        for i in range(0, self.config.z):
+            layer_node = ET.SubElement(layers_node, 'layer')
+            layer_node.set('value', str(i))
+
     def write_nodeTypes(self):
         nodeTypes_node = ET.SubElement(self.root_node, 'nodeTypes')
         for i in range(0, self.config.z):
@@ -391,6 +397,7 @@ class NetworkWriter(Writer):
 
     def write_network(self, file_name):
         self.write_header()
+        self.write_layers()
         self.write_nodeTypes()
         nodes_node = self.write_nodes_node()
         self.write_nodes(nodes_node, 'Router')
@@ -541,7 +548,7 @@ class ConfigkWriter(Writer):
         report_node = ET.SubElement(self.root_node, 'report')
         bufferReportRouters = ET.SubElement(report_node, 'bufferReportRouters')
         bufferReportRouters.text = str(self.config.bufferReportRouters).replace(",", "")
-	
+
     def write_config(self, file_name):
         self.write_general()
         self.write_noc()
