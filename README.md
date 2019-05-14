@@ -6,9 +6,15 @@
 
 # Ratatoskr NoC simulator
 
-Welcome to the project website of ratatoskr, a framework to design technology-asymmetric interconnect architectures targeting heterogeneous 3D-SoCs. It is developed at the University in Magdeburg (Germany). Our A-3D-Network-on-Chip simulator is a Network-on-Chip Simulator for asymmetric NoC-architectures. It is developed using SystemC, a system description language based on C++. The software is under MIT license terms.
 
-If you use the simulator in your research, we would appreciate the following citation in any publications to which it has contributed:
+Welcome to the project website of ratatoskr, a framework to design NoCs for heterogeneous 3D SoCs. It includes:
+
+- A NoC simulator with support for heterogeneous 3D SoCs. In includes a high-level model of the router.
+- A lightweight and efficient implementation of a 3D NoC router.
+- Percise power models for links and routers.
+- Integrated design tools.
+
+It is developed at the University in Magdeburg, Germany and Bremen, Germany. The simulator is using C++14 and SystemCand is under MIT license terms. If you use the simulator in your research, we would appreciate the following citation in any publications to which it has contributed:
 
 ---
 
@@ -16,11 +22,13 @@ Jan Moritz Joseph, Sven Wrieden, Christopher Blochwitz, Alberto Garc&iacute;a-Or
 
 ---
 
-## Installation
+You can download the resources via this repo using a recursive git clone git clone --recursive https://github.com/jmjos/ratatorkr or directly on the individual repositories (VHDL router model and power models are shipped individually).
 
-There are several ways to compile the project. If you'd just like to use the project, please use the cmake method.
+## Getting started
 
-### Build Enviroment
+### Installation
+
+#### Build Enviroment
 
 - Ubuntu 18.04 & Boost Libs & pugixml
 - CentOS 7 & boost-devel.x86_64 & pugixml-devel.x86_64
@@ -28,7 +36,7 @@ There are several ways to compile the project. If you'd just like to use the pro
 - SystemC 2.3.3 www.accellera.org/images/downloads/standards/systemc/systemc-2.3.3.gz
 - cmake assumes an installation of systemc to ``/usr/local/systemc-2.3.3`` If not the case, please modify simulator/CMakeLists.txt
 
-#### Building with build script
+##### Building with build script
 We provide a build script, which relys on cmake. It is provided run it via:
 ```
 > cd simulator
@@ -36,7 +44,7 @@ We provide a build script, which relys on cmake. It is provided run it via:
 ```
 
 
-#### Building with cmake
+##### Building with cmake
 Go into simulator folder. Simply type
 ```
 > cd simulator
@@ -53,14 +61,14 @@ To use a subfolder and multi-thread build:
 > cp sim ..
 ```
 
-#### Building with CLion
+##### Building with CLion
 
 Works out-of-the-box using "Open Existing Project" and then opening the CMakeLists.txt in the prject folder. You need to change one thing which is, the Generation path:
 - File -> Settings -> Build, Execuation, Deployment -> CMake. Now set the Generation path to the current folder i.e. '.'.
 
 Enjoy.
 
-#### Building with Eclipse
+##### Building with Eclipse
 
 Open a workspace at the location "workspace"-folder. Then, create an new C++ project with the same name as the subfolder of the project you want to work on (i.e. a3dnoc-simulator). After applying the settings, you should be ready to go! 
 
@@ -129,8 +137,21 @@ any documentation you want to write about your project.
 ## Contributing
 If you wish to contribute, please contact me at my univeristy email address jan.joseph@ovgu.de. We offer student development jobs for students from Magdeburg.
 
-## Credits
-A special thanks to my students Sven Wrieden and Imad Hajjar (github.com/imadhajjar) for their amazing help with the project. 
+## People 
+The following people participated:
+- [Lennart Bamberg](github.com/lennartjanis): Physical models, hardware implementation and optimization
+- [Jan Moritz Joseph](https://github.com/jmjos): Simulation tools and design optimization
+- [Prof. Dr.-Ing. Alberto García-Ortiz](www.ids.uni-bremen.de/agarcia.html)
+- [Prof. Dr.-Ing. Thilo Pionteck](http://www.iikt.ovgu.de/pionteck.html)
+- [Imad Hajjar](https://github.com/imadhajjar)
+- Dominik Ermel
+- Sven Wrieden
+
+## Acknolegdements
+
+This work is funded by the German Research Foundation (DFG) project GA 763/7-1 and PI 477/8-1.
+
+We are very grateful for the help of [Prof. Dr. Volker Kaibel](https://www.math.uni-magdeburg.de/~kaibel/).
 
 ## License
 
