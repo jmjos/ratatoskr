@@ -18,4 +18,4 @@ __pycache__/
 /bin/individual_simulation/sim_folder/
 /bin/urand/performance_buffer_VCUsage_report.pdf
 .idea/
-
+log.txt
