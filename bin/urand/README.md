@@ -45,6 +45,6 @@ When sourced, it will activate the python virtual library.
 
 After the simulation is done you should see rawResults.pkl file. This file contains the latencies (the result of the simulation) and the general configuration that produced these results (basically, the config.ini file).
 
-Also, to make sure the simulator runs the urand simulation correctly, you should get a latencie graph similar to the following one.
+Also, to make sure the simulator runs the urand simulation correctly, you should get a latencies graph similar to the following one.
 
-<img src="https://github.com/jmjos/ratatoskr/raw/master/docs/misc/result.png">
+<img src="https://github.com/jmjos/ratatoskr/raw/master/docs/misc/latencies.png">
