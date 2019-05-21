@@ -1,1 +1,0 @@
-source ./virtualenv/bin/activate
