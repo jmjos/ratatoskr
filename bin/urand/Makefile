@@ -4,7 +4,7 @@ all: venv
 
 venv: ${venvdir}/bin/activate
 ${venvdir}/bin/activate: requirements.txt
-	test -d ${venvdir} || python -m venv ${venvdir}
+	test -d ${venvdir} || python3 -m venv ${venvdir}
 	${venvdir}/bin/pip install --upgrade pip
 	${venvdir}/bin/pip install -Ur requirements.txt
 	touch ${venvdir}/bin/activate
