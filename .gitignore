@@ -11,6 +11,7 @@ simulator/.idea/
 simulator/CMakeFiles/
 *.csv
 *.pkl
+!*rawResults.pkl
 sim
 virtualenv/
 __pycache__/
