@@ -36,6 +36,8 @@ You can download the resources via this repo using a recursive git clone git clo
 - SystemC 2.3.3 www.accellera.org/images/downloads/standards/systemc/systemc-2.3.3.gz
 - cmake assumes an installation of systemc to ``/usr/local/systemc-2.3.3`` If not the case, please modify simulator/CMakeLists.txt
 
+If you are using Ubuntu 16, you must compile against SystemC 2.3.1a!
+
 ##### Building with build script
 We provide a build script, which relys on cmake. It is provided run it via:
 ```
