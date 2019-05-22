@@ -405,7 +405,6 @@ void RouterVC::send()
             classicPortContainer.at(in.conPos).portFlowControlValidOut.write(true);
             globalReport.increaseCrossbar(this->id);
             Node n = globalResources.nodes.at(this->node.id);
-            globalReport.increase_power_stats(this->id, n.getDirOfConPos(out.conPos));
             if (DIR::Local!=node.getDirOfConPos(out.conPos)) // NI has infinite buffers
                 creditCounter.at(out)--;
             if (flit->type==TAIL) {
