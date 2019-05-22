@@ -297,36 +297,54 @@ void GlobalReport::reportBuffPerVCUsageHist(std::string& csvFileName, int router
 
 void GlobalReport::reportAllRoutersUsageHist()
 {
-    int nodesSize = globalResources.nodes.size();
-    for (unsigned int i = 0; i<nodesSize; ++i) {
-        if (globalResources.nodes[i].type->model=="RouterVC" &&
-                std::find(bufferReportRouters.begin(), bufferReportRouters.end(), i)!=bufferReportRouters.end()) {
-            std::string csvFileName;
-
-            int isFolderCreated = system("mkdir -p ./VCUsage");
-            if (isFolderCreated!=0) {
-                std::cerr << "VCUsage folder was not created!" << std::endl;
-                std::exit(EXIT_FAILURE);
-            }
-            csvFileName = "VCUsage/"+std::to_string(i)+".csv";
-            reportVCUsageHist(csvFileName, i);
-
-            isFolderCreated = system("mkdir -p ./BuffUsage");
-            if (isFolderCreated!=0) {
-                std::cerr << "VCUsage folder was not created!" << std::endl;
-                std::exit(EXIT_FAILURE);
-            }
-            if (!bufferUsagePerVCHist.at(i).empty()) {
-                int nodeConnsSize = globalResources.nodes[i].connections.size();
-                for (unsigned int conPos = 0; conPos<nodeConnsSize; ++conPos) {
-                    int dir_int = globalResources.nodes[i].getDirOfConPos(conPos);
-                    std::string dir_str = DIR::toString(globalResources.nodes[i].getDirOfConPos(conPos));
-                    boost::trim(dir_str);
-                    csvFileName = "BuffUsage/"+std::to_string(i)+"_"+dir_str+".csv";
-                    reportBuffPerVCUsageHist(csvFileName, i, dir_int);
-                }
+    std::vector<int> routers_ids{};
+    if (!bufferReportRouters.empty()) {
+        routers_ids = bufferReportRouters;
+    }
+    else {
+        int num_nodes = globalResources.nodes.size();
+        for (unsigned int i = 0; i<num_nodes; ++i) {
+            if (globalResources.nodes[i].type->model=="RouterVC") {
+                routers_ids.push_back(i);
             }
         }
+    }
+    int num_routers = routers_ids.size();
+    for (unsigned int i = 0; i<num_routers; ++i) {
+        int router_id = routers_ids[i];
+        std::string csvFileName;
+
+        int isFolderCreated = system("mkdir -p ./VCUsage");
+        if (isFolderCreated!=0) {
+            std::cerr << "VCUsage folder was not created!" << std::endl;
+            std::exit(EXIT_FAILURE);
+        }
+        csvFileName = "VCUsage/"+std::to_string(router_id)+".csv";
+        reportVCUsageHist(csvFileName, router_id);
+
+        isFolderCreated = system("mkdir -p ./BuffUsage");
+        if (isFolderCreated!=0) {
+            std::cerr << "VCUsage folder was not created!" << std::endl;
+            std::exit(EXIT_FAILURE);
+        }
+        if (!bufferUsagePerVCHist.at(router_id).empty()) {
+            int nodeConnsSize = globalResources.nodes[router_id].connections.size();
+            for (unsigned int conPos = 0; conPos<nodeConnsSize; ++conPos) {
+                int dir_int = globalResources.nodes[router_id].getDirOfConPos(conPos);
+                std::string dir_str = DIR::toString(globalResources.nodes[router_id].getDirOfConPos(conPos));
+                boost::trim(dir_str);
+                csvFileName = "BuffUsage/"+std::to_string(router_id)+"_"+dir_str+".csv";
+                reportBuffPerVCUsageHist(csvFileName, router_id, dir_int);
+            }
+        }
+
+        isFolderCreated = system("mkdir -p ./Power_Stats");
+        if (isFolderCreated!=0) {
+            std::cerr << "Power_Stats folder was not created!" << std::endl;
+            std::exit(EXIT_FAILURE);
+        }
+        csvFileName = "Power_Stats/"+std::to_string(router_id)+".csv";
+        report_power_stats(csvFileName, router_id);
     }
 }
 
@@ -443,6 +461,10 @@ void GlobalReport::resizeMatrices()
             }
         }
     }
+    power_stats.resize(numRouters);
+    for (auto& router_stats:power_stats) {
+        router_stats.resize(DIR::size);
+    }
 }
 
 void GlobalReport::reportClockCount(ostream& stream)
@@ -499,4 +521,20 @@ void GlobalReport::reportRoutersPowerCSV(ostream& csvfile)
     }
 }
 
+void GlobalReport::increase_power_stats(int router_id, int dir)
+{
+    long counter = power_stats.at(router_id).at(dir);
+    power_stats[router_id][dir] = ++counter;
+}
+
+void GlobalReport::report_power_stats(std::string& csvFileName, int router_id)
+{
+    ofstream csvFile;
+    csvFile.open(csvFileName);
+    csvFile << "Direction," << "Num_Send_OPs\n";
+    for (unsigned int dir = 0; dir<DIR::size; ++dir) {
+        csvFile << DIR::toString(dir) << "," << power_stats[router_id][dir] << "\n";
+    }
+    csvFile.close();
+}
 

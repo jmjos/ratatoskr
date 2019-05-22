@@ -61,6 +61,8 @@ public:
      */
     std::vector<std::vector<std::vector<std::vector<long>>>> bufferUsagePerVCHist;
 
+    std::vector<std::vector<long>> power_stats;
+
     void readConfigFile(const std::string& config_path);
 
     /// VERBOSE ///
@@ -159,6 +161,10 @@ public:
     void reportRoutersPowerCSV(ostream& csvfile);
 
     std::vector<int> bufferReportRouters;// TODO = {5, 6, 9, 10, 21, 22, 25, 26, 37, 38, 41, 42};
+
+    void increase_power_stats(int router_id, int dir);
+
+    void report_power_stats(std::string& csvFileName, int router_id);
 
 private:
     GlobalResources& globalResources = GlobalResources::getInstance();
