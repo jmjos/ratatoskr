@@ -531,9 +531,13 @@ void GlobalReport::report_power_stats(std::string& csvFileName, int router_id)
 {
     ofstream csvFile;
     csvFile.open(csvFileName);
-    csvFile << "Direction," << "Num_Send_OPs\n";
+    Node router = globalResources.nodes.at(router_id);
+    csvFile << "Direction, Num_Active, Num_Non_Active\n";
     for (unsigned int dir = 0; dir<DIR::size; ++dir) {
-        csvFile << DIR::toString(dir) << "," << power_stats[router_id][dir] << "\n";
+        int layer = router.layer;
+        long num_active = power_stats[router_id][dir];
+        long num_non_active = clockCounts.at(layer) - num_active;
+        csvFile << DIR::toString(dir) << "," <<  num_active << "," << num_non_active << "\n";
     }
     csvFile.close();
 }
