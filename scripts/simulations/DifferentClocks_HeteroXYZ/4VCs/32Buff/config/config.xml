@@ -5,7 +5,7 @@
   </general>
   <noc>
     <nocFile>config/network.xml</nocFile>
-    <flitsPerPacket value="10" />
+    <flitsPerPacket value="32"/>
     <Vdd value="5" />
   </noc>
   <application>
