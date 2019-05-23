@@ -337,14 +337,6 @@ void GlobalReport::reportAllRoutersUsageHist()
                 reportBuffPerVCUsageHist(csvFileName, router_id, dir_int);
             }
         }
-
-        isFolderCreated = system("mkdir -p ./Power_Stats");
-        if (isFolderCreated!=0) {
-            std::cerr << "Power_Stats folder was not created!" << std::endl;
-            std::exit(EXIT_FAILURE);
-        }
-        csvFileName = "Power_Stats/"+std::to_string(router_id)+".csv";
-        report_power_stats(csvFileName, router_id);
     }
 }
 
@@ -461,10 +453,6 @@ void GlobalReport::resizeMatrices()
             }
         }
     }
-    power_stats.resize(numRouters);
-    for (auto& router_stats:power_stats) {
-        router_stats.resize(DIR::size);
-    }
 }
 
 void GlobalReport::reportClockCount(ostream& stream)
@@ -519,26 +507,5 @@ void GlobalReport::reportRoutersPowerCSV(ostream& csvfile)
                 << "," << buffer_router_front_pwr_d.at(id) << "," << routing_pwr_d.at(id) << ","
                 << crossbar_pwr_d.at(id) << "\n";
     }
-}
-
-void GlobalReport::increase_power_stats(int router_id, int dir)
-{
-    long counter = power_stats.at(router_id).at(dir);
-    power_stats[router_id][dir] = ++counter;
-}
-
-void GlobalReport::report_power_stats(std::string& csvFileName, int router_id)
-{
-    ofstream csvFile;
-    csvFile.open(csvFileName);
-    Node router = globalResources.nodes.at(router_id);
-    csvFile << "Direction, Num_Active, Num_Non_Active\n";
-    for (unsigned int dir = 0; dir<DIR::size; ++dir) {
-        int layer = router.layer;
-        long num_active = power_stats[router_id][dir];
-        long num_non_active = clockCounts.at(layer) - num_active;
-        csvFile << DIR::toString(dir) << "," <<  num_active << "," << num_non_active << "\n";
-    }
-    csvFile.close();
 }
 
