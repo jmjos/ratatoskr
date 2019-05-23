@@ -178,7 +178,7 @@ def get_latencies(latencies_results_file):
 ###############################################################################
 
 
-def begin_individual_sim(config, restart, injectionRates, injIter):
+def begin_individual_sim(config, restart, injectionRates, injIter, power_file):
     """
     Begin a simulation with a specif injection rate.
 
@@ -187,6 +187,7 @@ def begin_individual_sim(config, restart, injectionRates, injIter):
         - restart: the index of restarts.
         - injectioRates: the list of injection rates.
         - injIter: the index of the injection rate to be run.
+        - power_file: the csv of the power estimates.
 
     Return:
         - None.
@@ -201,8 +202,37 @@ def begin_individual_sim(config, restart, injectionRates, injIter):
                       currentConfDir + '/config.xml',
                       injectionRates[injIter])
     run_indivisual_sim(currentSimDir, config.root_sim_folder)
+    merge_power_stats(injectionRates[injIter], restart,
+                      currentSimDir + '/Power_Stats/', power_file)
 ###############################################################################
 
+
+def init_header(file):
+    """
+    Initialize the header of power csv file.
+
+    Parameters:
+        - file: the path to the csv file.
+    """
+    with open(file, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Inj_Rate', 'Sim', 'Router',
+                         'Direction', 'Num_Active', 'Num_Non_Active'])
+###############################################################################
+
+
+def merge_power_stats(inj_rate, sim, source_folder, output_file):
+    for file in os.listdir(source_folder):
+        file = os.path.join(source_folder, file)
+        with open(file, 'r', newline='') as f:
+            reader = csv.reader(f)
+            next(reader)  # skip the header
+            with open(output_file, 'a', newline='') as f:
+                writer = csv.writer(f)
+                for row in reader:
+                    router_id = os.path.splitext(os.path.basename(file))[0]
+                    writer.writerow([inj_rate, sim, router_id] + row)
+###############################################################################
 
 def begin_all_sims(config):
     """
@@ -229,10 +259,12 @@ def begin_all_sims(config):
     injIter = 0
     VCUsage = []
     BuffUsage = []
+    power_file = config.basedir + '/power_stats.csv'
+    init_header(power_file)
     for inj in injectionRates:
         print('Starting Sims with ' + str(config.num_cores) + ' processes')
         Parallel(n_jobs=config.num_cores)(delayed(begin_individual_sim)
-        (config, restart, injectionRates, injIter) for restart in range(config.restarts))
+        (config, restart, injectionRates, injIter, power_file) for restart in range(config.restarts))
 
         VCUsage_inj = [pd.DataFrame() for i in range(3)]
         BuffUsage_inj = init_data_structure()  # a dict of dicts
@@ -272,6 +304,9 @@ def begin_all_sims(config):
 
         injIter += 1
 
+    Power_Stats = pd.read_csv(power_file)
+    os.remove(power_file)
+
     print('Executed all sims of all injection rates.')
 
     results = {'latenciesFlit': latenciesFlit,
@@ -279,7 +314,8 @@ def begin_all_sims(config):
                'latenciesPacket': latenciesPacket,
                'injectionRates': injectionRates,
                'VCUsage': VCUsage,
-               'BuffUsage': BuffUsage}
+               'BuffUsage': BuffUsage,
+               'Power_Stats': Power_Stats}
     return results
 ###############################################################################
 
