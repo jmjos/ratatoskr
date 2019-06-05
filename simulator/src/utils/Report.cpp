@@ -29,7 +29,7 @@ Report::Report()
 void Report::connect(const std::string& addr, const std::string& port)
 {
     networkDisabled = true;
-    struct addrinfo addrInfoReq {};
+    struct addrinfo addrInfoReq{};
     struct addrinfo* addrInfo;
     memset(&addrInfoReq, 0, sizeof addrInfoReq);
 

@@ -59,7 +59,7 @@ public:
 
     void receiveFlitFromRouter() override;
 
-    void generateFlitsForPacket(Packet *p) override;
+    void generateFlitsForPacket(Packet* p) override;
 
     void receiveFlowControlCreditFromRouter();
 };

@@ -38,6 +38,6 @@ Packet* PacketFactory::createPacket(Node& src, Node& dst, int size, double gener
 void PacketFactory::deletePacket(Packet* p)
 {
     auto it = std::find(packets.begin(), packets.end(), p);
-    delete(*it);
+    delete (*it);
     packets.erase(it);
 }

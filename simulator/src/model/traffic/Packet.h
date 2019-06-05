@@ -31,26 +31,26 @@
 #include "utils/Report.h"
 
 struct Packet {
-	static long long idcnt;
-	long long id;
-	long long dbid;
-	Node src;
-	Node dst;
-	int size;
-	double generationTime;
-	dataTypeID_t dataType; // type identifier for link matrices
-	int pkgclass;	// tag for adaptive routing
-	int numhops;
-	std::vector<int> traversedRouters;
-	std::vector<flitID_t> toTransmit;
-	std::vector<flitID_t> inTransmit;
-	std::vector<flitID_t> transmitted;
-	std::vector<Flit*> flits;
-	Report& rep = Report::getInstance();
+    static long long idcnt;
+    long long id;
+    long long dbid;
+    Node src;
+    Node dst;
+    int size;
+    double generationTime;
+    dataTypeID_t dataType; // type identifier for link matrices
+    int pkgclass;    // tag for adaptive routing
+    int numhops;
+    std::vector<int> traversedRouters;
+    std::vector<flitID_t> toTransmit;
+    std::vector<flitID_t> inTransmit;
+    std::vector<flitID_t> transmitted;
+    std::vector<Flit*> flits;
+    Report& rep = Report::getInstance();
 
-	Packet(Node& src, Node& dst, int size, double generationTime, dataTypeID_t dataType);
+    Packet(Node& src, Node& dst, int size, double generationTime, dataTypeID_t dataType);
 
-	friend ostream & operator <<(ostream & os, const Packet& p);
+    friend ostream& operator<<(ostream& os, const Packet& p);
 
-	~Packet();
+    ~Packet();
 };

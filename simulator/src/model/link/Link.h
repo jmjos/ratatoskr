@@ -37,7 +37,7 @@ public:
     GlobalReport& report = GlobalReport::getInstance();
     int id, globalID;
     dataTypeID_t flitDataType;
-    flitID_t flitID;
+    // flitID_t flitID;
     FlitType flitType;
 
     int previousTransmissionState;

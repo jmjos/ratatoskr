@@ -29,7 +29,7 @@ Router::Router(sc_module_name nm, Node& node)
         :
         node(node)
 {
-    int numOfRouters = static_cast<int>(globalResources.nodes.size() / 2);
+    int numOfRouters = static_cast<int>(globalResources.nodes.size()/2);
     this->id = node.id%(numOfRouters);
     this->dbid = rep.registerElement("Router", this->id);
 
@@ -39,13 +39,13 @@ Router::Router(sc_module_name nm, Node& node)
     rep.reportAttribute(dbid, "clock", std::to_string(node.type->clockDelay));
     rep.reportAttribute(dbid, "type", node.type->model);
 
-    if(node.type->routing=="XYZ")
+    if (node.type->routing=="XYZ")
         routingAlg = std::make_unique<XYZRouting>();
-    else if(node.type->routing=="HeteroXYZ")
+    else if (node.type->routing=="HeteroXYZ")
         routingAlg = std::make_unique<HeteroXYZRouting>();
-    else if(node.type->routing=="RandomXYZ")
+    else if (node.type->routing=="RandomXYZ")
         routingAlg = std::make_unique<RandomXYZRouting>();
-    else if(node.type->routing=="RandomHeteroXYZ")
+    else if (node.type->routing=="RandomHeteroXYZ")
         routingAlg = std::make_unique<RandomHeteroXYZRouting>();
 }
 

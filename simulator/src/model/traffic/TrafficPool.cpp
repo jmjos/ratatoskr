@@ -21,6 +21,7 @@
  ******************************************************************************/
 #include "TrafficPool.h"
 #include "model/networkInterface/NetworkInterface.h"
+
 TrafficPool::TrafficPool()
 {
     this->dbid = rep.registerElement("TrafficPool", 0);

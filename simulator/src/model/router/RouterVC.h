@@ -27,18 +27,18 @@
 class RouterVC : public Router {
 public:
     std::map<Channel, int> creditCounter;
-    std::map<Channel, int> lastReceivedCreditID;
-    std::map<int, std::vector<int> > VCAllocation_inputVC_rrList;
-    std::map<int, std::vector<int> > switchAllocation_inputVC_rrList;
+    std::map<Channel, std::array<int, 4>> lastReceivedCreditID;
+    std::map<int, std::vector<int>> VCAllocation_inputVC_rrList;
+    std::map<int, std::vector<int>> switchAllocation_inputVC_rrList;
     std::map<int, int> switchAllocation_outputVCPtr;
 
-    RouterVC(sc_module_name nm, Node &node);
+    RouterVC(sc_module_name nm, Node& node);
 
     ~RouterVC();
 
     void initialize() override;
 
-    void bind(Connection *, SignalContainer *, SignalContainer *) override;
+    void bind(Connection*, SignalContainer*, SignalContainer*) override;
 
     void receive() override;
 
@@ -50,7 +50,7 @@ public:
 
     std::map<int, std::vector<Channel>> VCAllocation_generateRequests();
 
-    void VCAllocation_generateAck(const std::map<int, std::vector<Channel>> &requests);
+    void VCAllocation_generateAck(const std::map<int, std::vector<Channel>>& requests);
 
     int VCAllocation_getNextFreeVC(int out);
 
@@ -58,7 +58,7 @@ public:
 
     std::map<int, std::vector<Channel>> switchAllocation_generateRequests();
 
-    void switchAllocation_generateAck(const std::map<int, std::vector<Channel>> &requests);
+    void switchAllocation_generateAck(const std::map<int, std::vector<Channel>>& requests);
 
     void receiveFlowControlCredit() override;
 
@@ -71,4 +71,12 @@ private:
     std::vector<int> generateVCsFromPtr(int direction, std::map<int, int> vcOffset);
 
     void insert_request(int out_conPos, Channel in, std::map<int, std::vector<Channel>>& requests);
+
+    void send_one_flit(BufferFIFO<Flit*>* buf, Channel in, Channel out);
+
+    void send_multi_flits(BufferFIFO<Flit*>* buf, Channel in, Channel out);
+
+    void receive_one_flit();
+
+    void receive_multi_flits();
 };

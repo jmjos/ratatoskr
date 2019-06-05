@@ -46,6 +46,6 @@ public:
 
     virtual void receiveFlitFromRouter() = 0;
 
-    virtual void generateFlitsForPacket(Packet *p) = 0;
+    virtual void generateFlitsForPacket(Packet* p) = 0;
 };
 

@@ -49,7 +49,7 @@ std::ostream& operator<<(std::ostream& os, const Packet& p)
 
 Packet::~Packet()
 {
-    for(auto& f:flits){
+    for (auto& f:flits) {
         delete f;
     }
     flits.clear();

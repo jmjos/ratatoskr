@@ -1,101 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mapping xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:noNamespaceSchemaLocation="ApplicationMapping.xsd">
-  <resource id ="0">
-    <Task id="0"></Task>
-  </resource>
-  <resource id ="1">
-    <Task id="1"></Task>
-  </resource>
-  <resource id ="2">
-    <Task id="2"></Task>
-  </resource>
-  <resource id ="3">
-    <Task id="3"></Task>
-  </resource>
-  <resource id ="4">
-    <Task id="4"></Task>
-  </resource>
-  <resource id ="5">
-    <Task id="5"></Task>
-  </resource>
-  <resource id ="6">
-    <Task id="6"></Task>
-  </resource>
-  <resource id ="7">
-    <Task id="7"></Task>
-  </resource>
-  <resource id ="8">
-    <Task id="8"></Task>
-  </resource>
-  <resource id ="9">
-    <Task id="9"></Task>
-  </resource>
-  <resource id ="10">
-    <Task id="10"></Task>
-  </resource>
-  <resource id ="11">
-    <Task id="11"></Task>
-  </resource>
-  <resource id ="12">
-    <Task id="12"></Task>
-  </resource>
-  <resource id ="13">
-    <Task id="13"></Task>
-  </resource>
-  <resource id ="14">
-    <Task id="14"></Task>
-  </resource>
-  <resource id ="15">
-    <Task id="15"></Task>
-  </resource>
-  <resource id ="16">
-    <Task id="16"></Task>
-  </resource>
-  <resource id ="17">
-    <Task id="17"></Task>
-  </resource>
-  <resource id ="18">
-    <Task id="18"></Task>
-  </resource>
-  <resource id ="19">
-    <Task id="19"></Task>
-  </resource>
-  <resource id ="20">
-    <Task id="20"></Task>
-  </resource>
-  <resource id ="21">
-    <Task id="21"></Task>
-  </resource>
-  <resource id ="22">
-    <Task id="22"></Task>
-  </resource>
-  <resource id ="23">
-    <Task id="23"></Task>
-  </resource>
-  <resource id ="24">
-    <Task id="24"></Task>
-  </resource>
-  <resource id ="25">
-    <Task id="25"></Task>
-  </resource>
-  <resource id ="26">
-    <Task id="26"></Task>
-  </resource>
-  <resource id ="27">
-    <Task id="27"></Task>
-  </resource>
-  <resource id ="28">
-    <Task id="28"></Task>
-  </resource>
-  <resource id ="29">
-    <Task id="29"></Task>
-  </resource>
-  <resource id ="30">
-    <Task id="30"></Task>
-  </resource>
-  <resource id ="31">
-    <Task id="31"></Task>
-  </resource>
+         xsi:noNamespaceSchemaLocation="ApplicationMapping.xsd">
+    <resource id="0">
+        <Task id="0"></Task>
+    </resource>
+    <resource id="1">
+        <Task id="1"></Task>
+    </resource>
+    <resource id="2">
+        <Task id="2"></Task>
+    </resource>
+    <resource id="3">
+        <Task id="3"></Task>
+    </resource>
+    <resource id="4">
+        <Task id="4"></Task>
+    </resource>
+    <resource id="5">
+        <Task id="5"></Task>
+    </resource>
+    <resource id="6">
+        <Task id="6"></Task>
+    </resource>
+    <resource id="7">
+        <Task id="7"></Task>
+    </resource>
+    <resource id="8">
+        <Task id="8"></Task>
+    </resource>
+    <resource id="9">
+        <Task id="9"></Task>
+    </resource>
+    <resource id="10">
+        <Task id="10"></Task>
+    </resource>
+    <resource id="11">
+        <Task id="11"></Task>
+    </resource>
+    <resource id="12">
+        <Task id="12"></Task>
+    </resource>
+    <resource id="13">
+        <Task id="13"></Task>
+    </resource>
+    <resource id="14">
+        <Task id="14"></Task>
+    </resource>
+    <resource id="15">
+        <Task id="15"></Task>
+    </resource>
+    <resource id="16">
+        <Task id="16"></Task>
+    </resource>
+    <resource id="17">
+        <Task id="17"></Task>
+    </resource>
+    <resource id="18">
+        <Task id="18"></Task>
+    </resource>
+    <resource id="19">
+        <Task id="19"></Task>
+    </resource>
+    <resource id="20">
+        <Task id="20"></Task>
+    </resource>
+    <resource id="21">
+        <Task id="21"></Task>
+    </resource>
+    <resource id="22">
+        <Task id="22"></Task>
+    </resource>
+    <resource id="23">
+        <Task id="23"></Task>
+    </resource>
+    <resource id="24">
+        <Task id="24"></Task>
+    </resource>
+    <resource id="25">
+        <Task id="25"></Task>
+    </resource>
+    <resource id="26">
+        <Task id="26"></Task>
+    </resource>
+    <resource id="27">
+        <Task id="27"></Task>
+    </resource>
+    <resource id="28">
+        <Task id="28"></Task>
+    </resource>
+    <resource id="29">
+        <Task id="29"></Task>
+    </resource>
+    <resource id="30">
+        <Task id="30"></Task>
+    </resource>
+    <resource id="31">
+        <Task id="31"></Task>
+    </resource>
 
 </mapping>

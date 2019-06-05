@@ -102,8 +102,12 @@ void RouterVC::initialize()
             else if (globalResources.bufferDepthType=="perVC")
                 buf_size = conn->getBufferDepthForNodeAndVC(connectedRouter.id, vc);
             creditCounter.insert({ch, buf_size});
-            lastReceivedCreditID.insert({ch, -1});
-            lastReceivedFlitsID.insert({ch, -1});
+            std::array<int, 4> last_creadit_ids{};
+            last_creadit_ids.fill(-1);
+            lastReceivedCreditID.insert({ch, last_creadit_ids});
+            std::array<flitID_t, 4> last_flit_ids{};
+            last_flit_ids.fill(-1);
+            lastReceivedFlitsID.insert({ch, last_flit_ids});
         }
     }
 }
@@ -143,35 +147,72 @@ void RouterVC::receive()
     int nodeConnsSize = node.connections.size();
     for (unsigned int conPos = 0; conPos<nodeConnsSize; conPos++) {
         if (classicPortContainer.at(conPos).portValidIn.read()) {
-            Flit* flit = classicPortContainer.at(conPos).portDataIn.read();
-            int vc = classicPortContainer.at(conPos).portVcIn.read();
-            BufferFIFO<Flit*>* buf = buffers.at(conPos)->at(vc);
-            Channel in = Channel(conPos, vc);
+            /*        Flit* flit = classicPortContainer.at(conPos).portDataIn.read();
+                    int vc = classicPortContainer.at(conPos).portVcIn.read();
+                    BufferFIFO<Flit*>* buf = buffers.at(conPos)->at(vc);
+                    Channel in = Channel(conPos, vc);
 
-            /* Prevents double writing of data, which occurs for asynchronous buffers.
-             * Problem: This function is executed for all buffers if new data arrive. If some directions are clocked
-             * at different data rate, the slower data rates are duplicated.
-             */
-            if (lastReceivedFlitsID.at(in)!=flit->id) {
-                if (buf->enqueue(flit)) {
-                    //rep.reportEvent(buf->dbid, "buffer_enqueue_flit", std::to_string(flit->id));
-                    globalReport.increaseBufferPush(this->id);
-                    lastReceivedFlitsID.at(in) = flit->id;
-                    if (flit->type==HEAD) {
-                        LOG(globalReport.verbose_router_receive_head_flit,
-                                "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
-                                         << "]\t- Receive Flit " << *flit);
+                    // Prevents double writing of data, which occurs for asynchronous buffers.
+                    // Problem: This function is executed for all buffers if new data arrive. If some directions are clocked
+                    // at different data rate, the slower data rates are duplicated.
+
+                    if (lastReceivedFlitsID.at(in)!=flit->id) {
+                        if (buf->enqueue(flit)) {
+                            //rep.reportEvent(buf->dbid, "buffer_enqueue_flit", std::to_string(flit->id));
+                            globalReport.increaseBufferPush(this->id);
+                            lastReceivedFlitsID.at(in) = flit->id;
+                            if (flit->type==HEAD) {
+                                LOG(globalReport.verbose_router_receive_head_flit,
+                                        "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
+                                                 << "]\t- Receive Flit " << *flit);
+                            }
+                            else {
+                                LOG(globalReport.verbose_router_receive_flit,
+                                        "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
+                                                 << "]\t- Receive Flit " << *flit);
+                            }
+                        }
+                        else {
+                            LOG(globalReport.verbose_router_buffer_overflow,
+                                    "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
+                                             << "]\t- Buffer Overflow " << *flit);
+                        }
+                    }*/
+
+            size_t num_in_ports = classicPortContainer.at(conPos).portsDataIn.size();
+            for (unsigned int i = 0; i<num_in_ports; ++i) {
+                Flit* flit = classicPortContainer.at(conPos).portsDataIn[i].read();
+                if (flit) {
+                    int vc = classicPortContainer.at(conPos).portsVcIn[i].read();
+                    BufferFIFO<Flit*>* buf = buffers.at(conPos)->at(vc);
+                    Channel in = Channel(conPos, vc);
+
+                    // Prevents double writing of data, which occurs for asynchronous buffers.
+                    // Problem: This function is executed for all buffers if new data arrive. If some directions are clocked
+                    // at different data rate, the slower data rates are duplicated.
+
+                    if (lastReceivedFlitsID.at(in).at(0)!=flit->id) {
+                        if (buf->enqueue(flit)) {
+                            //rep.reportEvent(buf->dbid, "buffer_enqueue_flit", std::to_string(flit->id));
+                            globalReport.increaseBufferPush(this->id);
+                            lastReceivedFlitsID.at(in)[i] = flit->id;
+                            if (flit->type==HEAD) {
+                                LOG(globalReport.verbose_router_receive_head_flit,
+                                        "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
+                                                 << "]\t- Receive Flit " << *flit);
+                            }
+                            else {
+                                LOG(globalReport.verbose_router_receive_flit,
+                                        "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
+                                                 << "]\t- Receive Flit " << *flit);
+                            }
+                        }
+                        else {
+                            LOG(globalReport.verbose_router_buffer_overflow,
+                                    "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
+                                             << "]\t- Buffer Overflow " << *flit);
+                        }
                     }
-                    else {
-                        LOG(globalReport.verbose_router_receive_flit,
-                                "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
-                                         << "]\t- Receive Flit " << *flit);
-                    }
-                }
-                else {
-                    LOG(globalReport.verbose_router_buffer_overflow,
-                            "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
-                                     << "]\t- Buffer Overflow " << *flit);
                 }
             }
         }
@@ -392,31 +433,47 @@ void RouterVC::send()
         Channel out = entry.second;
         if (creditCounter.count(out) && creditCounter.at(out)>0) {
             BufferFIFO<Flit*>* buf = buffers.at(in.conPos)->at(in.vc);
-            assert(!buf->empty());
-            Flit* flit = buf->front();
-            assert(flit);
-            buf->dequeue();
-            globalReport.increaseBufferPop(this->id);
-            classicPortContainer.at(out.conPos).portValidOut.write(true);
-            classicPortContainer.at(out.conPos).portDataOut.write(flit);
-            classicPortContainer.at(out.conPos).portVcOut.write(out.vc);
-            Credit credit{in.vc};
-            classicPortContainer.at(in.conPos).portFlowControlOut.write(credit);
+
+            //DIR::TYPE src = node.getDirOfConPos(in.conPos);
+            DIR::TYPE dest = node.getDirOfConPos(out.conPos);
+
+            if (dest==DIR::Up)
+                send_multi_flits(buf, in, out);
+            else
+                send_one_flit(buf, in, out);
+
+            /*classicPortContainer.at(out.conPos).portValidOut.write(true);
             classicPortContainer.at(in.conPos).portFlowControlValidOut.write(true);
-            globalReport.increaseCrossbar(this->id);
-            Node n = globalResources.nodes.at(this->node.id);
-            globalReport.increase_power_stats(this->id, n.getDirOfConPos(out.conPos));
-            if (DIR::Local!=node.getDirOfConPos(out.conPos)) // NI has infinite buffers
-                creditCounter.at(out)--;
-            if (flit->type==TAIL) {
-                routingTable.erase(in);
-            }
-            LOG(
-                    (globalReport.verbose_router_send_head_flit && flit->type==HEAD) ||
-                            globalReport.verbose_router_send_flit,
-                    "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(out.conPos)) << out.vc
-                             << "]\t- Send Flit "
-                             << *flit);
+
+            size_t num_out_ports = classicPortContainer.at(out.conPos).portsDataOut.size();
+            for (unsigned int i = 0; i<num_out_ports; ++i) {
+                assert(!buf->empty());
+                Flit* flit = buf->front();
+                assert(flit);
+                buf->dequeue();
+                globalReport.increaseBufferPop(this->id);
+                classicPortContainer.at(out.conPos).portsDataOut[i].write(flit);
+                classicPortContainer.at(out.conPos).portsVcOut[i].write(out.vc);
+                Credit credit{in.vc};
+                classicPortContainer.at(in.conPos).portsFlowControlOut[i].write(credit);
+
+                globalReport.increaseCrossbar(this->id);
+
+                Node n = globalResources.nodes.at(this->node.id);
+                globalReport.increase_power_stats(this->id, n.getDirOfConPos(out.conPos)); //TODO maybe not in for loop?
+
+                if (DIR::Local!=node.getDirOfConPos(out.conPos)) // NI has infinite buffers
+                    creditCounter.at(out)--;
+                if (flit->type==TAIL) {
+                    routingTable.erase(in);
+                }
+                LOG(
+                        (globalReport.verbose_router_send_head_flit && flit->type==HEAD) ||
+                                globalReport.verbose_router_send_flit,
+                        "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(out.conPos)) << out.vc
+                                 << "]\t- Send Flit "
+                                 << *flit);
+            }*/
         }
         else {
             LOG(globalReport.verbose_router_throttle,
@@ -434,11 +491,16 @@ void RouterVC::receiveFlowControlCredit()
     for (int conPos = 0; conPos<nodeConnsSize; conPos++) {
         if (classicPortContainer.at(conPos).portFlowControlValidIn.posedge()) {
             if (classicPortContainer.at(conPos).portFlowControlValidIn.read()) {
-                auto credit = classicPortContainer.at(conPos).portFlowControlIn.read();
-                Channel ch{conPos, credit.vc};
-                if (lastReceivedCreditID.at(ch)!=credit.id)
-                    creditCounter.at(ch)++;
-                lastReceivedCreditID.at(ch) = credit.id;
+                size_t num_in_ports = classicPortContainer.at(conPos).portsFlowControlIn.size();
+                for (unsigned int i = 0; i<num_in_ports; ++i) {
+                    auto credit = &classicPortContainer.at(conPos).portsFlowControlIn[i].read();
+                    if(credit) {
+                        Channel ch{conPos, credit->vc};
+                        if (lastReceivedCreditID.at(ch).at(0)!=credit->id)
+                            creditCounter.at(ch)++;
+                        lastReceivedCreditID.at(ch)[i] = credit->id;
+                    }
+                }
             }
         }
     }
@@ -498,4 +560,87 @@ void RouterVC::insert_request(int out_conPos, Channel in, std::map<int, std::vec
     }
     else
         requests.at(out_conPos).push_back(in);
+}
+
+void RouterVC::send_one_flit(BufferFIFO<Flit*>* buf, Channel in, Channel out)
+{
+    assert(!buf->empty());
+    Flit* flit = buf->front();
+    assert(flit);
+    buf->dequeue();
+    globalReport.increaseBufferPop(this->id);
+    classicPortContainer.at(out.conPos).portValidOut.write(true);
+    classicPortContainer.at(out.conPos).portsDataOut[0].write(flit);
+    classicPortContainer.at(out.conPos).portsVcOut[0].write(out.vc);
+    Credit credit{in.vc};
+    classicPortContainer.at(in.conPos).portsFlowControlOut[0].write(credit);
+    classicPortContainer.at(in.conPos).portFlowControlValidOut.write(true);
+    globalReport.increaseCrossbar(this->id);
+    Node n = globalResources.nodes.at(this->node.id);
+    if (DIR::Local!=node.getDirOfConPos(out.conPos)) // NI has infinite buffers
+        creditCounter.at(out)--;
+    if (flit->type==TAIL) {
+        routingTable.erase(in);
+    }
+    LOG(
+            (globalReport.verbose_router_send_head_flit && flit->type==HEAD) ||
+                    globalReport.verbose_router_send_flit,
+            "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(out.conPos)) << out.vc
+                     << "]\t- Send Flit "
+                     << *flit);
+}
+
+void RouterVC::send_multi_flits(BufferFIFO<Flit*>* buf, Channel in, Channel out)
+{
+    classicPortContainer.at(out.conPos).portValidOut.write(true);
+    classicPortContainer.at(in.conPos).portFlowControlValidOut.write(true);
+
+    size_t num_out_ports = classicPortContainer.at(out.conPos).portsDataOut.size();
+    Packet* first_flit_p = nullptr;
+    for (unsigned int i = 0; i<num_out_ports; ++i) {
+        if (!buf->empty()) {
+            Flit* flit = buf->front();
+            if (flit) {
+                // make sure all flits are from the same packet
+                if (i==0) {
+                    first_flit_p = flit->packet;
+                }
+                assert(first_flit_p->id==flit->packet->id);
+
+                buf->dequeue();
+                globalReport.increaseBufferPop(this->id);
+                classicPortContainer.at(out.conPos).portsDataOut[i].write(flit);
+                classicPortContainer.at(out.conPos).portsVcOut[i].write(out.vc);
+                Credit credit{in.vc};
+                classicPortContainer.at(in.conPos).portsFlowControlOut[i].write(credit);
+
+                globalReport.increaseCrossbar(this->id);
+
+                Node n = globalResources.nodes.at(this->node.id);
+                globalReport.increase_power_stats(this->id, n.getDirOfConPos(out.conPos)); //TODO maybe not in for loop?
+
+                if (DIR::Local!=node.getDirOfConPos(out.conPos)) // NI has infinite buffers
+                    creditCounter.at(out)--;
+                if (flit->type==TAIL) {
+                    routingTable.erase(in);
+                }
+                LOG(
+                        (globalReport.verbose_router_send_head_flit && flit->type==HEAD) ||
+                                globalReport.verbose_router_send_flit,
+                        "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(out.conPos)) << out.vc
+                                 << "]\t- Send Flit "
+                                 << *flit);
+            }
+        }
+    }
+}
+
+void RouterVC::receive_one_flit()
+{
+
+}
+
+void RouterVC::receive_multi_flits()
+{
+
 }

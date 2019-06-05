@@ -25,14 +25,15 @@
 
 #include "model/traffic/Flit.h"
 #include "utils/Structures.h"
+#include <array>
 
 class FlitSignalContainer : public SignalContainer {
 public:
     sc_signal<bool> sigValid;
     sc_signal<bool> sigFlowControlValid;
-    sc_signal<Credit> sigFlowControl;
-    sc_signal<Flit*> sigData;
-    sc_signal<int> sigVc;
+    std::array<sc_signal<Credit>, 4> sigsFlowControl;
+    std::array<sc_signal<Flit*>, 4> sigsData;
+    std::array<sc_signal<int>, 4> sigsVc;
 
     explicit FlitSignalContainer(const sc_module_name& nm)
             :
@@ -48,15 +49,15 @@ class FlitPortContainer : public PortContainer {
 public:
     sc_in<bool> portValidIn;
     sc_in<bool> portFlowControlValidIn;
-    sc_in<Credit> portFlowControlIn;
-    sc_in<Flit*> portDataIn;
-    sc_in<int> portVcIn;
+    std::array<sc_in<Credit>, 4> portsFlowControlIn;
+    std::array<sc_in<Flit*>, 4> portsDataIn;
+    std::array<sc_in<int>, 4> portsVcIn;
 
     sc_out<bool> portValidOut;
     sc_out<bool> portFlowControlValidOut;
-    sc_out<Credit> portFlowControlOut;
-    sc_out<Flit*> portDataOut;
-    sc_out<int> portVcOut;
+    std::array<sc_out<Credit>, 4> portsFlowControlOut;
+    std::array<sc_out<Flit*>, 4> portsDataOut;
+    std::array<sc_out<int>, 4> portsVcOut;
 
     explicit FlitPortContainer(const sc_module_name& nm)
             :
@@ -76,16 +77,20 @@ public:
 
         portValidIn(cscin->sigValid);
         portFlowControlValidIn(cscin->sigFlowControlValid);
-        portFlowControlIn(cscin->sigFlowControl);
-        portDataIn(cscin->sigData);
-        portVcIn(cscin->sigVc);
+        size_t size = portsFlowControlIn.size();
+        for (unsigned int i = 0; i<size; ++i) {
+            portsFlowControlIn[i](cscin->sigsFlowControl[i]);
+            portsDataIn[i](cscin->sigsData[i]);
+            portsVcIn[i](cscin->sigsVc[i]);
+        }
 
         portValidOut(cscout->sigValid);
         portFlowControlValidOut(cscout->sigFlowControlValid);
-        portFlowControlOut(cscout->sigFlowControl);
-        portDataOut(cscout->sigData);
-        portVcOut(cscout->sigVc);
-
+        for (unsigned int i = 0; i<size; ++i) {
+            portsFlowControlOut[i](cscout->sigsFlowControl[i]);
+            portsDataOut[i](cscout->sigsData[i]);
+            portsVcOut[i](cscout->sigsVc[i]);
+        }
     }
 
     void bindOpen(SignalContainer* sIn)
@@ -96,14 +101,19 @@ public:
 
         portValidIn(cscin->sigValid);
         portFlowControlValidIn(cscin->sigFlowControlValid);
-        portFlowControlIn(cscin->sigFlowControl);
-        portDataIn(cscin->sigData);
-        portVcIn(cscin->sigVc);
+        size_t size = portsFlowControlIn.size();
+        for (unsigned int i = 0; i<size; ++i) {
+            portsFlowControlIn[i](cscin->sigsFlowControl[i]);
+            portsDataIn[i](cscin->sigsData[i]);
+            portsVcIn[i](cscin->sigsVc[i]);
+        }
 
         portValidOut(portOpen);
         portFlowControlValidOut(portOpen);
-        portFlowControlOut(portOpen);
-        portDataOut(portOpen);
-        portVcOut(portOpen);
+        for (unsigned int i = 0; i<size; ++i) {
+            portsFlowControlOut[i](portOpen);
+            portsDataOut[i](portOpen);
+            portsVcOut[i](portOpen);
+        }
     }
 };

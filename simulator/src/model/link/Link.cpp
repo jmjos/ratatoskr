@@ -30,7 +30,7 @@ Link::Link(sc_module_name nm, const Connection& c, int globalID)
 {
     classicPortContainer = new FlitPortContainer(
             ("link_portCont_"+std::to_string(this->id)).c_str());
-   
+
     // this->rawDataOutput = new ofstream((std::string) nm + ".txt");
     SC_THREAD(passthrough_thread);
     sensitive << clk.pos();
@@ -64,34 +64,39 @@ void Link::passthrough_thread()
             }
             else if (flitType==HEAD) {
                 // a head flit traversed previously
-                outputToFile = std::to_string(flitDataType) + "_;";
+                outputToFile = std::to_string(flitDataType)+"_;";
                 currentTransmissionState = HEADIDLESTATE;
             }
             else {
                 // a flit already traversed the links
-                outputToFile = std::to_string(flitDataType) + "_;";
+                outputToFile = std::to_string(flitDataType)+"_;";
                 if (flitType!=HEAD && flitType!=BODY && flitType!=TAIL)
                     continue;
-                currentTransmissionState = (2*flitDataType) + offset + 1;
+                currentTransmissionState = (2*flitDataType)+offset+1;
             }
         }
         else {
             // this cycle active
-            Flit* currentFlit = classicPortContainer->portDataIn.read();
-            flitType = currentFlit->type;
-            flitDataType = currentFlit->dataType;
-            flitID = currentFlit->id;
-            if (flitType==HEAD) {
-                //received head flit
-                outputToFile = "HD;";
-                currentTransmissionState = HEADSTATE;
-            }
-            else {
-                // received data flit
-                outputToFile = std::to_string(flitDataType) + "D;";
-                if (flitType!=HEAD && flitType!=BODY && flitType!=TAIL)
-                    continue;
-                currentTransmissionState = (2*flitDataType) + offset;
+            size_t num_in_ports = classicPortContainer->portsDataIn.size();
+            for (unsigned int i = 0; i<num_in_ports; ++i) {
+                Flit* currentFlit = classicPortContainer->portsDataIn[i].read();
+                if(currentFlit) {
+                    flitType = currentFlit->type;
+                    flitDataType = currentFlit->dataType;
+                    // flitID = currentFlit->id;
+                    if (flitType==HEAD) {
+                        //received head flit
+                        outputToFile = "HD;";
+                        currentTransmissionState = HEADSTATE;
+                    }
+                    else {
+                        // received data flit
+                        outputToFile = std::to_string(flitDataType)+"D;";
+                        if (flitType!=HEAD && flitType!=BODY && flitType!=TAIL)
+                            continue;
+                        currentTransmissionState = (2*flitDataType)+offset;
+                    }
+                }
             }
         }
 

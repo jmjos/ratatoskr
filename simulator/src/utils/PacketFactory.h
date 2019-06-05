@@ -28,7 +28,10 @@
 class PacketFactory {
 public:
     std::vector<Packet*> packets;
+
     static PacketFactory& getInstance();
+
     Packet* createPacket(Node& src, Node& dst, int size, double generationTime, dataTypeID_t dataType);
+
     void deletePacket(Packet* p);
 };
