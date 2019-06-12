@@ -140,39 +140,16 @@ void NetworkInterfaceVC::thread()
 
                 std::vector<flitID_t> f_ids{};
                 int src_id = this->id;
-                int dst_id = p->dst.id - (globalResources.nodes.size()/2);
+                int dst_id = p->dst.id-(globalResources.nodes.size()/2);
                 int outConPos = routingAlg->route(src_id, dst_id);
                 DIR::TYPE dir = globalResources.nodes.at(id).getDirOfConPos(outConPos);
-                auto conn_nodes_ids = node.connectedNodes;
-                Node correct_node = node;
-                for (const auto &conn_node_id:conn_nodes_ids) {
-                    Node conn_node = globalResources.nodes.at(conn_node_id);
-                    if (dir == DIR::Up && conn_node.pos.z > node.pos.z) {
-                        correct_node = conn_node;
-                        break;
-                    }
-                    if (dir == DIR::Down && conn_node.pos.z < node.pos.z) {
-                        correct_node = conn_node;
-                        break;
-                    } else if (dir == DIR::East && conn_node.pos.x > node.pos.x) {
-                        correct_node = conn_node;
-                        break;
-                    } else if (dir == DIR::West && conn_node.pos.x < node.pos.x) {
-                        correct_node = conn_node;
-                        break;
-                    } else if (dir == DIR::North && conn_node.pos.y > node.pos.y) {
-                        correct_node = conn_node;
-                        break;
-                    } else if (dir == DIR::South && conn_node.pos.y < node.pos.y) {
-                        correct_node = conn_node;
-                        break;
-                    }
-                }
+                Node next_node = routingAlg->getNextNode(this->node, dir);
                 int my_delay = node.type->clockDelay;
-                int next_node_delay = correct_node.type->clockDelay;
-                if(next_node_delay > my_delay) {    // going to a slower layer
+                int next_node_delay = next_node.type->clockDelay;
+                if (next_node_delay>my_delay) {
                     f_ids = std::vector<flitID_t>(p->toTransmit.begin(), p->toTransmit.begin()+4);
-                } else {
+                }
+                else {
                     f_ids = std::vector<flitID_t>(p->toTransmit.begin(), p->toTransmit.begin()+1);
                 }
 
@@ -307,7 +284,7 @@ void NetworkInterfaceVC::receiveFlowControlCreditFromRouter()
         size_t num_in_ports = flitPortContainer->portsFlowControlIn.size();
         for (unsigned int i = 0; i<num_in_ports; ++i) {
             auto credit = &flitPortContainer->portsFlowControlIn[i].read();
-            if(credit) {
+            if (credit) {
                 assert(credit->vc==0);
                 if (lastReceivedCreditID!=credit->id) {
                     ++creditCounter;

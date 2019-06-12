@@ -30,4 +30,8 @@ public:
     GlobalResources& globalResources = GlobalResources::getInstance();
 
     virtual int route(int src_node_id, int dst_node_id) = 0; // calculate a route and returns the connection's position
+
+    Node getNextNode(const Node& node, DIR::TYPE dir);
 };
+
+

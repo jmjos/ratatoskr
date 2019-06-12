@@ -33,6 +33,8 @@
                 <hotspot value="0"/>
             </phase>
         </synthetic>
+	<dataFile>config/data.xml</dataFile>
+	<mapFile>config/map.xml</mapFile>
         <simulationFile>traffic/pipelinePerformance_2D/PipelineResetTB.xml</simulationFile>
         <mappingFile>traffic/pipelinePerformance_2D/PipelineResetTBMapping.xml</mappingFile>
         <netraceFile>traffic/netrace/example.tra.bz2</netraceFile>
@@ -52,11 +54,11 @@
         </processingElements>
         <router>
             <function_calls value="false"/>
-            <send_flit value="true"/>
-            <send_head_flit value="true"/>
-            <receive_head_flit value="true"/>
-            <receive_flit value="true"/>
-            <receive_tail_flit value="true"/>
+            <send_flit value="false"/>
+            <send_head_flit value="false"/>
+            <receive_head_flit value="false"/>
+            <receive_flit value="false"/>
+            <receive_tail_flit value="false"/>
             <throttle value="false"/>
             <reset value="false"/>
             <assign_channel value="false"/>
