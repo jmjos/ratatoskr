@@ -34,3 +34,7 @@ NetworkInterface::NetworkInterface(sc_module_name nm, Node& node)
     rep.reportAttribute(dbid, "clock", std::to_string(node.type->clockDelay));
     rep.reportAttribute(dbid, "type", node.type->model);
 }
+
+NetworkInterface::~NetworkInterface() {
+    delete routingAlg;
+}

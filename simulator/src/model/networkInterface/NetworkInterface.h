@@ -27,6 +27,10 @@
 
 #include "utils/Structures.h"
 #include "model/router/Router.h"
+#include <model/router/routings/XYZRouting.h>
+#include <model/router/routings/HeteroXYZRouting.h>
+#include <model/router/routings/RandomXYZRouting.h>
+#include <model/router/routings/RandomHeteroXYZRouting.h>
 #include "utils/GlobalReport.h"
 
 class NetworkInterface : public NetworkParticipant, public sc_module {
@@ -35,6 +39,7 @@ public:
     int dbid;
     Node node;
     Report& rep = Report::getInstance();
+    BaseRouting* routingAlg;
 
     SC_HAS_PROCESS(NetworkInterface);
 
@@ -47,5 +52,7 @@ public:
     virtual void receiveFlitFromRouter() = 0;
 
     virtual void generateFlitsForPacket(Packet* p) = 0;
+
+    ~NetworkInterface();
 };
 

@@ -59,6 +59,17 @@ void NetworkInterfaceVC::initialize()
 {
     flitPortContainer->portValidOut.write(false);
     flitPortContainer->portFlowControlValidOut.write(false);
+
+    //Node corres_router = globalResources.nodes.at(id-(globalResources.nodes.size()/2));
+    Node corres_router = globalResources.nodes.at(id);
+    if (corres_router.type->routing=="XYZ")
+        routingAlg = new XYZRouting();
+    else if (corres_router.type->routing=="HeteroXYZ")
+        routingAlg = new HeteroXYZRouting();
+    else if (corres_router.type->routing=="RandomXYZ")
+        routingAlg = new RandomXYZRouting();
+    else if (corres_router.type->routing=="RandomHeteroXYZ")
+        routingAlg = new RandomHeteroXYZRouting();
 }
 
 void NetworkInterfaceVC::bind(Connection* con, SignalContainer* sigContIn, SignalContainer* sigContOut)
@@ -127,7 +138,44 @@ void NetworkInterfaceVC::thread()
                         || globalReport.verbose_pe_send_flit,
                         "NI" << this->id << "(Node" << node.id << ")\t\t- Send Flit " << *current_flit);*/
 
-                auto f_ids = std::vector<flitID_t>(p->toTransmit.begin(), p->toTransmit.begin()+4);
+                std::vector<flitID_t> f_ids{};
+                int src_id = this->id;
+                int dst_id = p->dst.id - (globalResources.nodes.size()/2);
+                int outConPos = routingAlg->route(src_id, dst_id);
+                DIR::TYPE dir = globalResources.nodes.at(id).getDirOfConPos(outConPos);
+                auto conn_nodes_ids = node.connectedNodes;
+                Node correct_node = node;
+                for (const auto &conn_node_id:conn_nodes_ids) {
+                    Node conn_node = globalResources.nodes.at(conn_node_id);
+                    if (dir == DIR::Up && conn_node.pos.z > node.pos.z) {
+                        correct_node = conn_node;
+                        break;
+                    }
+                    if (dir == DIR::Down && conn_node.pos.z < node.pos.z) {
+                        correct_node = conn_node;
+                        break;
+                    } else if (dir == DIR::East && conn_node.pos.x > node.pos.x) {
+                        correct_node = conn_node;
+                        break;
+                    } else if (dir == DIR::West && conn_node.pos.x < node.pos.x) {
+                        correct_node = conn_node;
+                        break;
+                    } else if (dir == DIR::North && conn_node.pos.y > node.pos.y) {
+                        correct_node = conn_node;
+                        break;
+                    } else if (dir == DIR::South && conn_node.pos.y < node.pos.y) {
+                        correct_node = conn_node;
+                        break;
+                    }
+                }
+                int my_delay = node.type->clockDelay;
+                int next_node_delay = correct_node.type->clockDelay;
+                if(next_node_delay > my_delay) {    // going to a slower layer
+                    f_ids = std::vector<flitID_t>(p->toTransmit.begin(), p->toTransmit.begin()+4);
+                } else {
+                    f_ids = std::vector<flitID_t>(p->toTransmit.begin(), p->toTransmit.begin()+1);
+                }
+
                 std::vector<Flit*> current_flits;
                 auto flits = &(p->flits);
                 for_each(f_ids.begin(), f_ids.end(), [&f_ids, &flits, &current_flits](int id) {
