@@ -397,6 +397,7 @@ public:
     int id;
     static int idcnt;
     int vc;
+    bool is_single_mode;
 
     Credit() = default;
 

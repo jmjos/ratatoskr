@@ -40,6 +40,8 @@ public:
     sc_in<bool> clk;
     FlitPortContainer* flitPortContainer;
     PacketPortContainer* packetPortContainer;
+    //std::array<int, 4> creditCounter;
+    //std::array<int, 4> lastReceivedCreditID;
     int creditCounter;
     int lastReceivedCreditID;
 

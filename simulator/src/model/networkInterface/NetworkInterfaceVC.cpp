@@ -33,6 +33,11 @@ NetworkInterfaceVC::NetworkInterfaceVC(sc_module_name nm, Node& node)
         Node connectedRouter = globalResources.nodes.at(node.connectedNodes.at(0));
         Connection* conn = &globalResources.connections.at(node.getConnWithNode(connectedRouter));
         this->creditCounter = conn->getBufferDepthForNode(connectedRouter.id);
+//        for(unsigned int i=0; i < 4; ++i) {
+//            this->creditCounter[i] = conn->getBufferDepthForNode(connectedRouter.id);
+//            lastReceivedCreditID[i] = -1;
+//        }
+
         this->flitPortContainer = new FlitPortContainer(
                 ("NI_FLIT_CONTAINER"+std::to_string(this->id)).c_str());
         this->packetPortContainer = new PacketPortContainer(
@@ -113,7 +118,7 @@ void NetworkInterfaceVC::thread()
     LOG(globalReport.verbose_pe_function_calls, "NI" << this->id << "(Node" << node.id << ")\t\t- send_data_process()");
     if (clk.posedge()) {
         if (!packet_send_queue.empty()) {
-            if (creditCounter!=0) {
+            if (creditCounter>0) {
                 Packet* p = packet_send_queue.front();
                 if (p->flits.empty())
                     generateFlitsForPacket(p);
@@ -207,6 +212,9 @@ void NetworkInterfaceVC::thread()
 
 void NetworkInterfaceVC::receiveFlitFromRouter()
 {
+    if (sc_time_stamp().to_double()/1000==824 && id==60)
+        cout << "stop" << endl;
+
     LOG(globalReport.verbose_pe_function_calls,
             "NI" << this->id << "(Node" << node.id << ")\t- receive_data_process()");
     if (flitPortContainer->portValidIn.posedge()) {

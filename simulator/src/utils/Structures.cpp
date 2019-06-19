@@ -317,7 +317,7 @@ SyntheticPhase::SyntheticPhase(synthID_t id, const std::string& name, const std:
 int Credit::idcnt = 0;
 
 Credit::Credit(int vc)
-        :vc(vc)
+        :vc(vc), is_single_mode(false)
 {
     id = (idcnt++)%INT_MAX;
 }
@@ -333,5 +333,6 @@ Credit& Credit::operator=(const Credit& credit)
         return *this;
     this->id = credit.id;
     this->vc = credit.vc;
+    this->is_single_mode = credit.is_single_mode;
     return *this;
 }

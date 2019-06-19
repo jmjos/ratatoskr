@@ -37,7 +37,7 @@ NoC::NoC(sc_module_name nm)
     createLinks(clocks);
     runNoC();
 
-    //SC_THREAD(verifyFlowControl);
+    SC_THREAD(verifyFlowControl);
 }
 
 void NoC::createClocks()
@@ -142,7 +142,7 @@ void NoC::createLinks(const std::vector<std::unique_ptr<sc_clock>>& clocks)
 }
 
 //This function was used to verify the credit counter. It works!
-/*
+
 void NoC::verifyFlowControl() {
     while (1) {
         wait(1, SC_NS);
@@ -209,7 +209,7 @@ void NoC::verifyFlowControl() {
         }
     }
 }
-*/
+
 
 void NoC::runNoC()
 {

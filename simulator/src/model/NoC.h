@@ -58,7 +58,7 @@ public:
     ~NoC() override;
 
     //This function was used to verify the credit counter. It works!
-    //void verifyFlowControl();
+    void verifyFlowControl();
 
 private:
     GlobalResources& globalResources = GlobalResources::getInstance();

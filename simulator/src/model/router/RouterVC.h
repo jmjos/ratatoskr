@@ -75,4 +75,6 @@ private:
     void send_one_flit(BufferFIFO<Flit*>* buf, Channel in, Channel out);
 
     void send_multi_flits(BufferFIFO<Flit*>* buf, Channel in, Channel out);
+
+    std::pair<int, int> getLastIdsPos(int curr_pos, int arr_size);
 };
