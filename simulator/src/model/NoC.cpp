@@ -149,28 +149,27 @@ void NoC::guiServer(){
             int numberOfRouter = globalResources.nodes.size() / 2;
             std::vector<ptree> routerChilds;
             routerChilds.resize(numberOfRouter);
-            int tmpCounter = 0;
+            int childCounter = 0;
             for (auto &c : globalResources.nodes) {
                 if (c.type->model == "RouterVC") {
                     RouterVC *router = dynamic_cast<RouterVC *>(networkParticipants.at(c.id));
                     int value = router->id;
-                    routerChilds.at(tmpCounter).put("id", value);
-                    tmpCounter++;
+                    routerChilds.at(childCounter).put("id", value);
+                    childCounter++;
                 }
             }
-
             for (auto child : routerChilds) {
                 children.push_back(std::make_pair("", child));
             }
+            pt.add_child("Data", children);
 
-            pt.add_child("MyArray", children);
             std::stringstream ss;
             boost::property_tree::json_parser::write_json(ss, pt);
             std::string jsonstring = ss.str();
 
             zmq::message_t reply(jsonstring.size());
             memcpy(reply.data(), jsonstring.c_str(), jsonstring.size());
-            socket.send(reply);
+            socket.send(reply, ZMQ_NOBLOCK);
             //std::string rpl = std::string(static_cast<char *>(reply.data()), reply.size());
             // std::cout << rpl << std::endl;
         }
