@@ -30,6 +30,13 @@
 #include <utils/PacketFactory.h>
 
 #include "systemc.h"
+#include <boost/asio.hpp>
+#include <boost/property_tree/ptree.hpp>
+//#include <boost/property_tree/ptree_serialization.hpp>
+#include <boost/property_tree/json_parser.hpp>
+//#include <boost/archive/binary_oarchive.hpp>
+//#include <boost/serialization/serialization.hpp>
+#include <zmq.hpp>
 
 #include "traffic/Flit.h"
 #include "utils/Structures.h"
@@ -47,6 +54,13 @@
 #include "model/traffic/task/TaskPool.h"
 
 class NoC : public sc_module {
+private:
+    int rc;
+    void *context = zmq_ctx_new ();
+    void *socket = zmq_socket (context, ZMQ_REP);
+    int pipefds[2];
+    zmq_pollitem_t items [2] = {NULL, NULL};
+    boost::property_tree::ptree pt;
 
 public:
     PacketFactory& packetFactory = PacketFactory::getInstance();
@@ -59,6 +73,7 @@ public:
 
     //This function was used to verify the credit counter. It works!
     //void verifyFlowControl();
+    void guiServer();
 
 private:
     GlobalResources& globalResources = GlobalResources::getInstance();
@@ -79,3 +94,29 @@ private:
     void createLinks(const std::vector<std::unique_ptr<sc_clock>>& clocks);
     void runNoC();
 };
+
+#define S_NOTIFY_MSG " "
+#define S_ERROR_MSG "Error while writing to self-pipe.\n"
+static int s_fd;
+static void s_signal_handler (int signal_value)
+{
+    int rc = write (s_fd, S_NOTIFY_MSG, sizeof(S_NOTIFY_MSG));
+    if (rc != sizeof(S_NOTIFY_MSG)) {
+        write (STDOUT_FILENO, S_ERROR_MSG, sizeof(S_ERROR_MSG)-1);
+        exit(1);
+    }
+}
+
+static void s_catch_signals (int fd)
+{
+    s_fd = fd;
+
+    struct sigaction action;
+    action.sa_handler = s_signal_handler;
+    //  Doesn't matter if SA_RESTART set because self-pipe will wake up zmq_poll
+    //  But setting to 0 will allow zmq_read to be interrupted.
+    action.sa_flags = 0;
+    sigemptyset (&action.sa_mask);
+    sigaction (SIGINT, &action, NULL);
+    sigaction (SIGTERM, &action, NULL);
+}

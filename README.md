@@ -35,6 +35,7 @@ You can download the resources via this repo using a recursive git clone git clo
 - cmake 3.10.2
 - SystemC 2.3.3 www.accellera.org/images/downloads/standards/systemc/systemc-2.3.3.gz
 - cmake assumes an installation of systemc to ``/usr/local/systemc-2.3.3`` If not the case, please modify simulator/CMakeLists.txt
+- installation of 0MQ, see http://zeromq.org/intro:get-the-software
 
 If you are using Ubuntu 16, you must compile against SystemC 2.3.1a!
 

@@ -19,5 +19,5 @@ ADD_DEFINITIONS(-D SC_INCLUDE_DYNAMIC_PROCESSES -D SYSTEMC_DISABLE_COPYRIGHT_MES
 
 ADD_EXECUTABLE(${PROJECT_NAME} src/utils/Report.cpp src/utils/Structures.cpp src/utils/PacketFactory.cpp  src/utils/GlobalResources.cpp src/utils/Statistics.cpp  src/utils/GlobalReport.cpp src/main.cpp  src/model/processingElement/ProcessingElement.cpp src/model/processingElement/ProcessingElementVC.cpp src/model/networkInterface/NetworkInterfaceVC.cpp  src/model/networkInterface/NetworkInterface.cpp src/model/traffic/Packet.cpp src/model/traffic/Flit.cpp src/model/traffic/synthetic/SyntheticPool.cpp src/model/traffic/task/TaskPool.cpp src/model/traffic/TrafficPool.cpp src/model/router/Buffer.cpp src/model/router/Router.cpp src/model/router/RouterVC.cpp src/model/NoC.cpp src/model/link/Link.cpp src/model/router/routings/RandomXYZRouting.cpp src/model/router/routings/RandomHeteroXYZRouting.cpp src/model/router/routings/XYZRouting.cpp src/model/router/routings/HeteroXYZRouting.cpp)
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} systemc pugixml)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} systemc pugixml boost_system zmq)
 

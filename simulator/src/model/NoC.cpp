@@ -36,7 +36,32 @@ NoC::NoC(sc_module_name nm) {
     createLinks(clocks);
     runNoC();
 
+    zmq_bind (socket, "tcp://*:5555");
+    rc = pipe(pipefds);
+    if (rc != 0) {
+        perror("Creating self-pipe");
+        exit(1);
+    }
+    for (int i = 0; i < 2; i++) {
+        int flags = fcntl(pipefds[0], F_GETFL, 0);
+        if (flags < 0) {
+            perror ("fcntl(F_GETFL)");
+            exit(1);
+        }
+        rc = fcntl (pipefds[0], F_SETFL, flags | O_NONBLOCK);
+        if (rc != 0) {
+            perror ("fcntl(F_SETFL)");
+            exit(1);
+        }
+    }
+
+    s_catch_signals (pipefds[1]);
+
+    items[0] = { 0, pipefds[0], ZMQ_POLLIN, 0 };
+    items[1] =  { socket, 0, ZMQ_POLLIN, 0 };
+
     //SC_THREAD(verifyFlowControl);
+    SC_THREAD(guiServer);
 }
 
 void NoC::createClocks() {
@@ -127,6 +152,82 @@ void NoC::createLinks(const std::vector<std::unique_ptr<sc_clock>> &clocks) {
             link_id += 2;
         } else {
             FATAL("Unsupported number of endpoints in connection " << c.id);
+        }
+    }
+}
+
+void NoC::guiServer(){
+    using boost::property_tree::ptree;
+
+    while (1) {
+        wait(10, SC_NS);
+        wait(SC_ZERO_TIME);
+        wait(SC_ZERO_TIME);
+        rc = zmq_poll(items, 2, 10);
+        if (rc == 0) {
+            continue;
+        } else if (rc < 0) {
+            if (errno == EINTR) { continue; }
+            perror("zmq_poll");
+            exit(1);
+        }
+
+        // Signal pipe FD
+        if (items [0].revents & ZMQ_POLLIN) {
+            char buffer [1];
+            read (pipefds[0], buffer, 1);  // clear notifying byte
+            printf ("W: interrupt received, killing server…\n");
+            break;
+        }
+
+        // Read socket
+        if (items [1].revents & ZMQ_POLLIN) {
+            char buffer [255];
+            // Use non-blocking so we can continue to check self-pipe via zmq_poll
+            rc = zmq_recv (socket, buffer, 255, ZMQ_NOBLOCK);
+            if (rc < 0) {
+                if (errno == EAGAIN) { continue; }
+                if (errno == EINTR) { continue; }
+                perror("recv");
+                exit(1);
+            }
+            printf ("W: recv\n");
+
+            ptree pt;
+            ptree children;
+            ptree child1, child2, child3;
+
+            int numberOfRouter = globalResources.nodes.size()/2;
+            std::vector<ptree> routerChilds;
+            routerChilds.resize(numberOfRouter);
+            int tmpCounter = 0;
+            for (auto &c : globalResources.nodes) {
+                if (c.type->model == "RouterVC"){
+                    RouterVC *router = dynamic_cast<RouterVC *>(networkParticipants.at(c.id));
+                    int value = router->id;
+                    routerChilds.at(tmpCounter).put("id", value);
+                    tmpCounter++;
+                }
+            }
+
+            for(auto child : routerChilds){
+                children.push_back(std::make_pair("", child));
+            }
+
+            pt.add_child("MyArray", children);
+            std::stringstream ss;
+            boost::property_tree::json_parser::write_json(ss, pt);
+            std::string jsonstring = ss.str();
+
+            zmq::message_t reply (jsonstring.size());
+            memcpy(reply.data(), jsonstring.c_str(), jsonstring.size());
+            rc = zmq_send (socket, &reply, jsonstring.size(), 0);
+
+            std::string rpl = std::string(static_cast<char*>(reply.data()), reply.size());
+
+            std::cout << rpl << std::endl;
+            exit(1);
+            assert (rc == 0);
         }
     }
 }
