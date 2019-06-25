@@ -137,15 +137,15 @@ void NoC::guiServer(){
     using boost::property_tree::ptree;
 
     while (1) {
-        wait(10, SC_NS);
+        wait(1, SC_NS);
         wait(SC_ZERO_TIME);
         wait(SC_ZERO_TIME);
+        int averagingWindow = 20;
         zmq::message_t request;
         socket.recv(&request, ZMQ_NOBLOCK);
         if (request.size() != 0) {
             ptree pt;
             ptree children;
-            ptree child1, child2, child3;
             int numberOfRouter = globalResources.nodes.size() / 2;
             std::vector<ptree> routerChilds;
             routerChilds.resize(numberOfRouter);
@@ -153,16 +153,32 @@ void NoC::guiServer(){
             for (auto &c : globalResources.nodes) {
                 if (c.type->model == "RouterVC") {
                     RouterVC *router = dynamic_cast<RouterVC *>(networkParticipants.at(c.id));
-                    int value = router->id;
-                    std::string fieldname = std::string("router") + std::to_string(router->id);
-                    routerChilds.at(childCounter).put(fieldname, value);
+                    float divisionNumberForAverage = 0.0;
+                    float sumForAverage = 0.0;
+                    int nodeConnsSize = router->node.connections.size();
+                    for (unsigned int conPos = 0; conPos < nodeConnsSize; conPos++) {
+                        Connection *con = &globalResources.connections.at(router->node.connections.at(conPos));
+                        int vcCount = con->getVCCountForNode(router->node.id);
+                        for (int vc = 0; vc < vcCount; vc++) {
+                            BufferFIFO<Flit *> *buf = router->buffers.at(conPos)->at(vc);
+                            sumForAverage += (float) buf->occupied();
+                            divisionNumberForAverage++;
+                        }
+                    }
+                    float average = sumForAverage / divisionNumberForAverage;
+
+                    std::string fieldname = std::string("averagebufferusage");// + std::to_string(router->id);
+                    routerChilds.at(childCounter).put(fieldname, average);
                     childCounter++;
                 }
             }
             for (auto child : routerChilds) {
                 children.push_back(std::make_pair("", child));
             }
+            ptree timeChild;
+            timeChild.put("time", sc_time_stamp().to_double());
             pt.add_child("Data", children);
+            pt.add_child("Time", timeChild);
 
             std::stringstream ss;
             boost::property_tree::json_parser::write_json(ss, pt);
@@ -171,8 +187,6 @@ void NoC::guiServer(){
             zmq::message_t reply(jsonstring.size());
             memcpy(reply.data(), jsonstring.c_str(), jsonstring.size());
             socket.send(reply, ZMQ_NOBLOCK);
-            //std::string rpl = std::string(static_cast<char *>(reply.data()), reply.size());
-            // std::cout << rpl << std::endl;
         }
     }
 }

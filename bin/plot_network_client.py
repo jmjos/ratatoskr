@@ -134,7 +134,7 @@ def vertical_horizontal_connection(p1_ix, p2_ix):
     z.append(points[p1_ix][0][2])
     z.append(points[p2_ix][0][2])
 
-    ax.plot(x, y, z, marker='o', color='black')
+    ax.plot(x, y, z, color='black')
 ###############################################################################
 
 
@@ -173,7 +173,7 @@ def solve_diagonal_connection(p1, p2):
         z.append(p1[2])
         z.append(p1[2])
 
-    ax.plot(x, y, z, marker='o', color='black')
+    ax.plot(x, y, z, color='black')
 ###############################################################################
 
 
@@ -262,6 +262,22 @@ def plot_faces():
     ax.add_collection3d(poly)
 ###############################################################################
 
+def colorize_nodes(colorValues):
+    """
+    Annotating the points using their index
+    """
+    points_coordinates = []
+    for p in points:
+        points_coordinates.append(p[0])
+    points_coordinates = np.array(points_coordinates)
+    xs = points_coordinates[:, 0]
+    ys = points_coordinates[:, 1]
+    zs = points_coordinates[:, 2]
+    global routerHeat 
+    routerHeat = ax.scatter(xs, ys, zs,c=colorValues, cmap='inferno')#, marker=m)
+    
+###############################################################################
+
 
 def main():
     """
@@ -273,29 +289,36 @@ def main():
     except IndexError:
         pass
     init_script(network_file)
+
+    create_fig()
+    plot_connections()
+#    annotate_points()
+#    create_faces()
+#    plot_faces()
+    colorize_nodes(range(len(points)))
+    timeStamp = ax.text(2, 2, 2, 0, size=12, color='red')
     
     context = zmq.Context()
 
     #  Socket to talk to server
-    print("Connecting to hello world server")
+    print("Connecting to simulator server")
     socket = context.socket(zmq.REQ)
     socket.connect("tcp://localhost:5555")
-
-    create_fig()
-    plot_connections()
-    annotate_points()
-    create_faces()
-    plot_faces()
-
-    for request in range(100):
-        print("Sending request %s " % request)
+   
+    for request in range(200):
         socket.send_string("Hello")
         message = socket.recv()
-        #print("Received reply %s [ %s ]" % (request, message))      
-        plt.pause(0.1)
-        d = json.loads(message)
-        print(d['Data']['id'])
-        
+        data = json.loads(message)
+        time = float(data["Time"]["time"])
+        colorvalues = []
+        for routerindex in range(len(points)):
+            colorvalues.append(float(data["Data"][routerindex]['averagebufferusage']))
+        routerHeat.remove()  
+        colorize_nodes(colorvalues)
+        timeStamp.remove()
+        timeStampvalue = "Time: " + str(time/1000) + " ns"
+        timeStamp = ax.text(0, 1, 1, timeStampvalue, size=12, color='red')
+        plt.pause(1/30)        
         
     plt.show()
         

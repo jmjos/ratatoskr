@@ -69,6 +69,7 @@ public:
 
 private:
     GlobalResources& globalResources = GlobalResources::getInstance();
+    GlobalReport& globalReport = GlobalReport::getInstance();
     Report& rep = Report::getInstance();
     int dbid;
     std::vector<std::unique_ptr<sc_clock>> clocks;
