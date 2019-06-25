@@ -30,6 +30,7 @@ import matplotlib.pyplot as plt
 import xml.etree.ElementTree as ET
 import configparser
 import zmq
+import json
 ###############################################################################
 # Global variables
 fig = None  # Figure Object
@@ -266,7 +267,7 @@ def main():
     """
     Main Execution Point
     """
-    network_file = 'network.xml'
+    network_file = '../simulator/config/network.xml'
     try:
         network_file = sys.argv[1]
     except IndexError:
@@ -280,17 +281,24 @@ def main():
     socket = context.socket(zmq.REQ)
     socket.connect("tcp://localhost:5555")
 
+    create_fig()
+    plot_connections()
+    annotate_points()
+    create_faces()
+    plot_faces()
+
     for request in range(100):
         print("Sending request %s " % request)
         socket.send_string("Hello")
         message = socket.recv()
-        print("Received reply %s [ %s ]" % (request, message))
-        create_fig()
-        plot_connections()
-        annotate_points()
-        create_faces()
-        plot_faces()
-        plt.show()
+        #print("Received reply %s [ %s ]" % (request, message))      
+        plt.pause(0.1)
+        d = json.loads(message)
+        print(d['Data']['id'])
+        
+        
+    plt.show()
+        
 ###############################################################################
 
 

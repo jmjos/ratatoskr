@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <general>
-    <simulationTime value="15000"/>
+    <simulationTime value="15000000"/>
     <outputToFile value="true">report</outputToFile>
   </general>
   <noc>

@@ -154,7 +154,8 @@ void NoC::guiServer(){
                 if (c.type->model == "RouterVC") {
                     RouterVC *router = dynamic_cast<RouterVC *>(networkParticipants.at(c.id));
                     int value = router->id;
-                    routerChilds.at(childCounter).put("id", value);
+                    std::string fieldname = std::string("router") + std::to_string(router->id);
+                    routerChilds.at(childCounter).put(fieldname, value);
                     childCounter++;
                 }
             }
