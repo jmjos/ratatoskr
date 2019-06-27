@@ -25,7 +25,7 @@
       <phase name="run">
         <distribution value="uniform"/>
         <start max="1100" min="1100"/>
-        <duration max="101100" min="101100"/>
+        <duration max="101100" min="1500000"/>
         <repeat max="-1" min="-1"/>
         <delay max="0" min="0"/>
         <injectionRate value="0.002"/>
