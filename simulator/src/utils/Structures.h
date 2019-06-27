@@ -401,7 +401,7 @@ public:
 
     Credit() = default;
 
-    explicit Credit(int vc);
+    Credit(int vc, bool is_single_mode);
 
     ~Credit() = default;
 

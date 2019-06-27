@@ -10,7 +10,7 @@
         <Vdd value="5"/>
     </noc>
     <application>
-        <benchmark>task</benchmark>
+        <benchmark>synthetic</benchmark>
         <synthetic>
             <phase name="warmup">
                 <distribution value="uniform"/>
@@ -18,7 +18,7 @@
                 <duration max="1090" min="1090"/>
                 <repeat max="-1" min="-1"/>
                 <delay max="0" min="0"/>
-                <injectionRate value="0.002"/>
+                <injectionRate value="0.04"/>
                 <count max="1" min="1"/>
                 <hotspot value="0"/>
             </phase>
@@ -28,13 +28,13 @@
                 <duration max="101100" min="101100"/>
                 <repeat max="-1" min="-1"/>
                 <delay max="0" min="0"/>
-                <injectionRate value="0.002"/>
+                <injectionRate value="0.04"/>
                 <count max="1" min="1"/>
                 <hotspot value="0"/>
             </phase>
         </synthetic>
-	<dataFile>config/data.xml</dataFile>
-	<mapFile>config/map.xml</mapFile>
+        <dataFile>config/data.xml</dataFile>
+        <mapFile>config/map.xml</mapFile>
         <simulationFile>traffic/pipelinePerformance_2D/PipelineResetTB.xml</simulationFile>
         <mappingFile>traffic/pipelinePerformance_2D/PipelineResetTBMapping.xml</mappingFile>
         <netraceFile>traffic/netrace/example.tra.bz2</netraceFile>

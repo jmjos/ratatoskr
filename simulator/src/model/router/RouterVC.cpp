@@ -143,9 +143,6 @@ void RouterVC::thread()
 
 void RouterVC::receive()
 {
-    if (sc_time_stamp().to_double()/1000==121 && id==13)
-        cout << "stop" << endl;
-
     LOG(globalReport.verbose_router_function_calls,
             "Router" << this->id << "in receive() @ " << sc_time_stamp());
     int nodeConnsSize = node.connections.size();
@@ -437,8 +434,6 @@ std::vector<int> RouterVC::getAllocatedVCsOfOutDir(int conPos)
 
 void RouterVC::send()
 {
-    if (sc_time_stamp().to_double()/1000==17 && id==12)
-        cout << "stop" << endl;
     LOG(globalReport.verbose_router_function_calls,
             "Router" << this->id << "in send() @ " << sc_time_stamp());
     for (auto& entry:switchTable) {
@@ -449,59 +444,31 @@ void RouterVC::send()
         BufferFIFO<Flit*>* buf = buffers.at(in.conPos)->at(in.vc);
         int my_delay = node.type->clockDelay;
         int next_node_delay = next_node.type->clockDelay;
-        if (next_node_delay>my_delay) {
+        if (next_node_delay!=my_delay || this->node.id==next_node.id) {
             // wait until the downstream router has enough credits and I have at least 4 flits
-            if (creditCounter.count(out) && creditCounter.at(out)>3 && buf->occupied()>=4)
-                send_multi_flits(buf, in, out);
+            if (creditCounter.count(out) && creditCounter.at(out)>3) {
+                if (buf->occupied()>=4) {
+                    send_multi_flits(buf, in, out);
+                }
+            }
             else LOG(globalReport.verbose_router_throttle,
                     "Router" << this->id << "(Node" << node.id << ")\t- Waiting for downstream Router!");
         }
         else {
-            if (creditCounter.count(out) && creditCounter.at(out)>0)
-                send_one_flit(buf, in, out);
+            if (creditCounter.count(out) && creditCounter.at(out)>0) {
+                if (buf->occupied()>=1) {
+                    send_one_flit(buf, in, out);
+                }
+            }
             else LOG(globalReport.verbose_router_throttle,
                     "Router" << this->id << "(Node" << node.id << ")\t- Waiting for downstream Router!");
         }
-        /*classicPortContainer.at(out.conPos).portValidOut.write(true);
-        classicPortContainer.at(in.conPos).portFlowControlValidOut.write(true);
-
-        size_t num_out_ports = classicPortContainer.at(out.conPos).portsDataOut.size();
-        for (unsigned int i = 0; i<num_out_ports; ++i) {
-            assert(!buf->empty());
-            Flit* flit = buf->front();
-            assert(flit);
-            buf->dequeue();
-            globalReport.increaseBufferPop(this->id);
-            classicPortContainer.at(out.conPos).portsDataOut[i].write(flit);
-            classicPortContainer.at(out.conPos).portsVcOut[i].write(out.vc);
-            Credit credit{in.vc};
-            classicPortContainer.at(in.conPos).portsFlowControlOut[i].write(credit);
-
-            globalReport.increaseCrossbar(this->id);
-
-            Node n = globalResources.nodes.at(this->node.id);
-            globalReport.increase_power_stats(this->id, n.getDirOfConPos(out.conPos)); //TODO maybe not in for loop?
-
-            if (DIR::Local!=node.getDirOfConPos(out.conPos)) // NI has infinite buffers
-                creditCounter.at(out)--;
-            if (flit->type==TAIL) {
-                routingTable.erase(in);
-            }
-            LOG(
-                    (globalReport.verbose_router_send_head_flit && flit->type==HEAD) ||
-                            globalReport.verbose_router_send_flit,
-                    "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(out.conPos)) << out.vc
-                             << "]\t- Send Flit "
-                             << *flit);
-        }*/
     }
     switchTable.clear();
 }
 
 void RouterVC::receiveFlowControlCredit()
 {
-    if (sc_time_stamp().to_double()/1000==16 && id==12)
-        cout << "stop" << endl;
     LOG(globalReport.verbose_router_function_calls,
             "Router" << this->id << "in VCAllocation_generateRequests() @ " << sc_time_stamp());
     int nodeConnsSize = node.connections.size();
@@ -510,7 +477,7 @@ void RouterVC::receiveFlowControlCredit()
             if (classicPortContainer.at(conPos).portFlowControlValidIn.read()) {
                 size_t num_in_ports = classicPortContainer.at(conPos).portsFlowControlIn.size();
                 for (unsigned int i = 0; i<num_in_ports; ++i) {
-                    auto credit = &classicPortContainer.at(conPos).portsFlowControlIn[i].read();
+                    auto credit = classicPortContainer.at(conPos).portsFlowControlIn[i].read();
                     if (credit) {
                         Channel ch{conPos, credit->vc};
                         std::pair<int, int> last_credit_ids = getLastIdsPos(i, 4);
@@ -525,7 +492,6 @@ void RouterVC::receiveFlowControlCredit()
                 }
             }
         }
-        //break;
     }
 }
 
@@ -587,8 +553,6 @@ void RouterVC::insert_request(int out_conPos, Channel in, std::map<int, std::vec
 
 void RouterVC::send_one_flit(BufferFIFO<Flit*>* buf, Channel in, Channel out)
 {
-    if (sc_time_stamp().to_double()/1000==16 && id==28)
-        cout << "stop" << endl;
     assert(!buf->empty());
     Flit* flit = buf->front();
     assert(flit);
@@ -600,14 +564,10 @@ void RouterVC::send_one_flit(BufferFIFO<Flit*>* buf, Channel in, Channel out)
 
     globalReport.increaseCrossbar(this->id);
     Node n = globalResources.nodes.at(this->node.id);
-    Credit credit{in.vc};
-    if (DIR::Local!=node.getDirOfConPos(out.conPos)) { // NI has infinite buffers
+    auto credit = new Credit{in.vc, true};
+    if (DIR::Local!=node.getDirOfConPos(out.conPos))  // NI has infinite buffers
         creditCounter.at(out)--;
-        credit.is_single_mode = false;
-    }
-    else {
-        credit.is_single_mode = true;
-    }
+
     classicPortContainer.at(in.conPos).portFlowControlValidOut.write(true);
     classicPortContainer.at(in.conPos).portsFlowControlOut[0].write(credit);
 
@@ -636,7 +596,7 @@ void RouterVC::send_multi_flits(BufferFIFO<Flit*>* buf, Channel in, Channel out)
                 globalReport.increaseBufferPop(this->id);
                 classicPortContainer.at(out.conPos).portsDataOut[i].write(flit);
                 classicPortContainer.at(out.conPos).portsVcOut[i].write(out.vc);
-                Credit credit{in.vc};
+                auto credit = new Credit{in.vc, false};
                 classicPortContainer.at(in.conPos).portsFlowControlOut[i].write(credit);
 
                 globalReport.increaseCrossbar(this->id);

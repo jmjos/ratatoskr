@@ -2,11 +2,11 @@
 <map>
     <bind>
         <task value="0"/>
-        <node value="45"/>
+        <node value="60"/>
     </bind>
 
     <bind>
         <task value="1"/>
-        <node value="60"/>
+        <node value="45"/>
     </bind>
 </map>

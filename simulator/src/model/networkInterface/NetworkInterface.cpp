@@ -35,6 +35,7 @@ NetworkInterface::NetworkInterface(sc_module_name nm, Node& node)
     rep.reportAttribute(dbid, "type", node.type->model);
 }
 
-NetworkInterface::~NetworkInterface() {
+NetworkInterface::~NetworkInterface()
+{
     delete routingAlg;
 }

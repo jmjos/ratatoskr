@@ -31,7 +31,7 @@ class FlitSignalContainer : public SignalContainer {
 public:
     sc_signal<bool> sigValid;
     sc_signal<bool> sigFlowControlValid;
-    std::array<sc_signal<Credit>, 4> sigsFlowControl;
+    std::array<sc_signal<Credit*>, 4> sigsFlowControl;
     std::array<sc_signal<Flit*>, 4> sigsData;
     std::array<sc_signal<int>, 4> sigsVc;
 
@@ -49,13 +49,13 @@ class FlitPortContainer : public PortContainer {
 public:
     sc_in<bool> portValidIn;
     sc_in<bool> portFlowControlValidIn;
-    std::array<sc_in<Credit>, 4> portsFlowControlIn;
+    std::array<sc_in<Credit*>, 4> portsFlowControlIn;
     std::array<sc_in<Flit*>, 4> portsDataIn;
     std::array<sc_in<int>, 4> portsVcIn;
 
     sc_out<bool> portValidOut;
     sc_out<bool> portFlowControlValidOut;
-    std::array<sc_out<Credit>, 4> portsFlowControlOut;
+    std::array<sc_out<Credit*>, 4> portsFlowControlOut;
     std::array<sc_out<Flit*>, 4> portsDataOut;
     std::array<sc_out<int>, 4> portsVcOut;
 

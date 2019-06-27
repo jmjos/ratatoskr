@@ -80,7 +80,7 @@ void Link::passthrough_thread()
             size_t num_in_ports = classicPortContainer->portsDataIn.size();
             for (unsigned int i = 0; i<num_in_ports; ++i) {
                 Flit* currentFlit = classicPortContainer->portsDataIn[i].read();
-                if(currentFlit) {
+                if (currentFlit) {
                     flitType = currentFlit->type;
                     flitDataType = currentFlit->dataType;
                     // flitID = currentFlit->id;

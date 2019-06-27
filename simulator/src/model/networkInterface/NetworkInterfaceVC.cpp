@@ -23,8 +23,7 @@
 
 NetworkInterfaceVC::NetworkInterfaceVC(sc_module_name nm, Node& node)
         :
-        NetworkInterface(nm, node),
-        lastReceivedCreditID(-1)
+        NetworkInterface(nm, node)
 {
     try {
         this->id = node.id%(globalResources.nodes.size()/2);
@@ -32,12 +31,11 @@ NetworkInterfaceVC::NetworkInterfaceVC(sc_module_name nm, Node& node)
         this->node = node;
         Node connectedRouter = globalResources.nodes.at(node.connectedNodes.at(0));
         Connection* conn = &globalResources.connections.at(node.getConnWithNode(connectedRouter));
+        size_t num_ports = lastReceivedCreditID.size();
+        for (unsigned int i = 0; i<num_ports; ++i) {
+            this->lastReceivedCreditID[i] = -1;
+        }
         this->creditCounter = conn->getBufferDepthForNode(connectedRouter.id);
-//        for(unsigned int i=0; i < 4; ++i) {
-//            this->creditCounter[i] = conn->getBufferDepthForNode(connectedRouter.id);
-//            lastReceivedCreditID[i] = -1;
-//        }
-
         this->flitPortContainer = new FlitPortContainer(
                 ("NI_FLIT_CONTAINER"+std::to_string(this->id)).c_str());
         this->packetPortContainer = new PacketPortContainer(
@@ -65,7 +63,6 @@ void NetworkInterfaceVC::initialize()
     flitPortContainer->portValidOut.write(false);
     flitPortContainer->portFlowControlValidOut.write(false);
 
-    //Node corres_router = globalResources.nodes.at(id-(globalResources.nodes.size()/2));
     Node corres_router = globalResources.nodes.at(id);
     if (corres_router.type->routing=="XYZ")
         routingAlg = new XYZRouting();
@@ -90,7 +87,6 @@ void NetworkInterfaceVC::receivePacketFromPE()
     if (packetPortContainer->portValidIn.posedge()) {
         LOG(globalReport.verbose_pe_function_calls, "NI" << this->id << "(Node" << node.id << ")\t\t- receive()");
         Packet* p = packetPortContainer->portDataIn.read();
-        //generateFlitsForPacket(p);
         packet_send_queue.push(p);
     }
 }
@@ -118,57 +114,37 @@ void NetworkInterfaceVC::thread()
     LOG(globalReport.verbose_pe_function_calls, "NI" << this->id << "(Node" << node.id << ")\t\t- send_data_process()");
     if (clk.posedge()) {
         if (!packet_send_queue.empty()) {
-            if (creditCounter>0) {
-                Packet* p = packet_send_queue.front();
-                if (p->flits.empty())
-                    generateFlitsForPacket(p);
+            Packet* p = packet_send_queue.front();
+            if (p->flits.empty())
+                generateFlitsForPacket(p);
 
-                /*flitID_t f_id = p->toTransmit.front();
-                auto iter = std::find_if(p->flits.begin(), p->flits.end(),
-                        [&f_id](Flit* f) { return f->id==f_id; });
-                Flit* current_flit = *iter;
-                current_flit->injectionTime = sc_time_stamp().to_double();
-                auto toDelete_pos = std::find(p->toTransmit.begin(), p->toTransmit.end(), current_flit->id);
-                p->toTransmit.erase(toDelete_pos);
-                p->inTransmit.push_back(current_flit->id);
-                //rep.reportEvent(dbid, "pe_send_flit", std::to_string(current_flit->id));
-                if (p->toTransmit.empty()) {
-                    packet_send_queue.pop();
-                }
-                flitPortContainer->portValidOut.write(true);
-                flitPortContainer->portDataOut.write(current_flit);
-                flitPortContainer->portVcOut.write(0);
-                creditCounter--;
-                LOG((globalReport.verbose_pe_send_head_flit && current_flit->type==HEAD)
-                        || globalReport.verbose_pe_send_flit,
-                        "NI" << this->id << "(Node" << node.id << ")\t\t- Send Flit " << *current_flit);*/
+            std::vector<flitID_t> f_ids{};
+            int src_id = this->id;
+            int dst_id = p->dst.id-(globalResources.nodes.size()/2);
+            int outConPos = routingAlg->route(src_id, dst_id);
+            DIR::TYPE dir = globalResources.nodes.at(id).getDirOfConPos(outConPos);
+            Node next_node = routingAlg->getNextNode(this->node, dir);
+            int my_delay = node.type->clockDelay;
+            int next_node_delay = next_node.type->clockDelay;
+            if (next_node_delay>my_delay) {
+                f_ids = std::vector<flitID_t>(p->toTransmit.begin(), p->toTransmit.begin()+4);
+            }
+            else {
+                f_ids = std::vector<flitID_t>(p->toTransmit.begin(), p->toTransmit.begin()+1);
+            }
 
-                std::vector<flitID_t> f_ids{};
-                int src_id = this->id;
-                int dst_id = p->dst.id-(globalResources.nodes.size()/2);
-                int outConPos = routingAlg->route(src_id, dst_id);
-                DIR::TYPE dir = globalResources.nodes.at(id).getDirOfConPos(outConPos);
-                Node next_node = routingAlg->getNextNode(this->node, dir);
-                int my_delay = node.type->clockDelay;
-                int next_node_delay = next_node.type->clockDelay;
-                if (next_node_delay>my_delay) {
-                    f_ids = std::vector<flitID_t>(p->toTransmit.begin(), p->toTransmit.begin()+4);
-                }
-                else {
-                    f_ids = std::vector<flitID_t>(p->toTransmit.begin(), p->toTransmit.begin()+1);
-                }
-
-                std::vector<Flit*> current_flits;
-                auto flits = &(p->flits);
-                for_each(f_ids.begin(), f_ids.end(), [&f_ids, &flits, &current_flits](int id) {
-                    auto iter = std::find_if(flits->begin(), flits->end(), [&id](Flit* f) {
-                        return id==f->id;
-                    });
-                    current_flits.push_back(*iter);
+            std::vector<Flit*> current_flits;
+            auto flits = &(p->flits);
+            for_each(f_ids.begin(), f_ids.end(), [&f_ids, &flits, &current_flits](int id) {
+                auto iter = std::find_if(flits->begin(), flits->end(), [&id](Flit* f) {
+                    return id==f->id;
                 });
+                current_flits.push_back(*iter);
+            });
 
+            size_t num_curr_flits = current_flits.size();
+            if (creditCounter>num_curr_flits) {
                 flitPortContainer->portValidOut.write(true);
-                size_t num_curr_flits = current_flits.size();
                 for (unsigned int i = 0; i<num_curr_flits; ++i) {
                     Flit* curr_flit = current_flits[i];
                     curr_flit->injectionTime = sc_time_stamp().to_double();
@@ -179,17 +155,18 @@ void NetworkInterfaceVC::thread()
                     flitPortContainer->portsDataOut[i].write(curr_flit);
                     flitPortContainer->portsVcOut[i].write(0);
                     --creditCounter;
+                    assert(creditCounter>=0);
                     LOG((globalReport.verbose_pe_send_head_flit && curr_flit->type==HEAD)
                             || globalReport.verbose_pe_send_flit,
                             "NI" << this->id << "(Node" << node.id << ")\t\t- Send Flit " << *curr_flit);
-                }
-                if (p->toTransmit.empty()) {
-                    packet_send_queue.pop();
                 }
             }
             else {
                 LOG(globalReport.verbose_pe_throttle,
                         "NI" << this->id << "(Node" << node.id << ")\t\t- Waiting for Router!");
+            }
+            if (p->toTransmit.empty()) {
+                packet_send_queue.pop();
             }
         }
         if (!packet_recv_queue.empty()) {
@@ -212,39 +189,9 @@ void NetworkInterfaceVC::thread()
 
 void NetworkInterfaceVC::receiveFlitFromRouter()
 {
-    if (sc_time_stamp().to_double()/1000==824 && id==60)
-        cout << "stop" << endl;
-
     LOG(globalReport.verbose_pe_function_calls,
             "NI" << this->id << "(Node" << node.id << ")\t- receive_data_process()");
     if (flitPortContainer->portValidIn.posedge()) {
-        /*Flit* received_flit = flitPortContainer->portDataIn.read();
-        Packet* p = received_flit->packet;
-        double time = sc_time_stamp().to_double();
-
-        // generate packet statistics. in case of synthetic traffic only for run phase
-        if ((float) globalResources.synthetic_start_measurement_time<=(time/1000)) {
-            globalReport.latencyFlit.sample((float) (time-received_flit->injectionTime));
-            if (received_flit->type==TAIL) {
-                globalReport.latencyPacket.sample((float) (time-received_flit->headFlit->generationTime));
-                globalReport.latencyNetwork.sample((float) (time-received_flit->headFlit->injectionTime));
-            }
-        }
-
-        auto position = std::find(p->inTransmit.begin(), p->inTransmit.end(), received_flit->id);
-        if (position!=p->inTransmit.end())
-            p->inTransmit.erase(position);
-        p->transmitted.push_back(received_flit->id);
-
-        //rep.reportEvent(dbid, "pe_receive_flit", std::to_string(received_flit->id));
-        LOG((globalReport.verbose_pe_receive_tail_flit && received_flit->type==TAIL)
-                || globalReport.verbose_pe_receive_flit,
-                "NI" << this->id << "(Node" << node.id << ")\t\t- Receive Flit " << *received_flit);
-        LOG(received_flit->type==TAIL && (!p->toTransmit.empty() || !p->inTransmit.empty()),
-                "NI" << this->id << "(Node" << node.id << ")\t\t- Received Tail Flit, but still missing flits! "
-                     << *received_flit);
-        if (p->toTransmit.empty() && p->inTransmit.empty())
-            packet_recv_queue.push(p);*/
         size_t num_in_ports = flitPortContainer->portsDataIn.size();
         for (unsigned int i = 0; i<num_in_ports; ++i) {
             Flit* received_flit = flitPortContainer->portsDataIn[i].read();
@@ -266,7 +213,6 @@ void NetworkInterfaceVC::receiveFlitFromRouter()
                     p->inTransmit.erase(position);
                 p->transmitted.push_back(received_flit->id);
 
-                //rep.reportEvent(dbid, "pe_receive_flit", std::to_string(received_flit->id));
                 LOG((globalReport.verbose_pe_receive_tail_flit && received_flit->type==TAIL)
                         || globalReport.verbose_pe_receive_flit,
                         "NI" << this->id << "(Node" << node.id << ")\t\t- Receive Flit " << *received_flit);
@@ -291,13 +237,31 @@ void NetworkInterfaceVC::receiveFlowControlCreditFromRouter()
     if (flitPortContainer->portFlowControlValidIn.posedge()) {
         size_t num_in_ports = flitPortContainer->portsFlowControlIn.size();
         for (unsigned int i = 0; i<num_in_ports; ++i) {
-            auto credit = &flitPortContainer->portsFlowControlIn[i].read();
+            auto credit = flitPortContainer->portsFlowControlIn[i].read();
             if (credit) {
                 assert(credit->vc==0);
-                if (lastReceivedCreditID!=credit->id) {
+                std::pair<int, int> last_credit_ids = getLastIdsPos(i, 4);
+                if (credit->id!=lastReceivedCreditID.at(last_credit_ids.first) &&
+                        credit->id!=lastReceivedCreditID.at(last_credit_ids.second)) {
                     ++creditCounter;
+                    if (credit->is_single_mode)
+                        break;
                 }
             }
         }
     }
+}
+
+std::pair<int, int> NetworkInterfaceVC::getLastIdsPos(int curr_pos, int arr_size)
+{
+    int last_pos, last_m_pos{-1};
+    if (curr_pos==0) {
+        last_pos = arr_size-1;
+        last_m_pos = curr_pos;
+    }
+    else {
+        last_pos = curr_pos-1;
+        last_m_pos = curr_pos;
+    }
+    return std::make_pair(last_pos, last_m_pos);
 }

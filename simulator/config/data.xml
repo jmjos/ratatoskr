@@ -32,7 +32,7 @@
                             <type value="1"/>
                             <task value="1"/>
                         </destination>
-		     </destinations>
+                    </destinations>
                 </possibility>
             </generates>
         </task>

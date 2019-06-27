@@ -40,10 +40,8 @@ public:
     sc_in<bool> clk;
     FlitPortContainer* flitPortContainer;
     PacketPortContainer* packetPortContainer;
-    //std::array<int, 4> creditCounter;
-    //std::array<int, 4> lastReceivedCreditID;
+    std::array<int, 4> lastReceivedCreditID;
     int creditCounter;
-    int lastReceivedCreditID;
 
     SC_HAS_PROCESS(NetworkInterfaceVC);
 
@@ -64,5 +62,7 @@ public:
     void generateFlitsForPacket(Packet* p) override;
 
     void receiveFlowControlCreditFromRouter();
+
+    std::pair<int, int> getLastIdsPos(int curr_pos, int arr_size);
 };
 
