@@ -44,6 +44,7 @@ num_of_layers = 0  # The number of layers in the mesh
 # That means each face consists of only four points.
 layers = []  # list of the layers
 faces = []  # List of the faces, for drawing reasons
+averageLoad = []
 ###############################################################################
 
 
@@ -298,6 +299,12 @@ def main():
     colorize_nodes(range(len(points)))
     timeStamp = ax.text(2, 2, 2, 0, size=12, color='red')
     
+    averageWindowSize = 10
+    averagePtr = 0
+    averageLoad = [[] for i in range(len(points)) ]
+    for routerLoad in averageLoad:
+        routerLoad = np.zeros(averageWindowSize)
+    
     context = zmq.Context()
 
     #  Socket to talk to server
@@ -310,11 +317,15 @@ def main():
         message = socket.recv()
         data = json.loads(message)
         time = float(data["Time"]["time"])
-        colorvalues = []
+        currentLoad = []
         for routerindex in range(len(points)):
-            colorvalues.append(float(data["Data"][routerindex]['averagebufferusage']))
+            currentLoad.append(float(data["Data"][routerindex]['averagebufferusage']))
+        for currentValue, loadValues in zip(currentLoad, averageLoad):
+            loadValues[averagePtr] = currentValue
+        averagePtr = averagePtr + 1 % averageWindowSize
+            
         routerHeat.remove()  
-        colorize_nodes(colorvalues)
+        colorize_nodes(mean(averageLoad))
         timeStamp.remove()
         timeStampvalue = "Time: " + str(time/1000) + " ns"
         timeStamp = ax.text(0, 1, 1, timeStampvalue, size=12, color='red')
