@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+<?xml oersion="1.0" ?>
 <network-on-chip xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <bufferDepthType value="single"/>
   <layers>
@@ -9,23 +9,23 @@
   <nodeTypes>
     <nodeType id="0">
       <model value="RouterVC"/>
-      <routing value="XYZ"/>
+      <routing value="HeteroXYZ"/>
       <selection value="1stFreeVC"/>
       <clockDelay value="1"/>
       <arbiterType value="fair"/>
     </nodeType>
     <nodeType id="1">
       <model value="RouterVC"/>
-      <routing value="XYZ"/>
+      <routing value="HeteroXYZ"/>
       <selection value="1stFreeVC"/>
-      <clockDelay value="1"/>
+      <clockDelay value="2"/>
       <arbiterType value="fair"/>
     </nodeType>
     <nodeType id="2">
       <model value="RouterVC"/>
-      <routing value="XYZ"/>
+      <routing value="HeteroXYZ"/>
       <selection value="1stFreeVC"/>
-      <clockDelay value="1"/>
+      <clockDelay value="4"/>
       <arbiterType value="fair"/>
     </nodeType>
     <nodeType id="3">
@@ -34,11 +34,11 @@
     </nodeType>
     <nodeType id="4">
       <model value="ProcessingElement"/>
-      <clockDelay value="1"/>
+      <clockDelay value="2"/>
     </nodeType>
     <nodeType id="5">
       <model value="ProcessingElement"/>
-      <clockDelay value="1"/>
+      <clockDelay value="4"/>
     </nodeType>
   </nodeTypes>
   <nodes>
