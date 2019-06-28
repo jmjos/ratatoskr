@@ -132,7 +132,7 @@ Remember to repeat three times! Also, we'll use uniform random traffic again, so
 
 Finally, you'll receive the following:
 
-![Uniform Random Traffic Heterogeneous XYZ](bin/demo/uniform-hetero.gif)
+![Uniform Random Traffic Heterogeneous XYZ](bin/demo/uniform_hetero.gif)
 
 Thanks for making the tutorial. For further instructions, please use our [documentation](TOC.md). There, we also provide instrucions how to compile the simulator.
 
