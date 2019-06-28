@@ -28,6 +28,8 @@ You can download the resources via this repo using a recursive git clone git clo
 
 Here, we provide a quick tutorial. For in-depth instructions, please visit the [documentation](docs/TOC.md).
 
+[TUTORIAL](docs/tutorial.md)
+
 ## Contributing
 If you wish to contribute, please contact me at my univeristy email address jan.joseph@ovgu.de. We offer student development jobs for students from Magdeburg.
 
