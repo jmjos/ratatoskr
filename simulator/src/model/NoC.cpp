@@ -145,7 +145,6 @@ void NoC::guiServer(){
         wait(1, SC_NS);
         wait(SC_ZERO_TIME);
         wait(SC_ZERO_TIME);
-        int averagingWindow = 20;
         zmq::message_t request;
         socket.recv(&request, ZMQ_NOBLOCK);
         if (request.size() != 0) {
@@ -198,7 +197,6 @@ void NoC::guiServer(){
 #endif
 
 #ifdef ENABLE_CREDITCOUTER_VERIFICATION
-
 while (1) {
         wait(1, SC_NS);
         wait(SC_ZERO_TIME);
