@@ -28,13 +28,6 @@ You can download the resources via this repo using a recursive git clone git clo
 
 Here, we provide a quick tutorial. For in-depth instructions, please visit the [documentation](docs/TOC.md).
 
-## Documentation
-
-Take a look at the [documentation table of contents](docs/TOC.md).
-This documentation is bundled with the project which makes it 
-available for offline reading and provides a useful starting point for
-any documentation you want to write about your project.
-
 ## Contributing
 If you wish to contribute, please contact me at my univeristy email address jan.joseph@ovgu.de. We offer student development jobs for students from Magdeburg.
 
