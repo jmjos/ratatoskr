@@ -18,7 +18,7 @@ It is developed at the University in Magdeburg, Germany and Bremen, Germany. The
 
 ---
 
-Jan Moritz Joseph, Sven Wrieden, Christopher Blochwitz, Alberto Garc&iacute;a-Ortiz, Thilo Pionteck: <a href="about:black" target="_blank"><em> A Simulation Environment for Design Space Exploration for Asymmetric 3D-Network-on-Chip</em></a>, 11th International Symposium on Reconfigurable Communication-centric Systems-on-Chip (ReCoSoC 2016), Tallinn, 2016
+Jan Moritz Joseph, Sven Wrieden, Christopher Blochwitz, Alberto Garc&iacute;a-Ortiz, Thilo Pionteck: A Simulation Environment for Design Space Exploration for Asymmetric 3D-Network-on-Chip, 11th International Symposium on Reconfigurable Communication-centric Systems-on-Chip (ReCoSoC 2016), Tallinn, 2016
 
 ---
 
@@ -79,7 +79,7 @@ cd ~/ratatoskr/bin/demo
 
 A GUI will open and show the buffer usage in each router. It's somewhat random...!
 
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/PWquZYYavmI?rel=0" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Uniform Random Traffic](http://img.youtube.com/vi/PWquZYYavmI/0.jpg)](http://www.youtube.com/watch?v=PWquZYYavmI "Uniform Random Traffic")
 
 At the end of the simulation after a few minutes, you'll see the performance results:
 
@@ -103,7 +103,7 @@ to
 
 Rerun the simulation by executing `python ../plot_network_client.py` in the first terminal and `./sim` in the second. You'll recieve a rather boring but expected network load:
 
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/ElsId8iSyyI?rel=0&amp;controls=0" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Hotspot Traffic](http://img.youtube.com/vi/ElsId8iSyyI/0.jpg)](http://www.youtube.com/watch?v=ElsId8iSyyI "Hotspot Traffic")
 
 ## Different routing algorithms
 
@@ -132,7 +132,7 @@ Remember to repeat three times! Also, we'll use uniform random traffic again, so
 
 Finally, you'll receive the following:
 
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/i961qpgxsdE?rel=0&amp;controls=0" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Uniform Random Traffic Heterogeneous XYZ](http://img.youtube.com/vi/i961qpgxsdE/0.jpg)](http://www.youtube.com/watch?v=i961qpgxsdE "Uniform Random Traffic Heterogeneous XYZ")
 
 Thanks for making the tutorial. For further instructions, please use our [documentation](TOC.md). There, we also provide instrucions how to compile the simulator.
 
