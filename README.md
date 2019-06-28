@@ -26,9 +26,11 @@ You can download the resources via this repo using a recursive git clone git clo
 
 ## Getting started
 
-### Installation
 
-#### Build Enviroment
+
+## Installation
+
+### Build Enviroment
 
 - Ubuntu 18.04 & Boost Libs & pugixml
 - CentOS 7 & boost-devel.x86_64 & pugixml-devel.x86_64
@@ -39,7 +41,7 @@ You can download the resources via this repo using a recursive git clone git clo
 
 If you are using Ubuntu 16, you must compile against SystemC 2.3.1a!
 
-##### Building with build script
+#### Building with build script
 We provide a build script, which relys on cmake. It is provided run it via:
 ```
 > cd simulator
@@ -47,7 +49,7 @@ We provide a build script, which relys on cmake. It is provided run it via:
 ```
 
 
-##### Building with cmake
+#### Building with cmake
 Go into simulator folder. Simply type
 ```
 > cd simulator
@@ -64,14 +66,14 @@ To use a subfolder and multi-thread build:
 > cp sim ..
 ```
 
-##### Building with CLion
+#### Building with CLion
 
 Works out-of-the-box using "Open Existing Project" and then opening the CMakeLists.txt in the prject folder. You need to change one thing which is, the Generation path:
 - File -> Settings -> Build, Execuation, Deployment -> CMake. Now set the Generation path to the current folder i.e. '.'.
 
 Enjoy.
 
-##### Building with Eclipse
+#### Building with Eclipse
 
 Open a workspace at the location "workspace"-folder. Then, create an new C++ project with the same name as the subfolder of the project you want to work on (i.e. a3dnoc-simulator). After applying the settings, you should be ready to go! 
 
@@ -84,7 +86,7 @@ Project Settings:
 > Libraries: -l systemc, -L /usr/local/systemc/lib-linux64  
 ```
 
-### Running the Software
+## Running the Software
 
 Linking the shared libs globally via 
 > sudo ln -s /usr/local/systemc-2.3.3/lib-linux64/libsystemc-2.3.3.so /usr/lib/libsystemc-2.3.3.so
