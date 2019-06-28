@@ -44,7 +44,6 @@ num_of_layers = 0  # The number of layers in the mesh
 # That means each face consists of only four points.
 layers = []  # list of the layers
 faces = []  # List of the faces, for drawing reasons
-averageLoad = []
 ###############################################################################
 
 
@@ -275,7 +274,7 @@ def colorize_nodes(colorValues):
     ys = points_coordinates[:, 1]
     zs = points_coordinates[:, 2]
     global routerHeat 
-    routerHeat = ax.scatter(xs, ys, zs,c=colorValues, cmap='inferno')#, marker=m)
+    routerHeat = ax.scatter(xs, ys, zs,c=colorValues, cmap='inferno', s = 200)#, marker=m)
     
 ###############################################################################
 
@@ -298,12 +297,8 @@ def main():
 #    plot_faces()
     colorize_nodes(range(len(points)))
     timeStamp = ax.text(2, 2, 2, 0, size=12, color='red')
-    
-    averageWindowSize = 10
-    averagePtr = 0
-    averageLoad = [[] for i in range(len(points)) ]
-    for routerLoad in averageLoad:
-        routerLoad = np.zeros(averageWindowSize)
+
+    averageRouterLoad = [0] * len(points)
     
     context = zmq.Context()
 
@@ -312,20 +307,20 @@ def main():
     socket = context.socket(zmq.REQ)
     socket.connect("tcp://localhost:5555")
    
-    for request in range(200):
+    for request in range(2000000):
         socket.send_string("Hello")
         message = socket.recv()
         data = json.loads(message)
         time = float(data["Time"]["time"])
         currentLoad = []
         for routerindex in range(len(points)):
-            currentLoad.append(float(data["Data"][routerindex]['averagebufferusage']))
-        for currentValue, loadValues in zip(currentLoad, averageLoad):
-            loadValues[averagePtr] = currentValue
-        averagePtr = averagePtr + 1 % averageWindowSize
-            
+            currentRouterValue = float(data["Data"][routerindex]['averagebufferusage'])
+            currentLoad.append(currentRouterValue)
+            alpha = .008
+            averageRouterLoad[routerindex] = alpha * currentRouterValue + (1 - alpha) * averageRouterLoad[routerindex] 
+        
         routerHeat.remove()  
-        colorize_nodes(mean(averageLoad))
+        colorize_nodes(averageRouterLoad)
         timeStamp.remove()
         timeStampvalue = "Time: " + str(time/1000) + " ns"
         timeStamp = ax.text(0, 1, 1, timeStampvalue, size=12, color='red')
