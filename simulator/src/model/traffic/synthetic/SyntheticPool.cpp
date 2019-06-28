@@ -59,7 +59,7 @@ void SyntheticPool::start()
             srcToDst = transpose();
         }
         else if (sp.distribution=="hotspot") {
-            srcToDst = hotSpot(sp.hotspot);
+            srcToDst = hotSpot(taskId, phaseId, dataDestId, maxClockDelay, sp);
         }
         else {
             FATAL("Distribution is not implemented");
@@ -100,7 +100,6 @@ std::map<int, int>
 SyntheticPool::uniform(taskID_t& taskId, int& phaseId,
         dataDestID_t& dataDestId, int maxClockDelay, const SyntheticPhase& sp)
 {
-
     int numOfPEs = processingElements.size();
     for (unsigned int i = 0; i<numOfPEs; ++i) {
         Task task = Task(taskId, processingElements.at(i)->node.id);
@@ -216,9 +215,10 @@ std::map<int, int> SyntheticPool::tornado()
     return srcToDst;
 }
 
-std::map<int, int> SyntheticPool::hotSpot(int hotSpot)
+std::map<int, int> SyntheticPool::hotSpot(taskID_t& taskId, int& phaseId, dataDestID_t& dataDestId, int maxClockDelay,
+                                          const SyntheticPhase& sp)
 {
-    int numOfPEs = processingElements.size();
+    /*int numOfPEs = processingElements.size();
 
     if (hotSpot==-1) {
         hotSpot = globalResources.getRandomIntBetween(0, numOfPEs-1);
@@ -230,7 +230,59 @@ std::map<int, int> SyntheticPool::hotSpot(int hotSpot)
     for (int i = 0; i<numOfPEs; ++i) {
         srcToDst[i] = hotSpot;
     }
-    return srcToDst;
+    return srcToDst;*/
+    int numOfPEs = processingElements.size();
+    nodeID_t hotspot = globalResources.syntheticPhases.at(phaseId).hotspot;
+    if (hotspot == -1)
+        hotspot = globalResources.getRandomIntBetween(0, numOfPEs - 1);
+    for (unsigned int i = 0; i<numOfPEs; ++i) {
+        Task task = Task(taskId, processingElements.at(i)->node.id);
+        task.minStart = sp.minStart;
+        task.maxStart = sp.maxStart;
+        task.minDuration = sp.minDuration;
+        task.maxDuration = sp.maxDuration;
+        task.syntheticPhase = sp.id;
+
+        int minInterval = static_cast<int>(std::floor((float) maxClockDelay/sp.injectionRate));
+        int maxInterval = static_cast<int>(std::floor((float) maxClockDelay/sp.injectionRate));
+        if (sp.minRepeat==-1 && sp.maxRepeat==-1) {
+            task.minRepeat = static_cast<int>(std::floor(
+                    (float) (task.minDuration-task.minStart)/(float) minInterval));
+            task.maxRepeat = static_cast<int>(std::floor(
+                    (float) (task.maxDuration-task.minStart)/(float) maxInterval));
+        }
+        else {
+            task.minRepeat = sp.minRepeat;
+            task.maxRepeat = sp.maxRepeat;
+        }
+
+        std::vector<DataSendPossibility> possibilities{};
+        possID_t poss_id = 1;
+        int dataTypeId = hotspot;
+        DataType dataType = DataType(dataTypeId, std::to_string(dataTypeId));
+        if (i!=hotspot) { // a PE should not send data to itself.
+            Node n = processingElements.at(hotspot)->node;
+            int minInterval = std::floor((float) maxClockDelay/sp.injectionRate);
+            int maxInterval = std::floor((float) maxClockDelay/sp.injectionRate);
+
+            std::vector<DataDestination> dests{};
+            DataDestination dest = DataDestination(dataDestId, dataType.id, n.id, minInterval, maxInterval);
+            dest.minCount = sp.minCount;
+            dest.maxCount = sp.maxCount;
+            dest.minDelay = sp.minDelay;
+            dest.maxDelay = sp.maxDelay;
+            dests.push_back(dest);
+            possibilities.emplace_back(poss_id, 1, dests);
+            ++dataDestId;
+        }
+        task.possibilities = possibilities;
+        globalResources.tasks.push_back(task);
+        ++taskId;
+    }
+    shuffle_execute_tasks(phaseId);
+    ++phaseId;
+
+    return std::map<int, int>();
 }
 
 void SyntheticPool::clear(Task*)

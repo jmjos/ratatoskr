@@ -50,7 +50,8 @@ private:
 
     std::map<int, int> tornado();
 
-    std::map<int, int> hotSpot(int);
+    std::map<int, int> hotSpot(taskID_t& taskId, int& phaseId, dataDestID_t& dataDestId, int maxClockDelay,
+                               const SyntheticPhase& sp);
 
     std::map<int, int> bitComplement();
 };

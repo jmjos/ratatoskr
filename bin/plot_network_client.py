@@ -316,7 +316,7 @@ def main():
         for routerindex in range(len(points)):
             currentRouterValue = float(data["Data"][routerindex]['averagebufferusage'])
             currentLoad.append(currentRouterValue)
-            alpha = .008
+            alpha = .01
             averageRouterLoad[routerindex] = alpha * currentRouterValue + (1 - alpha) * averageRouterLoad[routerindex] 
         
         routerHeat.remove()  

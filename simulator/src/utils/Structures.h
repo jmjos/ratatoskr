@@ -387,7 +387,7 @@ struct SyntheticPhase {
     int maxCount;
     int minDelay;
     int maxDelay;
-    int hotspot;
+    int hotspot = -1;
 
     SyntheticPhase(synthID_t id, const std::string& name, const std::string& distribution, float injectionRate);
 };
