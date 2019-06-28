@@ -37,8 +37,12 @@ NoC::NoC(sc_module_name nm):context(1), socket(context, ZMQ_REP){
     createLinks(clocks);
     runNoC();
 
-    //SC_THREAD(verifyFlowControl);
+#ifdef ENABLE_CREDITCOUTER_VERIFICATION
+    SC_THREAD(verifyFlowControl);
+#endif
+#ifdef ENABLE_GUI
     SC_THREAD(guiServer);
+#endif
 }
 
 void NoC::createClocks() {
@@ -133,6 +137,7 @@ void NoC::createLinks(const std::vector<std::unique_ptr<sc_clock>> &clocks) {
     }
 }
 
+#ifdef ENABLE_GUI
 void NoC::guiServer(){
     using boost::property_tree::ptree;
 
@@ -190,31 +195,29 @@ void NoC::guiServer(){
         }
     }
 }
+#endif
 
-//This function was used to verify the credit counter. It works!
-/*
-void NoC::verifyFlowControl() {
-    while (1) {
+#ifdef ENABLE_CREDITCOUTER_VERIFICATION
+
+while (1) {
         wait(1, SC_NS);
         wait(SC_ZERO_TIME);
         wait(SC_ZERO_TIME);//last thing that's executed!
-        for (auto &c : globalResources.connections) {
-            if (c.nodes.size() == 2) { //might extend to bus architecture
-                Node &node1 = globalResources.nodes.at(c.nodes.at(0));
-                Node &node2 = globalResources.nodes.at(c.nodes.at(1));
-                if (node1.type->model == "RouterVC" && node2.type->model == "RouterVC") {
-                    RouterVC *router1 = dynamic_cast<RouterVC *>(networkParticipants.at(node1.id));
-                    RouterVC *router2 = dynamic_cast<RouterVC *>(networkParticipants.at(node2.id));
-
+        for (auto& c : globalResources.connections) {
+            if (c.nodes.size()==2) { //might extend to bus architecture
+                Node& node1 = globalResources.nodes.at(c.nodes.at(0));
+                Node& node2 = globalResources.nodes.at(c.nodes.at(1));
+                if (node1.type->model=="RouterVC" && node2.type->model=="RouterVC") {
+                    RouterVC* router1 = dynamic_cast<RouterVC*>(networkParticipants.at(node1.id));
+                    RouterVC* router2 = dynamic_cast<RouterVC*>(networkParticipants.at(node2.id));
                     int conPos1 = node1.getConPosOfId(c.id);
                     int conPos2 = node2.getConPosOfId(c.id);
-
-                    for (int vc = 0; vc < c.vcsCount.at(0); ++vc) {
+                    for (int vc = 0; vc<c.vcsCount.at(0); ++vc) {
                         Channel out = Channel(conPos1, vc);
                         auto credits = router1->creditCounter.at(out);
-                        BufferFIFO<Flit *> *buf = router2->buffers.at(conPos2)->at(vc);
+                        BufferFIFO<Flit*>* buf = router2->buffers.at(conPos2)->at(vc);
                         auto bufferFill = buf->free();
-                        if (credits != bufferFill) {
+                        if (credits!=bufferFill) {
                             cout << bufferFill << endl;
                             cout << credits << endl;
                             cout << "Error in " << node1.id << " vc " << vc << "(CC: " << credits << ") to " << node2.id
@@ -222,44 +225,59 @@ void NoC::verifyFlowControl() {
                                  << bufferFill << ")" << endl;
                         }
                     }
-
-                    for (int vc = 0; vc < c.vcsCount.at(1); ++vc) {
+                    for (int vc = 0; vc<c.vcsCount.at(1); ++vc) {
                         Channel out = Channel(conPos2, vc);
                         auto credits = router2->creditCounter.at(out);
-                        BufferFIFO<Flit *> *buf = router1->buffers.at(conPos1)->at(vc);
+                        BufferFIFO<Flit*>* buf = router1->buffers.at(conPos1)->at(vc);
                         auto bufferFill = buf->free();
-                        if (credits != bufferFill) {
+                        if (credits!=bufferFill) {
                             cout << "Error in " << node2.id << " vc " << vc << "(CC: " << credits << ") to " << node1.id
                                  << "(buf:"
                                  << bufferFill << ")" << endl;
                         }
                     }
-                } else if (node1.type->model == "ProcessingElement") {
-                    //ProcessingElementVC* pe = dynamic_cast<ProcessingElementVC *>(networkParticipants.at(node1.id));
-                    RouterVC *router2 = dynamic_cast<RouterVC *>(networkParticipants.at(node2.id));
+                }
+                else if (node1.type->model=="ProcessingElement") {
+                    NetworkInterfaceVC* ni = dynamic_cast<NetworkInterfaceVC*>(networkParticipants.at(node1.id));
+                    RouterVC* router2 = dynamic_cast<RouterVC*>(networkParticipants.at(node2.id));
                     int conPos2 = node2.getConPosOfId(c.id);
                     int vc = 0;
                     Channel out = Channel(conPos2, vc);
                     auto credits = router2->creditCounter.at(out);
-                    if (credits == 0) {
-                        cout << "Error in " << node2.id << "Local hat 0 credits" << endl;
+                    if (credits==0) {
+                        cout << "Error in " << node2.id << " Local hat 0 credits" << endl;
                     }
-                } else if (node2.type->model == "ProcessingElement") {
-                    //ProcessingElementVC* pe = dynamic_cast<ProcessingElementVC *>(networkParticipants.at(node1.id));
-                    RouterVC *router = dynamic_cast<RouterVC *>(networkParticipants.at(node1.id));
+                    BufferFIFO<Flit*>* buf = router2->buffers.at(conPos2)->at(0);
+                    auto bufferFill = buf->free();
+                    if (bufferFill!=ni->creditCounter) {
+                        cout << "Error in NI " << node2.id << "(CC: " << credits << ") to " << node1.id
+                             << "(buf:"
+                             << bufferFill << ")" << endl;
+                    }
+                }
+                else if (node2.type->model=="ProcessingElement") {
+                    NetworkInterfaceVC* ni = dynamic_cast<NetworkInterfaceVC*>(networkParticipants.at(node2.id));
+                    RouterVC* router = dynamic_cast<RouterVC*>(networkParticipants.at(node1.id));
                     int conPos = node1.getConPosOfId(c.id);
                     int vc = 0;
                     Channel out = Channel(conPos, vc);
                     auto credits = router->creditCounter.at(out);
-                    if (credits == 0) {
-                        cout << "Error in " << node1.id << "Local hat 0 credits" << endl;
+                    if (credits==0) {
+                        cout << "Error in " << node1.id << " Local hat 0 credits" << endl;
+                    }
+                    BufferFIFO<Flit*>* buf = router->buffers.at(conPos)->at(0);
+                    auto bufferFill = buf->free();
+                    if (bufferFill!=ni->creditCounter) {
+                        cout << "Error in NI " << node2.id << "(CC: " << credits << ") to " << node1.id
+                             << "(buf:"
+                             << bufferFill << ")" << endl;
                     }
                 }
             }
         }
     }
 }
-*/
+#endif
 
 void NoC::runNoC() {
     for (auto &r : networkParticipants) {

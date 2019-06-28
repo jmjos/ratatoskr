@@ -63,9 +63,12 @@ public:
 
     ~NoC() override;
 
-    //This function was used to verify the credit counter. It works!
-    //void verifyFlowControl();
+#ifdef ENABLE_CREDITCOUTER_VERIFICATION
+    void verifyFlowControl();
+#endif
+#ifdef ENABLE_GUI
     void guiServer();
+#endif
 
 private:
     GlobalResources& globalResources = GlobalResources::getInstance();
