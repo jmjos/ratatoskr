@@ -299,7 +299,7 @@ def main():
     timeStamp = ax.text(2, 2, 2, 0, size=12, color='red')
 
     averageRouterLoad = [0] * len(points)
-    
+
     context = zmq.Context()
 
     #  Socket to talk to server
