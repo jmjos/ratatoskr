@@ -28,7 +28,7 @@ You can download the resources via this repo using a recursive git clone git clo
 
 Here, we provide a quick tutorial. For in-depth instructions, please visit the [documentation](docs/TOC.md).
 
-Let's start simple. You can a virtualbox image from [here](about:blank). Boot it, login with demo/demo (user/pass). You'll find the simulator in ~/ratatoskr. We'll start from there. Let's start a terminal! (If you'd like to install the simulator on your own system, please read the detailed documentation in [the docs](TOC.md).
+Let's start simple. You can a virtualbox image from [here](https://drive.google.com/open?id=1wDSwk0DIyzxVyD3pfzP4sBhK69QrsxN1). Boot it, login with demo/demo (user/pass). You'll find the simulator in ~/ratatoskr. We'll start from there. Let's start a terminal! (If you'd like to install the simulator on your own system, please read the detailed documentation in [the docs](TOC.md).
 
 ```bash
 cd ~/ratatoskr
