@@ -2,6 +2,7 @@
 
 ## Getting started
 
+* [Installation](install.md) - How to intall
 * [Usage](usage.md) — Overview of the project contents.
 * [FAQ](faq.md) — Frequently asked questions along with their answers.
 
