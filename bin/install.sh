@@ -9,3 +9,13 @@ wget www.accellera.org/images/downloads/standards/systemc/systemc-2.3.3.gz
 tar -xzf systemc-2.3.3.gz
 cd systemc-2.3.3.gz
 sudo mkdir -p /usr/local/systemc-2.3.3
+mkdir objdir
+cd objdir
+../configure --prefix=/usr/local/systemc-2.3.3
+make -j 3
+sudo make install
+
+cd ~
+git clone https://github.com/jmjos/ratatoskr.git
+cd ratatoskr/simulator
+build.sh
