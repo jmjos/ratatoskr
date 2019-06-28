@@ -79,6 +79,8 @@ cd ~/ratatoskr/bin/demo
 
 A GUI will open and show the buffer usage in each router. It's somewhat random...!
 
+![Uniform Random Traffic XYZ][bin/demo/uniform.gif]
+
 [![Uniform Random Traffic](http://img.youtube.com/vi/PWquZYYavmI/0.jpg)](http://www.youtube.com/watch?v=PWquZYYavmI "Uniform Random Traffic")
 
 At the end of the simulation after a few minutes, you'll see the performance results:
@@ -102,6 +104,8 @@ to
 ```
 
 Rerun the simulation by executing `python ../plot_network_client.py` in the first terminal and `./sim` in the second. You'll recieve a rather boring but expected network load:
+
+![Hotspot Traffic][bin/demo/hotspot.gif]
 
 [![Hotspot Traffic](http://img.youtube.com/vi/ElsId8iSyyI/0.jpg)](http://www.youtube.com/watch?v=ElsId8iSyyI "Hotspot Traffic")
 
@@ -131,6 +135,8 @@ to
 Remember to repeat three times! Also, we'll use uniform random traffic again, so update the `config/config.xml` (revert the changes made before).
 
 Finally, you'll receive the following:
+
+![Uniform Random Traffic Heterogeneous XYZ][bin/demo/uniform-hetero.gif]
 
 [![Uniform Random Traffic Heterogeneous XYZ](http://img.youtube.com/vi/i961qpgxsdE/0.jpg)](http://www.youtube.com/watch?v=i961qpgxsdE "Uniform Random Traffic Heterogeneous XYZ")
 
