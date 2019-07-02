@@ -1,0 +1,164 @@
+Loading db file '/home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_AO_RVT_TT_170906.db'
+Loading db file '/home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_INVBUF_RVT_TT_170906.db'
+Loading db file '/home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_OA_RVT_TT_170906.db'
+Loading db file '/home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_SIMPLE_RVT_TT_170906.db'
+Loading db file '/home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_SEQ_RVT_TT_170906.db'
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+Warning: Design has unannotated primary inputs. (PWR-414)
+Warning: Design has unannotated sequential cell outputs. (PWR-415)
+ 
+****************************************
+Report : power
+        -hier
+        -analysis_effort low
+Design : router_pl
+Version: K-2015.06-SP4
+Date   : Wed Nov 28 15:18:58 2018
+****************************************
+
+
+Library(s) Used:
+
+    asap7sc7p5t_22b_INVBUF_RVT_TT_170906 (File: /home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_INVBUF_RVT_TT_170906.db)
+    asap7sc7p5t_22b_SIMPLE_RVT_TT_170906 (File: /home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_SIMPLE_RVT_TT_170906.db)
+    asap7sc7p5t_22b_AO_RVT_TT_170906 (File: /home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_AO_RVT_TT_170906.db)
+    asap7sc7p5t_22b_OA_RVT_TT_170906 (File: /home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_OA_RVT_TT_170906.db)
+    asap7sc7p5t_22b_SEQ_RVT_TT_170906 (File: /home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_SEQ_RVT_TT_170906.db)
+
+
+Operating Conditions: PVT_0P7V_25C   Library: asap7sc7p5t_22b_OA_RVT_TT_170906
+Wire Load Model Mode: top
+
+
+Global Operating Voltage = 0.7  
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000ff
+    Time Units = 1ps
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1pW
+
+
+--------------------------------------------------------------------------------
+                                       Switch   Int      Leak     Total
+Hierarchy                              Power    Power    Power    Power    %
+--------------------------------------------------------------------------------
+router_pl                                 0.232    2.368 1.33e+06    2.601 100.0
+  CTRL_ARB (arbiter_7_1_1_1_1_DXYU)    2.44e-02    0.222 2.44e+05    0.247   9.5
+    switch_allocator_1 (switch_allocator_7_DXYU) 1.14e-02 5.74e-02 7.69e+04 6.89e-02   2.6
+      mod_219 (switch_allocator_7_DXYU_DW_mod_tc_6) 2.35e-05 1.89e-05 2.74e+03 4.52e-05   0.0
+      mod_219_G2 (switch_allocator_7_DXYU_DW_mod_tc_5) 1.01e-04 6.98e-05 2.85e+03 1.73e-04   0.0
+      mod_219_G3 (switch_allocator_7_DXYU_DW_mod_tc_4) 2.34e-04 1.50e-04 2.86e+03 3.88e-04   0.0
+      mod_219_G4 (switch_allocator_7_DXYU_DW_mod_tc_3) 7.09e-05 5.58e-05 2.81e+03 1.30e-04   0.0
+      mod_219_G5 (switch_allocator_7_DXYU_DW_mod_tc_2) 1.47e-04 1.04e-04 2.92e+03 2.54e-04   0.0
+      mod_219_G6 (switch_allocator_7_DXYU_DW_mod_tc_1) 8.85e-05 5.62e-05 2.91e+03 1.48e-04   0.0
+      mod_219_G7 (switch_allocator_7_DXYU_DW_mod_tc_0) 1.02e-04 6.77e-05 2.89e+03 1.73e-04   0.0
+      credit_count_i_6_12 (credit_count_single_vc_depth_out2_1) 4.91e-04 2.51e-03 1.62e+03 3.00e-03   0.1
+      credit_count_i_6_11 (credit_count_single_vc_depth_out2_2) 4.45e-04 2.42e-03 1.63e+03 2.87e-03   0.1
+      rr_arbiter_6_0 (rr_arbiter_no_delay_CNT2_7) 1.36e-04 1.97e-03 1.27e+03 2.10e-03   0.1
+      credit_count_i_5_10 (credit_count_single_vc_depth_out2_3) 4.96e-04 2.52e-03 1.62e+03 3.02e-03   0.1
+      credit_count_i_5_9 (credit_count_single_vc_depth_out2_4) 4.81e-04 2.49e-03 1.63e+03 2.97e-03   0.1
+      rr_arbiter_5_0 (rr_arbiter_no_delay_CNT2_8) 1.10e-04 1.94e-03 1.27e+03 2.05e-03   0.1
+      credit_count_i_4_8 (credit_count_single_vc_depth_out2_5) 4.75e-04 2.49e-03 1.62e+03 2.96e-03   0.1
+      credit_count_i_4_7 (credit_count_single_vc_depth_out2_6) 4.39e-04 2.41e-03 1.63e+03 2.86e-03   0.1
+      rr_arbiter_4_0 (rr_arbiter_no_delay_CNT2_9) 1.70e-04 2.00e-03 1.28e+03 2.17e-03   0.1
+      credit_count_i_3_6 (credit_count_single_vc_depth_out2_7) 5.05e-04 2.53e-03 1.62e+03 3.04e-03   0.1
+      credit_count_i_3_5 (credit_count_single_vc_depth_out2_8) 4.59e-04 2.45e-03 1.63e+03 2.91e-03   0.1
+      rr_arbiter_3_0 (rr_arbiter_no_delay_CNT2_10) 1.06e-04 1.93e-03 1.27e+03 2.04e-03   0.1
+      credit_count_i_2_4 (credit_count_single_vc_depth_out2_9) 4.78e-04 2.47e-03 1.63e+03 2.95e-03   0.1
+      credit_count_i_2_3 (credit_count_single_vc_depth_out2_10) 4.25e-04 2.37e-03 1.63e+03 2.80e-03   0.1
+      rr_arbiter_2_0 (rr_arbiter_no_delay_CNT2_11) 2.61e-04 2.10e-03 1.28e+03 2.37e-03   0.1
+      credit_count_i_1_2 (credit_count_single_vc_depth_out2_11) 4.77e-04 2.48e-03 1.63e+03 2.96e-03   0.1
+      credit_count_i_1_1 (credit_count_single_vc_depth_out2_12) 4.40e-04 2.41e-03 1.63e+03 2.86e-03   0.1
+      rr_arbiter_1_0 (rr_arbiter_no_delay_CNT2_12) 1.74e-04 2.01e-03 1.28e+03 2.18e-03   0.1
+      credit_count_i_0_0 (credit_count_single_vc_depth_out2_0) 4.67e-04 2.48e-03 1.62e+03 2.94e-03   0.1
+      rr_arbiter_6 (rr_arbiter_no_delay_CNT2_13) 4.93e-05 1.87e-03 1.25e+03 1.92e-03   0.1
+      rr_arbiter_5 (rr_arbiter_no_delay_CNT2_14) 2.81e-04 2.07e-03 1.25e+03 2.35e-03   0.1
+      rr_arbiter_4 (rr_arbiter_no_delay_CNT2_15) 1.86e-04 1.99e-03 1.25e+03 2.18e-03   0.1
+      rr_arbiter_3 (rr_arbiter_no_delay_CNT2_16) 7.29e-05 1.90e-03 1.24e+03 1.97e-03   0.1
+      rr_arbiter_2 (rr_arbiter_no_delay_CNT2_17) 1.63e-04 1.95e-03 1.25e+03 2.11e-03   0.1
+      rr_arbiter_1 (rr_arbiter_no_delay_CNT2_0) 4.74e-05 1.88e-03 1.25e+03 1.92e-03   0.1
+    vc_allocator_1 (vc_allocator_7_1_1_1_1_DXYU) 1.30e-02    0.165 1.68e+05    0.178   6.8
+      output_last_arbiter_i_6 (vc_output_allocator_port_num7_vc_num_out2_1) 7.46e-04 1.51e-02 1.57e+04 1.58e-02   0.6
+        rr_arbiter (rr_arbiter_no_delay_CNT6_1) 2.53e-04 5.70e-03 7.06e+03 5.96e-03   0.2
+      input_first_arbiter_i_6 (header_arbiter_and_decoder_1_1_1_7_6_2_1_DXYU) 6.87e-04 9.64e-03 9.28e+03 1.03e-02   0.4
+        seq_packet_counter_i_1 (seq_packet_counter_1_1) 9.11e-05 3.72e-03 2.42e+03 3.81e-03   0.1
+        seq_packet_counter_i_0 (seq_packet_counter_1_2) 1.04e-04 3.73e-03 2.42e+03 3.83e-03   0.1
+        routing_calc_1 (routing_calc_Xis1_Yis1_Zis1_rout_algoDXYU_1) 1.46e-04 6.56e-05  857.401 2.12e-04   0.0
+          dxyu_routing_1 (dxyu_routing_Xis1_Yis1_Zis1_1) 1.46e-04 6.56e-05  857.401 2.12e-04   0.0
+        rr_arbiter_no_delay_1 (rr_arbiter_no_delay_CNT2_1) 6.47e-05 1.89e-03 1.26e+03 1.96e-03   0.1
+      output_last_arbiter_i_5 (vc_output_allocator_port_num7_vc_num_out2_2) 5.88e-04 1.50e-02 1.56e+04 1.56e-02   0.6
+        rr_arbiter (rr_arbiter_no_delay_CNT6_2) 2.05e-04 5.65e-03 7.02e+03 5.86e-03   0.2
+      input_first_arbiter_i_5 (header_arbiter_and_decoder_1_1_1_7_5_2_1_DXYU) 1.68e-03 1.03e-02 9.15e+03 1.19e-02   0.5
+        seq_packet_counter_i_1 (seq_packet_counter_1_3) 3.88e-04 3.93e-03 2.42e+03 4.32e-03   0.2
+        seq_packet_counter_i_0 (seq_packet_counter_1_4) 4.33e-04 3.97e-03 2.43e+03 4.40e-03   0.2
+        routing_calc_1 (routing_calc_Xis1_Yis1_Zis1_rout_algoDXYU_2) 1.76e-04 6.49e-05  824.074 2.42e-04   0.0
+          dxyu_routing_1 (dxyu_routing_Xis1_Yis1_Zis1_2) 1.76e-04 6.49e-05  824.074 2.42e-04   0.0
+        rr_arbiter_no_delay_1 (rr_arbiter_no_delay_CNT2_2) 1.46e-04 1.98e-03 1.26e+03 2.13e-03   0.1
+      output_last_arbiter_i_4 (vc_output_allocator_port_num7_vc_num_out2_3) 8.08e-04 1.52e-02 1.57e+04 1.60e-02   0.6
+        rr_arbiter (rr_arbiter_no_delay_CNT6_3) 3.37e-04 5.78e-03 7.07e+03 6.12e-03   0.2
+      input_first_arbiter_i_4 (header_arbiter_and_decoder_1_1_1_7_4_2_1_DXYU) 1.32e-03 1.00e-02 9.18e+03 1.14e-02   0.4
+        seq_packet_counter_i_1 (seq_packet_counter_1_5) 2.69e-04 3.85e-03 2.42e+03 4.12e-03   0.2
+        seq_packet_counter_i_0 (seq_packet_counter_1_6) 3.20e-04 3.88e-03 2.42e+03 4.20e-03   0.2
+        routing_calc_1 (routing_calc_Xis1_Yis1_Zis1_rout_algoDXYU_3) 1.64e-04 6.54e-05  836.790 2.30e-04   0.0
+          dxyu_routing_1 (dxyu_routing_Xis1_Yis1_Zis1_3) 1.64e-04 6.54e-05  836.790 2.30e-04   0.0
+        rr_arbiter_no_delay_1 (rr_arbiter_no_delay_CNT2_3) 1.19e-04 1.95e-03 1.26e+03 2.07e-03   0.1
+      output_last_arbiter_i_3 (vc_output_allocator_port_num7_vc_num_out2_4) 6.24e-04 1.50e-02 1.57e+04 1.57e-02   0.6
+        rr_arbiter (rr_arbiter_no_delay_CNT6_4) 2.08e-04 5.65e-03 7.07e+03 5.87e-03   0.2
+      input_first_arbiter_i_3 (header_arbiter_and_decoder_1_1_1_7_3_2_1_DXYU) 8.53e-04 9.75e-03 9.24e+03 1.06e-02   0.4
+        seq_packet_counter_i_1 (seq_packet_counter_1_7) 1.36e-04 3.75e-03 2.42e+03 3.89e-03   0.1
+        seq_packet_counter_i_0 (seq_packet_counter_1_8) 1.60e-04 3.77e-03 2.42e+03 3.93e-03   0.2
+        routing_calc_1 (routing_calc_Xis1_Yis1_Zis1_rout_algoDXYU_4) 1.52e-04 6.67e-05  853.742 2.19e-04   0.0
+          dxyu_routing_1 (dxyu_routing_Xis1_Yis1_Zis1_4) 1.52e-04 6.67e-05  853.742 2.19e-04   0.0
+        rr_arbiter_no_delay_1 (rr_arbiter_no_delay_CNT2_4) 7.98e-05 1.91e-03 1.26e+03 2.00e-03   0.1
+      output_last_arbiter_i_2 (vc_output_allocator_port_num7_vc_num_out2_5) 1.37e-03 1.55e-02 1.58e+04 1.69e-02   0.6
+        rr_arbiter (rr_arbiter_no_delay_CNT6_5) 5.77e-04 5.99e-03 7.14e+03 6.58e-03   0.3
+      input_first_arbiter_i_2 (header_arbiter_and_decoder_1_1_1_7_2_2_1_DXYU) 1.12e-03 9.92e-03 9.20e+03 1.10e-02   0.4
+        seq_packet_counter_i_1 (seq_packet_counter_1_9) 2.15e-04 3.81e-03 2.42e+03 4.03e-03   0.2
+        seq_packet_counter_i_0 (seq_packet_counter_1_10) 2.49e-04 3.84e-03 2.42e+03 4.09e-03   0.2
+        routing_calc_1 (routing_calc_Xis1_Yis1_Zis1_rout_algoDXYU_5) 1.58e-04 6.43e-05  841.884 2.23e-04   0.0
+          dxyu_routing_1 (dxyu_routing_Xis1_Yis1_Zis1_5) 1.58e-04 6.43e-05  841.884 2.23e-04   0.0
+        rr_arbiter_no_delay_1 (rr_arbiter_no_delay_CNT2_5) 1.02e-04 1.94e-03 1.26e+03 2.04e-03   0.1
+      output_last_arbiter_i_1 (vc_output_allocator_port_num7_vc_num_out2_0) 9.43e-04 1.52e-02 1.57e+04 1.62e-02   0.6
+        rr_arbiter (rr_arbiter_no_delay_CNT6_6) 3.60e-04 5.79e-03 7.08e+03 6.16e-03   0.2
+      input_first_arbiter_i_1 (header_arbiter_and_decoder_1_1_1_7_1_2_1_DXYU) 7.58e-04 9.68e-03 9.24e+03 1.04e-02   0.4
+        seq_packet_counter_i_1 (seq_packet_counter_1_11) 1.08e-04 3.73e-03 2.42e+03 3.84e-03   0.1
+        seq_packet_counter_i_0 (seq_packet_counter_1_12) 1.30e-04 3.74e-03 2.42e+03 3.88e-03   0.1
+        routing_calc_1 (routing_calc_Xis1_Yis1_Zis1_rout_algoDXYU_6) 1.50e-04 6.63e-05  853.468 2.17e-04   0.0
+          dxyu_routing_1 (dxyu_routing_Xis1_Yis1_Zis1_6) 1.50e-04 6.63e-05  853.468 2.17e-04   0.0
+        rr_arbiter_no_delay_1 (rr_arbiter_no_delay_CNT2_6) 7.23e-05 1.90e-03 1.26e+03 1.98e-03   0.1
+      output_last_arbiter_i_0 (vc_output_allocator_port_num7_vc_num_out1) 3.51e-04 1.03e-02 1.24e+04 1.06e-02   0.4
+        rr_arbiter (rr_arbiter_no_delay_CNT6_0) 1.49e-04 5.58e-03 7.01e+03 5.74e-03   0.2
+      input_first_arbiter_i_0 (header_arbiter_and_decoder_1_1_1_7_0_1_1_DXYU) 6.14e-04 4.07e-03 3.79e+03 4.69e-03   0.2
+        seq_packet_counter_i_0 (seq_packet_counter_1_0) 4.03e-04 3.94e-03 2.42e+03 4.35e-03   0.2
+        routing_calc_1 (routing_calc_Xis1_Yis1_Zis1_rout_algoDXYU_0) 1.22e-04 4.51e-05  815.082 1.68e-04   0.0
+          dxyu_routing_1 (dxyu_routing_Xis1_Yis1_Zis1_0) 1.22e-04 4.51e-05  815.082 1.68e-04   0.0
+  output_register_i_6 (output_register_vc_num2_vc_num_out2_1) 2.15e-03 6.41e-02 2.66e+04 6.62e-02   2.5
+  output_register_i_5 (output_register_vc_num2_vc_num_out2_2) 1.71e-03 6.38e-02 2.67e+04 6.55e-02   2.5
+  output_register_i_4 (output_register_vc_num2_vc_num_out2_3) 2.32e-03 6.47e-02 2.66e+04 6.70e-02   2.6
+  output_register_i_3 (output_register_vc_num2_vc_num_out2_4) 1.74e-03 6.37e-02 2.67e+04 6.55e-02   2.5
+  output_register_i_2 (output_register_vc_num2_vc_num_out2_5) 2.81e-03 6.49e-02 2.64e+04 6.78e-02   2.6
+  output_register_i_1 (output_register_vc_num2_vc_num_out2_0) 2.28e-03 6.45e-02 2.66e+04 6.68e-02   2.6
+  output_register_i_0 (output_register_vc_num1_vc_num_out1) 1.30e-03 6.12e-02 2.55e+04 6.25e-02   2.4
+  XBAR (crossbar_7_DXYU)               1.17e-02 6.34e-03 9.47e+04 1.82e-02   0.7
+  vc_input_buffer_i_6 (vc_input_buffer_2_0000000200000002_1) 2.66e-02    0.260 1.24e+05    0.287  11.0
+    fifo_i_1 (fifo_buff_depth2_1)      1.30e-02    0.129 5.84e+04    0.143   5.5
+    fifo_i_0 (fifo_buff_depth2_2)      1.28e-02    0.130 5.84e+04    0.142   5.5
+  vc_input_buffer_i_5 (vc_input_buffer_2_0000000200000002_2) 2.96e-02    0.261 1.24e+05    0.291  11.2
+    fifo_i_1 (fifo_buff_depth2_3)      1.32e-02    0.130 5.83e+04    0.143   5.5
+    fifo_i_0 (fifo_buff_depth2_4)      1.37e-02    0.130 5.83e+04    0.144   5.5
+  vc_input_buffer_i_4 (vc_input_buffer_2_0000000200000002_3) 2.89e-02    0.261 1.24e+05    0.290  11.1
+    fifo_i_1 (fifo_buff_depth2_5)      1.34e-02    0.130 5.83e+04    0.143   5.5
+    fifo_i_0 (fifo_buff_depth2_6)      1.34e-02    0.130 5.83e+04    0.143   5.5
+  vc_input_buffer_i_3 (vc_input_buffer_2_0000000200000002_4) 2.78e-02    0.261 1.24e+05    0.288  11.1
+    fifo_i_1 (fifo_buff_depth2_7)      1.32e-02    0.130 5.84e+04    0.143   5.5
+    fifo_i_0 (fifo_buff_depth2_8)      1.32e-02    0.130 5.84e+04    0.143   5.5
+  vc_input_buffer_i_2 (vc_input_buffer_2_0000000200000002_5) 2.81e-02    0.260 1.24e+05    0.288  11.1
+    fifo_i_1 (fifo_buff_depth2_9)      1.31e-02    0.130 5.84e+04    0.143   5.5
+    fifo_i_0 (fifo_buff_depth2_10)     1.30e-02    0.130 5.83e+04    0.143   5.5
+  vc_input_buffer_i_1 (vc_input_buffer_2_0000000200000002_0) 2.68e-02    0.260 1.24e+05    0.287  11.0
+    fifo_i_1 (fifo_buff_depth2_11)     1.24e-02    0.130 5.84e+04    0.142   5.5
+    fifo_i_0 (fifo_buff_depth2_12)     1.31e-02    0.130 5.84e+04    0.143   5.5
+  vc_input_buffer_i_0 (vc_input_buffer_1_0000000200000002) 1.39e-02    0.130 5.83e+04    0.144   5.5
+    fifo_i_0 (fifo_buff_depth2_0)      1.39e-02    0.130 5.83e+04    0.144   5.5
+1

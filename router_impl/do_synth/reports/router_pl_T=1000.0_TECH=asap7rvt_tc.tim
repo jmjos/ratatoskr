@@ -1,0 +1,103 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : router_pl
+Version: K-2015.06-SP4
+Date   : Wed Nov 28 15:18:58 2018
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: PVT_0P7V_25C   Library: asap7sc7p5t_22b_OA_RVT_TT_170906
+Wire Load Model Mode: top
+
+  Startpoint: CTRL_ARB/vc_allocator_1/input_first_arbiter_i_4/seq_packet_counter_i_1/flit_count_int_reg[2]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: output_register_i_1/data_tx_pl_reg[1]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                 0.0000     0.0000
+  clock network delay (ideal)                           0.0000     0.0000
+  CTRL_ARB/vc_allocator_1/input_first_arbiter_i_4/seq_packet_counter_i_1/flit_count_int_reg[2]/CLK (ASYNC_DFFHx1_ASAP7_75t_R)   0.0000 #   0.0000 r
+  CTRL_ARB/vc_allocator_1/input_first_arbiter_i_4/seq_packet_counter_i_1/flit_count_int_reg[2]/QN (ASYNC_DFFHx1_ASAP7_75t_R)  45.5821  45.5821 f
+  CTRL_ARB/vc_allocator_1/input_first_arbiter_i_4/seq_packet_counter_i_1/flit_count[2] (seq_packet_counter_1_5)   0.0000  45.5821 f
+  CTRL_ARB/vc_allocator_1/input_first_arbiter_i_4/U8/Y (NOR4xp25_ASAP7_75t_R)  26.5792  72.1613 r
+  CTRL_ARB/vc_allocator_1/input_first_arbiter_i_4/U31/Y (INVx1_ASAP7_75t_R)   9.2458  81.4071 f
+  CTRL_ARB/vc_allocator_1/input_first_arbiter_i_4/input_vc_in_use[1] (header_arbiter_and_decoder_1_1_1_7_4_2_1_DXYU)   0.0000  81.4071 f
+  CTRL_ARB/vc_allocator_1/input_vc_in_use[8] (vc_allocator_7_1_1_1_1_DXYU)   0.0000  81.4071 f
+  CTRL_ARB/switch_allocator_1/input_vc_in_use[8] (switch_allocator_7_DXYU)   0.0000  81.4071 f
+  CTRL_ARB/switch_allocator_1/U204/Y (AND2x2_ASAP7_75t_R)  14.6394  96.0465 f
+  CTRL_ARB/switch_allocator_1/rr_arbiter_4/req[1] (rr_arbiter_no_delay_CNT2_15)   0.0000  96.0465 f
+  CTRL_ARB/switch_allocator_1/rr_arbiter_4/U10/Y (NAND3xp33_ASAP7_75t_R)   8.7547 104.8013 r
+  CTRL_ARB/switch_allocator_1/rr_arbiter_4/U7/Y (OAI21xp5_ASAP7_75t_R)  19.6567 124.4580 f
+  CTRL_ARB/switch_allocator_1/rr_arbiter_4/grant[1] (rr_arbiter_no_delay_CNT2_15)   0.0000 124.4580 f
+  CTRL_ARB/switch_allocator_1/U186/Y (INVx1_ASAP7_75t_R)  24.4229 148.8809 r
+  CTRL_ARB/switch_allocator_1/U115/Y (NOR2xp33_ASAP7_75t_R)  14.2421 163.1229 f
+  CTRL_ARB/switch_allocator_1/U276/Y (A2O1A1Ixp33_ASAP7_75t_R)  15.2477 178.3706 r
+  CTRL_ARB/switch_allocator_1/U272/Y (A2O1A1Ixp33_ASAP7_75t_R)  13.8219 192.1925 f
+  CTRL_ARB/switch_allocator_1/U271/Y (AND3x1_ASAP7_75t_R)  14.1533 206.3458 f
+  CTRL_ARB/switch_allocator_1/rr_arbiter_1_0/req[1] (rr_arbiter_no_delay_CNT2_12)   0.0000 206.3458 f
+  CTRL_ARB/switch_allocator_1/rr_arbiter_1_0/U10/Y (NAND3xp33_ASAP7_75t_R)   9.1137 215.4595 r
+  CTRL_ARB/switch_allocator_1/rr_arbiter_1_0/U9/Y (AND2x2_ASAP7_75t_R)  22.7592 238.2187 r
+  CTRL_ARB/switch_allocator_1/rr_arbiter_1_0/grant[0] (rr_arbiter_no_delay_CNT2_12)   0.0000 238.2187 r
+  CTRL_ARB/switch_allocator_1/U179/Y (INVx1_ASAP7_75t_R)  10.2334 248.4521 f
+  CTRL_ARB/switch_allocator_1/U112/Y (OAI22xp5_ASAP7_75t_R)  25.7764 274.2285 r
+  CTRL_ARB/switch_allocator_1/U7/Y (XOR2xp5_ASAP7_75t_R)  22.5588 296.7874 f
+  CTRL_ARB/switch_allocator_1/mod_219_G2/a[2] (switch_allocator_7_DXYU_DW_mod_tc_5)   0.0000 296.7874 f
+  CTRL_ARB/switch_allocator_1/mod_219_G2/U21/Y (NAND2xp33_ASAP7_75t_R)  24.8314 321.6187 r
+  CTRL_ARB/switch_allocator_1/mod_219_G2/U1/Y (NOR2xp33_ASAP7_75t_R)  27.1178 348.7366 f
+  CTRL_ARB/switch_allocator_1/mod_219_G2/U16/Y (INVx1_ASAP7_75t_R)  15.0909 363.8275 r
+  CTRL_ARB/switch_allocator_1/mod_219_G2/U30/Y (OAI22xp33_ASAP7_75t_R)  18.8921 382.7196 f
+  CTRL_ARB/switch_allocator_1/mod_219_G2/U3/Y (NAND2xp33_ASAP7_75t_R)  23.9982 406.7178 r
+  CTRL_ARB/switch_allocator_1/mod_219_G2/U4/Y (NOR2xp33_ASAP7_75t_R)  23.1697 429.8875 f
+  CTRL_ARB/switch_allocator_1/mod_219_G2/U5/Y (OR2x2_ASAP7_75t_R)  21.6521 451.5396 f
+  CTRL_ARB/switch_allocator_1/mod_219_G2/U6/Y (NOR2xp33_ASAP7_75t_R)  28.0390 479.5786 r
+  CTRL_ARB/switch_allocator_1/mod_219_G2/U12/Y (INVx1_ASAP7_75t_R)  18.5033 498.0819 f
+  CTRL_ARB/switch_allocator_1/mod_219_G2/U33/Y (AOI22xp33_ASAP7_75t_R)  21.0525 519.1344 r
+  CTRL_ARB/switch_allocator_1/mod_219_G2/U28/Y (AND3x1_ASAP7_75t_R)  20.0515 539.1859 r
+  CTRL_ARB/switch_allocator_1/mod_219_G2/U20/Y (NAND3xp33_ASAP7_75t_R)  14.7781 553.9639 f
+  CTRL_ARB/switch_allocator_1/mod_219_G2/U25/Y (AND2x2_ASAP7_75t_R)  18.8383 572.8022 f
+  CTRL_ARB/switch_allocator_1/mod_219_G2/remainder[2] (switch_allocator_7_DXYU_DW_mod_tc_5)   0.0000 572.8022 f
+  CTRL_ARB/switch_allocator_1/U154/Y (INVx1_ASAP7_75t_R)   3.9399 576.7421 r
+  CTRL_ARB/switch_allocator_1/U22/Y (NOR2xp33_ASAP7_75t_R)  16.1809 592.9230 f
+  CTRL_ARB/switch_allocator_1/U224/Y (AOI333xp33_ASAP7_75t_R)  30.4769 623.3999 r
+  CTRL_ARB/switch_allocator_1/U223/Y (NAND3xp33_ASAP7_75t_R)  24.1634 647.5633 f
+  CTRL_ARB/switch_allocator_1/U145/Y (INVx1_ASAP7_75t_R)  11.6001 659.1634 r
+  CTRL_ARB/switch_allocator_1/U26/Y (NOR2xp33_ASAP7_75t_R)  22.6499 681.8133 f
+  CTRL_ARB/switch_allocator_1/vc_transfer_vec[8] (switch_allocator_7_DXYU)   0.0000 681.8133 f
+  CTRL_ARB/vc_transfer_vec[8] (arbiter_7_1_1_1_1_DXYU)   0.0000  681.8133 f
+  vc_input_buffer_i_4/vc_transfer[1] (vc_input_buffer_2_0000000200000002_3)   0.0000 681.8133 f
+  vc_input_buffer_i_4/U71/Y (HB1xp67_ASAP7_75t_R)      28.0155   709.8288 f
+  vc_input_buffer_i_4/U67/Y (INVx1_ASAP7_75t_R)        16.8915   726.7203 r
+  vc_input_buffer_i_4/U1/Y (INVx1_ASAP7_75t_R)         55.0768   781.7971 f
+  vc_input_buffer_i_4/U37/Y (AO22x1_ASAP7_75t_R)       38.5605   820.3576 f
+  vc_input_buffer_i_4/data_transfer[1] (vc_input_buffer_2_0000000200000002_3)   0.0000 820.3576 f
+  XBAR/crossbar_in[4][1] (crossbar_7_DXYU)              0.0000   820.3576 f
+  XBAR/U1104/Y (AOI222xp33_ASAP7_75t_R)                19.2044   839.5620 r
+  XBAR/U1103/Y (OAI221xp5_ASAP7_75t_R)                 15.0439   854.6060 f
+  XBAR/crossbar_out[1][1] (crossbar_7_DXYU)             0.0000   854.6060 f
+  output_register_i_1/data_tx[1] (output_register_vc_num2_vc_num_out2_0)   0.0000 854.6060 f
+  output_register_i_1/U4/Y (OAI22xp5_ASAP7_75t_R)      12.4609   867.0668 r
+  output_register_i_1/data_tx_pl_reg[1]/D (ASYNC_DFFHx1_ASAP7_75t_R)   0.0000 867.0668 r
+  data arrival time                                              867.0668
+
+  clock clk (rise edge)                               1000.0000  1000.0000
+  clock network delay (ideal)                           0.0000   1000.0000
+  output_register_i_1/data_tx_pl_reg[1]/CLK (ASYNC_DFFHx1_ASAP7_75t_R)   0.0000 1000.0000 r
+  library setup time                                  -16.6520   983.3480
+  data required time                                             983.3480
+  --------------------------------------------------------------------------
+  data required time                                             983.3480
+  data arrival time                                              -867.0668
+  --------------------------------------------------------------------------
+  slack (MET)                                                    116.2812
+
+
+1

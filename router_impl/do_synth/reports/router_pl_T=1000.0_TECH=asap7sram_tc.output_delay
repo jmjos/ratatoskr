@@ -1,0 +1,45 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : router_pl
+Version: K-2015.06-SP4
+Date   : Wed Nov 28 15:40:31 2018
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: PVT_0P7V_25C   Library: asap7sc7p5t_22b_SIMPLE_SRAM_TT_170906
+Wire Load Model Mode: top
+
+  Startpoint: output_register_i_0/data_tx_pl_reg[63]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: data_tx_pl[0][63]
+            (output port clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  output_register_i_0/data_tx_pl_reg[63]/CLK (ASYNC_DFFHx1_ASAP7_75t_SRAM)     0.00 #     0.00 r
+  output_register_i_0/data_tx_pl_reg[63]/QN (ASYNC_DFFHx1_ASAP7_75t_SRAM)    45.01    45.01 f
+  output_register_i_0/data_tx_pl[63] (output_register_vc_num1_vc_num_out1)     0.00    45.01 f
+  data_tx_pl[0][63] (out)                                 0.00      45.01 f
+  data arrival time                                                 45.01
+
+  clock clk (rise edge)                                1000.00    1000.00
+  clock network delay (ideal)                             0.00    1000.00
+  output external delay                                   0.00    1000.00
+  data required time                                              1000.00
+  --------------------------------------------------------------------------
+  data required time                                              1000.00
+  data arrival time                                                -45.01
+  --------------------------------------------------------------------------
+  slack (MET)                                                      954.99
+
+
+1

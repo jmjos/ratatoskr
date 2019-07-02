@@ -1,0 +1,140 @@
+ 
+****************************************
+Report : area
+Design : arbiter
+Version: K-2015.06-SP4
+Date   : Wed Nov 28 14:14:09 2018
+****************************************
+
+Library(s) Used:
+
+    asap7sc7p5t_22b_INVBUF_RVT_TT_170906 (File: /home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_INVBUF_RVT_TT_170906.db)
+    asap7sc7p5t_22b_SIMPLE_RVT_TT_170906 (File: /home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_SIMPLE_RVT_TT_170906.db)
+    asap7sc7p5t_22b_AO_RVT_TT_170906 (File: /home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_AO_RVT_TT_170906.db)
+    asap7sc7p5t_22b_OA_RVT_TT_170906 (File: /home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_OA_RVT_TT_170906.db)
+    asap7sc7p5t_22b_SEQ_RVT_TT_170906 (File: /home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_SEQ_RVT_TT_170906.db)
+
+Number of ports:                         2475
+Number of nets:                          5089
+Number of cells:                         3298
+Number of combinational cells:           2953
+Number of sequential cells:               252
+Number of macros/black boxes:               0
+Number of buf/inv:                        925
+Number of references:                       2
+
+Combinational area:               3047.336644
+Buf/Inv area:                      656.216649
+Noncombinational area:            1528.450550
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (No wire load specified)
+
+Total cell area:                  4575.787195
+Total area:                 undefined
+
+Hierarchical area distribution
+------------------------------
+
+                                  Global cell area          Local cell area
+                                  ------------------  ---------------------------- 
+Hierarchical cell                 Absolute   Percent  Combi-     Noncombi-  Black-
+                                  Total      Total    national   national   boxes   Design
+--------------------------------  ---------  -------  ---------  ---------  ------  ------------------------------------------------
+arbiter                           4575.7872    100.0     0.0000     0.0000  0.0000  arbiter
+switch_allocator_1                1607.7658     35.1   373.7146     0.0000  0.0000  switch_allocator_7_XYZ_ref
+switch_allocator_1/credit_count_i_0_0   42.9235     0.9   24.7277   18.1958 0.0000  credit_count_single_vc_depth_out4_0
+switch_allocator_1/credit_count_i_0_1   42.9235     0.9   24.7277   18.1958 0.0000  credit_count_single_vc_depth_out4_13
+switch_allocator_1/credit_count_i_1_2   42.9235     0.9   24.7277   18.1958 0.0000  credit_count_single_vc_depth_out4_12
+switch_allocator_1/credit_count_i_1_3   42.9235     0.9   24.7277   18.1958 0.0000  credit_count_single_vc_depth_out4_11
+switch_allocator_1/credit_count_i_2_4   42.9235     0.9   24.7277   18.1958 0.0000  credit_count_single_vc_depth_out4_10
+switch_allocator_1/credit_count_i_2_5   42.9235     0.9   24.7277   18.1958 0.0000  credit_count_single_vc_depth_out4_9
+switch_allocator_1/credit_count_i_3_6   42.9235     0.9   24.7277   18.1958 0.0000  credit_count_single_vc_depth_out4_8
+switch_allocator_1/credit_count_i_3_7   42.9235     0.9   24.7277   18.1958 0.0000  credit_count_single_vc_depth_out4_7
+switch_allocator_1/credit_count_i_4_8   42.9235     0.9   24.7277   18.1958 0.0000  credit_count_single_vc_depth_out4_6
+switch_allocator_1/credit_count_i_4_9   42.9235     0.9   24.7277   18.1958 0.0000  credit_count_single_vc_depth_out4_5
+switch_allocator_1/credit_count_i_5_10   42.9235     0.9   24.7277   18.1958 0.0000 credit_count_single_vc_depth_out4_4
+switch_allocator_1/credit_count_i_5_11   42.9235     0.9   24.7277   18.1958 0.0000 credit_count_single_vc_depth_out4_3
+switch_allocator_1/credit_count_i_6_12   42.9235     0.9   24.7277   18.1958 0.0000 credit_count_single_vc_depth_out4_2
+switch_allocator_1/credit_count_i_6_13   42.9235     0.9   24.7277   18.1958 0.0000 credit_count_single_vc_depth_out4_1
+switch_allocator_1/mod_219          46.4227      1.0    46.4227     0.0000  0.0000  switch_allocator_7_XYZ_ref_DW_mod_tc_5
+switch_allocator_1/mod_219_G2       46.1894      1.0    46.1894     0.0000  0.0000  switch_allocator_7_XYZ_ref_DW_mod_tc_4
+switch_allocator_1/mod_219_G3       46.1894      1.0    46.1894     0.0000  0.0000  switch_allocator_7_XYZ_ref_DW_mod_tc_3
+switch_allocator_1/mod_219_G4       45.4896      1.0    45.4896     0.0000  0.0000  switch_allocator_7_XYZ_ref_DW_mod_tc_2
+switch_allocator_1/mod_219_G5       46.1894      1.0    46.1894     0.0000  0.0000  switch_allocator_7_XYZ_ref_DW_mod_tc_1
+switch_allocator_1/mod_219_G6       46.1894      1.0    46.1894     0.0000  0.0000  switch_allocator_7_XYZ_ref_DW_mod_tc_0
+switch_allocator_1/mod_219_G7       46.1894      1.0    46.1894     0.0000  0.0000  switch_allocator_7_XYZ_ref_DW_mod_tc_6
+switch_allocator_1/rr_arbiter_0     22.1616      0.5    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_0
+switch_allocator_1/rr_arbiter_0_0   22.1616      0.5    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_14
+switch_allocator_1/rr_arbiter_1     22.1616      0.5    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_20
+switch_allocator_1/rr_arbiter_1_0   22.1616      0.5    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_13
+switch_allocator_1/rr_arbiter_2     22.1616      0.5    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_19
+switch_allocator_1/rr_arbiter_2_0   22.1616      0.5    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_12
+switch_allocator_1/rr_arbiter_3     22.1616      0.5    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_18
+switch_allocator_1/rr_arbiter_3_0   22.1616      0.5    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_11
+switch_allocator_1/rr_arbiter_4     22.1616      0.5    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_17
+switch_allocator_1/rr_arbiter_4_0   22.1616      0.5    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_10
+switch_allocator_1/rr_arbiter_5     22.1616      0.5    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_16
+switch_allocator_1/rr_arbiter_5_0   22.1616      0.5    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_9
+switch_allocator_1/rr_arbiter_6     22.1616      0.5    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_15
+switch_allocator_1/rr_arbiter_6_0   22.1616      0.5    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_8
+vc_allocator_1                    2968.0214     64.9    22.1616     0.0000  0.0000  vc_allocator_7_1_1_1_1_XYZ_ref
+vc_allocator_1/input_first_arbiter_i_0  174.0269     3.8   40.5907    0.0000 0.0000 header_arbiter_and_decoder_1_1_1_7_0_2_1_XYZ_ref
+vc_allocator_1/input_first_arbiter_i_0/routing_calc_1   17.9626     0.4    0.0000    0.0000 0.0000 routing_calc_Xis1_Yis1_Zis1_rout_algoXYZ_ref_0
+vc_allocator_1/input_first_arbiter_i_0/routing_calc_1/dxyu_routing_1   17.9626     0.4   17.9626    0.0000 0.0000 xyz_routing_Xis1_Yis1_Zis1_0
+vc_allocator_1/input_first_arbiter_i_0/rr_arbiter_no_delay_1   22.1616     0.5   10.0310   12.1306 0.0000 rr_arbiter_no_delay_CNT2_7
+vc_allocator_1/input_first_arbiter_i_0/seq_packet_counter_i_0   46.6560     1.0   22.3949   24.2611 0.0000 seq_packet_counter_1_0
+vc_allocator_1/input_first_arbiter_i_0/seq_packet_counter_i_1   46.6560     1.0   22.3949   24.2611 0.0000 seq_packet_counter_1_13
+vc_allocator_1/input_first_arbiter_i_1  174.0269     3.8   40.5907    0.0000 0.0000 header_arbiter_and_decoder_1_1_1_7_1_2_1_XYZ_ref
+vc_allocator_1/input_first_arbiter_i_1/routing_calc_1   17.9626     0.4    0.0000    0.0000 0.0000 routing_calc_Xis1_Yis1_Zis1_rout_algoXYZ_ref_6
+vc_allocator_1/input_first_arbiter_i_1/routing_calc_1/dxyu_routing_1   17.9626     0.4   17.9626    0.0000 0.0000 xyz_routing_Xis1_Yis1_Zis1_6
+vc_allocator_1/input_first_arbiter_i_1/rr_arbiter_no_delay_1   22.1616     0.5   10.0310   12.1306 0.0000 rr_arbiter_no_delay_CNT2_6
+vc_allocator_1/input_first_arbiter_i_1/seq_packet_counter_i_0   46.6560     1.0   22.3949   24.2611 0.0000 seq_packet_counter_1_12
+vc_allocator_1/input_first_arbiter_i_1/seq_packet_counter_i_1   46.6560     1.0   22.3949   24.2611 0.0000 seq_packet_counter_1_11
+vc_allocator_1/input_first_arbiter_i_2  174.0269     3.8   40.5907    0.0000 0.0000 header_arbiter_and_decoder_1_1_1_7_2_2_1_XYZ_ref
+vc_allocator_1/input_first_arbiter_i_2/routing_calc_1   17.9626     0.4    0.0000    0.0000 0.0000 routing_calc_Xis1_Yis1_Zis1_rout_algoXYZ_ref_5
+vc_allocator_1/input_first_arbiter_i_2/routing_calc_1/dxyu_routing_1   17.9626     0.4   17.9626    0.0000 0.0000 xyz_routing_Xis1_Yis1_Zis1_5
+vc_allocator_1/input_first_arbiter_i_2/rr_arbiter_no_delay_1   22.1616     0.5   10.0310   12.1306 0.0000 rr_arbiter_no_delay_CNT2_5
+vc_allocator_1/input_first_arbiter_i_2/seq_packet_counter_i_0   46.6560     1.0   22.3949   24.2611 0.0000 seq_packet_counter_1_10
+vc_allocator_1/input_first_arbiter_i_2/seq_packet_counter_i_1   46.6560     1.0   22.3949   24.2611 0.0000 seq_packet_counter_1_9
+vc_allocator_1/input_first_arbiter_i_3  174.0269     3.8   40.5907    0.0000 0.0000 header_arbiter_and_decoder_1_1_1_7_3_2_1_XYZ_ref
+vc_allocator_1/input_first_arbiter_i_3/routing_calc_1   17.9626     0.4    0.0000    0.0000 0.0000 routing_calc_Xis1_Yis1_Zis1_rout_algoXYZ_ref_4
+vc_allocator_1/input_first_arbiter_i_3/routing_calc_1/dxyu_routing_1   17.9626     0.4   17.9626    0.0000 0.0000 xyz_routing_Xis1_Yis1_Zis1_4
+vc_allocator_1/input_first_arbiter_i_3/rr_arbiter_no_delay_1   22.1616     0.5   10.0310   12.1306 0.0000 rr_arbiter_no_delay_CNT2_4
+vc_allocator_1/input_first_arbiter_i_3/seq_packet_counter_i_0   46.6560     1.0   22.3949   24.2611 0.0000 seq_packet_counter_1_8
+vc_allocator_1/input_first_arbiter_i_3/seq_packet_counter_i_1   46.6560     1.0   22.3949   24.2611 0.0000 seq_packet_counter_1_7
+vc_allocator_1/input_first_arbiter_i_4  174.0269     3.8   40.5907    0.0000 0.0000 header_arbiter_and_decoder_1_1_1_7_4_2_1_XYZ_ref
+vc_allocator_1/input_first_arbiter_i_4/routing_calc_1   17.9626     0.4    0.0000    0.0000 0.0000 routing_calc_Xis1_Yis1_Zis1_rout_algoXYZ_ref_3
+vc_allocator_1/input_first_arbiter_i_4/routing_calc_1/dxyu_routing_1   17.9626     0.4   17.9626    0.0000 0.0000 xyz_routing_Xis1_Yis1_Zis1_3
+vc_allocator_1/input_first_arbiter_i_4/rr_arbiter_no_delay_1   22.1616     0.5   10.0310   12.1306 0.0000 rr_arbiter_no_delay_CNT2_3
+vc_allocator_1/input_first_arbiter_i_4/seq_packet_counter_i_0   46.6560     1.0   22.3949   24.2611 0.0000 seq_packet_counter_1_6
+vc_allocator_1/input_first_arbiter_i_4/seq_packet_counter_i_1   46.6560     1.0   22.3949   24.2611 0.0000 seq_packet_counter_1_5
+vc_allocator_1/input_first_arbiter_i_5  174.0269     3.8   40.5907    0.0000 0.0000 header_arbiter_and_decoder_1_1_1_7_5_2_1_XYZ_ref
+vc_allocator_1/input_first_arbiter_i_5/routing_calc_1   17.9626     0.4    0.0000    0.0000 0.0000 routing_calc_Xis1_Yis1_Zis1_rout_algoXYZ_ref_2
+vc_allocator_1/input_first_arbiter_i_5/routing_calc_1/dxyu_routing_1   17.9626     0.4   17.9626    0.0000 0.0000 xyz_routing_Xis1_Yis1_Zis1_2
+vc_allocator_1/input_first_arbiter_i_5/rr_arbiter_no_delay_1   22.1616     0.5   10.0310   12.1306 0.0000 rr_arbiter_no_delay_CNT2_2
+vc_allocator_1/input_first_arbiter_i_5/seq_packet_counter_i_0   46.6560     1.0   22.3949   24.2611 0.0000 seq_packet_counter_1_4
+vc_allocator_1/input_first_arbiter_i_5/seq_packet_counter_i_1   46.6560     1.0   22.3949   24.2611 0.0000 seq_packet_counter_1_3
+vc_allocator_1/input_first_arbiter_i_6  174.0269     3.8   40.5907    0.0000 0.0000 header_arbiter_and_decoder_1_1_1_7_6_2_1_XYZ_ref
+vc_allocator_1/input_first_arbiter_i_6/routing_calc_1   17.9626     0.4    0.0000    0.0000 0.0000 routing_calc_Xis1_Yis1_Zis1_rout_algoXYZ_ref_1
+vc_allocator_1/input_first_arbiter_i_6/routing_calc_1/dxyu_routing_1   17.9626     0.4   17.9626    0.0000 0.0000 xyz_routing_Xis1_Yis1_Zis1_1
+vc_allocator_1/input_first_arbiter_i_6/rr_arbiter_no_delay_1   22.1616     0.5   10.0310   12.1306 0.0000 rr_arbiter_no_delay_CNT2_1
+vc_allocator_1/input_first_arbiter_i_6/seq_packet_counter_i_0   46.6560     1.0   22.3949   24.2611 0.0000 seq_packet_counter_1_2
+vc_allocator_1/input_first_arbiter_i_6/seq_packet_counter_i_1   46.6560     1.0   22.3949   24.2611 0.0000 seq_packet_counter_1_1
+vc_allocator_1/output_last_arbiter_i_0  246.8102     5.4   69.7507   60.6528 0.0000 vc_output_allocator_port_num7_vc_num_out2_0
+vc_allocator_1/output_last_arbiter_i_0/rr_arbiter  116.4067     2.5   80.0150   36.3917 0.0000 rr_arbiter_no_delay_CNT6_0
+vc_allocator_1/output_last_arbiter_i_1  246.8102     5.4   69.7507   60.6528 0.0000 vc_output_allocator_port_num7_vc_num_out2_6
+vc_allocator_1/output_last_arbiter_i_1/rr_arbiter  116.4067     2.5   80.0150   36.3917 0.0000 rr_arbiter_no_delay_CNT6_6
+vc_allocator_1/output_last_arbiter_i_2  246.8102     5.4   69.7507   60.6528 0.0000 vc_output_allocator_port_num7_vc_num_out2_5
+vc_allocator_1/output_last_arbiter_i_2/rr_arbiter  116.4067     2.5   80.0150   36.3917 0.0000 rr_arbiter_no_delay_CNT6_5
+vc_allocator_1/output_last_arbiter_i_3  246.8102     5.4   69.7507   60.6528 0.0000 vc_output_allocator_port_num7_vc_num_out2_4
+vc_allocator_1/output_last_arbiter_i_3/rr_arbiter  116.4067     2.5   80.0150   36.3917 0.0000 rr_arbiter_no_delay_CNT6_4
+vc_allocator_1/output_last_arbiter_i_4  246.8102     5.4   69.7507   60.6528 0.0000 vc_output_allocator_port_num7_vc_num_out2_3
+vc_allocator_1/output_last_arbiter_i_4/rr_arbiter  116.4067     2.5   80.0150   36.3917 0.0000 rr_arbiter_no_delay_CNT6_3
+vc_allocator_1/output_last_arbiter_i_5  246.8102     5.4   69.7507   60.6528 0.0000 vc_output_allocator_port_num7_vc_num_out2_2
+vc_allocator_1/output_last_arbiter_i_5/rr_arbiter  116.4067     2.5   80.0150   36.3917 0.0000 rr_arbiter_no_delay_CNT6_2
+vc_allocator_1/output_last_arbiter_i_6  246.8102     5.4   69.7507   60.6528 0.0000 vc_output_allocator_port_num7_vc_num_out2_1
+vc_allocator_1/output_last_arbiter_i_6/rr_arbiter  116.4067     2.5   80.0150   36.3917 0.0000 rr_arbiter_no_delay_CNT6_1
+--------------------------------  ---------  -------  ---------  ---------  ------  ------------------------------------------------
+Total                                                 3047.3366  1528.4506  0.0000
+
+1

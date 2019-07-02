@@ -1,0 +1,49 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : vc_input_buffer
+Version: K-2015.06-SP4
+Date   : Tue Nov 27 18:47:58 2018
+****************************************
+
+Operating Conditions: PVT_0P7V_25C   Library: asap7sc7p5t_22b_AO_SLVT_TT_170906
+Wire Load Model Mode: top
+
+  Startpoint: fifo_i_1/read_pointer_reg[0]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: data_transfer[55]
+            (output port clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  fifo_i_1/read_pointer_reg[0]/CLK (ASYNC_DFFHx1_ASAP7_75t_SL)     0.00     0.00 r
+  fifo_i_1/read_pointer_reg[0]/QN (ASYNC_DFFHx1_ASAP7_75t_SL)    24.11    24.11 f
+  fifo_i_1/U53/Y (BUFx2_ASAP7_75t_SL)                    13.80      37.91 f
+  fifo_i_1/U55/Y (BUFx6f_ASAP7_75t_SL)                   12.14      50.06 f
+  fifo_i_1/U342/Y (NAND2xp5_ASAP7_75t_SL)                 4.76      54.81 r
+  fifo_i_1/U16/Y (OAI21xp33_ASAP7_75t_SL)                 6.40      61.22 f
+  fifo_i_1/data_out[55] (fifo_buff_depth2_1)              0.00      61.22 f
+  U246/Y (NAND2xp5_ASAP7_75t_SL)                          5.92      67.13 r
+  U130/Y (OAI21xp33_ASAP7_75t_SL)                         3.71      70.85 f
+  data_transfer[55] (out)                                 0.00      70.85 f
+  data arrival time                                                 70.85
+
+  clock clk (rise edge)                                   1.00       1.00
+  clock network delay (ideal)                             0.00       1.00
+  output external delay                                   0.00       1.00
+  data required time                                                 1.00
+  --------------------------------------------------------------------------
+  data required time                                                 1.00
+  data arrival time                                                -70.85
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                 -69.85
+
+
+1

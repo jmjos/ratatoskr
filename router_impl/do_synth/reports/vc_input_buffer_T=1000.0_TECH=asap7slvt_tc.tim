@@ -1,0 +1,48 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : vc_input_buffer
+Version: K-2015.06-SP4
+Date   : Tue Nov 27 18:52:28 2018
+****************************************
+
+Operating Conditions: PVT_0P7V_25C   Library: asap7sc7p5t_22b_AO_SLVT_TT_170906
+Wire Load Model Mode: top
+
+  Startpoint: fifo_i_0/write_pointer_reg[0]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: fifo_i_0/fifo_reg[0][0]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                 0.0000     0.0000
+  clock network delay (ideal)                           0.0000     0.0000
+  fifo_i_0/write_pointer_reg[0]/CLK (ASYNC_DFFHx1_ASAP7_75t_SL)   0.0000   0.0000 r
+  fifo_i_0/write_pointer_reg[0]/QN (ASYNC_DFFHx1_ASAP7_75t_SL)  31.1863  31.1863 r
+  fifo_i_0/U224/Y (INVx1_ASAP7_75t_SL)                  5.5286    36.7150 f
+  fifo_i_0/U70/Y (NAND2xp5_ASAP7_75t_SL)                9.6878    46.4028 r
+  fifo_i_0/U141/Y (HB1xp67_ASAP7_75t_SL)               18.4082    64.8110 r
+  fifo_i_0/U138/Y (INVx1_ASAP7_75t_SL)                 79.7273   144.5383 f
+  fifo_i_0/U5/Y (OAI22xp5_ASAP7_75t_SL)                25.4702   170.0085 r
+  fifo_i_0/fifo_reg[0][0]/D (ASYNC_DFFHx1_ASAP7_75t_SL)   0.0000 170.0085 r
+  data arrival time                                              170.0085
+
+  clock clk (rise edge)                               1000.0000  1000.0000
+  clock network delay (ideal)                           0.0000   1000.0000
+  fifo_i_0/fifo_reg[0][0]/CLK (ASYNC_DFFHx1_ASAP7_75t_SL)   0.0000 1000.0000 r
+  library setup time                                   -8.2625   991.7375
+  data required time                                             991.7375
+  --------------------------------------------------------------------------
+  data required time                                             991.7375
+  data arrival time                                              -170.0085
+  --------------------------------------------------------------------------
+  slack (MET)                                                    821.7289
+
+
+1

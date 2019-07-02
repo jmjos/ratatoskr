@@ -1,0 +1,82 @@
+Loading db file '/home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_OA_RVT_TT_170906.db'
+Loading db file '/home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_SIMPLE_RVT_TT_170906.db'
+Loading db file '/home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_AO_RVT_TT_170906.db'
+Loading db file '/home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_INVBUF_RVT_TT_170906.db'
+Loading db file '/home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_SEQ_RVT_TT_170906.db'
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+Warning: Design has unannotated primary inputs. (PWR-414)
+Warning: Design has unannotated sequential cell outputs. (PWR-415)
+ 
+****************************************
+Report : power
+        -hier
+        -analysis_effort low
+Design : switch_allocator
+Version: K-2015.06-SP4
+Date   : Wed Nov 28 13:58:28 2018
+****************************************
+
+
+Library(s) Used:
+
+    asap7sc7p5t_22b_INVBUF_RVT_TT_170906 (File: /home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_INVBUF_RVT_TT_170906.db)
+    asap7sc7p5t_22b_SIMPLE_RVT_TT_170906 (File: /home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_SIMPLE_RVT_TT_170906.db)
+    asap7sc7p5t_22b_AO_RVT_TT_170906 (File: /home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_AO_RVT_TT_170906.db)
+    asap7sc7p5t_22b_OA_RVT_TT_170906 (File: /home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_OA_RVT_TT_170906.db)
+    asap7sc7p5t_22b_SEQ_RVT_TT_170906 (File: /home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_SEQ_RVT_TT_170906.db)
+
+
+Operating Conditions: PVT_0P7V_25C   Library: asap7sc7p5t_22b_OA_RVT_TT_170906
+Wire Load Model Mode: top
+
+
+Global Operating Voltage = 0.7  
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000ff
+    Time Units = 1ps
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1pW
+
+
+--------------------------------------------------------------------------------
+                                       Switch   Int      Leak     Total
+Hierarchy                              Power    Power    Power    Power    %
+--------------------------------------------------------------------------------
+switch_allocator                       3.58e-02 9.14e-02 1.02e+05    0.127 100.0
+  mod_219_G7 (switch_allocator_DW_mod_tc_6) 1.05e-03 7.14e-04 2.86e+03 1.77e-03   1.4
+  mod_219 (switch_allocator_DW_mod_tc_5) 1.10e-03 7.36e-04 2.80e+03 1.84e-03   1.4
+  mod_219_G2 (switch_allocator_DW_mod_tc_4) 1.11e-03 7.78e-04 2.85e+03 1.89e-03   1.5
+  mod_219_G3 (switch_allocator_DW_mod_tc_3) 1.12e-03 7.67e-04 2.85e+03 1.89e-03   1.5
+  mod_219_G4 (switch_allocator_DW_mod_tc_2) 1.04e-03 7.65e-04 2.80e+03 1.81e-03   1.4
+  mod_219_G5 (switch_allocator_DW_mod_tc_1) 1.05e-03 7.45e-04 2.86e+03 1.80e-03   1.4
+  mod_219_G6 (switch_allocator_DW_mod_tc_0) 9.35e-04 6.82e-04 2.87e+03 1.62e-03   1.3
+  credit_count_i_6_13 (credit_count_single_vc_depth_out4_1) 9.19e-04 3.66e-03 2.54e+03 4.58e-03   3.6
+  credit_count_i_6_12 (credit_count_single_vc_depth_out4_2) 9.35e-04 3.66e-03 2.54e+03 4.60e-03   3.6
+  rr_arbiter_6_0 (rr_arbiter_no_delay_CNT2_1) 3.14e-04 2.15e-03 1.28e+03 2.46e-03   1.9
+  credit_count_i_5_11 (credit_count_single_vc_depth_out4_3) 9.09e-04 3.64e-03 2.54e+03 4.55e-03   3.6
+  credit_count_i_5_10 (credit_count_single_vc_depth_out4_4) 9.03e-04 3.64e-03 2.54e+03 4.54e-03   3.6
+  rr_arbiter_5_0 (rr_arbiter_no_delay_CNT2_2) 3.17e-04 2.15e-03 1.28e+03 2.46e-03   1.9
+  credit_count_i_4_9 (credit_count_single_vc_depth_out4_5) 9.23e-04 3.65e-03 2.54e+03 4.58e-03   3.6
+  credit_count_i_4_8 (credit_count_single_vc_depth_out4_6) 9.43e-04 3.68e-03 2.54e+03 4.63e-03   3.6
+  rr_arbiter_4_0 (rr_arbiter_no_delay_CNT2_3) 3.20e-04 2.15e-03 1.28e+03 2.47e-03   1.9
+  credit_count_i_3_7 (credit_count_single_vc_depth_out4_7) 8.93e-04 3.62e-03 2.54e+03 4.52e-03   3.5
+  credit_count_i_3_6 (credit_count_single_vc_depth_out4_8) 9.27e-04 3.65e-03 2.54e+03 4.58e-03   3.6
+  rr_arbiter_3_0 (rr_arbiter_no_delay_CNT2_4) 3.10e-04 2.14e-03 1.28e+03 2.45e-03   1.9
+  credit_count_i_2_5 (credit_count_single_vc_depth_out4_9) 9.20e-04 3.66e-03 2.54e+03 4.58e-03   3.6
+  credit_count_i_2_4 (credit_count_single_vc_depth_out4_10) 9.14e-04 3.64e-03 2.55e+03 4.56e-03   3.6
+  rr_arbiter_2_0 (rr_arbiter_no_delay_CNT2_5) 3.14e-04 2.14e-03 1.28e+03 2.46e-03   1.9
+  credit_count_i_1_3 (credit_count_single_vc_depth_out4_11) 9.10e-04 3.64e-03 2.54e+03 4.55e-03   3.6
+  credit_count_i_1_2 (credit_count_single_vc_depth_out4_12) 9.33e-04 3.66e-03 2.54e+03 4.60e-03   3.6
+  rr_arbiter_1_0 (rr_arbiter_no_delay_CNT2_6) 3.26e-04 2.16e-03 1.28e+03 2.49e-03   2.0
+  credit_count_i_0_1 (credit_count_single_vc_depth_out4_13) 9.17e-04 3.65e-03 2.54e+03 4.56e-03   3.6
+  credit_count_i_0_0 (credit_count_single_vc_depth_out4_0) 9.27e-04 3.66e-03 2.54e+03 4.59e-03   3.6
+  rr_arbiter_0_0 (rr_arbiter_no_delay_CNT2_7) 3.12e-04 2.14e-03 1.28e+03 2.45e-03   1.9
+  rr_arbiter_6 (rr_arbiter_no_delay_CNT2_8) 3.06e-04 2.02e-03 1.25e+03 2.33e-03   1.8
+  rr_arbiter_5 (rr_arbiter_no_delay_CNT2_9) 2.89e-04 2.02e-03 1.25e+03 2.31e-03   1.8
+  rr_arbiter_4 (rr_arbiter_no_delay_CNT2_10) 3.03e-04 2.01e-03 1.25e+03 2.32e-03   1.8
+  rr_arbiter_3 (rr_arbiter_no_delay_CNT2_11) 2.85e-04 2.01e-03 1.25e+03 2.29e-03   1.8
+  rr_arbiter_2 (rr_arbiter_no_delay_CNT2_12) 3.02e-04 2.01e-03 1.25e+03 2.32e-03   1.8
+  rr_arbiter_1 (rr_arbiter_no_delay_CNT2_13) 3.01e-04 2.02e-03 1.25e+03 2.32e-03   1.8
+  rr_arbiter_0 (rr_arbiter_no_delay_CNT2_0) 2.83e-04 2.01e-03 1.25e+03 2.30e-03   1.8
+1

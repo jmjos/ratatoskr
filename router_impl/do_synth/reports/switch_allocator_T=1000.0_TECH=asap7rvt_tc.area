@@ -1,0 +1,82 @@
+ 
+****************************************
+Report : area
+Design : switch_allocator
+Version: K-2015.06-SP4
+Date   : Wed Nov 28 13:58:24 2018
+****************************************
+
+Library(s) Used:
+
+    asap7sc7p5t_22b_INVBUF_RVT_TT_170906 (File: /home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_INVBUF_RVT_TT_170906.db)
+    asap7sc7p5t_22b_SIMPLE_RVT_TT_170906 (File: /home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_SIMPLE_RVT_TT_170906.db)
+    asap7sc7p5t_22b_AO_RVT_TT_170906 (File: /home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_AO_RVT_TT_170906.db)
+    asap7sc7p5t_22b_OA_RVT_TT_170906 (File: /home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_OA_RVT_TT_170906.db)
+    asap7sc7p5t_22b_SEQ_RVT_TT_170906 (File: /home/agids/usr/bamberg/pdks/asap7/asap7libs_24/db/rvt_typ/asap7sc7p5t_22b_SEQ_RVT_TT_170906.db)
+
+Number of ports:                          868
+Number of nets:                          1533
+Number of cells:                         1235
+Number of combinational cells:           1130
+Number of sequential cells:                70
+Number of macros/black boxes:               0
+Number of buf/inv:                        320
+Number of references:                      55
+
+Combinational area:               1168.266243
+Buf/Inv area:                      223.948803
+Noncombinational area:             424.569597
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (No wire load specified)
+
+Total cell area:                  1592.835840
+Total area:                 undefined
+
+Hierarchical area distribution
+------------------------------
+
+                                  Global cell area          Local cell area
+                                  ------------------  ---------------------------- 
+Hierarchical cell                 Absolute   Percent  Combi-     Noncombi-  Black-
+                                  Total      Total    national   national   boxes   Design
+--------------------------------  ---------  -------  ---------  ---------  ------  ------------------------------------
+switch_allocator                  1592.8358    100.0   358.7846     0.0000  0.0000  switch_allocator
+credit_count_i_0_0                  42.9235      2.7    24.7277    18.1958  0.0000  credit_count_single_vc_depth_out4_0
+credit_count_i_0_1                  42.9235      2.7    24.7277    18.1958  0.0000  credit_count_single_vc_depth_out4_13
+credit_count_i_1_2                  42.9235      2.7    24.7277    18.1958  0.0000  credit_count_single_vc_depth_out4_12
+credit_count_i_1_3                  42.9235      2.7    24.7277    18.1958  0.0000  credit_count_single_vc_depth_out4_11
+credit_count_i_2_4                  42.9235      2.7    24.7277    18.1958  0.0000  credit_count_single_vc_depth_out4_10
+credit_count_i_2_5                  42.9235      2.7    24.7277    18.1958  0.0000  credit_count_single_vc_depth_out4_9
+credit_count_i_3_6                  42.9235      2.7    24.7277    18.1958  0.0000  credit_count_single_vc_depth_out4_8
+credit_count_i_3_7                  42.9235      2.7    24.7277    18.1958  0.0000  credit_count_single_vc_depth_out4_7
+credit_count_i_4_8                  42.9235      2.7    24.7277    18.1958  0.0000  credit_count_single_vc_depth_out4_6
+credit_count_i_4_9                  42.9235      2.7    24.7277    18.1958  0.0000  credit_count_single_vc_depth_out4_5
+credit_count_i_5_10                 42.9235      2.7    24.7277    18.1958  0.0000  credit_count_single_vc_depth_out4_4
+credit_count_i_5_11                 42.9235      2.7    24.7277    18.1958  0.0000  credit_count_single_vc_depth_out4_3
+credit_count_i_6_12                 42.9235      2.7    24.7277    18.1958  0.0000  credit_count_single_vc_depth_out4_2
+credit_count_i_6_13                 42.9235      2.7    24.7277    18.1958  0.0000  credit_count_single_vc_depth_out4_1
+mod_219                             46.4227      2.9    46.4227     0.0000  0.0000  switch_allocator_DW_mod_tc_5
+mod_219_G2                          46.1894      2.9    46.1894     0.0000  0.0000  switch_allocator_DW_mod_tc_4
+mod_219_G3                          46.1894      2.9    46.1894     0.0000  0.0000  switch_allocator_DW_mod_tc_3
+mod_219_G4                          45.4896      2.9    45.4896     0.0000  0.0000  switch_allocator_DW_mod_tc_2
+mod_219_G5                          46.1894      2.9    46.1894     0.0000  0.0000  switch_allocator_DW_mod_tc_1
+mod_219_G6                          46.1894      2.9    46.1894     0.0000  0.0000  switch_allocator_DW_mod_tc_0
+mod_219_G7                          46.1894      2.9    46.1894     0.0000  0.0000  switch_allocator_DW_mod_tc_6
+rr_arbiter_0                        22.1616      1.4    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_0
+rr_arbiter_0_0                      22.1616      1.4    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_7
+rr_arbiter_1                        22.1616      1.4    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_13
+rr_arbiter_1_0                      22.1616      1.4    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_6
+rr_arbiter_2                        22.1616      1.4    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_12
+rr_arbiter_2_0                      22.1616      1.4    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_5
+rr_arbiter_3                        22.1616      1.4    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_11
+rr_arbiter_3_0                      22.1616      1.4    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_4
+rr_arbiter_4                        22.1616      1.4    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_10
+rr_arbiter_4_0                      22.1616      1.4    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_3
+rr_arbiter_5                        22.1616      1.4    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_9
+rr_arbiter_5_0                      22.1616      1.4    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_2
+rr_arbiter_6                        22.1616      1.4    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_8
+rr_arbiter_6_0                      22.1616      1.4    10.0310    12.1306  0.0000  rr_arbiter_no_delay_CNT2_1
+--------------------------------  ---------  -------  ---------  ---------  ------  ------------------------------------
+Total                                                 1168.2662   424.5696  0.0000
+
+1

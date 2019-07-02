@@ -1,0 +1,93 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : router_pl
+Version: K-2015.06-SP4
+Date   : Wed Nov 28 15:40:31 2018
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: PVT_0P7V_25C   Library: asap7sc7p5t_22b_SIMPLE_SRAM_TT_170906
+Wire Load Model Mode: top
+
+  Startpoint: incr_rx_vec[12]
+              (input port clocked by clk)
+  Endpoint: output_register_i_5/data_tx_pl_reg[63]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  input external delay                                    0.00       0.00 f
+  incr_rx_vec[12] (in)                                    0.00       0.00 f
+  CTRL_ARB/incr_rx_vec[12] (arbiter_7_1_1_1_1_DXYU)       0.00       0.00 f
+  CTRL_ARB/switch_allocator_1/incr_rx_vec[12] (switch_allocator_7_DXYU)     0.00     0.00 f
+  CTRL_ARB/switch_allocator_1/credit_count_i_6_12/incr_rx (credit_count_single_vc_depth_out2_1)     0.00     0.00 f
+  CTRL_ARB/switch_allocator_1/credit_count_i_6_12/U18/Y (XNOR2xp5_ASAP7_75t_SRAM)    19.92    19.92 f
+  CTRL_ARB/switch_allocator_1/credit_count_i_6_12/U17/Y (NAND3xp33_ASAP7_75t_SRAM)    13.56    33.48 r
+  CTRL_ARB/switch_allocator_1/credit_count_i_6_12/credit_avail (credit_count_single_vc_depth_out2_1)     0.00    33.48 r
+  CTRL_ARB/switch_allocator_1/U283/Y (A2O1A1Ixp33_ASAP7_75t_SRAM)    12.44    45.91 f
+  CTRL_ARB/switch_allocator_1/U7/Y (NOR2xp33_ASAP7_75t_SRAM)    17.78    63.69 r
+  CTRL_ARB/switch_allocator_1/rr_arbiter_6_0/req[1] (rr_arbiter_no_delay_CNT2_7)     0.00    63.69 r
+  CTRL_ARB/switch_allocator_1/rr_arbiter_6_0/U10/Y (NAND3xp33_ASAP7_75t_SRAM)    19.77    83.46 f
+  CTRL_ARB/switch_allocator_1/rr_arbiter_6_0/U9/Y (AND2x2_ASAP7_75t_SRAM)    27.01   110.47 f
+  CTRL_ARB/switch_allocator_1/rr_arbiter_6_0/grant[0] (rr_arbiter_no_delay_CNT2_7)     0.00   110.47 f
+  CTRL_ARB/switch_allocator_1/U94/Y (OAI22xp5_ASAP7_75t_SRAM)    40.68   151.15 r
+  CTRL_ARB/switch_allocator_1/U9/Y (OR2x2_ASAP7_75t_SRAM)    38.18   189.34 r
+  CTRL_ARB/switch_allocator_1/U82/Y (XNOR2xp5_ASAP7_75t_SRAM)    20.53   209.87 r
+  CTRL_ARB/switch_allocator_1/mod_219_G7/a[2] (switch_allocator_7_DXYU_DW_mod_tc_0)     0.00   209.87 r
+  CTRL_ARB/switch_allocator_1/mod_219_G7/U1/Y (NAND2xp5_ASAP7_75t_SRAM)    20.49   230.36 f
+  CTRL_ARB/switch_allocator_1/mod_219_G7/U6/Y (NOR2xp33_ASAP7_75t_SRAM)    26.87   257.23 r
+  CTRL_ARB/switch_allocator_1/mod_219_G7/U17/Y (INVx1_ASAP7_75t_SRAM)    18.17   275.41 f
+  CTRL_ARB/switch_allocator_1/mod_219_G7/U26/Y (OAI22xp33_ASAP7_75t_SRAM)    27.33   302.74 r
+  CTRL_ARB/switch_allocator_1/mod_219_G7/U2/Y (NAND2xp5_ASAP7_75t_SRAM)    25.14   327.88 f
+  CTRL_ARB/switch_allocator_1/mod_219_G7/U7/Y (NOR2xp33_ASAP7_75t_SRAM)    23.32   351.20 r
+  CTRL_ARB/switch_allocator_1/mod_219_G7/U14/Y (OR2x2_ASAP7_75t_SRAM)    26.20   377.41 r
+  CTRL_ARB/switch_allocator_1/mod_219_G7/U16/Y (INVx1_ASAP7_75t_SRAM)    10.04   387.45 f
+  CTRL_ARB/switch_allocator_1/mod_219_G7/U25/Y (AOI22xp33_ASAP7_75t_SRAM)    16.90   404.35 r
+  CTRL_ARB/switch_allocator_1/mod_219_G7/U24/Y (AND3x1_ASAP7_75t_SRAM)    25.24   429.59 r
+  CTRL_ARB/switch_allocator_1/mod_219_G7/U4/Y (NAND2xp5_ASAP7_75t_SRAM)    13.24   442.84 f
+  CTRL_ARB/switch_allocator_1/mod_219_G7/U21/Y (AND2x2_ASAP7_75t_SRAM)    20.21   463.05 f
+  CTRL_ARB/switch_allocator_1/mod_219_G7/remainder[2] (switch_allocator_7_DXYU_DW_mod_tc_0)     0.00   463.05 f
+  CTRL_ARB/switch_allocator_1/U25/Y (NOR2xp33_ASAP7_75t_SRAM)    23.50   486.54 r
+  CTRL_ARB/switch_allocator_1/U222/Y (AOI33xp33_ASAP7_75t_SRAM)    24.27   510.81 f
+  CTRL_ARB/switch_allocator_1/U219/Y (NAND3xp33_ASAP7_75t_SRAM)    18.19   529.00 r
+  CTRL_ARB/switch_allocator_1/U65/Y (INVxp67_ASAP7_75t_SRAM)    12.88   541.88 f
+  CTRL_ARB/switch_allocator_1/U52/Y (NOR2xp33_ASAP7_75t_SRAM)    23.63   565.51 r
+  CTRL_ARB/switch_allocator_1/vc_transfer_vec[6] (switch_allocator_7_DXYU)     0.00   565.51 r
+  CTRL_ARB/vc_transfer_vec[6] (arbiter_7_1_1_1_1_DXYU)     0.00    565.51 r
+  vc_input_buffer_i_3/vc_transfer[1] (vc_input_buffer_2_0000000200000002_4)     0.00   565.51 r
+  vc_input_buffer_i_3/U70/Y (HB1xp67_ASAP7_75t_SRAM)     31.77     597.28 r
+  vc_input_buffer_i_3/U73/Y (INVx1_ASAP7_75t_SRAM)       12.76     610.04 f
+  vc_input_buffer_i_3/U1/Y (INVx1_ASAP7_75t_SRAM)        86.85     696.89 r
+  vc_input_buffer_i_3/U35/Y (AO22x1_ASAP7_75t_SRAM)      67.09     763.98 r
+  vc_input_buffer_i_3/data_transfer[63] (vc_input_buffer_2_0000000200000002_4)     0.00   763.98 r
+  XBAR/crossbar_in[3][63] (crossbar_7_DXYU)               0.00     763.98 r
+  XBAR/U619/Y (AOI222xp33_ASAP7_75t_SRAM)                20.42     784.40 f
+  XBAR/U618/Y (OAI211xp5_ASAP7_75t_SRAM)                 16.89     801.29 r
+  XBAR/crossbar_out[5][63] (crossbar_7_DXYU)              0.00     801.29 r
+  output_register_i_5/data_tx[63] (output_register_vc_num2_vc_num_out2_2)     0.00   801.29 r
+  output_register_i_5/U66/Y (OAI22xp5_ASAP7_75t_SRAM)    16.14     817.43 f
+  output_register_i_5/data_tx_pl_reg[63]/D (ASYNC_DFFHx1_ASAP7_75t_SRAM)     0.00   817.43 f
+  data arrival time                                                817.43
+
+  clock clk (rise edge)                                1000.00    1000.00
+  clock network delay (ideal)                             0.00    1000.00
+  output_register_i_5/data_tx_pl_reg[63]/CLK (ASYNC_DFFHx1_ASAP7_75t_SRAM)     0.00  1000.00 r
+  library setup time                                    -14.66     985.34
+  data required time                                               985.34
+  --------------------------------------------------------------------------
+  data required time                                               985.34
+  data arrival time                                               -817.43
+  --------------------------------------------------------------------------
+  slack (MET)                                                      167.90
+
+
+1

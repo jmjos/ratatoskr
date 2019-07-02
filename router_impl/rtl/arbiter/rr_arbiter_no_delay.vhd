@@ -1,0 +1,90 @@
+-------------------------------------------------------------------------------
+-- Title      : Round Robin arbiter
+-- Project    : Modular, heterogenous 3D NoC
+-------------------------------------------------------------------------------
+-- File       : NOC_3D_PACKAGE.vhd
+-- Author     : Lennart Bamberg  <bamberg@office.item.uni-bremen.de>
+-- Company    : 
+-- Created    : 2018-10-24
+-- Last update: 2018-11-28
+-- Platform   : 
+-- Standard   : VHDL'93/02
+-------------------------------------------------------------------------------
+-- Description:  
+-------------------------------------------------------------------------------
+-- HUGE PARTS OF THIS FILE ARE ADOPTED FROM A FILE BY BENJAMIN KRILL, DISTRI-
+-- BUTED USING THE FOLLOWING COPYRIGHT NOTE:
+-- Copyright (c) 2009 Benjamin Krill <benjamin@krll.de>
+--
+-- Permission is hereby granted, free of charge, to any person obtaining a copy
+-- of this software and associated documentation files (the "Software"), to deal
+-- in the Software without restriction, including without limitation the rights
+-- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+-- copies of the Software, and to permit persons to whom the Software is
+-- furnished to do so, subject to the following conditions:
+--
+-- The above copyright notice and this permission notice shall be included in
+-- all copies or substantial portions of the Software.
+--
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+-- THE SOFTWARE.
+
+-------------------------------------------------------------------------------
+-- Revisions  :
+-- Date        Version  Author  Description
+-- 2009-XX-XX  0.0      krll    Created
+-- 2018-10-24  1.0      bamberg Modified for 3D NoC project
+-------------------------------------------------------------------------------
+
+-- -----------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use work.NOC_3D_PACKAGE.all;
+
+entity rr_arbiter_no_delay is
+  generic (CNT : integer := 7);
+  port (
+    clk   : in std_logic;
+    rst : in std_logic;
+
+    req   : in  std_logic_vector(CNT-1 downto 0);
+    ack   : in  std_logic;
+    grant : out std_logic_vector(CNT-1 downto 0)
+    );
+end;
+
+architecture rr_arbiter_no_delay of rr_arbiter_no_delay is
+  signal pre_req  : std_logic_vector(CNT-1 downto 0);
+  signal sel_gnt  : std_logic_vector(CNT-1 downto 0);
+  signal isol_lsb : std_logic_vector(CNT-1 downto 0);
+  signal mask_pre : std_logic_vector(CNT-1 downto 0);
+  signal win      : std_logic_vector(CNT-1 downto 0);
+begin
+  grant    <= win;
+   -- Mask off previous winners
+  mask_pre <= req and not (std_logic_vector(unsigned(pre_req) - 1) or pre_req);
+  -- Select new winner (isolate LSB of the masked req)
+  sel_gnt  <= mask_pre and std_logic_vector(unsigned(not(mask_pre)) + 1);
+  -- Isolate least significant set bit.
+  isol_lsb <= req and std_logic_vector(unsigned(not(req)) + 1);
+  win      <= sel_gnt when mask_pre /= (CNT-1 downto 0 => '0') else isol_lsb;
+
+  process (clk, rst)
+  begin
+    if rst = RST_LVL then
+      pre_req <= (others => '0');
+    elsif rising_edge(clk) then
+      if  ack = '1' then
+          pre_req <= win;
+      end if;
+    end if;
+  end process;
+
+end rr_arbiter_no_delay;
