@@ -84,7 +84,10 @@ A GUI will open and show the buffer usage in each router. It's somewhat random..
 At the end of the simulation after a few minutes, you'll see the performance results:
 
 ```
-
+Generating report of the simulation run into file report ...  done.
+Average flit latency: 13.86 ns.
+Average packet latency: 46.64 ns.
+Average network latency: 46.64 ns.
 ```
 
 Next, let's use hotspot traffic pattern. Therefore, we configure the simulator. Close the gui by pressing `q` in the window or using `Crtl-C` in the terminal. Change line 26 of the `config/config.xml` file from
