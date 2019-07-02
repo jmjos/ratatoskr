@@ -258,7 +258,7 @@ std::map<int, int> SyntheticPool::hotSpot(taskID_t& taskId, int& phaseId, dataDe
 
         std::vector<DataSendPossibility> possibilities{};
         possID_t poss_id = 1;
-        int dataTypeId = hotspot;
+        int dataTypeId = 1;
         DataType dataType = DataType(dataTypeId, std::to_string(dataTypeId));
         if (i!=hotspot) { // a PE should not send data to itself.
             Node n = processingElements.at(hotspot)->node;
