@@ -1,0 +1,24 @@
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+picture1 = cv2.imread('./day_sample_front.png')
+picture2 = cv2.imread('./day_sample_front2.png')
+picture3 = cv2.imread('./day_sample_front3.png')
+
+gray_pic1 = cv2.cvtColor(picture1, cv2.COLOR_BGR2GRAY)
+gray_pic2 = cv2.cvtColor(picture2, cv2.COLOR_BGR2GRAY)
+gray_pic3 = cv2.cvtColor(picture3, cv2.COLOR_BGR2GRAY)
+
+
+roi1_pic1 = gray_pic1[200:328, 0:128]
+roi2_pic1 = gray_pic1[572:700, 872:1000]
+roi1_pic2 = gray_pic2[64:128, 74:138]
+roi2_pic2 = gray_pic2[64:128, 140:240]
+roi1_pic3 = gray_pic2[1:128, 171:]
+
+
+np.savez('traffic_pictures.npz',
+         pic1=gray_pic1, pic2=gray_pic2, pic3=gray_pic3,
+         roi4k1=roi1_pic2, roi4k2=roi2_pic2,
+         roi16k1=roi1_pic1, roi16k2=roi2_pic1, roi16k3=roi1_pic3)

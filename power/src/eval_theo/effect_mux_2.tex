@@ -1,0 +1,51 @@
+% This file was created by matplotlib2tikz v0.6.15.
+\begin{tikzpicture}
+
+\begin{axis}[
+title={BI Coded Uncorrelated Data},
+xlabel={Mux Probability},
+ylabel={Coding gain in %},
+xmin=0, xmax=1,
+ymin=-10, ymax=15,
+axis on top,
+width=\figurewidth,
+height=\figureheight,
+tick pos=both,
+xmajorgrids,
+ymajorgrids,
+legend entries={{2D Link},{3D Link}},
+legend cell align={left}
+]
+\addlegendimage{no markers, red}
+\addlegendimage{no markers, blue}
+\addplot [red, mark=*, mark size=3, mark options={solid,draw=black}]
+table {%
+0 14.9218058031058
+0.1 12.8478838890958
+0.2 10.8217688593667
+0.3 8.74189155070675
+0.4 6.66172586785266
+0.5 4.70155490972467
+0.6 2.68034415333352
+0.7 0.661772035425179
+0.8 -1.4036104802899
+0.9 -3.39576516279381
+1 -5.49602973603611
+};
+\addplot [blue, mark=square*, mark size=3, mark options={solid,draw=black}]
+table {%
+0 14.6664718899538
+0.1 12.5812251390204
+0.2 10.5447213268472
+0.3 8.4572844313485
+0.4 6.36710869225543
+0.5 4.38521239387625
+0.6 2.37800846338585
+0.7 0.344107532302962
+0.8 -1.73912158763492
+0.9 -3.72883957116468
+1 -5.85301784517747
+};
+\end{axis}
+
+\end{tikzpicture}

@@ -1,0 +1,79 @@
+% This file was created by matplotlib2tikz v0.6.15.
+\begin{tikzpicture}
+
+\begin{axis}[
+title={Correlated Data},
+xlabel={Mux Probability},
+ylabel={Energy/Pattern},
+xmin=0, xmax=1,
+ymin=-10, ymax=15,
+axis on top,
+width=\figurewidth,
+height=\figureheight,
+tick pos=both,
+xmajorgrids,
+ymajorgrids,
+legend entries={{2D Link},{3D Link}},
+legend cell align={left}
+]
+\addlegendimage{no markers, red}
+\addlegendimage{no markers, blue}
+\addplot [red, mark=*, mark size=3, mark options={solid,draw=black}]
+table {%
+0 13.3846547767656
+0.1 12.2192810815626
+0.2 9.64199679556266
+0.3 7.61748858994351
+0.4 5.00256548051365
+0.5 3.12851877402711
+0.6 1.75193468363479
+0.7 -1.25973438351297
+0.8 -0.880998451971826
+0.9 -5.14115424512092
+1 -6.7730622425823
+};
+\addplot [blue, mark=square*, mark size=3, mark options={solid,draw=black}]
+table {%
+0 13.1212345888638
+0.1 11.9581219024437
+0.2 9.54703318056063
+0.3 7.41106466576225
+0.4 4.5499935174231
+0.5 3.00249453218394
+0.6 1.48240817160563
+0.7 -1.7092041746946
+0.8 -1.01345197141185
+0.9 -5.3235629114069
+1 -6.7449284508329
+};
+\addplot [red, mark=*, mark size=3, mark options={solid,draw=black}, forget plot]
+table {%
+0 3.40657854202441e-14
+0.1 3.75426053055729e-14
+0.2 4.08618420511713e-14
+0.3 4.41787464880998e-14
+0.4 4.76331972390024e-14
+0.5 5.09266503475586e-14
+0.6 5.48268357563573e-14
+0.7 5.7593316012425e-14
+0.8 6.19392793528474e-14
+0.9 6.46903649861442e-14
+1 6.8357824152802e-14
+};
+\addplot [blue, mark=square*, mark size=3, mark options={solid,draw=black}, forget plot]
+table {%
+0 5.45201388094298e-14
+0.1 5.88909818628248e-14
+0.2 6.30884734037506e-14
+0.3 6.72795087493015e-14
+0.4 7.16458187697837e-14
+0.5 7.58442652058988e-14
+0.6 8.07108217188742e-14
+0.7 8.42583244170784e-14
+0.8 8.96899471000117e-14
+0.9 9.31605854375573e-14
+1 9.77630961822039e-14
+};
+\end{axis}
+
+\end{tikzpicture}
