@@ -255,10 +255,16 @@ class NetworkWriter(Writer):
         else:
             self.z_step = 1/(self.config.z - 1)
             self.z_range = np.arange(0, 1+self.z_step, self.z_step)
-        self.x_step = 1/(self.config.x - 1)
-        self.x_range = np.arange(0, 1+self.x_step, self.x_step)
-        self.y_step = 1/(self.config.y - 1)
-        self.y_range = np.arange(0, 1+self.y_step, self.y_step)
+        self.x_step = []
+        self.x_range = []
+        for x in self.config.x:
+            self.x_step.append(1/(x - 1))
+            self.x_range.append(np.arange(0, 1+self.x_step[-1], self.x_step[-1]))
+        self.y_step = []
+        self.y_range = []
+        for y in self.config.y:
+            self.y_step.append(1/(y - 1))
+            self.y_range.append(np.arange(0, 1+self.y_step[-1], self.y_step[-1]))
 
     def write_header(self):
         bufferDepthType_node = ET.SubElement(self.root_node, 'bufferDepthType')
@@ -301,13 +307,17 @@ class NetworkWriter(Writer):
         if node_type == 'Router':
             node_id = 0
         else:
-            node_id = self.config.x * self.config.y * self.config.z
+            nodecounts = []
+            for (x, y) in zip(self.config.x, self.config.y):
+                nodecounts.append(x*y)
+            node_id = sum(nodecounts)
         nodeType_id = 0
 
+        z = 0
         for zi in self.z_range:
             idType = 0
-            for yi in self.y_range:
-                for xi in self.x_range:
+            for yi in self.y_range[z]:
+                for xi in self.x_range[z]:
                     node_node = ET.SubElement(nodes_node, 'node')
                     node_node.set('id', str(node_id))
                     xPos_node = ET.SubElement(node_node, 'xPos')
@@ -327,6 +337,7 @@ class NetworkWriter(Writer):
                     layer_node.set('value', str(int(zi*(self.config.z-1))))
                     node_id += 1
                     idType += 1
+            z += 1
             nodeType_id += 1
 
     def make_port(self, ports_node, port_id, node_id):
@@ -376,24 +387,36 @@ class NetworkWriter(Writer):
         connections_node = ET.SubElement(self.root_node, 'connections')
         con_id = 0
         node_id = 0
+        z = 0
+        nodecounts = []
+        for (x, y) in zip(self.config.x, self.config.y):
+            nodecounts.append(x*y)
+        nodecount = sum(nodecounts)
+
         for zi in self.z_range:
-            for yi in self.y_range:
-                for xi in self.x_range:
-                    # creat Local
-                    con_id = self.make_con(connections_node, con_id, node_id, node_id+(self.config.x*self.config.y*self.config.z))
+            for yi in self.y_range[z]:
+                for xi in self.x_range[z]:
+                    # create Local
+                    con_id = self.make_con(connections_node, con_id, node_id, node_id+(nodecount))
                     if xi > 0:  # create West
                         con_id = self.make_con(connections_node, con_id, node_id, node_id-1)
-                    if xi < 0.9:  # create East
+                    if xi < 0.95:  # create East
                         con_id = self.make_con(connections_node, con_id, node_id, node_id+1)
                     if yi > 0:  # create South
-                        con_id = self.make_con(connections_node, con_id, node_id, node_id-self.config.x)
-                    if yi < 0.9:  # create North
-                        con_id = self.make_con(connections_node, con_id, node_id, node_id+self.config.x)
+                        con_id = self.make_con(connections_node, con_id, node_id, node_id-self.config.x[z])
+                    if yi < 0.95:  # create North
+                        con_id = self.make_con(connections_node, con_id, node_id, node_id+self.config.x[z])
                     if zi > 0:  # create Down
-                        con_id = self.make_con(connections_node, con_id, node_id, node_id-(self.config.x*self.config.y))
-                    if zi < 0.9:  # create Up
-                        con_id = self.make_con(connections_node, con_id, node_id, node_id+(self.config.x*self.config.y))
+                        print(yi)
+                        y_index = np.where(self.y_range[z - 1] == zi)
+                        print(self.y_range[z - 1])
+                        print(y_index)
+                        #con_id = self.make_con(connections_node, con_id, node_id, node_id-(self.config.x[z]*self.config.y[z]))
+                    if zi < 0.95:  # create Up
+                        test = 1
+                        #con_id = self.make_con(connections_node, con_id, node_id, node_id+(self.config.x[z]*self.config.y[z]))
                     node_id += 1
+            z += 1
 
     def write_network(self, file_name):
         self.write_header()

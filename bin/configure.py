@@ -64,8 +64,17 @@ class Configuration:
         except Exception:
                 raise
 
-        self.x = int(config['Hardware']['x'])
-        self.y = int(config['Hardware']['y'])
+        self.x = config['Hardware']['x']
+        self.y = config['Hardware']['y']
+        try:
+                self.x = self.x[1:len(self.x)-1]
+                self.x = self.x.split(',')
+                self.x = [ int(x) for x in self.x ]
+                self.y = self.y[1:len(self.y)-1]
+                self.y = self.y.split(',')
+                self.y = [ int(y) for y in self.y ]
+        except Exception:
+                raise
         self.z = int(config['Hardware']['z'])
         self.routing = config['Hardware']['routing']
         self.clockDelay = int(config['Hardware']['clockDelay'])
@@ -88,7 +97,7 @@ def main():
 
     writer = writers.NetworkWriter(config)
     writer.write_network('network.xml')
-    plot_network.main()
+    #plot_network.main()
 ###############################################################################
 
 
