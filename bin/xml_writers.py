@@ -416,16 +416,26 @@ class NetworkWriter(Writer):
                         if (len(y_finder[0]) != 0):
                             y_index = y_finder[0][0]
                         if (x_index != -1 and y_index != -1):
-                            print("found")
+                            #print("found")
                             previous_node_count = 0
                             if (zi > 1):
-                                previous_node_count = sum(nodecounts[ 0 : zi - 1 ])
+                                previous_node_count = sum(nodecounts[ 0 : int(zi) - 1 ])
                             dst_id = previous_node_count + y_index * self.config.y[z - 1] + x_index
-                            print("connecting " + str(node_id) + " with " + str(dst_id))
-                            con_id = self.make_con(connections_node, con_id, node_id, dst_id)#node_id-(self.config.x[z]*self.config.y[z]))
+                            #print("connecting " + str(node_id) + " with " + str(dst_id))
+                            con_id = self.make_con(connections_node, con_id, node_id, dst_id)
                     if zi < 0.95:  # create Up
-                        test = 1
-                        #con_id = self.make_con(connections_node, con_id, node_id, node_id+(self.config.x[z]*self.config.y[z]))
+                        x_finder = np.where(self.x_range[z + 1] == xi)
+                        x_index = -1
+                        y_finder = np.where(self.y_range[z + 1] == yi)
+                        y_index = -1
+                        if (len(x_finder[0]) != 0):
+                            x_index = x_finder[0][0]
+                        if (len(y_finder[0]) != 0):
+                            y_index = y_finder[0][0]
+                        if (x_index != -1 and y_index != -1):
+                            previous_node_count = sum(nodecounts[ 0 : int(zi) + 1 ])
+                            dst_id = previous_node_count + y_index * self.config.y[z - 1] + x_index
+                            con_id = self.make_con(connections_node, con_id, node_id, dst_id)
                     node_id += 1
             z += 1
 
