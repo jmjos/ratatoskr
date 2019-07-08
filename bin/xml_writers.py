@@ -416,10 +416,9 @@ class NetworkWriter(Writer):
                         if (len(y_finder[0]) != 0):
                             y_index = y_finder[0][0]
                         if (x_index != -1 and y_index != -1):
-                            #print("found")
                             previous_node_count = 0
-                            if (zi > 1):
-                                previous_node_count = sum(nodecounts[ 0 : int(zi) - 1 ])
+                            if (z > 1):
+                                previous_node_count = sum(nodecounts[ 0 : int(z) - 1 ])
                             dst_id = previous_node_count + y_index * self.config.y[z - 1] + x_index
                             #print("connecting " + str(node_id) + " with " + str(dst_id))
                             con_id = self.make_con(connections_node, con_id, node_id, dst_id)
@@ -433,7 +432,7 @@ class NetworkWriter(Writer):
                         if (len(y_finder[0]) != 0):
                             y_index = y_finder[0][0]
                         if (x_index != -1 and y_index != -1):
-                            previous_node_count = sum(nodecounts[ 0 : int(zi) + 1 ])
+                            previous_node_count = sum(nodecounts[ 0 : int(z) + 1 ])
                             dst_id = previous_node_count + y_index * self.config.y[z - 1] + x_index
                             con_id = self.make_con(connections_node, con_id, node_id, dst_id)
                     node_id += 1
