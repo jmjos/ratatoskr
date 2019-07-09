@@ -353,6 +353,7 @@ class NetworkWriter(Writer):
         vcCount_node.set('value', str(self.config.vcCount))
 
     def make_con(self, connections_node, con_id, src_node, dst_node):
+        #print("binding " + str(src_node) + " to " + str(dst_node))
         dupCon = self.is_duplicate_con(connections_node, src_node, dst_node)
         if not dupCon:
             self.construct_con(connections_node, con_id, src_node, dst_node)
@@ -392,21 +393,41 @@ class NetworkWriter(Writer):
         for (x, y) in zip(self.config.x, self.config.y):
             nodecounts.append(x*y)
         nodecount = sum(nodecounts)
+        already_connected = set()
 
         for zi in self.z_range:
             for yi in self.y_range[z]:
                 for xi in self.x_range[z]:
                     # create Local
-                    print("connecting local from " + str(node_id) + " to " + str(node_id + nodecount))
-                    con_id = self.make_con(connections_node, con_id, node_id, node_id+(nodecount))
+                    #print("connecting local from " + str(node_id) + " to " + str(node_id + nodecount))
+                    connection_tuple = (min(node_id, node_id + nodecount), max(node_id , node_id +nodecount))
+                    if not connection_tuple in already_connected:
+                        con_id = self.make_con(connections_node, con_id, connection_tuple[1], connection_tuple[0])
+                        already_connected.add(connection_tuple)
                     if xi > 0:  # create West
-                        con_id = self.make_con(connections_node, con_id, node_id, node_id-1)
+                        connection_tuple = (node_id - 1, node_id)
+                        if not connection_tuple in already_connected:
+                            con_id = self.make_con(connections_node, con_id, connection_tuple[1], connection_tuple[0])
+                            already_connected.add(connection_tuple)
+                        #con_id = self.make_con(connections_node, con_id, node_id, node_id-1)
                     if xi < 0.95:  # create East
-                        con_id = self.make_con(connections_node, con_id, node_id, node_id+1)
+                        connection_tuple = (node_id, node_id + 1)
+                        if not connection_tuple in already_connected:
+                            con_id = self.make_con(connections_node, con_id, connection_tuple[1], connection_tuple[0])
+                            already_connected.add(connection_tuple)
+                        #con_id = self.make_con(connections_node, con_id, node_id, node_id+1)
                     if yi > 0:  # create South
-                        con_id = self.make_con(connections_node, con_id, node_id, node_id-self.config.x[z])
+                        connection_tuple = (min(node_id, node_id-self.config.x[z]), max(node_id , node_id-self.config.x[z]))
+                        if not connection_tuple in already_connected:
+                            con_id = self.make_con(connections_node, con_id, connection_tuple[1], connection_tuple[0])
+                            already_connected.add(connection_tuple)
+                        #con_id = self.make_con(connections_node, con_id, node_id, node_id-self.config.x[z])
                     if yi < 0.95:  # create North
-                        con_id = self.make_con(connections_node, con_id, node_id, node_id+self.config.x[z])
+                        connection_tuple = (min(node_id, node_id+self.config.x[z]), max(node_id , node_id+self.config.x[z]))
+                        if not connection_tuple in already_connected:
+                            con_id = self.make_con(connections_node, con_id, connection_tuple[1], connection_tuple[0])
+                            already_connected.add(connection_tuple)
+                        #con_id = self.make_con(connections_node, con_id, node_id, node_id+self.config.x[z])
                     if zi > 0:  # create Down
                         x_finder = np.where(self.x_range[z - 1] == xi)
                         x_index = -1
@@ -422,7 +443,11 @@ class NetworkWriter(Writer):
                                 previous_node_count = sum(nodecounts[ 0 : int(z) - 1 ])
                             dst_id = previous_node_count + y_index * self.config.y[z - 1] + x_index
                             #print("connecting " + str(node_id) + " with " + str(dst_id))
-                            con_id = self.make_con(connections_node, con_id, node_id, dst_id)
+                            connection_tuple = (min(node_id, dst_id), max(node_id , dst_id))
+                            if not connection_tuple in already_connected:
+                                con_id = self.make_con(connections_node, con_id, connection_tuple[1], connection_tuple[0])
+                                already_connected.add(connection_tuple)
+                            #con_id = self.make_con(connections_node, con_id, node_id, dst_id)
                     if zi < 0.95:  # create Up
                         x_finder = np.where(self.x_range[z + 1] == xi)
                         x_index = -1
@@ -434,8 +459,12 @@ class NetworkWriter(Writer):
                             y_index = y_finder[0][0]
                         if (x_index != -1 and y_index != -1):
                             previous_node_count = sum(nodecounts[ 0 : int(z) + 1 ])
-                            dst_id = previous_node_count + y_index * self.config.y[z - 1] + x_index
-                            con_id = self.make_con(connections_node, con_id, node_id, dst_id)
+                            dst_id = previous_node_count + y_index * self.config.y[z + 1] + x_index
+                            connection_tuple = (min(node_id, dst_id), max(node_id , dst_id))
+                            if not connection_tuple in already_connected:
+                                con_id = self.make_con(connections_node, con_id, connection_tuple[1], connection_tuple[0])
+                                already_connected.add(connection_tuple)
+                            #con_id = self.make_con(connections_node, con_id, node_id, dst_id)
                     node_id += 1
             z += 1
 
