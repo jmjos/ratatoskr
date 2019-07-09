@@ -77,7 +77,13 @@ class Configuration:
                 raise
         self.z = int(config['Hardware']['z'])
         self.routing = config['Hardware']['routing']
-        self.clockDelay = int(config['Hardware']['clockDelay'])
+        self.clockDelay = config['Hardware']['clockDelay']
+        try:
+                self.clockDelay = self.clockDelay[1:len(self.clockDelay)-1]
+                self.clockDelay = self.clockDelay.split(',')
+                self.clockDelay = [ int(cd) for cd in self.clockDelay ]
+        except Exception:
+                raise
         self.bufferDepthType = config['Hardware']['bufferDepthType']
         self.bufferDepth = int(config['Hardware']['bufferDepth'])
         self.buffersDepths = config['Hardware']['buffersDepths']

@@ -288,7 +288,7 @@ class NetworkWriter(Writer):
             selection_node = ET.SubElement(nodeType_node, 'selection')
             selection_node.set('value', '1stFreeVC')
             clockDelay_node = ET.SubElement(nodeType_node, 'clockDelay')
-            clockDelay_node.set('value', str(self.config.clockDelay))
+            clockDelay_node.set('value', str(self.config.clockDelay[i]))
             arbiterType_node = ET.SubElement(nodeType_node, 'arbiterType')
             arbiterType_node.set('value', 'fair')
         for i in range(self.config.z, self.config.z*2):
@@ -397,6 +397,7 @@ class NetworkWriter(Writer):
             for yi in self.y_range[z]:
                 for xi in self.x_range[z]:
                     # create Local
+                    print("connecting local from " + str(node_id) + " to " + str(node_id + nodecount))
                     con_id = self.make_con(connections_node, con_id, node_id, node_id+(nodecount))
                     if xi > 0:  # create West
                         con_id = self.make_con(connections_node, con_id, node_id, node_id-1)
