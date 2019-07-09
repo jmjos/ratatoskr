@@ -77,7 +77,9 @@ void GlobalReport::reportComplete(const std::string& filename)
     reportRoutersPowerCSV(csvfile);
     csvfile.close();
 
+#ifdef ENABLE_BUFFER_VC_STATS
     reportAllRoutersUsageHist();
+#endif
 }
 
 void GlobalReport::reportPerformance(ostream& stream)

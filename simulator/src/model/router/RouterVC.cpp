@@ -198,11 +198,15 @@ void RouterVC::updateUsageStats()
                 BufferFIFO<Flit*>* buf = buffers.at(conPos)->at(vc);
                 if (!buf->empty()) {
                     numberActiveVCs++;
+#ifdef ENABLE_BUFFER_VC_STATS
                     globalReport.updateBuffUsagePerVCHist(this->id, node.getDirOfConPos(conPos), vc,
                             static_cast<int>(buf->occupied()));
+#endif
                 }
             }
+#ifdef ENABLE_BUFFER_VC_STATS
             globalReport.updateVCUsageHist(this->id, node.getDirOfConPos(conPos), numberActiveVCs);
+#endif
         }
     }
 }
