@@ -1,0 +1,80 @@
+<?xml version="1.0" ?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <general>
+    <simulationTime value="15000000"/>
+    <outputToFile value="true">report</outputToFile>
+  </general>
+  <noc>
+    <nocFile>config/network.xml</nocFile>
+    <flitsPerPacket value="32"/>
+    <Vdd value="5"/>
+  </noc>
+  <application>
+    <benchmark>synthetic</benchmark>
+    <synthetic>
+      <phase name="warmup">
+        <distribution value="uniform"/>
+        <start max="100" min="100"/>
+        <duration max="1090" min="1090"/>
+        <repeat max="-1" min="-1"/>
+        <delay max="0" min="0"/>
+        <injectionRate value="0.002"/>
+        <count max="1" min="1"/>
+        <hotspot value="0"/>
+      </phase>
+      <phase name="run">
+        <distribution value="hotspot"/>
+        <start max="1100" min="1100"/>
+        <duration max="101100" min="15000000"/>
+        <repeat max="-1" min="-1"/>
+        <delay max="0" min="0"/>
+        <injectionRate value="0.002"/>
+        <count max="1" min="1"/>
+        <hotspot value="5"/>
+      </phase>
+    </synthetic>
+    <simulationFile>traffic/pipelinePerformance_2D/PipelineResetTB.xml</simulationFile>
+    <mappingFile>traffic/pipelinePerformance_2D/PipelineResetTBMapping.xml</mappingFile>
+    <netraceFile>traffic/netrace/example.tra.bz2</netraceFile>
+    <netraceStartRegion value="0"/>
+    <isUniform value="false"/>
+    <numberOfTrafficTypes value="5"/>
+  </application>
+  <verbose>
+    <processingElements>
+      <function_calls value="false"/>
+      <send_flit value="false"/>
+      <send_head_flit value="true"/>
+      <receive_flit value="false"/>
+      <receive_tail_flit value="true"/>
+      <throttle value="false"/>
+      <reset value="false"/>
+    </processingElements>
+    <router>
+      <function_calls value="false"/>
+      <send_flit value="false"/>
+      <send_head_flit value="true"/>
+      <receive_flit value="false"/>
+      <receive_tail_flit value="true"/>
+      <throttle value="false"/>
+      <reset value="false"/>
+      <assign_channel value="false"/>
+      <buffer_overflow value="true"/>
+    </router>
+    <netrace>
+      <inject value="true"/>
+      <eject value="true"/>
+      <router_receive value="true"/>
+    </netrace>
+    <tasks>
+      <function_calls value="true"/>
+      <xml_parse value="false"/>
+      <data_receive value="true"/>
+      <data_send value="true"/>
+      <source_execute value="false"/>
+    </tasks>
+  </verbose>
+  <report>
+    <bufferReportRouters>5 6 9 10 21 22 25 26 37 38 41 42</bufferReportRouters>
+  </report>
+</configuration>
