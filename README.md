@@ -159,11 +159,11 @@ If you wish to contribute, please contact me at my univeristy email address jan.
 The following people participated:
 - [Lennart Bamberg](github.com/lennartjanis): Physical models, hardware implementation and optimization
 - [Jan Moritz Joseph](https://github.com/jmjos): Simulation tools and design optimization
-- [Prof. Dr.-Ing. Alberto García-Ortiz](www.ids.uni-bremen.de/agarcia.html)
-- [Prof. Dr.-Ing. Thilo Pionteck](http://www.iikt.ovgu.de/pionteck.html)
-- [Imad Hajjar](https://github.com/imadhajjar)
-- Dominik Ermel
-- Sven Wrieden
+- [Prof. Dr.-Ing. Alberto García-Ortiz](www.ids.uni-bremen.de/agarcia.html): PI
+- [Prof. Dr.-Ing. Thilo Pionteck](http://www.iikt.ovgu.de/pionteck.html): PI
+- [Imad Hajjar](https://github.com/imadhajjar): Implementation
+- Dominik Ermel: Implementation of optimization models
+- Sven Wrieden: Parts of the Implementation of version 1.0
 
 ## Acknolegdements
 
