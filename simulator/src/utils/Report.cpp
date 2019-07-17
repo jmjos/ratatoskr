@@ -23,7 +23,6 @@
 
 Report::Report()
 {
-    logfile.open("log.txt");
 }
 
 void Report::connect(const std::string& addr, const std::string& port)
@@ -100,6 +99,10 @@ void Report::log(bool qualifier, const std::string& message, int type)
                       << std::endl;
         }
         if (type & Logtype::LOGFILE) {
+            if (!logfileOpened) {
+                logfile.open("log.txt");
+                logfileOpened = true;
+            }
             logfile << std::setfill(' ') << std::setw(5) << sc_time_stamp().value()/1000 << "ns: " << message
                     << std::endl;
         }

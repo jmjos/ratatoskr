@@ -74,6 +74,7 @@ private:
     int socketfd = 0;
     int element_count = 0;
     std::ofstream logfile;
+    bool logfileOpened = false;
     std::string sendBuffer;
     int dbid = 0;
 
