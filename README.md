@@ -49,16 +49,18 @@ cd ~/ratatoskr/simulator
 
 After a short time, you'll get the executable `sim`. Let's run three simple examples!
 
-## Different traffic patterns
+## Simulating a NoC for a heterogeneous 3D SoCs
 
-In this part, we'll run uniform random traffic pattern and hotspot traffic pattern and visualize the differences with out GUI. Enter the demo folder and copy the executable and the configuration files:
+In this part, we'll simulate a NoC for a heterogeneous 3D SoC with two 30nm mixed-signal layers on top an a single 15nm digital layer on bottom. We'll use YXZY routing, as published from *Joseph et al. 2019*, and load uniform random traffic. The result will look like this:
+
+![Heterogeneous Traffic](bin/demo/uniform_hetero_network.gif)
+
+Let's generate this figure. Enter the demo folder and copy the executable and the configuration files:
 
 ```bash
 cd ~/ratatoskr/bin/demo
 cp ~/ratatoskr/simulator/sim .
 ```
-
-In the `config` folder, you'll find the configuration of the simulator (`config.xml`) and the network, a 4 * 4 * 3 - NoC. They are already set up for the uniform random traffic pattern. The simulation is set to 1.5M clock cycles, which will take a while. But that's enough to observe the behavior of the NoC in the GUI! Let's to that:
 
 We'll the the python venv and copy the required files for the GUI:
 
@@ -67,17 +69,28 @@ cd ~/ratatoskr/bin/
 make
 source source_me.sh
 cd ~/ratatoskr/bin/demo
+cp config/network_heterogeneous.xml network.xml #will be read as network config file for plotting.
 python ../plot_network_client.py
 ```
 
 The GUI script is started and waits for the simulation to run. Let's open a second terminal, in which you run the simulator:
 
 ```bash
+cp config/config_heterogeneous.xml config/config.xml
 cd ~/ratatoskr/bin/demo
 ./sim
 ```
 
-A GUI will open and show the buffer usage in each router. It's somewhat random...!
+## Different traffic patterns
+
+In this part, we'll run uniform random traffic pattern and hotspot traffic pattern and visualize the differences with out GUI. We'll use simple homogeneous networks for comparability to conventional NoC simulators. Copy the correct configuration files. In the `config` folder, you'll find the configuration of the simulator (`config_homogeneous.xml`) and the network, a 4 * 4 * 3 - NoC (`network.xml`). They are already set up for the uniform random traffic pattern. The simulation is set to 1.5M clock cycles, which will take a while. But that's enough to observe the behavior of the NoC in the GUI! Let's to that:
+
+```bash
+cp config/config_homogeneous.xml config/config.xml #for simulator
+cp config/network.xml network.xml # for GUI
+```
+
+Rerun the simulation by executing `python ../plot_network_client.py` in the first terminal and `./sim` in the second.  A GUI will open and show the buffer usage in each router. It's somewhat random...!
 
 ![Uniform Random Traffic XYZ](bin/demo/uniform.gif)
 
