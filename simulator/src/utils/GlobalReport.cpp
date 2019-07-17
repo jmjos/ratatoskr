@@ -311,33 +311,39 @@ void GlobalReport::reportAllRoutersUsageHist()
             }
         }
     }
+    int numSimulatedRouters = static_cast<unsigned int>(globalResources.nodes.size()/2);
     int num_routers = routers_ids.size();
     for (unsigned int i = 0; i<num_routers; ++i) {
         int router_id = routers_ids[i];
-        std::string csvFileName;
+        if (router_id <= numSimulatedRouters) {
+            std::string csvFileName;
 
-        int isFolderCreated = system("mkdir -p ./VCUsage");
-        if (isFolderCreated!=0) {
-            std::cerr << "VCUsage folder was not created!" << std::endl;
-            std::exit(EXIT_FAILURE);
-        }
-        csvFileName = "VCUsage/"+std::to_string(router_id)+".csv";
-        reportVCUsageHist(csvFileName, router_id);
-
-        isFolderCreated = system("mkdir -p ./BuffUsage");
-        if (isFolderCreated!=0) {
-            std::cerr << "VCUsage folder was not created!" << std::endl;
-            std::exit(EXIT_FAILURE);
-        }
-        if (!bufferUsagePerVCHist.at(router_id).empty()) {
-            int nodeConnsSize = globalResources.nodes[router_id].connections.size();
-            for (unsigned int conPos = 0; conPos<nodeConnsSize; ++conPos) {
-                int dir_int = globalResources.nodes[router_id].getDirOfConPos(conPos);
-                std::string dir_str = DIR::toString(globalResources.nodes[router_id].getDirOfConPos(conPos));
-                boost::trim(dir_str);
-                csvFileName = "BuffUsage/"+std::to_string(router_id)+"_"+dir_str+".csv";
-                reportBuffPerVCUsageHist(csvFileName, router_id, dir_int);
+            int isFolderCreated = system("mkdir -p ./VCUsage");
+            if (isFolderCreated!=0) {
+                std::cerr << "VCUsage folder was not created!" << std::endl;
+                std::exit(EXIT_FAILURE);
             }
+            csvFileName = "VCUsage/"+std::to_string(router_id)+".csv";
+            reportVCUsageHist(csvFileName, router_id);
+
+            isFolderCreated = system("mkdir -p ./BuffUsage");
+            if (isFolderCreated!=0) {
+                std::cerr << "VCUsage folder was not created!" << std::endl;
+                std::exit(EXIT_FAILURE);
+            }
+            if (!bufferUsagePerVCHist.at(router_id).empty()) {
+                int nodeConnsSize = globalResources.nodes[router_id].connections.size();
+                for (unsigned int conPos = 0; conPos<nodeConnsSize; ++conPos) {
+                    int dir_int = globalResources.nodes[router_id].getDirOfConPos(conPos);
+                    std::string dir_str = DIR::toString(globalResources.nodes[router_id].getDirOfConPos(conPos));
+                    boost::trim(dir_str);
+                    csvFileName = "BuffUsage/"+std::to_string(router_id)+"_"+dir_str+".csv";
+                    reportBuffPerVCUsageHist(csvFileName, router_id, dir_int);
+                }
+            }
+        } else {
+            cout << endl << "Warning: You configured that router with id " << router_id << " is to be reported, but that router does not exist." << endl;
+            cout << "         Router ignored. Please update config/config.xml, <bufferReportRouters>"  << endl;
         }
     }
 }
@@ -436,8 +442,15 @@ void GlobalReport::resizeMatrices()
     ni_pwr_d.resize(numRouters, 0.0);
     ni_pwr_s.resize(numRouters, 0.0);
 
-    Connection con = globalResources.connections.at(0);
-    int vcCount = con.vcsCount.at(0);
+    //Connection con = globalResources.connections.at(0);
+    //int vcCount = con.vcsCount.at(0);
+    int vcCount = -1;
+    for (auto con : globalResources.connections){
+        for (auto vc : con.vcsCount){
+            vcCount = vcCount > vc ? vcCount : vc;
+        }
+    }
+
     VCsUsageHist.resize(numRouters);
     for (auto& vec_2d:VCsUsageHist) {
         vec_2d.resize(DIR::size);
