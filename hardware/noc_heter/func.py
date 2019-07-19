@@ -12,7 +12,6 @@
 import subprocess
 import itertools
 import string
-import func
 import numpy as np
 from string import Template
 #########################################################################################
