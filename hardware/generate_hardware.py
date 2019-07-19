@@ -101,6 +101,7 @@ def main():
     writer.write_noc_hetero()
     writer.write_noc_hetero_high_throughput()
     writer.write_noc_hetero_with_pe()
+    writer.write_noc_hetero_high_throughput_with_pe()
 ###############################################################################
 
 

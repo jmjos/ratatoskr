@@ -236,9 +236,9 @@ class NoCWriter():
 
         os.rename(out_file, dest_path + "/" + out_file)
 
-    def write_noc_hetero_with_pe(self):
+    def write_noc_hetero_high_throughput_with_pe(self):
         out_file = 'noc_heter_high_throughput_with_pe.vhd'
-        dest_path = "noc_heter_high_throughput_with_pe"
+        dest_path = "noc_heter_high_throughput_with_pe_gen"
         template_path = "noc_heter_high_throughput_with_pe"
         self.setup_path(template_path, dest_path)
 
@@ -298,6 +298,73 @@ class NoCWriter():
                                     self.rout_algo, self.cf_vec, local_lb, self.flit_size, self.rate_percent, self.run_time,
                                     self.layer_prob, self.clk_period)
 
+        #########################################################################################
+        #       writing end of architecture
+        #########################################################################################
+        ft=open(out_file,"a")
+        ft.write("end architecture structural;")
+
+        os.rename(out_file, dest_path + "/" + out_file)
+
+    def write_noc_hetero_with_pe(self):
+        out_file = 'noc_heter_with_pe.vhd'
+        dest_path = "noc_heter_with_pe_gen"
+        template_path = "noc_heter_with_pe"
+        self.setup_path(template_path, dest_path)
+        #########################################################################################
+        #       Number of routers and input/output signals in network entity
+        #########################################################################################
+        router_num = self.noc_x * self.noc_y * self.noc_z
+        io_sig_num = sum(self.vc_xy) * self.noc_x * self.noc_y
+        max_vc = max(max(self.vc_xy),max(self.vc_z))
+        #########################################################################################
+        #       Opening the file and writing the entity and top of the architecture
+        #########################################################################################
+        ft=open(out_file, 'w+')
+        ft.write(noc_heter_with_pe.entity.substitute(router_num=str(router_num), io_sig_num=str(io_sig_num)))
+        ft.write(noc_heter_with_pe.archi_top.substitute(noc_x=str(self.noc_x-1), noc_y=str(self.noc_y-1), noc_z=str(self.noc_z-1),
+                                           vc_num=str(max_vc), router_num=router_num, io_sig_num=io_sig_num))
+        #########################################################################################
+        #       Writing the input and output connection signals in architecture
+        #########################################################################################
+        for z in range(self.noc_z):
+            for y in range(self.noc_y):
+                for x in range(self.noc_x):
+                    port_num = 7
+                    if (y == self.noc_y - 1):
+                        port_num -= 1
+                    if (x == self.noc_x - 1):
+                        port_num -= 1
+                    if (y == 0):
+                        port_num -= 1
+                    if (x == 0):
+                        port_num -= 1
+                    if (z == self.noc_z - 1):
+                        port_num -= 1
+                    if (z == 0):
+                        port_num -= 1
+                    ft.write(noc_heter_with_pe.data_in_tmp.substitute(x=str(x),y=str(y),z=str(z),port_num=str(port_num)))
+                    vc_num_vec=noc_heter_with_pe.ret_sum_vc(z=z, vc_xy=self.vc_xy, vc_z=self.vc_z, noc_z=self.noc_z, port_num=port_num)
+                    vc_num_out_vec=noc_heter_with_pe.ret_sum_vc(z=z, vc_xy=self.vc_xy, vc_z=self.vc_z, noc_z=self.noc_z, port_num=port_num)
+                    ft.write(noc_heter_with_pe.vc_write_rx_vec_tmp.substitute(x=str(x),y=str(y),z=str(z),sum_vc=vc_num_vec))
+                    ft.write(noc_heter_with_pe.incr_rx_vec_tmp.substitute(x=str(x),y=str(y),z=str(z),sum_vc=vc_num_out_vec))
+                    ft.write(noc_heter_with_pe.vc_write_tx_pl_vec_tmp.substitute(x=str(x),y=str(y),z=str(z),sum_vc=vc_num_out_vec))
+                    ft.write(noc_heter_with_pe.incr_tx_pl_vec_tmp.substitute(x=str(x),y=str(y),z=str(z),sum_vc=vc_num_vec))
+        #########################################################################################
+        #       writing the begin of the architecture
+        #########################################################################################
+        ft.write("""
+        begin
+        """)
+        ft.close()
+        #########################################################################################
+        #       writing each router code
+        #########################################################################################
+        for z in range(self.noc_z):
+            for y in range(self.noc_y):
+                for x in range(self.noc_x):
+                    noc_heter_with_pe.ftwrite_router(x, y, z, self.noc_x, self.noc_y, self.noc_z, self.vc_xy, self.vc_z, self.vc_num, self.depth_xy, self.depth_z, self.rout_algo,
+                                        self.cf_vec, self.clk_period, self.flit_size, self.credit_num, self.rate_percent, self.run_time, self.layer_prob)
         #########################################################################################
         #       writing end of architecture
         #########################################################################################
