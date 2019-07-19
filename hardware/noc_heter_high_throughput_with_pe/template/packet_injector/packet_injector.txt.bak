@@ -1,0 +1,441 @@
+-------------------------------------------------------------------------------
+-- Title      : inject packet to a router
+-- Project    : 
+-------------------------------------------------------------------------------
+-- File       : packet_injector.vhd
+-- Author     : Behnam Razi Perjikolaei  <raziperj@uni-bremen.de>
+-- Company    : 
+-- Created    : 2019-06-19
+-- Last update: 2019-06-25
+-- Platform   : 
+-- Standard   : VHDL'87
+-------------------------------------------------------------------------------
+-- Description: 
+-------------------------------------------------------------------------------
+-- Copyright (c) 2019 
+-------------------------------------------------------------------------------
+-- Revisions  :
+-- Date        Version  Author  Description
+-- 2019-06-19  1.0      behnam  Created
+-------------------------------------------------------------------------------
+
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.math_real.all;
+use ieee.numeric_std.all;
+use work.NOC_3D_PACKAGE.all;
+use work.packet_injector_package.all;
+use ieee.std_logic_textio.all;
+use std.textio.all;
+use ieee.std_logic_misc.all;
+------------------------------------------------------------------------------------------
+
+entity packet_injector is
+
+  generic (cf_vec       : integer_vec := $cf_vec;
+           clk_period   : natural     := $clk_period;            -- clock period in ns
+           Xis          : natural     := 1;            -- Location of router on X axis
+           Yis          : natural     := 1;            -- Location of router on Y axis
+           Zis          : natural     := 1;            -- Location of router on Z axis
+           N            : natural     := $N;           -- Width of input port
+           vc_num       : natural     := $max_vc_num;            -- Number of VCs in Local port
+           credit_num   : integer_vec := $credit_num;       -- Buffer depth of each VC
+           rate_percent : natural     := $rate_percent;            -- Injection rate
+           run_time     : natural     := $run_time;         -- Maximum injection time
+           layer_prob   : integer_vec := $layer_prob;  -- Possibility of sending data to the
+                                                       -- nodes of each layer
+           seed1_rand   : positive    := 2147483398;
+           seed2_rand   : positive    := 214748
+           );
+
+  port (clk, rst             : in  std_logic;
+        rand_packet_in       : in  std_logic_vector(N-1 downto 0);
+        incr_from_router     : in  std_logic_vector(vc_num-1 downto 0);
+        vc_write_from_router : in  std_logic_vector(vc_num-1 downto 0);
+        rand_packet_out      : out std_logic_vector(N-1 downto 0);
+        incr_to_router       : out std_logic_vector(vc_num-1 downto 0);
+        vc_write_to_router   : out std_logic_vector(vc_num-1 downto 0)
+        );
+
+end packet_injector;
+
+------------------------------------------------------------------------------------------
+
+architecture beh of packet_injector is
+  constant cf                  : positive := cf_vec(Zis);
+  constant max_packet_num_size : natural  := positive(ceil(log2(real(max_packet_num+1))));
+  constant packet_len_size     : natural  := positive(ceil(log2(real(max_packet_len+1))));  -- /cf is erased check it!!!!
+  constant max_x_dim_size      : natural  := positive(ceil(log2(real(max_x_dim))));
+  constant max_y_dim_size      : natural  := positive(ceil(log2(real(max_y_dim))));
+  constant max_z_dim_size      : natural  := positive(ceil(log2(real(max_z_dim))));
+  constant header_inf_size     : natural  := packet_len_size +max_z_dim_size
+                                            +max_y_dim_size+max_x_dim_size;
+  constant packet_len_lb : natural := 0;
+  constant packet_len_ub : natural := packet_len_lb+packet_len_size-1;
+  constant dest_x_lb     : natural := packet_len_ub+1;
+  constant dest_x_ub     : natural := dest_x_lb+max_x_dim_size-1;
+  constant dest_y_lb     : natural := dest_x_ub+1;
+  constant dest_y_ub     : natural := dest_y_lb+max_y_dim_size-1;
+  constant dest_z_lb     : natural := dest_y_ub+1;
+  constant dest_z_ub     : natural := dest_z_lb+max_z_dim_size-1;
+  constant scr_x_lb      : natural := dest_z_ub+1;
+  constant scr_x_ub      : natural := scr_x_lb+max_x_dim_size-1;
+  constant scr_y_lb      : natural := scr_x_ub+1;
+  constant scr_y_ub      : natural := scr_y_lb+max_y_dim_size-1;
+  constant scr_z_lb      : natural := scr_y_ub+1;
+  constant scr_z_ub      : natural := scr_z_lb+max_z_dim_size-1;
+  constant PID_lb        : natural := scr_z_ub+1;
+  constant PID_ub        : natural := PID_lb+max_packet_num_size-1;
+  constant FID_lb        : natural := PID_ub+1;
+  constant FID_ub        : natural := FID_lb+packet_len_size-1;
+  constant max_time      : natural := run_time-(N*vc_num);
+  constant output_data_file : string  := "./reports/output_data_"&integer'image(Zis)&integer'image(Yis)&
+                                         integer'image(Xis)&".txt";
+  constant input_data_file : string := "./reports/input_data_"&integer'image(Zis)&integer'image(Yis)&
+                                         integer'image(Xis)&".txt";
+------------------------------------------------------------------------------------------
+-- 
+------------------------------------------------------------------------------------------
+  type     flit_counter_vector is array(natural range <>) of
+    unsigned(max_packet_num_size-1 downto 0);
+  type   address_inf_vector is array (natural range<>) of address_inf;
+  type   packet_vector is array (vc_num-1 downto 0) of std_logic_vector(N-1 downto 0);
+  type   new_packet_vector is array (vc_num-1 downto 0) of std_logic_vector(scr_z_ub-1 downto 0);
+  type   PID_vector is array (natural range<>) of unsigned(max_packet_num_size-1 downto 0);
+  type   FID_vector is array (natural range<>) of unsigned(packet_len_size-1 downto 0);
+------------------------------------------------------------------------------------------
+-- 
+------------------------------------------------------------------------------------------
+  signal packet_length : std_logic_vector(positive(ceil(log2(real(max_packet_len+1))))-1 downto 0);
+  signal new_header    : std_logic_vector(vc_num-1 downto 0);
+  signal credit_avail  : std_logic_vector(vc_num-1 downto 0);
+  signal flit_counter  : flit_counter_vector(vc_num-1 downto 0);
+  signal packet_data : std_logic_vector(N-header_inf_size-packet_len_size-max_packet_num_size-1
+                                        downto 0) :=(others => '1');
+  signal packet, new_packet       : packet_vector := (others => (others => '0'));
+--  signal new_packet               : new_packet_vector := (others => (others => '0'));
+  signal PID                      : PID_vector(vc_num-1 downto 0);
+  signal PID_CNTR                 : unsigned(max_packet_num_size-1 downto 0);
+  signal FID                      : FID_vector(vc_num-1 downto 0);
+  signal vc_is_busy               : std_logic_vector(vc_num-1 downto 0);
+  signal ready2send               : std_logic;
+  signal valid_req                : std_logic_vector(vc_num-1 downto 0);
+------------------------------------------------------------------------------------------
+-- 
+------------------------------------------------------------------------------------------
+  signal rand_packet_in_sig       : std_logic_vector(N-1 downto 0);
+  signal incr_from_router_sig     : std_logic_vector(vc_num-1 downto 0);
+  signal vc_write_from_router_sig : std_logic_vector(vc_num-1 downto 0);
+  signal rand_packet_out_sig      : std_logic_vector(N-1 downto 0);
+  signal incr_to_router_sig       : std_logic_vector(vc_num-1 downto 0);
+  signal vc_write_to_router_sig   : std_logic_vector(vc_num-1 downto 0);
+  signal inject_time_vec          : integer_vec(((max_time*rate_percent)/100)-1 downto 0);
+  signal curr_time                : natural;
+  signal time_found               : boolean;
+  signal packet_counter           : unsigned(max_packet_num_size-1 downto 0);
+------------------------------------------------------------------------------------------
+-- INSERT FILES
+------------------------------------------------------------------------------------------
+  file OUTPUT_DATA                : text;
+  file INPUT_DATA                 : text;
+begin  -- beh
+  rand_packet_in_sig       <= rand_packet_in;
+  incr_from_router_sig     <= incr_from_router;
+  vc_write_from_router_sig <= vc_write_from_router;
+  rand_packet_out          <= rand_packet_out_sig;
+  incr_to_router           <= incr_to_router_sig;
+  vc_write_to_router       <= vc_write_to_router_sig;
+  ----------------------------------------------------------------------------------------
+  -- 
+  ----------------------------------------------------------------------------------------
+  rand_packet_out_sig      <= packet(one_hot2int(vc_write_to_router_sig));
+  incr_to_router_sig       <= vc_write_from_router_sig;  -- there is a lot fo buffer in reciever
+                                        -- as soon as a packet is recieved,
+                                        -- incr signal will be send back
+
+  valid_req <= credit_avail and vc_is_busy;  -- If there is data to send and VC has
+                                             -- credit, then the request is valid
+  ----------------------------------------------------------------------------------------
+  -- If a new packet must be send out (ready2send = '1'), check for a free VC, and make it
+  -- '1' and if there is no more flit to send make the VC free
+  ----------------------------------------------------------------------------------------
+  VC_SEL_PROC : process (clk, rst)
+    variable vc_is_busy_var : std_logic_vector(vc_num-1 downto 0);
+    variable vc_flag        : boolean;
+    variable time_found_var : boolean;
+  begin
+    if rst = RST_LVL then
+      vc_is_busy <= (others => '0');
+    elsif rising_edge(clk) then
+      vc_is_busy_var := vc_is_busy;
+      for vc_i in 0 to vc_num-1 loop
+        if to_integer(flit_counter(vc_i)) = 1 and vc_write_to_router_sig(vc_i) = '1' then
+          vc_is_busy_var(vc_i) := '0';
+        end if;
+      end loop;  -- vC_i
+      if ready2send = '1' then
+        vc_flag        := false;
+        time_found_var := false;
+        for vc_i in 0 to vc_num-1 loop
+          if vc_is_busy_var(vc_i) = '0' and vc_flag = false then
+            vc_is_busy_var(vc_i) := '1';
+            vc_flag              := true;
+          end if;
+        end loop;
+      end if;
+      vc_is_busy <= vc_is_busy_var;
+    end if;
+  end process VC_SEL_PROC;
+------------------------------------------------------------------------------------------
+-- Round Robin arbiter. If there are valid requests for the VCs, grant one VC for the next
+-- transmission
+------------------------------------------------------------------------------------------
+  NEXT_VC_SEL : entity work.rr_arbiter_no_delay
+    generic map (
+      CNT => vc_num)
+    port map (
+      clk   => clk,
+      rst   => rst,
+      req   => valid_req,
+      ack   => '1',                          -- when there is a req, it will be served
+      grant => vc_write_to_router_sig);
+------------------------------------------------------------------------------------------
+-- Credit counter for credit base flow control
+------------------------------------------------------------------------------------------
+  CREDIT_CNTR_GEN : for vc_i in 0 to vc_num-1 generate
+    CREDIT_CNTR : if cf = 1 generate
+      CREDIT_COUNT_SINGLE : entity work.credit_count_single
+        generic map (
+          vc_depth_out => credit_num(vc_i))
+        port map (
+          clk          => clk,
+          rst          => rst,
+          incr_rx      => incr_from_router_sig(vc_i),
+          vc_write_tx  => vc_write_to_router_sig(vc_i),
+          credit_avail => credit_avail(vc_i));
+    end generate CREDIT_CNTR;
+    CREDIT_CNTR_CF : if cf /= 1 generate
+      CREDIT_COUNT_CF : entity work.credit_count_cf
+        generic map (
+          vc_depth_out => credit_num(vc_i),
+          cf           => cf)
+        port map (
+          clk          => clk,
+          rst          => rst,
+          incr_rx      => incr_from_router_sig(vc_i),
+          vc_write_tx  => vc_write_to_router_sig(vc_i),
+          credit_avail => credit_avail(vc_i));
+    end generate CREDIT_CNTR_CF;
+  end generate CREDIT_CNTR_GEN;
+------------------------------------------------------------------------------------------
+-- 
+------------------------------------------------------------------------------------------
+  REG_PROC : process (clk, rst)
+    variable PID_var : unsigned(max_packet_num_size-1 downto 0);
+    variable FID_var : FID_vector(vc_num-1 downto 0);
+  begin  -- process REG_PROC
+    if rst = RST_LVL then
+      flit_counter <= (others => (others => '0'));
+      PID_CNTR     <= (others => '0');
+      FID          <= (others => (others => '0'));
+    elsif rising_edge(clk) then
+      PID_var := PID_CNTR;
+      FID_var := FID;
+      for vc_i in 0 to vc_num-1 loop
+        if new_header(vc_i) = '1' then
+          PID_var            := PID_var+1;
+          PID(vc_i)          <= PID_var;
+          FID_var(vc_i)          := to_unsigned(1, packet_len_size);
+          flit_counter(vc_i) <= unsigned(packet(vc_i)(packet_len_ub downto packet_len_lb));
+        elsif vc_write_to_router_sig(vc_i) = '1' then
+          FID_var(vc_i)          := FID_var(vc_i)+1*cf_vec(Zis);
+          if to_integer(FID_var(vc_i)) > to_integer(unsigned(packet(vc_i)(packet_len_ub downto packet_len_lb))) then
+            FID_var(vc_i) := unsigned(packet(vc_i)(packet_len_ub downto packet_len_lb));
+          end if;
+          flit_counter(vc_i) <= flit_counter(vc_i)-1*cf_vec(Zis);
+        end if;
+      end loop;
+      PID_CNTR <= PID_var;
+      FID <= FID_var;
+    end if;
+  end process REG_PROC;
+  ----------------------------------------------------------------------------------------
+  -- ASSIGN VALUES TO NEW_HEADER AND PACKET SIGNALS
+  ----------------------------------------------------------------------------------------
+  NEW_HEADER_GEN : for vc_i in 0 to vc_num-1 generate
+    new_header(vc_i)                   <= '1' when flit_counter(vc_i) = 0 else '0';
+                                             -- new_header signal is
+                                             -- '1' where the
+                                             -- flit_counter is 0
+    packet(vc_i)(PID_ub downto PID_lb) <= std_logic_vector(PID(vc_i));
+    packet(vc_i)(FID_ub downto FID_lb) <= std_logic_vector(FID(vc_i));
+    packet(vc_i)(scr_z_ub downto 0)    <= new_packet(vc_i)(scr_z_ub downto 0);
+
+  end generate NEW_HEADER_GEN;
+
+
+  ----------------------------------------------------------------------------------------
+  -- 
+  ----------------------------------------------------------------------------------------
+  HEADER_GEN_PROC : process(new_header)
+    variable seed1        : positive := seed1_rand;
+    variable seed2        : positive := seed2_rand;
+    variable rand_length  : real;
+    variable dest_addr    : address_inf_vector(vc_num-1 downto 0);
+    variable p_length     : integer range 0 to max_packet_len;
+  begin
+    check_vc : for vc_i in 0 to vc_num-1 loop
+      if new_header(vc_i) = '1' then
+        uniform(seed1, seed2, rand_length);
+        p_length := integer(rand_length*real(max_packet_len));
+        while p_length = 0 loop
+          uniform(seed1, seed2, rand_length);
+          p_length := integer(rand_length*real(max_packet_len));
+        end loop;
+        dest_addr(vc_i) := rand_destination(seed1, seed2, layer_prob);
+        while to_integer(unsigned(dest_addr(vc_i).x_dest)) = Xis and
+          to_integer(unsigned(dest_addr(vc_i).y_dest)) = Yis and
+          to_integer(unsigned(dest_addr(vc_i).z_dest)) = Zis loop
+          uniform(seed1, seed2, rand_length);
+          dest_addr(vc_i) := rand_destination(seed1, seed2, layer_prob);
+        end loop;
+        new_packet(vc_i)(dest_x_ub downto dest_x_lb)         <= dest_addr(vc_i).x_dest;
+        new_packet(vc_i)(dest_y_ub downto dest_y_lb)         <= dest_addr(vc_i).y_dest;
+        new_packet(vc_i)(dest_z_ub downto dest_z_lb)         <= dest_addr(vc_i).z_dest;
+        neW_packet(vc_i)(packet_len_ub downto packet_len_lb) <=
+          std_logic_vector(to_unsigned(p_length, packet_len_size));
+        new_packet(vc_i)(scr_x_ub downto scr_x_lb) <= std_logic_vector(to_unsigned(Xis, max_x_dim_size));
+        new_packet(vc_i)(scr_y_ub downto scr_y_lb) <= std_logic_vector(to_unsigned(Yis, max_y_dim_size));
+        new_packet(vc_i)(scr_z_ub downto scr_z_lb) <= std_logic_vector(to_unsigned(Zis, max_z_dim_size));
+        --packet(vc_i)(PID_ub downto PID_lb)     <= std_logic_vector(PID(vc_i));
+        --packet(vc_i)(FID_ub downto FID_lb)     <= std_logic_vector(FID(vc_i));
+      end if;
+    end loop check_vc;
+  end process;
+------------------------------------------------------------------------------------------
+-- Injection time generation
+------------------------------------------------------------------------------------------
+-- purpose: produce  injection time
+  INJECT_RATE_PROC : process (rst)
+    variable seed1        : positive := seed1_rand;
+    variable seed2        : positive := seed2_rand;
+    variable rand_time           : real;
+    variable int_time            : integer;
+    variable inject_time_vec_var : integer_vec((max_time*rate_percent/100)-1 downto 0);
+  begin  -- process INJECT_RATE_PROC
+    if rst = RST_LVL then
+      inject_time_vec_var := (others => 0);
+      for time_i in 0 to (max_time*rate_percent/100)-1 loop
+        uniform(seed1, seed2, rand_time);
+        int_time := clk_period*integer(rand_time*real(max_time/clk_period));
+        while find_int(inject_time_vec_var, int_time) loop
+          uniform(seed1, seed2, rand_time);
+          int_time := clk_period*integer(rand_time*real(max_time/clk_period));
+        end loop;
+        inject_time_vec_var(time_i) := int_time;
+      end loop;  -- time_i
+    end if;
+    inject_time_vec <= inject_time_vec_var;
+  end process INJECT_RATE_PROC;
+------------------------------------------------------------------------------------------
+-- Calculate current time
+------------------------------------------------------------------------------------------
+  curr_time_gen : process (clk, rst)
+  begin  -- process curr_time
+    if rst = RST_LVL then               -- asynchronous reset (active RST_LVL)
+      curr_time <= 0;
+    elsif clk'event and clk = '1' then  -- rising clock edge
+      curr_time <= curr_time+clk_period;
+    end if;
+  end process curr_time_gen;
+------------------------------------------------------------------------------------------
+-- Inject signal generation
+------------------------------------------------------------------------------------------
+-- purpose: generate inject signal
+  INJECT_SIG : process (packet_counter, vc_is_busy)
+    variable ready2send_var : std_logic;
+  begin  -- process INJECT_SIG
+    ready2send_var := '0';
+--    if find_int(inject_time_vec, curr_time+clk_period) then
+    if packet_counter /= 0 then
+      if and_reduce(vc_is_busy) = '0' then
+        ready2send_var := '1';
+      end if;
+    end if;
+    ready2send <= ready2send_var;
+  end process INJECT_SIG;
+
+  PCKT_CNTR : process (clk, rst)
+  begin  -- process PCKT_CNTR
+    if rst = RST_LVL then
+      packet_counter <= (others => '0');
+    elsif clk'event and clk = '1' then
+      if find_int(inject_time_vec, curr_time+clk_period) = true and ready2send = '0' then
+        packet_counter <= packet_counter+1;
+      elsif find_int(inject_time_vec, curr_time+clk_period) = false and ready2send = '1' then
+        packet_counter <= packet_counter-1;
+      end if;
+    end if;
+  end process PCKT_CNTR;
+
+------------------------------------------------------------------------------------------
+-- WRITING ON FILE
+------------------------------------------------------------------------------------------
+  WRITE_FILE : process(clk,rst)
+    variable write_oline : line;
+    variable write_iline : line;
+  begin
+    
+    if rst= RST_LVL then
+        file_open(OUTPUT_DATA, output_data_file, write_mode);
+        write(write_oline, string'("time"));
+        write(write_oline, string'("PACKET DATA"), right, 25);
+        write(write_oline, string'("PACKET LENGTH"), right, 30);
+        write(write_oline, string'("PACKET ID"), right, 15);
+        write(write_oline, string'("FLIT ID"), right, 15);
+        write(write_oline, string'("SOURCE"), right, 12);
+        write(write_oline, string'("DEST"), right, 15);
+        writeline(OUTPUT_DATA, write_oline);
+        file_close(OUTPUT_DATA);
+        file_open(INPUT_DATA, input_data_file, write_mode);
+        write(write_iline, string'("time"));
+        write(write_iline, string'("PACKET DATA"), right, 25);
+        write(write_iline, string'("PACKET LENGTH"), right, 30);
+        write(write_iline, string'("PACKET ID"), right, 15);
+        write(write_iline, string'("FLIT ID"), right, 15);
+        write(write_iline, string'("SOURCE"), right, 12);
+        write(write_iline, string'("DEST"), right, 15);
+        writeline(INPUT_DATA, write_iline);
+        file_close(INPUT_DATA);
+     elsif clk = '1' and clk'event then
+      if to_integer(unsigned(vc_write_to_router_sig)) /= 0 then
+        file_open(OUTPUT_DATA, output_data_file, append_mode);
+        write(write_oline, time'image(now), left, 10);
+        write(write_oline, rand_packet_out_sig, right, 15);
+        write(write_oline, to_integer(unsigned(rand_packet_out_sig(packet_len_ub downto packet_len_lb))),
+              right, 15);
+        write(write_oline, to_integer(unsigned(rand_packet_out_sig(PID_ub downto PID_lb))), right, 10);
+        write(write_oline, to_integer(unsigned(rand_packet_out_sig(FID_ub downto FID_lb))), right, 10);
+        write(write_oline, rand_packet_out_sig(scr_z_ub downto scr_x_lb), right, 10);
+        write(write_oline, rand_packet_out_sig(dest_z_ub downto dest_x_lb), right, 10);
+        writeline(OUTPUT_DATA, write_oline);
+        file_close(OUTPUT_DATA);
+      end if;
+      if to_integer(unsigned(vc_write_from_router_sig)) /= 0 then
+        file_open(INPUT_DATA, input_data_file, append_mode);
+        write(write_iline, time'image(now), left, 10);
+        write(write_iline, rand_packet_in_sig, right, 15);
+        write(write_iline, to_integer(unsigned(rand_packet_in_sig(packet_len_ub downto packet_len_lb))),
+              right, 15);
+        write(write_iline, to_integer(unsigned(rand_packet_in_sig(PID_ub downto PID_lb))), right, 10);
+        write(write_iline, to_integer(unsigned(rand_packet_in_sig(FID_ub downto FID_lb))), right, 10);
+        write(write_iline, rand_packet_in_sig(scr_z_ub downto scr_x_lb), right, 10);
+        write(write_iline, rand_packet_in_sig(dest_z_ub downto dest_x_lb), right, 10);
+        writeline(INPUT_DATA, write_iline);
+        file_close(INPUT_DATA);
+      end if;
+    end if;
+  end process;
+end beh;
+
+------------------------------------------------------------------------------------------

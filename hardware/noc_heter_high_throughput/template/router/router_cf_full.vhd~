@@ -1,0 +1,424 @@
+-------------------------------------------------------------------------------
+-- Title      : This router has cf*N size in Local and Up and Down ports and
+--              N size for the other ports
+-- Project    : 
+-------------------------------------------------------------------------------
+-- File       : router_cf_full.vhd
+-- Author     : Behnam Razi Perjikolaei  <s_ids103@item0108.item.uni-bremen.de>
+-- Company    : 
+-- Created    : 2019-05-27
+-- Last update: 2019-05-27
+-- Platform   : 
+-- Standard   : VHDL'87
+-------------------------------------------------------------------------------
+-- Description: 
+-------------------------------------------------------------------------------
+-- Copyright (c) 2019 
+-------------------------------------------------------------------------------
+-- Revisions  :
+-- Date        Version  Author  Description
+-- 2019-05-27  1.0      behnam	Created
+-------------------------------------------------------------------------------
+
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use IEEE.STD_LOGIC_MISC.all;
+use work.NOC_3D_PACKAGE.all;
+------------------------------------------------------------------------------------------
+
+entity router_slow_full is
+
+  generic (
+    cf                           : natural           := 2;
+    port_num                     : integer           := 7;
+    Xis                          : natural           := 1;
+    Yis                          : natural           := 1;
+    Zis                          : natural           := 1;
+    header_incl_in_packet_length : boolean           := true;
+    -- integer vector of range "0 to port_num-1"
+    port_exist                   : integer_vec       := (0, 1, 2, 3, 4, 5, 6);
+    vc_num_vec                   : integer_vec       := (2, 2, 2, 2, 2, 2, 2);
+    vc_num_out_vec               : integer_vec       := (2, 2, 2, 2, 2, 2, 2);
+    -- integer vector of range "0 to port_num-1, 0 to max_vc_num-1"                                   
+    vc_depth_array               : vc_prop_int_array := ((3, 3), (3, 3), (3, 3), (3, 3), (3, 3), (3, 3), (3, 3));
+    vc_depth_out_array           : vc_prop_int_array := ((3, 3), (3, 3), (3, 3), (3, 3), (3, 3), (3, 3), (3, 3));
+    rout_algo                    : string            := "DXYU"
+    );
+
+  port (
+    -- Inputs
+    clk, fclk, rst     : in  std_logic;
+    data_rx            : in  std_logic_vector((3*cf+port_num-3)*flit_size-1 downto 0);
+    vc_write_rx_vec    : in  std_logic_vector(int_vec_sum(vc_num_vec)-1 downto 0);
+    incr_rx_vec        : in  std_logic_vector(int_vec_sum(vc_num_out_vec)-1 downto 0);
+                                        -- Outputs
+    data_tx_pl         : out std_logic_vector((3*cf+port_num-3)*flit_size-1 downto 0);
+    vc_write_tx_pl_vec : out std_logic_vector(int_vec_sum(vc_num_out_vec)-1 downto 0);
+    incr_tx_pl_vec     : out std_logic_vector(int_vec_sum(vc_num_vec)-1 downto 0));
+end router_slow_full;
+
+------------------------------------------------------------------------------------------
+
+architecture rtl of router_slow_full is
+  constant local_index           : natural range 0 to port_num-1                       := ret_index(port_exist, int_local);
+  constant up_index              : natural range 0 to port_num-1                       := ret_index(port_exist, int_up);
+  constant down_index            : natural range 0 to port_num-1                       := ret_index(port_exist, int_down);
+  constant up_sel_ub             : natural range 0 to port_num*bit_width(port_num-1)-1 := (up_index+1)*bit_width(port_num-1)-1;
+  constant up_sel_lb             : natural range 0 to port_num*bit_width(port_num-1)-1 := up_index*bit_width(port_num-1);
+  constant down_sel_ub           : natural range 0 to port_num*bit_width(port_num-1)-1 := (down_index+1)*bit_width(port_num-1)-1;
+  constant down_sel_lb           : natural range 0 to port_num*bit_width(port_num-1)-1 := down_index*bit_width(port_num-1);
+  constant local_sel_ub          : natural range 0 to port_num*bit_width(port_num-1)-1 := (local_index+1)*bit_width(port_num-1)-1;
+  constant local_sel_lb          : natural range 0 to port_num*bit_width(port_num-1)-1 := local_index*bit_width(port_num-1);
+  signal   vc_transfer_vec       : std_logic_vector(int_vec_sum(vc_num_vec)-1 downto 0);
+  signal   local_in_long         : std_logic_vector(cf*flit_size-1 downto 0);
+  signal   down_in_long          : std_logic_vector(cf*flit_size-1 downto 0);
+  signal   up_in_long            : std_logic_vector(vc_num_vec(up_index)*cf*flit_size-1 downto 0);
+  signal   down_out_long         : std_logic_vector(cf*flit_size-1 downto 0);
+  signal   up_out_long           : std_logic_vector(cf*flit_size-1 downto 0);
+  signal   local_out_long        : std_logic_vector(cf*flit_size-1 downto 0);
+  signal   valid_data_vc_vec     : std_logic_vector(int_vec_sum(vc_num_vec)-1 downto 0);
+  signal   header                : header_inf_vector(int_vec_sum(vc_num_vec)-1 downto 0);
+  signal   crossbar_ctrl         : std_logic_vector(port_num*bit_width(port_num-1)-1 downto 0);
+  signal   vc_write_tx_vec       : std_logic_vector(int_vec_sum(vc_num_out_vec)-1 downto 0);
+  signal   vc_transfer_sgl_local : std_logic_vector(vc_num_vec(local_index)-1 downto 0);
+  signal   vc_transfer_par_local : std_logic_vector(vc_num_vec(local_index)-1 downto 0);
+  signal   vc_transfer_sgl_up    : std_logic_vector(vc_num_vec(up_index)-1 downto 0);
+  signal   vc_transfer_par_up    : std_logic_vector(vc_num_vec(up_index)-1 downto 0);
+  signal   vc_transfer_sgl_down  : std_logic_vector(vc_num_vec(down_index)-1 downto 0);
+  signal   vc_transfer_par_down  : std_logic_vector(vc_num_vec(down_index)-1 downto 0);
+  signal   sel_up                : std_logic_vector(bit_width(port_num-1)-1 downto 0);
+  signal   sel_local             : std_logic_vector(bit_width(port_num-1)-1 downto 0);
+  signal   sel_down              : std_logic_vector(bit_width(port_num-1)-1 downto 0);
+  signal   crossbar_in_sig       : std_logic_vector((3*cf+port_num-3)*flit_size-1 downto 0);
+  signal   crossbar_out_sig      : std_logic_vector((3*cf+port_num-3)*flit_size-1 downto 0);
+-- Local in and out signal connections
+begin
+
+  ----------------------------------------------------------------------------------------
+  -- Separate local and up and down select signals coming from arbiter (switch_allocator)
+  ----------------------------------------------------------------------------------------
+  sel_up                              <= crossbar_ctrl(up_sel_ub downto up_sel_lb);
+  sel_local                           <= crossbar_ctrl(local_sel_ub downto local_sel_lb);
+  sel_down                            <= crossbar_ctrl(down_sel_ub downto down_sel_lb);
+  ----------------------------------------------------------------------------------------
+  -- Separate Local in and Local out signals (cf*N)
+  ----------------------------------------------------------------------------------------
+  local_in_long                       <= data_rx(cf*flit_size-1 downto 0);
+  data_tx_pl(cf*flit_size-1 downto 0) <= local_out_long;
+------------------------------------------------------------------------------------------
+-- Connecting up and down port output data coming from shift_out_mux to the output port
+------------------------------------------------------------------------------------------
+  data_tx_pl((2*cf+port_num-3)*flit_size-1 downto (cf+port_num-3)*flit_size)
+ <= up_out_long;
+  data_tx_pl((3*cf+port_num-3)*flit_size-1 downto (2*cf+port_num-3)*flit_size)
+ <= down_out_long;
+------------------------------------------------------------------------------------------
+-- Connecting up and down port data to then input of shift_in_reg
+------------------------------------------------------------------------------------------
+  up_in_long  <= data_rx((2*cf+port_num-3)*flit_size-1 downto (cf+port_num-3)*flit_size);
+  down_in_long <= data_rx((3*cf+port_num-3)*flit_size-1 downto (2*cf+port_num-3)*flit_size);
+  ------------------------------------------------------------------------------------------
+  -- Local vc_transfer_par and vc_transfer_sgl generating
+  -- If the local port is selected by the sel signals for up or down ports Mux in crossbar,
+  -- then local port must send data in parallel(local input
+  -- is connected to up or down outputs), otherwise it sends in single size
+  ------------------------------------------------------------------------------------------
+  LOCAL_VC_TRANSFER_PROC : process(sel_up, sel_down, vc_transfer_vec)
+    variable var_up, var_down : natural range 0 to 2*port_num;
+    constant lr_vc            : natural := lower_range(vc_num_vec, local_index);
+  begin
+    vc_transfer_par_local <= (others => '-');
+    vC_transfer_sgl_local <= (others => '-');
+    var_up                := up_index+to_integer(unsigned(sel_up))+1;
+    var_down              := down_index+to_integer(unsigned(sel_down))+1;
+    if var_up > port_num-1 then
+      var_up := var_up - port_num;
+    end if;
+    if var_down > port_num-1 then
+      var_down := var_down - port_num;
+    end if;
+    for vc_i in 0 to vc_num_vec(local_index)-1 loop
+      if vc_transfer_vec(lr_vc+vc_i) = '1' and (var_up = local_index or var_down = local_index) then
+        vc_transfer_par_local(vc_i) <= '1';
+        vC_transfer_sgl_local(vc_i) <= '0';
+      else
+        vc_transfer_par_local(vc_i) <= '0';
+        vc_transfer_sgl_local(vc_i) <= vc_transfer_vec(lr_vc+vc_i);
+      end if;
+    end loop;
+  end process;
+  ------------------------------------------------------------------------------------------
+  -- Up vc_transfer_par and vc_transfer_sgl generating
+  -- If the up port is selected by the sel signals for local or down ports Mux in crossbar,
+  -- then up port must send data in parallel(up input
+  -- is connected to local or down outputs), otherwise it sends data in single size
+  ------------------------------------------------------------------------------------------
+  UP_VC_TRANSFER_PROC : process(sel_local, sel_down, vc_transfer_vec)
+    variable var_local, var_down : natural range 0 to 2*port_num;
+    constant lr_vc               : natural := lower_range(vc_num_vec, up_index);
+  begin
+    vc_transfer_par_up <= (others => '-');
+    vc_transfer_sgl_up <= (others => '-');
+    var_local          := local_index+to_integer(unsigned(sel_local))+1;
+    var_down           := down_index+to_integer(unsigned(sel_down))+1;
+    if var_local > port_num-1 then
+      var_local := var_local - port_num;
+    end if;
+    if var_down > port_num-1 then
+      var_down := var_down - port_num;
+    end if;
+    for vc_i in 0 to vc_num_vec(up_index)-1 loop
+      if vc_transfer_vec(lr_vc+vc_i) = '1' and (var_local = up_index or var_down = up_index) then
+        vc_transfer_par_up(vc_i) <= '1';
+        vc_transfer_sgl_up(vc_i) <= '0';
+      else
+        vc_transfer_par_up(vc_i) <= '0';
+        vc_transfer_sgl_up(vc_i) <= vc_transfer_vec(lr_vc+vc_i);
+      end if;
+    end loop;
+  end process;
+  ------------------------------------------------------------------------------------------
+  -- Down vc_transfer_par and vc_transfer_sgl generating
+  -- If the down port is selected by the sel signals for local or up ports Mux in crossbar,
+  -- then down port must send data in parallel(down input
+  -- is connected to local or up outputs), otherwise it sends data in single size
+  ------------------------------------------------------------------------------------------
+  DOWN_VC_TRANSFER_PROC : process(sel_local, sel_up, vc_transfer_vec)
+    variable var_local, var_up : natural range 0 to 2*port_num;
+    constant lr_vc             : natural := lower_range(vc_num_vec, down_index);
+  begin
+    vc_transfer_par_up <= (others => '-');
+    vc_transfer_sgl_up <= (others => '-');
+    var_local          := local_index+to_integer(unsigned(sel_local))+1;
+    var_up             := up_index+to_integer(unsigned(sel_up))+1;
+    if var_local > port_num-1 then
+      var_local := var_local - port_num;
+    end if;
+    if var_up > port_num-1 then
+      var_up := var_up - port_num;
+    end if;
+    for vc_i in 0 to vc_num_vec(down_index)-1 loop
+      if vc_transfer_vec(lr_vc+vc_i) = '1' and (var_local = down_index or var_up = down_index) then
+        vc_transfer_par_up(vc_i) <= '1';
+        vc_transfer_sgl_up(vc_i) <= '0';
+      else
+        vc_transfer_par_up(vc_i) <= '0';
+        vc_transfer_sgl_up(vc_i) <= vc_transfer_vec(lr_vc+vc_i);
+      end if;
+    end loop;
+  end process;
+------------------------------------------------------------------------------------------
+-- Input buffer generating
+------------------------------------------------------------------------------------------
+  INPUT_BUFFS : for i in 0 to port_num-1 generate
+    constant ur_vc : natural := upper_range(vc_num_vec, i);
+    constant lr_vc : natural := lower_range(vc_num_vec, i);
+  begin
+------------------------------------------------------------------------------------------
+-- Local input buffer generating
+------------------------------------------------------------------------------------------
+    vc_input_buffer_local : if i = local_index generate
+      LOCAL_BUFFER_GEN : entity work.vc_input_buffer_par_support
+        generic map(vc_num   => vc_num_vec(i),
+                    cf       => cf,
+                    vc_depth => vc_depth_array(i))
+        port map
+        (
+          clk               => clk,
+          rst               => rst,
+          data_rx           => local_in_long,
+          vc_write_rx       => vc_write_rx_vec(ur_vc downto lr_vc),
+          vc_transfer_sgl   => vc_transfer_sgl_local,
+          vc_transfer_par   => vc_transfer_par_local,  -- Parallel Read EN
+          valid_data_vc     => valid_data_vc_vec(ur_vc downto lr_vc),
+--        valid_data_vc => valid_data_vc_local,
+          valid_data_vc_par => open,
+          data_transfer     => crossbar_in_sig(cf*flit_size-1 downto 0),
+          header            => header(ur_vc downto lr_vc)
+          );
+    end generate;
+------------------------------------------------------------------------------------------
+-- Horizontal input buffer generating
+------------------------------------------------------------------------------------------
+    vc_input_buffer_horizontal : if i /= local_index and i /= up_index and i /= down_index generate
+      BUFFER_GEN : entity work.vc_input_buffer
+        generic map (
+          vc_num   => vc_num_vec(i),
+          vc_depth => vc_depth_array(i))
+        port map (
+          clk           => clk,
+          rst           => rst,
+          data_rx       => data_rx((cf+i)*flit_size-1 downto (cf+i-1)*flit_size),
+          vc_write_rx   => vc_write_rx_vec(ur_vc downto lr_vc),
+          vc_transfer   => vc_transfer_vec(ur_vc downto lr_vc),
+          valid_data_vc => valid_data_vc_vec(ur_vc downto lr_vc),
+          data_transfer => crossbar_in_sig((cf+i)*flit_size-1 downto (cf+i-1)*flit_size),
+          header        => header(ur_vc downto lr_vc));
+    end generate;
+------------------------------------------------------------------------------------------
+-- Up input buffer generating
+------------------------------------------------------------------------------------------
+    vc_input_buffer_up : if i = up_index generate
+      UP_BUFFER_GEN : entity work.vc_input_buffer_cf
+        generic map (
+          vc_num   => vc_num_vec(i),
+          cf       => cf,
+          vc_depth => vc_depth_array(i))
+        port map (
+          clk             => clk,
+          rst             => rst,
+          data_rx         => up_in_long,
+          vc_write_rx     => vc_write_rx_vec(ur_vc downto lr_vc),
+          vc_transfer_sgl => vc_transfer_sgl_up,
+          vc_transfer_par => vc_transfer_par_up,
+          valid_data_vc   => valid_data_vc_vec(ur_vc downto lr_vc),
+          data_transfer   => crossbar_in_sig((2*cf+port_num-3)*flit_size-1 downto (cf+port_num-3)*flit_size) ,
+          header          => header(ur_vc downto lr_vc));
+    end generate;
+------------------------------------------------------------------------------------------
+-- Down input buffer generating
+------------------------------------------------------------------------------------------
+    vc_input_buffer_down : if i = down_index generate
+      DOWN_BUFFER_GEN : entity work.vc_input_buffer_cf
+        generic map (
+          vc_num   => vc_num_vec(i),
+          cf       => cf,
+          vc_depth => vc_depth_array(i))
+        port map (
+          clk             => clk,
+          rst             => rst,
+          data_rx         => down_in_long,
+          vc_write_rx     => vc_write_rx_vec(ur_vc downto lr_vc),
+          vc_transfer_sgl => vc_transfer_sgl_down,
+          vc_transfer_par => vc_transfer_par_down,
+          valid_data_vc   => valid_data_vc_vec(ur_vc downto lr_vc),
+          data_transfer   => crossbar_in_sig((3*cf+port_num-3)*flit_size-1 downto (2*cf+port_num-3)*flit_size) ,
+          header          => header(ur_vc downto lr_vc));
+    end generate;
+  end generate INPUT_BUFFS;
+------------------------------------------------------------------------------------------
+-- Crossbar generating
+------------------------------------------------------------------------------------------
+  XBAR : entity work.crossbar_cf
+    generic map (cf         => cf,
+                 port_num   => port_num,
+                 port_exist => port_exist,
+                 rout_algo  => rout_algo)
+    port map (
+      crossbar_in   => crossbar_in_sig,
+      crossbar_ctrl => crossbar_ctrl,
+      crossbar_out  => crossbar_out_sig);
+------------------------------------------------------------------------------------------
+-- Output buffer generating 
+------------------------------------------------------------------------------------------
+  OUT_PL_REG : for i in 0 to port_num-1 generate
+    constant ur_vc_out : natural := upper_range(vc_num_out_vec, i);
+    constant lr_vc_out : natural := lower_range(vc_num_out_vec, i);
+    constant ur_vc     : natural := upper_range(vc_num_vec, i);
+    constant lr_vc     : natural := lower_range(vc_num_vec, i);
+  begin
+    --------------------------------------------------------------------------------------
+    -- Generating output register for local port. It must use cf*N data_tx and data_tx_pl 
+    --------------------------------------------------------------------------------------
+    LOCAL_OUT_PL_GEN : if i = local_index generate
+      output_register_local : entity work.output_register_cf
+        generic map (
+          cf         => cf,
+          vC_num     => vc_num_vec(i),
+          vc_num_out => vc_num_out_vec(i))
+        port map (
+          clk            => clk,
+          rst            => rst,
+          data_tx        => crossbar_out_sig(cf*flit_size-1 downto 0),
+          vc_write_tx    => vc_write_tx_vec(ur_vc_out downto lr_vc_out),
+          incr_tx        => vc_transfer_vec(ur_vc downto lr_vc),
+          data_tx_pl     => local_out_long,
+          vc_write_tx_pl => vc_write_tx_pl_vec(ur_vc_out downto lr_vc_out),
+          incr_tx_pl     => incr_tx_pl_vec(ur_vc downto lr_vc));
+    end generate LOCAL_OUT_PL_GEN;
+    --------------------------------------------------------------------------------------
+    -- Generating output register for all horizontal ports
+    --------------------------------------------------------------------------------------
+    OUT_PL_i : if i /= local_index and i /= up_index and i /= down_index generate
+      output_register_i : entity work.output_register
+        generic map (
+          vc_num     => vc_num_vec(i),
+          vc_num_out => vc_num_out_vec(i))
+        port map (
+          clk            => clk,
+          rst            => rst,
+          data_tx        => crossbar_out_sig((cf+i)*flit_size-1 downto (cf+i-1)*flit_size),
+          vc_write_tx    => vc_write_tx_vec(ur_vc_out downto lr_vc_out),
+          incr_tx        => vc_transfer_vec(ur_vc downto lr_vc),
+          data_tx_pl     => data_tx_pl((cf+i)*flit_size-1 downto (cf+i-1)*flit_size),
+          vc_write_tx_pl => vc_write_tx_pl_vec(ur_vc_out downto lr_vc_out),
+          incr_tx_pl     => incr_tx_pl_vec(ur_vc downto lr_vc));
+    end generate OUT_PL_i;
+    --------------------------------------------------------------------------------------
+    -- Generating output register for up port. It must use cf*N data_tx and data_tx_pl
+    --------------------------------------------------------------------------------------
+    UP_OUT_PL_GEN : if i = up_index generate
+      output_register_up : entity work.output_register_cf
+        generic map (
+          cf         => cf,
+          vc_num     => vc_num_vec(i),
+          vc_num_out => vc_num_out_vec(i))
+        port map (
+          clk            => clk,
+          rst            => rst,
+          data_tx        => crossbar_out_sig((2*cf+port_num-3)*flit_size-1 downto (cf+port_num-3)*flit_size),
+          vc_write_tx    => vc_write_tx_vec(ur_vc_out downto lr_vc_out),
+          incr_tx        => vc_transfer_vec(ur_vc downto lr_vc),
+          data_tx_pl     => up_out_long,
+          vc_write_tx_pl => vc_write_tx_pl_vec(ur_vc_out downto lr_vc_out),
+          incr_tx_pl     => incr_tx_pl_vec(ur_vc downto lr_vc));
+    end generate UP_OUT_PL_GEN;
+    --------------------------------------------------------------------------------------
+    -- Generating output register for down port. It must use cf*N data_tx and data_tx_pl
+    --------------------------------------------------------------------------------------
+    DOWN_OUT_PL_GEN : if i = down_index generate
+      output_register_down : entity work.output_register_cf
+        generic map (
+          cf         => cf,
+          vc_num     => vc_num_vec(i),
+          vc_num_out => vc_num_out_vec(i))
+        port map (
+          clk            => clk,
+          rst            => rst,
+          data_tx        => crossbar_out_sig((3*cf+port_num-3)*flit_size-1 downto (2*cf+port_num-3)*flit_size),
+          vc_write_tx    => vc_write_tx_vec(ur_vc_out downto lr_vc_out),
+          incr_tx        => vc_transfer_vec(ur_vc downto lr_vc),
+          data_tx_pl     => down_out_long,
+          vc_write_tx_pl => vc_write_tx_pl_vec(ur_vc_out downto lr_vc_out),
+          incr_tx_pl     => incr_tx_pl_vec(ur_vc downto lr_vc));
+    end generate DOWN_OUT_PL_GEN;
+    
+  end generate;
+------------------------------------------------------------------------------------------
+-- Arbiter generating
+------------------------------------------------------------------------------------------
+  CTRL_ARB : entity work.arbiter_cf
+    generic map (
+      cf                           => cf,
+      port_num                     => port_num,
+      port_exist                   => port_exist,
+      Xis                          => Xis,
+      Yis                          => Yis,
+      Zis                          => Zis,
+      header_incl_in_packet_length => header_incl_in_packet_length,
+      rout_algo                    => rout_algo,
+      vc_num_vec                   => vc_num_vec,
+      vc_num_out_vec               => vc_num_out_vec,
+      vc_depth_array               => vc_depth_array,
+      vc_depth_out_array           => vc_depth_out_array)
+    port map (
+      clk               => clk,
+      rst               => rst,
+      header            => header,
+      valid_data_vc_vec => valid_data_vc_vec,
+      incr_rx_vec       => incr_rx_vec,
+      crossbar_ctrl     => crossbar_ctrl,
+      vc_transfer_vec   => vc_transfer_vec,
+      vc_write_tx_vec   => vc_write_tx_vec);
+end rtl;

@@ -1,0 +1,133 @@
+-------------------------------------------------------------------------------
+-- Title      : Centralized arbiter for high throughput router
+-- Project    : 
+-------------------------------------------------------------------------------
+-- File       : arbiter_cf.vhd
+-- Author     : Studi-IDS-103  <s_ids103@item0109.item.uni-bremen.de>
+-- Company    : 
+-- Created    : 2019-04-30
+-- Last update: 2019-04-30
+-- Platform   : 
+-- Standard   : VHDL'87
+-------------------------------------------------------------------------------
+-- Description: 
+-------------------------------------------------------------------------------
+-- Copyright (c) 2019 
+-------------------------------------------------------------------------------
+-- Revisions  :
+-- Date        Version  Author  Description
+-- 2019-04-30  1.0      s_ids103        Created
+-------------------------------------------------------------------------------
+
+library ieee;
+use ieee.std_logic_1164.all;
+use work.NOC_3D_PACKAGE.all;
+
+------------------------------------------------------------------------------------------
+
+entity arbiter_cf is
+
+  generic (
+    cf                           : natural           := $cf;
+    port_num                     : positive          := $max_port_num;
+    -- Integer range has to be / is (0 to port_num-1)
+    port_exist                   : integer_vec       := $max_port_exist;
+    Xis                          : natural           := 1;
+    Yis                          : natural           := 1;
+    Zis                          : natural           := 1;
+    header_incl_in_packet_length : boolean           := true;
+    rout_algo                    : string            := "XYZ_ref";
+    vc_num_vec                   : integer_vec       := $max_vc_num_vec;
+    vc_num_out_vec               : integer_vec       := $max_vc_num_out_vec;
+    -- integer vector of range "0 to port_num-1, 0 to max_vc_num-1"                                   
+    vc_depth_array               : vc_prop_int_array := $vc_depth_array;
+    vc_depth_out_array           : vc_prop_int_array := $vc_depth_out_array
+    );
+
+  port (
+    clk, rst          : in  std_logic;
+    header            : in  header_inf_vector(int_vec_sum(vc_num_vec)-1 downto 0);
+    valid_data_vc_vec : in  std_logic_vector(int_vec_sum(vc_num_vec)-1 downto 0);
+    incr_rx_vec       : in  std_logic_vector(int_vec_sum(vc_num_out_vec)-1 downto 0);
+    crossbar_ctrl     : out std_logic_vector(port_num*bit_width(port_num-1)-1 downto 0);
+    vc_transfer_vec   : out std_logic_vector(int_vec_sum(vc_num_vec)-1 downto 0);
+--    vc_transfer_par   : out std_logic_vector(vc_num_vec(ret_index(vc_num_vec, int_local))+vc_num_vec(ret_index(vc_num_vec, int_up))+vc_num_vec(ret_index(vc_num_vec, int_down))-1 downto 0);
+    vc_write_tx_vec   : out std_logic_vector(int_vec_sum(vc_num_out_vec)-1 downto 0));
+
+end arbiter_cf;
+
+------------------------------------------------------------------------------------------
+
+architecture rtl of arbiter_cf is
+
+  ----------------------------------------------------------------------------------------
+  -- Internal signal declarations
+  ----------------------------------------------------------------------------------------
+  signal vc_transfer_vec_int : std_logic_vector(int_vec_sum(vc_num_vec)-1 downto 0);
+--  signal vc_transfer_par_int : std_logic_vector(vc_num_vec(ret_index(vc_num_vec, int_local))+vc_num_vec(ret_index(vc_num_vec, int_up))+vc_num_vec(ret_index(vc_num_vec, int_down))-1 downto 0);
+  signal input_vc_in_use     : std_logic_vector(int_vec_sum(vc_num_vec)-1 downto 0);
+  signal crossbar_ctrl_vec : std_logic_vector(int_vec_sum(vc_num_out_vec)*
+                                              bit_width(port_num-1)-1 downto 0);
+  signal output_vc_in_use : std_logic_vector(int_vec_sum(vc_num_out_vec)-1 downto 0);
+  signal vc_sel_enc_vec   : vc_status_array_enc(int_vec_sum(vc_num_out_vec)-1 downto 0);
+  ----------------------------------------------------------------------------------------
+  -- Component declarations
+  ----------------------------------------------------------------------------------------
+
+begin  -- rtl
+
+  ----------------------------------------------------------------------------------------
+  -- Component instantiations
+  ----------------------------------------------------------------------------------------
+  vc_allocator_1 : entity work.vc_allocator_high_perf -- use the more cmplx/performant one
+    generic map (
+      port_num                     => port_num,
+      port_exist                   => port_exist,
+      Xis                          => Xis,
+      Yis                          => Yis,
+      Zis                          => Zis,
+      header_incl_in_packet_length => header_incl_in_packet_length,
+      rout_algo                    => rout_algo,
+      vc_num_vec                   => vc_num_vec,
+      vc_num_out_vec               => vc_num_out_vec)
+    port map (
+      clk               => clk,
+      rst               => rst,
+      header            => header,
+      enr_vc            => vc_transfer_vec_int,
+      valid_data_vc_vec => valid_data_vc_vec,
+      input_vc_in_use   => input_vc_in_use,
+      crossbar_ctrl_vec => crossbar_ctrl_vec,
+      vc_sel_enc_vec    => vc_sel_enc_vec,
+      output_vc_in_use  => output_vc_in_use);
+
+
+  switch_allocator_1 : entity work.switch_allocator_cf
+    generic map (
+      cf		 => cf,
+      port_num           => port_num,
+      port_exist         => port_exist,
+      vc_num_vec         => vc_num_vec,
+      vc_num_out_vec     => vc_num_out_vec,
+      vc_depth_array     => vc_depth_array,
+      vc_depth_out_array => vc_depth_out_array,
+      rout_algo          => rout_algo)
+    port map (
+      clk               => clk,
+      rst               => rst,
+      input_vc_in_use   => input_vc_in_use,
+      output_vc_in_use  => output_vc_in_use,
+      crossbar_ctrl_vec => crossbar_ctrl_vec,
+      vc_sel_enc_vec    => vc_sel_enc_vec,
+      valid_data_vc_vec => valid_data_vc_vec,
+      incr_rx_vec       => incr_rx_vec,
+      crossbar_ctrl     => crossbar_ctrl,
+      vc_transfer_vec   => vc_transfer_vec_int,
+--      vc_transfer_par   => vc_transfer_par_int,
+      vc_write_tx_vec   => vc_write_tx_vec);
+
+  vc_transfer_vec <= vc_transfer_vec_int;
+--  vc_transfer_par <= vc_transfer_par_int;
+end rtl;
+
+------------------------------------------------------------------------------------------

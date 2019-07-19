@@ -1,0 +1,42 @@
+-------------------------------------------------------------------------------
+-- Title      : Crossbar to route cf-flits between the local and the down port
+-- Project    : 
+-------------------------------------------------------------------------------
+-- File       : crossbar_cf_vert_top_layer.vhd
+-- Author     : Lennart Bamberg  <lennart@x230>
+-- Company    : 
+-- Created    : 2018-05-21
+-- Last update: 2018-05-24
+-- Platform   : 
+-- Standard   : VHDL'93/02
+-------------------------------------------------------------------------------
+-- Description: Routes cf flits of width n between the local and the down port
+--              (no real crossbar anymore)
+-------------------------------------------------------------------------------
+-- Copyright (c) 2018 
+-------------------------------------------------------------------------------
+-- Revisions  :
+-- Date        Version  Author  Description
+-- 2018-05-21  1.0      lennart Created
+-------------------------------------------------------------------------------
+library ieee;
+use ieee.std_logic_1164.all;
+use work.noc_3d_package.all;
+entity crossbar_cf_vert_top_layer is
+  generic (
+    N  : positive := $flit_size;                 -- flit width
+    cf : positive := $cf);                 -- clock scaling factor
+
+  port (
+    local_in                    : in  std_logic_vector(cf*N-1 downto 0);  -- crossbar input from the local port
+    down_in                     : in  std_logic_vector(cf*N-1 downto 0);  -- crossbar input from the down port
+    local_out                   : out std_logic_vector(cf*N-1 downto 0);  -- crossbar output to the local port
+    down_out                    : out std_logic_vector(cf*N-1 downto 0));  -- crossbar output to the down port
+end entity crossbar_cf_vert_top_layer;
+
+
+architecture rtl of crossbar_cf_vert_top_layer is
+begin
+  local_out <= down_in;
+  down_out <= local_in;
+end architecture rtl;

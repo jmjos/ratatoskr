@@ -1,0 +1,101 @@
+-------------------------------------------------------------------------------
+-- Title      : Input buffer when virtual channels are used
+--              (for credit based flow-control) 
+-- Project    : Modular, heterogenous 3D NoC
+-------------------------------------------------------------------------------
+-- File       : vc_input_buffer_local.vhd
+-- Author     : Behnam Razi
+-- Company    : 
+-- Created    : 2019-04-16
+-- Last update: 2019-04-30
+-- Platform   : 
+-- Standard   : VHDL'93/02
+-------------------------------------------------------------------------------
+-- Description: Input buffer including virtual channel for local port in
+-- high throughput NoC. Each VC has the option for single or parallel reading
+-- of the registers (vc_transfer_sgl or vc_transfer_par). cf is the clock factor
+-- and te input is always cf*flit_size. 
+-------------------------------------------------------------------------------
+-- Copyright (c) 2019
+-------------------------------------------------------------------------------
+-- Revisions  :
+-- Date        Version  Author  Description
+-- 2018-05-24  1.0      Behnam Razi
+-------------------------------------------------------------------------------
+library ieee;
+use IEEE.math_real.all;
+use ieee.numeric_std.all;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_misc.all;
+use work.NOC_3D_PACKAGE.all;
+-- Entity of Virtual Channel --
+entity vc_input_buffer_par_support is
+  generic(vc_num   : integer       := $max_vc_num;
+          cf       : positive       :=$cf;
+          vc_depth : integer_vec := $max_vc_depth);  -- indicade for which port this virtual channel is being used VC_depth must be equal or bigger than cf
+  port(
+       clk               : in  std_logic;  -- clock for buffers inside the VC (virtual channel)
+       rst               : in  std_logic;   -- reset for buffers inside the VC
+       data_rx	         : in  std_logic_vector((cf*flit_size)-1 downto 0);
+       vc_write_rx       : in  std_logic_vector(vc_num-1 downto 0);  -- Write EN VC
+       vc_transfer_sgl   : in  std_logic_vector(vc_num-1 downto 0);  -- Read EN VC
+       vc_transfer_par   : in  std_logic_vector(vc_num-1 downto 0);  -- Parallel Read EN
+       valid_data_vc     : out std_logic_vector(vc_num-1 downto 0);  --
+       valid_data_vc_par : out std_logic_vector(vc_num-1 downto 0);
+       data_transfer     : out std_logic_vector((cf*flit_size)-1 downto 0);        --
+       -- Information from the header that are required for path-finding
+       -- and channel allocation (Destination Address & Packet-Length)
+       header            : out header_inf_vector(vc_num-1 downto 0)
+       );
+end entity vc_input_buffer_par_support;
+
+-- Architecture of virtual channel --
+architecture rtl of vc_input_buffer_par_support is
+
+  -- Interconnection signals --
+  signal enr_vector        : std_logic_vector(vc_num-1 downto 0);  -- enable read signal for each channel (No. channels of selected port)
+  signal enr_par_vector    : std_logic_vector(vc_num-1 downto 0);
+  type buffer_vector is array (natural range <>) of std_logic_vector((cf*flit_size)-1 downto 0);  -- defining a new type (a vector in the
+  signal buffer_out_vector : buffer_vector(vc_num-1 downto 0);
+
+begin
+  -- generating fifo buffers in the number of channels for selected port "port_num" --
+  buffer_gen : for i in 0 to vc_num-1 generate
+    fifo_i : entity work.fifo_par_support
+      generic map(buff_depth => vc_depth(vc_depth'left+i),  -- set the selected port buffer depth
+                  N          => flit_size,
+		  cf	     => cf)  -- set the flit size
+
+      port map (data_in        => data_rx,
+                write_par_en   => vc_write_rx(i),
+                read_en        => vc_transfer_sgl(i),
+		read_par_en    => vc_transfer_par(i),
+                clk            => clk,
+                rst            => rst,
+                data_out       => buffer_out_vector(i),
+                valid_data     => valid_data_vc(i),
+		valid_data_par => valid_data_vc_par(i)
+                );
+  end generate buffer_gen;
+
+  OUTPUT_MUX : if vc_num > 1 generate
+    process(buffer_out_vector, vc_transfer_sgl, vc_transfer_par)
+    begin
+      data_transfer <= (others => '-');
+      if or_reduce(vc_transfer_sgl) = '1' then
+        data_transfer <= buffer_out_vector(one_hot2int(vc_transfer_sgl));
+      elsif or_reduce(vc_transfer_par) = '1' then
+        data_transfer <= buffer_out_vector(one_hot2int(vc_transfer_par));
+      end if;
+    end process;
+  end generate;
+
+  OUTPUT_PASS : if vc_num = 1 generate
+    data_transfer <= buffer_out_vector(0);
+  end generate;
+
+  HEADER_GEN : for i in 0 to vc_num-1 generate
+    header(i) <= get_header_inf(buffer_out_vector(i));
+  end generate;
+
+end rtl;

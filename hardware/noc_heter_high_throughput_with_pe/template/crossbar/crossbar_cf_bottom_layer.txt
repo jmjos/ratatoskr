@@ -1,0 +1,124 @@
+-------------------------------------------------------------------------------
+-- Title      : Crossbar for high throughput router in bottom layer
+-- Project    : 
+-------------------------------------------------------------------------------
+-- File       : crossbar_cf_bottom_layer.vhd
+-- Author     : Behnam Razi
+-- Company    : 
+-- Created    : 2019-04-29
+-- Last update: 2019-04-29
+-- Platform   : 
+-- Standard   : VHDL'87
+-------------------------------------------------------------------------------
+-- Description: Local and up port have cf*flit_size width
+-------------------------------------------------------------------------------
+-- Copyright (c) 2019 
+-------------------------------------------------------------------------------
+-- Revisions  :
+-- Date        Version  Author  Description
+-- 2019-04-29  1.0      behnam  Created
+-------------------------------------------------------------------------------
+
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.math_real.all;
+use ieee.numeric_std.all;
+use work.NOC_3D_PACKAGE.all;
+
+
+------------------------------------------------------------------------------------------
+
+entity crossbar_cf_bottom_layer is
+  generic (
+    cf         : positive    := $cf;
+    port_num   : positive    := $max_port_num-1;
+    port_exist : integer_vec := $port_exist_wo_down;
+    rout_algo  : string      := $rout_algo
+    );
+
+  port (
+    crossbar_in   : in  std_logic_vector((2*cf+port_num-2)*flit_size-1 downto 0);  -- 2
+                                                                                   -- ports
+                                                                                   -- have
+                                                                                   -- cf
+                                                                                   -- size
+    crossbar_ctrl : in  std_logic_vector(port_num*bit_width(port_num-1)-1 downto 0);
+    crossbar_out  : out std_logic_vector((2*cf+port_num-2)*flit_size-1 downto 0)
+    );
+
+end crossbar_cf_bottom_layer;
+
+------------------------------------------------------------------------------------------
+
+architecture rtl of crossbar_cf_bottom_layer is
+------------------------------------------------------------------------------------------
+-- Constant declarations
+------------------------------------------------------------------------------------------
+  constant local_index        : natural  := ret_index(port_exist, int_local);
+  constant up_index	      : natural  := ret_index(port_exist, int_up);
+  constant cf_size            : natural  := cf*flit_size;
+  constant port_sel_width     : positive := bit_width(port_num-1);  -- bits for
+                                                                    -- crossbar_ctrl signal of
+                                                                    -- one output port
+  constant local_lb           : natural  := 0;
+  constant local_ub           : natural  := cf_size-1;
+  constant up_lb              : natural  := local_ub+1+(port_num-2)*flit_size;
+  constant up_ub              : natural  := up_lb+cf_size-1;
+  constant sel_width          : natural  := bit_width(port_num-1);
+  ----------------------------------------------------------------------------------------
+  -- Internal signal declarations
+  ----------------------------------------------------------------------------------------
+  signal   local_in_long      : std_logic_vector((cf-1)*flit_size-1 downto 0);
+  signal   local_out_long     : std_logic_vector((cf-1)*flit_size-1 downto 0);
+  signal   up_in_long         : std_logic_vector((cf-1)*flit_size-1 downto 0);
+  signal   up_out_long        : std_logic_vector((cf-1)*flit_size-1 downto 0);
+--  signal   extend_to_cf       : std_logic_vector((cf-1)*flit_size-1 downto 0);
+  signal   crossbar_short_in  : flit_vector(port_num-1 downto 0);
+  signal   crossbar_short_out : flit_vector(port_num-1 downto 0);
+--  signal   sel_local          : std_logic_vector(sel_width-1 downto 0);
+--  signal   sel_up             : std_logic_vector(sel_width-1 downto 0);
+  ----------------------------------------------------------------------------------------
+  -- Component declarations
+  ----------------------------------------------------------------------------------------
+
+begin  -- rtl
+--  extend_to_cf                 <= (others => '0');
+  local_in_long                <= crossbar_in(local_ub downto flit_size+local_lb);
+  up_in_long                   <= crossbar_in(up_ub downto flit_size+up_lb);
+  ----------------------------------------------------------------------------------------
+  -- Crossbar short input assignment (first flits of local, up and down ports
+  ----------------------------------------------------------------------------------------
+  crossbar_short_in(int_local) <= crossbar_in(flit_size-1 downto 0);
+  crossbar_short_in_gen : for i in 1 to port_num-2 generate
+    crossbar_short_in(i) <= crossbar_in((i*flit_size)+local_ub downto (i-1)*flit_size+local_ub+1);
+  end generate crossbar_short_in_gen;
+  crossbar_short_in(port_num-1) <= crossbar_in(up_lb+flit_size-1 downto up_lb);
+  ----------------------------------------------------------------------------------------
+  -- Component instantiations
+  ----------------------------------------------------------------------------------------
+  short_crossbar_gen : entity work.crossbar
+    generic map (
+      port_num   => port_num,
+      port_exist => port_exist,
+      rout_algo  => rout_algo)
+    port map (
+      crossbar_in   => crossbar_short_in,
+      crossbar_ctrl => crossbar_ctrl,
+      crossbar_out  => crossbar_short_out);
+------------------------------------------------------------------------------------------
+-- Assign long (cf*N) outputs
+------------------------------------------------------------------------------------------
+  local_out_long <= up_in_long;
+  up_out_long <= local_in_long;
+  ----------------------------------------------------------------------------------------
+  -- Assign signals to output ports
+  ----------------------------------------------------------------------------------------
+  crossbar_out (local_ub downto local_lb) <= local_out_long& crossbar_short_out(local_index);
+  crossbar_out_gen : for i in 1 to port_num-2 generate
+    crossbar_out((i*flit_size)+local_ub downto (i-1)*flit_size+local_ub+1) <= crossbar_short_out(i);
+  end generate crossbar_out_gen;
+  crossbar_out (up_ub downto up_lb) <= up_out_long&crossbar_short_out(up_index);
+
+end rtl;
+
+------------------------------------------------------------------------------------------

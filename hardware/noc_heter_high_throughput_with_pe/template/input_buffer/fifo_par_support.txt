@@ -1,0 +1,113 @@
+-------------------------------------------------------------------------------
+-- Title      : Input buffer which can write a single or cf paralell flits,
+--              reads cf_flits 
+-- Project    : 
+-------------------------------------------------------------------------------
+-- File       : input_buffer_local.vhd
+-- Author     : Lennart Bamberg  <bamberg@office.item.uni-bremen.de>
+-- Company    : 
+-- Created    : 2018-05-24
+-- Last update: 2019-04-30
+-- Platform   : 
+-- Standard   : VHDL'93/02
+-------------------------------------------------------------------------------
+-- Description:  (credit-based flow ctrl)
+-------------------------------------------------------------------------------
+-- Copyright (c) 2018 
+-------------------------------------------------------------------------------
+-- Revisions  :
+-- Date        Version  Author  Description
+-- 2018-05-24  1.0      bamberg Created
+-------------------------------------------------------------------------------
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use ieee.math_real.all;
+use work.NOC_3D_PACKAGE.all;
+
+entity fifo_par_support is
+
+  generic (
+    N          : integer := $flit_size;         -- flit width
+    buff_depth : integer := $max_buffer_depth;          -- buffer depths (hast to be a multiple
+    -- (1x or 2x or 3x, etc.)
+    -- of the clock scaling factor) !!!
+    cf         : positive := $cf);         -- clock factor
+  port (
+    data_in                    : in  std_logic_vector(cf*N-1 downto 0);  -- input data
+    write_par_en               : in  std_logic;   -- write enable
+    read_en, read_par_en       : in  std_logic;   -- read enable
+    clk, rst                   : in  std_logic;
+    data_out                   : out std_logic_vector(cf*N-1 downto 0);  -- output data
+    valid_data, valid_data_par : out std_logic);  --buffer not empty
+end entity fifo_par_support;
+
+architecture rtl of fifo_par_support is
+  signal read_pointer, write_pointer :
+    unsigned(integer(ceil(log2(real(buff_depth))))-1 downto 0);
+  type buffer_type is array (natural range<>) of std_logic_vector(N-1 downto 0);
+  signal input_buffer                     : buffer_type(buff_depth-1 downto 0);
+  signal par_data_in_flits                : buffer_type(cf-1 downto 0);
+  signal buffer_full, prev_write_not_read : std_logic;
+begin
+
+  --devide the paralell data in single flits
+  FLIT_SPLIT : for i in 0 to cf-1 generate
+  begin
+    par_data_in_flits(i)         <= data_in(N-1+i*N downto i*N);
+    data_out(N-1+i*N downto i*N) <= input_buffer((to_integer(read_pointer)+i) mod buff_depth);
+  end generate;
+
+
+  -- BUFFER + READ/WRITE POINTER
+  process(clk, rst)
+  begin
+    if rst = RST_LVL then
+      write_pointer <= (others => '0');
+      read_pointer  <= (others => '0');
+      input_buffer  <= (others => (others => '0'));
+    elsif clk'event and clk = '1' then
+      if write_par_en = '1' then
+        FLIT_SPLIT : for i in 0 to cf-1 loop
+          input_buffer((to_integer(write_pointer)+i) mod buff_depth) <= par_data_in_flits(i);
+        end loop;
+        write_pointer <= (write_pointer + cf) mod buff_depth;
+      end if;
+      if read_en = '1' and read_par_en = '1' then  --false state
+        read_pointer <= (others => '-');
+      elsif read_en = '1' then
+        read_pointer <= (read_pointer + 1) mod buff_depth;
+      elsif read_par_en = '1' then
+        read_pointer <= (read_pointer + cf) mod buff_depth;
+      end if;
+    end if;
+  end process;
+
+  --DATA OUT
+
+
+  --Extra register required to check if buffer_full
+  process(clk, rst)
+  begin
+    if rst = RST_LVL then
+      prev_write_not_read <= '0';
+    elsif clk = '1' and clk'event then
+      if (read_en = '1' and read_par_en = '1') then
+        prev_write_not_read <= '-';     --states which cannot occur
+      elsif ((write_par_en = '1') and (read_par_en = '0')) then
+        prev_write_not_read <= '1';
+      else
+        prev_write_not_read <= '0';
+      end if;
+    end if;
+  end process;
+
+  -- generate buffer_full and valid data signals
+  buffer_full    <= '1' when prev_write_not_read = '1' and write_pointer = read_pointer else '0';
+  valid_data_par <= '1' when ((((write_pointer-read_pointer) mod buff_depth) >= cf) or buffer_full = '1')
+                    else '0';
+  valid_data <= '1' when ((((write_pointer-read_pointer) mod buff_depth) >= 1) or buffer_full = '1')
+                else '0';
+--  valid_data <= '1' when (write_pointer /= read_pointer or buffer_full = '1')
+--                else '0';
+end architecture;

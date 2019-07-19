@@ -1,0 +1,98 @@
+-------------------------------------------------------------------------------
+-- Title      : shift in register 
+-- Project    : 
+-------------------------------------------------------------------------------
+-- File       : shift_in_reg.vhd
+-- Author     : Behnam Razi  <raziperj@uni-bremen.de>
+-- Company    : 
+-- Created    : 2018-06-04
+-- Last update: 2018-06-04
+-- Platform   : 
+-- Standard   : VHDL'93/02
+-------------------------------------------------------------------------------
+-- Description: Shift register recieve data in series with fast clock and sends  
+--              it as parallel to slow later with considering the clock factor 
+--              (Cf) between the fast and slow layer
+-------------------------------------------------------------------------------
+-- Copyright (c) 2018 
+-------------------------------------------------------------------------------
+-- Revisions  :
+-- Date        Version  Author  Description
+-- 2018-06-04  1.0      razi Created
+-------------------------------------------------------------------------------
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use ieee.math_real.all;
+use work.NOC_3D_PACKAGE.all;
+
+entity shift_in_reg is
+
+  generic (
+    N          : integer := $flit_size;         -- flit width
+    cf : integer := $cf);         	-- clock factor
+
+  port (
+    data_in    : in  std_logic_vector(N-1 downto 0);  -- input data
+    valid_input: in  std_logic;                       -- write enable
+    clk, rst   : in  std_logic;
+    data_out   : out std_logic_vector(cf*N-1 downto 0);  -- output data
+    valid_data : out std_logic);                      --buffer not empty
+end entity shift_in_reg;
+
+architecture rtl of shift_in_reg is
+  signal valid_counter, update_counter :    unsigned(integer(ceil(log2(real(cf))))-1 downto 0):=(others => '0');
+  type reg_type is array (natural range<>) of std_logic_vector(N-1 downto 0);
+  signal shift_reg : reg_type(cf-2 downto 0);
+  signal update_reg: reg_type(cf-1 downto 0);
+  signal valid_data_reg,update_reg_full: std_logic;
+begin
+
+  FLIT_SPLIT : for i in 0 to cf-1 generate
+    data_out(N-1+i*N downto i*N) <= update_reg(i);
+  end generate;
+
+
+  process(clk, rst)
+  variable valid_counter_int, update_counter_int: integer range 0 to cf-1;
+  variable update_reg_full_var: std_logic;
+  begin
+    if rst = RST_LVL then
+      shift_reg <= (others => (others => '0'));
+      valid_counter  <= (others => '0');
+      update_reg <= (others => (others => '0'));
+      valid_data_reg <= '0';
+      update_reg_full <= '0';
+    elsif clk'event and clk = '1' then
+      valid_counter_int := to_integer(valid_counter);
+      update_counter_int:= to_integer(update_counter);
+      update_reg_full_var:= update_reg_full;
+      if valid_input = '1' and valid_counter_int/=cf-1 then
+        SHIFT_GEN: for i in cf-2 downto 1 loop
+		shift_reg(i-1)<=shift_reg(i);
+		end loop;
+	shift_reg(cf-2)<=data_in;
+
+	valid_counter_int := (valid_counter_int+1) mod cf;
+      elsif valid_input ='1' and (valid_counter_int)=cf-1 then
+      	update_reg(cf-2 downto 0)<=shift_reg;
+	update_reg(cf-1)<= data_in;
+        update_reg_full_var := '1';
+	valid_counter_int := (valid_counter_int+1) mod cf;
+      end if;
+      update_counter_int := (update_counter_int+1) mod cf;
+      update_counter <= to_unsigned(update_counter_int,integer(ceil(log2(real(cf)))));
+      valid_counter <= to_unsigned(valid_counter_int,integer(ceil(log2(real(cf)))));
+      if update_counter_int = 0 and valid_counter_int = 0 and update_reg_full_var = '1' then
+	valid_data_reg <= '1';
+        update_reg_full_var := '0';
+      elsif update_counter_int = 0 then
+	valid_data_reg <= '0';
+      end if;
+      update_reg_full <= update_reg_full_var;
+    end if;
+  end process;
+
+valid_data <= valid_data_reg;
+end architecture;
+

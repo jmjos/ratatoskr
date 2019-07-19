@@ -1,0 +1,111 @@
+-------------------------------------------------------------------------------
+-- Title      : Sends increment signals for flow control from fast to slow layer
+-- Project    : 
+-------------------------------------------------------------------------------
+-- File       : send_incr_fast_to_slow.vhd
+-- Author     : Studi-IDS-103  <s_ids103@item0108.item.uni-bremen.de>
+-- Company    : 
+-- Created    : 2019-05-23
+-- Last update: 2019-05-23
+-- Platform   : 
+-- Standard   : VHDL'87
+-------------------------------------------------------------------------------
+-- Description: collect 4 increment signals and send one signal to slow layer
+-------------------------------------------------------------------------------
+-- Copyright (c) 2019 
+-------------------------------------------------------------------------------
+-- Revisions  :
+-- Date        Version  Author  Description
+-- 2019-05-23  1.0      s_ids103        Created
+-------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.NUMERIC_STD.all;
+use IEEE.STD_LOGIC_MISC.all;
+use IEEE.Math_REAL.all;
+use work.NOC_3D_PACKAGE.all;
+
+entity send_incr_fast_to_slow is
+  generic(cf       : integer     := 4;
+          vc_depth : integer_vec := (8, 8);
+          vc_num   : integer     := 2);  -- Number of the signals
+                                         -- (depend on the number of fast layer port's
+                                         -- virtual channels
+  port (clk, sclk, rst : in  std_logic;
+        incr_in        : in  std_logic_vector(vc_num-1 downto 0);
+        incr_out       : out std_logic_vector(vc_num-1 downto 0));
+end entity send_incr_fast_to_slow;
+
+
+------------------------------------------------------------------------------------------
+architecture rtl of send_incr_fast_to_slow is
+  constant max_vc_depth : integer := ret_max(vc_depth);
+  ----------------------------------------------------------------------------------------
+  -- Counter and counter_array type definition
+  ----------------------------------------------------------------------------------------
+  subtype  counter is unsigned(integer(ceil(log2(real(cf))))-1 downto 0);
+  type     counter_array is array (natural range <>) of
+    unsigned(integer(ceil(log2(real(max_vc_depth+1))))-1 downto 0);
+------------------------------------------------------------------------------------------
+-- Counters and registers declaration
+------------------------------------------------------------------------------------------
+  signal valid_counter            : counter_array (vc_num-1 downto 0);  -- When incr_in becomes '1'
+                                        --increments it's value
+  signal update_reg, update_sig, incr_out_reg : std_logic_vector(vc_num-1 downto 0);
+
+begin
+  process(sclk, rst)
+  begin
+    if rst = RST_LVL then
+      incr_out_reg <= (others => '0');
+    elsif sclk'event and sclk = '1' then
+      for i in 0 to vc_num-1 loop
+--	incr_out_reg(i) <= update_sig(i);
+	incr_out_reg(i) <= update_reg(i);
+      end loop;
+    end if;
+  end process;
+
+
+ OUT_GEN: for i in 0 to vc_num-1 generate
+  incr_out(i) <= incr_out_reg(i); -- and (not update_reg(i));
+  update_sig(i) <= '1' when incr_in(i) = '1' and valid_counter(i) = cf-1 else
+		   '0';
+ end generate;
+
+
+  process(clk, rst)
+    variable valid_counter_int : integer_vec(vc_num-1 downto 0);
+    variable update_reg_var    : std_logic_vector(vc_num-1 downto 0);
+  begin
+    if rst = RST_LVL then
+      valid_counter <= (others => (others => '0'));
+      update_reg    <= (others => '0');
+
+    elsif clk'event and clk = '1' then
+      update_reg_var := update_reg;
+      for i in 0 to vc_num-1 loop
+        valid_counter_int(i) := to_integer(valid_counter(i));
+        if incr_out_reg(i) = '1' then --and valid_counter_int(i) /= cf then
+          update_reg_var(i) := '0';
+        end if;
+        if incr_in(i) = '1' then
+          valid_counter_int(i) := valid_counter_int(i)+1;
+        end if;
+          if valid_counter_int(i) >= cf and incr_out_reg(i) = '0' then  --????
+            update_reg_var(i)    := '1';
+            valid_counter_int(i) := valid_counter_int(i)-cf;
+          end if;
+        --end if;
+      end loop;
+      for i in 0 to vc_num-1 loop
+        valid_counter(i) <= to_unsigned(valid_counter_int(i), integer(ceil(log2(real(max_vc_depth+1)))));
+        update_reg(i) <= update_reg_var(i);
+      end loop;
+    end if;
+  end process;
+
+end architecture;
+
+------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------

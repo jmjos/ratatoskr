@@ -1,0 +1,74 @@
+-------------------------------------------------------------------------------
+-- Title      : make new destination for header packet
+-- Project    : 
+-------------------------------------------------------------------------------
+-- File       : new_destination.vhd
+-- Author     : Behnam Razi Perjikolaei  <raziperj@uni-bremen.de>
+-- Company    : 
+-- Created    : 2019-06-19
+-- Last update: 2019-06-19
+-- Platform   : 
+-- Standard   : VHDL'87
+-------------------------------------------------------------------------------
+-- Description: 
+-------------------------------------------------------------------------------
+-- Copyright (c) 2019 
+-------------------------------------------------------------------------------
+-- Revisions  :
+-- Date        Version  Author  Description
+-- 2019-06-19  1.0      behnam  Created
+-------------------------------------------------------------------------------
+
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.math_real.all;
+use ieee.numeric_std.all;
+use work.NOC_3D_PACKAGE.all;
+------------------------------------------------------------------------------------------
+
+entity new_destination is
+
+  generic (Xis        : natural     := 0;            -- Location of router on X axis
+           Yis        : natural     := 0;            -- Location of router on Y axis
+           Zis        : natural     := 0;            -- Location of router on Z axis
+           layer_prob : integer_vec := (50, 40, 10)  -- Possibility of sending data to the
+                                                     -- nodes of each lay
+           );
+
+  port (en        : in  std_logic;
+        dest_addr : out address_inf
+        );
+
+end new_destination;
+
+------------------------------------------------------------------------------------------
+
+architecture str of new_destination is
+
+  signal dest_addr_sig : address_inf;
+begin  -- str
+
+  ADDRESS_GEN_PROC : process(en)
+    variable seed1, seed2           : positive;
+    variable rand       : real ;
+    variable range_of_rand          : real := 100.0;
+    variable z_prob_min, z_prob_max, z_rand_num : integer range 0 to 100;
+    variable dest_addr_var : address_inf;
+  begin
+    if en = '1' then
+      uniform(seed1, seed2, rand);
+      z_rand_num := integer(rand*range_of_rand);
+      z_prob_max := 0;
+      for i in layer_prob'range loop
+        z_prob_min := z_prob_max;
+        z_prob_max := z_prob_min+layer_prob(i);
+        if z_rand_num <= z_prob_max and z_rand_num >= z_prob_min then
+          dest_addr.z_dest <= std_logic_vector(to_unsigned(i, positive(ceil(log2(real(max_z_dim))))));
+        end if;
+      end loop;  -- i
+    end if;
+  end process;
+--dest_addr <= dest_addr_sig;
+end str;
+
+------------------------------------------------------------------------------------------

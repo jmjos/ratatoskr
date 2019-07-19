@@ -1,0 +1,91 @@
+-------------------------------------------------------------------------------
+-- Title      : Crossbar for high throughput router (based on "DXYU" routing) in middle layer (UP and DOWN exist)
+-- Project    : 
+-------------------------------------------------------------------------------
+-- File       : crossbar_cf.vhd
+-- Author     : Behnam Razi  <s_ids103@item0109.item.uni-bremen.de>
+-- Company    : 
+-- Created    : 2019-04-24
+-- Last update: 2019-04-24
+-- Platform   : 
+-- Standard   : VHDL'93/02
+-------------------------------------------------------------------------------
+-- Description: 
+-------------------------------------------------------------------------------
+-- Copyright (c) 2019 
+-------------------------------------------------------------------------------
+-- Revisions  :
+-- Date        Version  Author  Description
+-- 2019-04-24  1.0      behnam  Created
+-------------------------------------------------------------------------------
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.math_real.all;
+use ieee.numeric_std.all;
+use work.NOC_3D_PACKAGE.all;
+use work.TURNS_3D_NOC.all;
+------------------------------------------------------------------------------------------
+
+entity crossbar_cf is
+
+  generic (
+    cf         : positive    := 2;
+    port_num   : positive    := 7;
+    port_exist : integer_vec := (0, 1, 2, 3, 4, 5, 6);
+    rout_algo  : string      := "DXYU"
+    );
+
+  port (
+    crossbar_in   : in  std_logic_vector((3*cf+port_num-3)*flit_size-1 downto 0);  -- 3
+                                                                                   -- ports
+                                                                                   -- have
+                                                                                   -- 3*cf
+                                                                                   -- size
+    crossbar_ctrl : in  std_logic_vector(port_num*bit_width(port_num-1)-1 downto 0);
+    crossbar_out  : out std_logic_vector((3*cf+port_num-3)*flit_size-1 downto 0)
+    );
+end entity crossbar_cf;
+
+architecture rtl of crossbar_cf is
+------------------------------------------------------------------------------------------
+-- Constant declarations
+------------------------------------------------------------------------------------------
+  constant poss_routes    : turn_table_3D := routes_3D(rout_algo);
+  constant port_sel_width : positive      := bit_width(port_num-1);  -- bits for
+                                                                     -- crossbar_ctrl signal of
+                                                                     -- one output port
+  constant local_lb       : natural       := 0;
+  constant local_ub       : natural       := cf*flit_size-1;
+  constant up_lb          : natural       := local_ub+1+(port_num-3)*flit_size;
+  constant up_ub          : natural       := up_lb+(cf*flit_size)-1;
+  constant down_lb        : natural       := up_ub+1;
+  constant down_ub        : natural       := down_lb+(cf*flit_size)-1;
+  constant cf_size        : natural       := cf*flit_size;
+  ----------------------------------------------------------------------------------------
+  -- Type definition
+  ----------------------------------------------------------------------------------------
+  type     multiplexer_input_type is array (port_num-2 downto 0)
+    of flit_vector(port_num-3 downto 0);
+  ----------------------------------------------------------------------------------------
+  -- Internal signal declarations
+  ----------------------------------------------------------------------------------------
+  signal multiplexer_input : multiplexer_input_type;
+  signal local_in_long     : std_logic_vector(cf_size-1 downto 0);
+  signal local_out_long    : std_logic_vector(cf_size-1 downto 0);
+  signal up_in_long        : std_logic_vector(cf_size-1 downto 0);
+  signal up_out_long       : std_logic_vector(cf_size-1 downto 0);
+  signal down_in_long      : std_logic_vector(cf_size-1 downto 0);
+  signal down_out_long     : std_logic_vector(cf_size-1 downto 0);
+  ----------------------------------------------------------------------------------------
+  -- Component declarations
+  ----------------------------------------------------------------------------------------
+
+begin  -- str
+
+  ----------------------------------------------------------------------------------------
+  -- Component instantiations
+  ----------------------------------------------------------------------------------------
+
+end rtl;
+
+------------------------------------------------------------------------------------------

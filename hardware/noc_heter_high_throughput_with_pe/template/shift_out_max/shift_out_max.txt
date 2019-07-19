@@ -1,0 +1,64 @@
+
+-------------------------------------------------------------------------------
+-- Title      : shift out mutiplexer 
+-- Project    : 
+-------------------------------------------------------------------------------
+-- File       : shift_out_mux.vhd
+-- Author     : Behnam Razi  <raziperj@uni-bremen.de>
+-- Company    : 
+-- Created    : 2018-06-13
+-- Last update: 2018-06-13
+-- Platform   : 
+-- Standard   : VHDL'93/02
+-------------------------------------------------------------------------------
+-- Description: Muliplexer recieves data in parallel from slow layer and   
+--              send data out in series to the fast layer with using the fast clk
+-------------------------------------------------------------------------------
+-- Copyright (c) 2018 
+-------------------------------------------------------------------------------
+-- Revisions  :
+-- Date        Version  Author  Description
+-- 2018-06-13  1.0      razi    Created
+-------------------------------------------------------------------------------
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use ieee.math_real.all;
+use work.NOC_3D_PACKAGE.all;
+
+entity shift_out_mux is
+
+  generic (
+    N          : integer := $flit_size;         -- flit width
+    cf : integer := $cf);         	-- clock factor
+
+  port (
+    data_in    : in  std_logic_vector(cf*N-1 downto 0);  -- input data
+    valid_input: in  std_logic;                       -- write enable
+    clk, rst   : in  std_logic;
+    data_out   : out std_logic_vector(N-1 downto 0));  -- output data
+end entity shift_out_mux;
+
+architecture rtl of shift_out_mux is
+  type mux_input_type is array (cf-1 downto 0) of std_logic_vector(N-1 downto 0);
+  signal shift_counter :    unsigned(integer(ceil(log2(real(cf))))-1 downto 0);
+  signal mux_input : mux_input_type;
+begin
+
+MUX_INPUT_GEN: for i in 0 to cf-1 generate
+  mux_input(i) <= data_in((i+1)*N-1 downto i*N);
+end generate;
+  
+  data_out <= mux_input(to_integer(shift_counter)); 
+
+  process( clk, rst)
+    begin
+      if rst = RST_LVL then
+  	shift_counter <= (others => '0');
+    elsif rising_edge(clk) then
+	if valid_input='1' or shift_counter /= 0 then
+	  shift_counter <= (shift_counter + 1) mod cf;
+	end if;
+    end if;
+  end process;
+end architecture;

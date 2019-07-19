@@ -1,0 +1,254 @@
+-------------------------------------------------------------------------------
+-- Title      : Crossbar for high throghput router in top layer 
+-- Project    : 
+-------------------------------------------------------------------------------
+-- File       : crossbar_cf_top_layer.vhd
+-- Author     : Behnam Razi
+-- Company    : 
+-- Created    : 2019-04-24
+-- Last update: 2019-04-29
+-- Platform   : 
+-- Standard   : VHDL'93/02
+-------------------------------------------------------------------------------
+-- Description: Local and down ports are cf*flit_size and the other ports are
+-- flit_size. This router acts according to DXYU routing. Therefore the output
+-- of down port is connected directly to input of local port and output of long
+-- local port is connected directly to input of down port
+-------------------------------------------------------------------------------
+-- Copyright (c) 2019 
+-------------------------------------------------------------------------------
+-- Revisions  :
+-- Date        Version  Author  Description
+-- 2019-04-24  1.0      behnam Created
+-------------------------------------------------------------------------------
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.math_real.all;
+use ieee.numeric_std.all;
+use work.NOC_3D_PACKAGE.all;
+use work.TURNS_3D_NOC.all;
+------------------------------------------------------------------------------------------
+
+entity crossbar_cf_top_layer is
+
+  generic (
+    cf         : positive    := $cf;
+    port_num   : positive    := $max_port_num-1;
+    port_exist : integer_vec := $port_exist_wo_up;
+    rout_algo  : string      := $rout_algo
+    );
+
+  port (
+    crossbar_in   : in  std_logic_vector((2*cf+port_num-2)*flit_size-1 downto 0);  -- 2
+                                                                                   -- ports
+                                                                                   -- have
+                                                                                   -- cf
+                                                                                   -- size
+    crossbar_ctrl : in  std_logic_vector(port_num*bit_width(port_num-1)-1 downto 0);
+    crossbar_out  : out std_logic_vector((2*cf+port_num-2)*flit_size-1 downto 0)
+    );
+end entity crossbar_cf_top_layer;
+
+architecture rtl of crossbar_cf_top_layer is
+------------------------------------------------------------------------------------------
+-- Constant declarations
+------------------------------------------------------------------------------------------
+  constant local_index        : natural  := ret_index(port_exist, int_local);
+  constant down_index         : natural  := ret_index(port_exist, int_down);
+  constant port_sel_width     : positive := bit_width(port_num-1);  -- bits for
+                                                                    -- crossbar_ctrl signal of
+                                                                    -- one output port
+  constant cf_size            : natural  := cf*flit_size;
+  constant local_lb           : natural  := 0;
+  constant local_ub           : natural  := cf*flit_size-1;
+  constant down_lb            : natural  := local_ub+1+(port_num-2)*flit_size;
+  constant down_ub            : natural  := down_lb+(cf_size)-1;
+  constant sel_width          : natural  := bit_width(port_num-1);
+  ----------------------------------------------------------------------------------------
+  -- Type definition
+  ----------------------------------------------------------------------------------------
+--  type     multiplexer_input_type is array (port_num-2 downto 0)
+--    of flit_vector(port_num-3 downto 0);
+  ----------------------------------------------------------------------------------------
+  -- Internal signal declarations
+  ----------------------------------------------------------------------------------------
+--  signal multiplexer_input : multiplexer_input_type;
+  signal   local_in_long      : std_logic_vector((cf-1)*flit_size-1 downto 0);
+  signal   local_out_long     : std_logic_vector((cf-1)*flit_size-1 downto 0);
+  signal   down_in_long       : std_logic_vector((cf-1)*flit_size-1 downto 0);
+  signal   down_out_long      : std_logic_vector((cf-1)*flit_size-1 downto 0);
+--  signal   extend_to_cf       : std_logic_vector((cf-1)*flit_size-1 downto 0);
+  signal   crossbar_short_in  : flit_vector(port_num-1 downto 0);
+  signal   crossbar_short_out : flit_vector(port_num-1 downto 0);
+--  signal   sel_local          : std_logic_vector(sel_width-1 downto 0);
+--  signal   sel_down           : std_logic_vector(sel_width-1 downto 0);
+  ----------------------------------------------------------------------------------------
+  -- Component declarations
+  ----------------------------------------------------------------------------------------
+
+begin  -- rtl
+--  extend_to_cf                 <= (others => '0');
+  local_in_long                <= crossbar_in(local_ub downto flit_size+local_lb);
+  down_in_long                 <= crossbar_in(down_ub downto flit_size+down_lb);
+--  sel_local                    <= crossbar_ctrl(sel_width-1 downto 0);
+--  sel_down                     <= crossbar_ctrl(port_num*sel_width-1 downto (port_num-1)*sel_width);
+  ----------------------------------------------------------------------------------------
+  -- Crossbar short input assignment (first flits of local, up and down ports
+  ----------------------------------------------------------------------------------------
+  crossbar_short_in(int_local) <= crossbar_in(flit_size-1 downto 0);
+  crossbar_short_in_gen : for i in 1 to port_num-2 generate
+    crossbar_short_in(i) <= crossbar_in((i*flit_size)+local_ub downto (i-1)*flit_size+local_ub+1);
+  end generate crossbar_short_in_gen;
+  crossbar_short_in(port_num-1) <= crossbar_in(down_lb+flit_size-1 downto down_lb);
+  ----------------------------------------------------------------------------------------
+  -- Component instantiations
+  ----------------------------------------------------------------------------------------
+  short_crossbar_gen : entity work.crossbar
+    generic map (
+      port_num   => port_num,
+      port_exist => port_exist,
+      rout_algo  => rout_algo)
+    port map (
+      crossbar_in   => crossbar_short_in,
+      crossbar_ctrl => crossbar_ctrl,
+      crossbar_out  => crossbar_short_out);
+------------------------------------------------------------------------------------------
+-- Assign long (cf*N) outputs
+------------------------------------------------------------------------------------------
+--  local_out_long <= down_in_long when local_index+to_integer(unsigned(sel_local))+1 = down_index else
+--                    (others => '-');
+--  down_out_long <= local_in_long when down_index+to_integer(unsigned(sel_down))+1 = local_index else
+--                    (others => '-');
+  local_out_long <= down_in_long;
+  down_out_long  <= local_in_long;
+  ----------------------------------------------------------------------------------------
+  -- Assign signals to output ports
+  ----------------------------------------------------------------------------------------
+  crossbar_out (local_ub downto local_lb) <= local_out_long&crossbar_short_out(local_index);
+  crossbar_out_gen : for i in 1 to port_num-2 generate
+    crossbar_out((i*flit_size)+local_ub downto (i-1)*flit_size+local_ub+1) <= crossbar_short_out(i);
+  end generate crossbar_out_gen;
+  crossbar_out (down_ub downto down_lb) <= down_out_long&crossbar_short_out(down_index);
+end rtl;
+------------------------------------------------------------------------------------------
+-- OLD VERSION IN COMMENT
+------------------------------------------------------------------------------------------
+--library ieee;
+--use ieee.std_logic_1164.all;
+--use ieee.math_real.all;
+--use ieee.numeric_std.all;
+--use work.NOC_3D_PACKAGE.all;
+--use work.TURNS_3D_NOC.all;
+
+--entity crossbar_cf_top_layer is
+--  generic(cf         : positive    := 2;                   -- clock factor
+--          port_num   : positive    := 6;                   -- number of ports
+--          port_exist : integer_vec := (0, 1, 2, 3, 4, 6);  -- port exist vector
+--          rout_algo  : string      := "DXYU");             -- routing algorithm
+--  port (crossbar_in   : in  std_logic_vector((2*cf+port_num-2)*flit_size-1 downto 0);
+--        crossbar_ctrl : in  std_logic_vector(port_num*bit_width(port_num-1)-1 downto 0);
+--        crossbar_out  : out std_logic_vector((2*cf+port_num-2)*flit_size-1 downto 0));
+---- crossbar outputs cf*flit_size for local and down ports and flit_size for the
+---- other ports
+--end entity crossbar_cf_top_layer;
+
+--architecture rtl of crossbar_cf_top_layer is
+--  constant poss_routes    : turn_table_3D := routes_3D(rout_algo);
+--  constant port_sel_width : positive      := bit_width(port_num-1);  -- bits for
+--                                                                     -- crossbar_ctrl signal of
+--                                                                     -- one output port
+--  constant down_lb        : natural       := (port_num-2+cf)*flit_size;
+--  constant local_lb       : natural       := 0;
+--  constant down_ub        : natural       := (2*cf+port_num-2)*flit_size-1;
+--  constant local_ub       : natural       := cf*flit_size-1;
+--  type     multiplexer_input_type is array (port_num-2 downto 0)
+--    of flit_vector(port_num-3 downto 0);
+--  signal multiplexer_input                                          : multiplexer_input_type;
+--  signal local_in_long, local_out_long, down_in_long, down_out_long : std_logic_vector(cf*flit_size-1 downto 0);
+--  signal local_in_short, local_out_short                            : std_logic_vector(flit_size-1 downto 0);
+--  signal crossbar_hor_in, crossbar_hor_out                          : flit_vector(port_num-2 downto 0);
+--  signal crossbar_hor_out_std                                       : std_logic_vector((port_num-1)*flit_size-1 downto 0);
+--  signal extend_to_cf                                               : std_logic_vector((cf-1)*flit_size-1 downto 0);
+--begin
+--  extend_to_cf                           <= (others => '0');         -- it's set to zero
+--  ----------------------------------------------------------------------------------------
+--  -- crossbar_cf_vert_top_layer code
+--  ----------------------------------------------------------------------------------------
+--  local_in_long                          <= crossbar_in(local_ub downto local_lb);
+--  down_in_long                           <= crossbar_in(down_ub downto down_lb);
+--  local_out_long                         <= down_in_long;
+--  down_out_long                          <= local_in_long;
+--  ----------------------------------------------------------------------------------------
+--  -- crossbar local output
+--  -- it takes the value of down if the selected port is down otherwise it takes the
+--  -- extended value of the other ports
+--  ----------------------------------------------------------------------------------------
+--  crossbar_out(local_ub downto local_lb) <= extend_to_cf&crossbar_hor_out_std(flit_size-1 downto 0) when
+--                                            to_integer(unsigned(crossbar_ctrl(port_sel_width-1 downto 0))) /= int_down
+--                                            else local_out_long;
+--  ----------------------------------------------------------------------------------------
+--  -- crossbar down output, it always takes the value of local port
+--  ----------------------------------------------------------------------------------------
+--  crossbar_out(down_ub downto down_lb)      <= down_out_long;
+--  ----------------------------------------------------------------------------------------
+--  -- crossbar horizontal port out
+--  ----------------------------------------------------------------------------------------
+--  crossbar_out(down_lb-1 downto local_ub+1) <= crossbar_hor_out_std((port_num-1)*flit_size-1 downto flit_size);
+--  ----------------------------------------------------------------------------------------
+--  -- the first flit_size of the local (local_short) goes to the first input of horizontal
+--  -- crossbar
+--  ----------------------------------------------------------------------------------------
+--  crossbar_hor_in(0)                        <= crossbar_in(flit_size-1 downto 0);
+--  ----------------------------------------------------------------------------------------
+--  -- the other ports are assigned to the 
+--  ----------------------------------------------------------------------------------------
+--  CROSSBAR_HOR_IN_GEN : for i in 1 to port_num-2 generate
+--    crossbar_hor_in(i) <= crossbar_in(cf*flit_size+i*flit_size-1 downto cf*flit_size+(i-1)*flit_size);
+--  end generate CROSSBAR_HOR_IN_GEN;
+
+--  SEPERATE_SIG_GEN : for i in 0 to port_num-2 generate  -- checked
+--    crossbar_hor_out_std((i+1)*flit_size-1 downto i*flit_size) <= crossbar_hor_out(i);
+--  end generate;
+
+---------------------------------------------------------------------------------
+---- Generate only the inputs that are really required. For all others, choose a
+---- don't care (in hardware: just wires)----------------------------------------
+---------------------------------------------------------------------------------
+--  INPUT_GEN : process(crossbar_hor_in)
+--    variable var_in : natural;
+--  begin
+--    multiplexer_input <= (others => (others => (others => '-')));
+--    for y in 0 to port_num-2 loop       -- For the mulitplexer at output y,
+--      for x in 0 to port_num-3 loop     -- the x^th input is 
+--        if y+x < port_num-2 then
+--          var_in := y+x+1;
+--        else
+--          var_in := y+x-port_num+2;
+--        end if;
+--        if poss_routes(port_exist(var_in))(port_exist(y)) then
+--          multiplexer_input(y)(x) <= crossbar_hor_in(var_in);
+--        end if;
+--      end loop;
+--    end loop;
+--  end process;
+
+
+
+--  MULT_GEN : for i in 1 to port_num-2 generate  -- not the local port, cause if
+--                                                -- it has to be connected to
+--                                                -- down port, then
+--                                                -- multiplexer_input of down
+--                                                -- port does not exis
+--  begin
+--    crossbar_hor_out(i) <= multiplexer_input(i)(
+--      to_integer(unsigned(crossbar_ctrl((i+1)*port_sel_width-1 downto i*port_sel_width))));
+--  end generate;
+--  crossbar_hor_out(0) <= multiplexer_input(0)(
+--    to_integer(unsigned(crossbar_ctrl(port_sel_width-1 downto 0))))
+--                         when to_integer(unsigned(crossbar_ctrl(port_sel_width-1 downto 0))) /= int_down
+--                         else (others => '-');
+---- if the selected port is not down port, then the output of crossbar_hor of
+---- local port will get the value of the selected port otherwise it's '-'
+
+
+--end architecture rtl;
