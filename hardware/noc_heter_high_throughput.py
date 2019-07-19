@@ -12,6 +12,7 @@
 import subprocess
 import itertools
 import string
+from helper import *
 import numpy as np
 from string import Template
 #########################################################################################
@@ -47,21 +48,27 @@ use ieee.std_logic_1164.all;
 use IEEE.math_real.all;
 USE ieee.numeric_std.ALL;
 use work.NOC_3D_PACKAGE.all;
-use work. packet_injector_package.all;
-entity full_noc_high_throughput_with_pe is
+
+entity full_noc_high_throughput is
 
 port(
   clk               : in  std_logic_vector($cf_num-1 downto 0);
-  rst               : in  std_logic
+  rst               : in  std_logic;
+  local_rx          : in  std_logic_vector($data_sig_num-1 downto 0);
+  local_vc_write_rx : in  std_logic_vector($io_sig_num-1 downto 0);
+  local_incr_rx_vec : in  std_logic_vector($io_sig_num-1 downto 0);
+  local_tx          : out std_logic_vector($data_sig_num-1 downto 0);
+  local_vc_write_tx : out std_logic_vector($io_sig_num-1 downto 0);
+  local_incr_tx_vec : out std_logic_vector($io_sig_num-1 downto 0)
   );
-end entity full_noc_high_throughput_with_pe;
+end entity full_noc_high_throughput;
 """)
 #########################################################################################
 #	Full_noc top of the architecture template and
 #	Defining interconnection signals data, credit increment (incr) and vc_write
 #########################################################################################
 archi_top = Template("""
-architecture structural of full_noc_high_throughput_with_pe is
+architecture structural of full_noc_high_throughput is
   type flit_vector_high_throughput is array (natural range <>) of std_logic_vector($max_cf*flit_size-1 downto 0); 
   type flit_vector_array is array (0 to $noc_z) of flit_vector_high_throughput(max_port_num-1 downto 0);
   type flit_vector_2D_array is array (0 to $noc_y) of flit_vector_array;
@@ -80,41 +87,6 @@ architecture structural of full_noc_high_throughput_with_pe is
   signal inter_incr_out     : incr_3D_array;
   signal inter_vc_write_in  : incr_3D_array;
   signal inter_vc_write_out : incr_3D_array;
-""")
-#########################################################################################
-#	Packet Injector generic template
-#########################################################################################
-pe_generic = Template("""
-pe_$Xis$Yis$Zis: entity work.packet_injector
-  generic map(cf_vec       => $cf_vec,
-           clk_period   => $clk_period,            -- clock period in ns
-           Xis          => $Xis,            -- Location of router on X axis
-           Yis          => $Yis,            -- Location of router on Y axis
-           Zis          => $Zis,            -- Location of router on Z axis
-           N            => $N,           -- Width of input port
-           vc_num       => $vc_num,            -- Number of VCs in Local port
-           credit_num   => $credit_num,       -- Buffer depth of each VC
-           rate_percent => $rate_percent,            -- Injection rate
-           run_time     => $run_time,         -- Maximum injection time
-           layer_prob   => $layer_prob, -- Possibility of sending data to the
-                                                       -- nodes of each layer
-           seed1_rand   => $seed1_rand,
-           seed2_rand   => $seed2_rand
-           )""")
-#########################################################################################
-#	Packet Injector port template
-#########################################################################################
-pe_port = Template("""
-  port map (
-        clk                  => clk($Zis),
-        rst                  => rst,
-        rand_packet_in       => data_out$Xis$Yis$Zis($N-1 downto 0),
-        incr_from_router     => incr_tx_pl_vec$Xis$Yis$Zis($vc_num-1 downto 0),
-        vc_write_from_router => vc_write_tx_pl_vec$Xis$Yis$Zis($vc_num-1 downto 0),
-        rand_packet_out      => data_in$Xis$Yis$Zis($N-1 downto 0),
-        incr_to_router       => incr_rx_vec$Xis$Yis$Zis($vc_num-1 downto 0),
-        vc_write_to_router   => vc_write_rx_vec$Xis$Yis$Zis($vc_num-1 downto 0)
-        );
 """)
 #########################################################################################
 #	Router fast generic map template
@@ -340,7 +312,7 @@ inter_vc_write2vc_write_in=Template("""vc_write_rx_vec$x$y$z($vc_ub-1 downto $vc
 vc_write_out2inter_vc_write=Template("""inter_vc_write_out($x)($y)($z)($i)($vc_num-1 downto 0) <= vc_write_tx_pl_vec$x$y$z($vc_ub-1 downto $vc_lb);
 """)
 #########################################################################################
-out_file='noc_heter_high_throughput_with_pe.vhd'
+out_file='noc_heter_high_throughput.vhd'
 #########################################################################################
 #########################################################################################
 # code for writing each router scripts
@@ -382,12 +354,12 @@ def ftwrite_router(x,y,z,noc_x, noc_y, noc_z, vc_xy, vc_z, depth_xy, depth_z, ro
   data_lb=0
   data_length=flit_size*cf_vec[z]
   data_ub=data_lb+data_length
-#  ft.write(inter_data2data_in.substitute(x=str(x),y=str(y),z=str(z),pos=str(pos),i='0',data_lb=data_lb,data_ub=data_ub,data_length=data_length))
-#  ft.write(data_out2inter_data.substitute(x=str(x),y=str(y),z=str(z),pos=str(pos),i='0',data_lb=data_lb,data_ub=data_ub,data_length=data_length))
-#  ft.write(inter_incr2incr_in.substitute(x=str(x),y=str(y),z=str(z),pos=str(pos),i='0',vc_num=vc_xy[z],vc_ub= vc_ub,vc_lb= vc_lb))
-#  ft.write(incr_out2inter_incr.substitute(x=str(x),y=str(y),z=str(z),pos=str(pos),i='0',vc_num=vc_xy[z],vc_ub= vc_ub,vc_lb= vc_lb))
-#  ft.write(inter_vc_write2vc_write_in.substitute(x=str(x),y=str(y),z=str(z),pos=str(pos),i='0',vc_num=vc_xy[z],vc_ub= vc_ub,vc_lb= vc_lb))
-#  ft.write(vc_write_out2inter_vc_write.substitute(x=str(x),y=str(y),z=str(z),pos=str(pos),i='0',vc_num=vc_xy[z],vc_ub= vc_ub,vc_lb= vc_lb))
+  ft.write(inter_data2data_in.substitute(x=str(x),y=str(y),z=str(z),pos=str(pos),i='0',data_lb=data_lb,data_ub=data_ub,data_length=data_length))
+  ft.write(data_out2inter_data.substitute(x=str(x),y=str(y),z=str(z),pos=str(pos),i='0',data_lb=data_lb,data_ub=data_ub,data_length=data_length))
+  ft.write(inter_incr2incr_in.substitute(x=str(x),y=str(y),z=str(z),pos=str(pos),i='0',vc_num=vc_xy[z],vc_ub= vc_ub,vc_lb= vc_lb))
+  ft.write(incr_out2inter_incr.substitute(x=str(x),y=str(y),z=str(z),pos=str(pos),i='0',vc_num=vc_xy[z],vc_ub= vc_ub,vc_lb= vc_lb))
+  ft.write(inter_vc_write2vc_write_in.substitute(x=str(x),y=str(y),z=str(z),pos=str(pos),i='0',vc_num=vc_xy[z],vc_ub= vc_ub,vc_lb= vc_lb))
+  ft.write(vc_write_out2inter_vc_write.substitute(x=str(x),y=str(y),z=str(z),pos=str(pos),i='0',vc_num=vc_xy[z],vc_ub= vc_ub,vc_lb= vc_lb))
   pos+=1
   data_lb=data_ub
 #  print(data_ub)
@@ -644,9 +616,9 @@ def ftwrite_router(x,y,z,noc_x, noc_y, noc_z, vc_xy, vc_z, depth_xy, depth_z, ro
   vc_depth_array+=")"
   vc_depth_out_array+=")"
 #########################################################################################
-#  ft.write(inter_data_local.substitute(Xis=str(x),Yis=str(y),Zis=str(z),i=str(x+(y*noc_x)+(z*noc_x*noc_y*cf_vec[z])),local_lb_i=local_lb, local_length=flit_size*cf_vec[z]))
-#  ft.write(inter_incr_local.substitute(Xis=str(x),Yis=str(y),Zis=str(z),io_sig_ub=str(io_sig_ub), io_sig_lb=str(io_sig_lb), vc_num=vc_xy[z]))
-#  ft.write(inter_vc_write_local.substitute(Xis=str(x),Yis=str(y),Zis=str(z),io_sig_ub=str(io_sig_ub), io_sig_lb=str(io_sig_lb), vc_num=vc_xy[z]))
+  ft.write(inter_data_local.substitute(Xis=str(x),Yis=str(y),Zis=str(z),i=str(x+(y*noc_x)+(z*noc_x*noc_y*cf_vec[z])),local_lb_i=local_lb, local_length=flit_size*cf_vec[z]))
+  ft.write(inter_incr_local.substitute(Xis=str(x),Yis=str(y),Zis=str(z),io_sig_ub=str(io_sig_ub), io_sig_lb=str(io_sig_lb), vc_num=vc_xy[z]))
+  ft.write(inter_vc_write_local.substitute(Xis=str(x),Yis=str(y),Zis=str(z),io_sig_ub=str(io_sig_ub), io_sig_lb=str(io_sig_lb), vc_num=vc_xy[z]))
   if cf_vec[z]==1:
     ft.write(router_fast_generic.substitute(
 					port_num= str(port_num),
@@ -707,31 +679,3 @@ def ftwrite_router(x,y,z,noc_x, noc_y, noc_z, vc_xy, vc_z, depth_xy, depth_z, ro
 					Zis=str(z)
 					))
     ft.close()
-#########################################################################################
-def ftwrite_pe(x, y, z, noc_x, noc_y, noc_z, vc_xy, vc_z, depth_xy, depth_z,
-               rout_algo, cf_vec, local_lb, flit_size, rate_percent, run_time,
-               layer_prob, clk_period):
-  ft=open(out_file, "a")
-  cf=cf_vec[z]
-  ft.write(pe_generic.substitute(
-      cf_vec= str(cf_vec),
-      clk_period= clk_period*cf,
-      Xis = x,
-      Yis = y,
-      Zis = z,
-      N = flit_size*cf,
-      vc_num= vc_xy[z],
-      credit_num = ret_int_array(vc_xy[z],depth_xy[z]),
-      rate_percent = rate_percent[z],
-      run_time = run_time,
-      layer_prob = layer_prob[z],
-      seed1_rand = np.random.random_integers(1,high=2147483398),
-      seed2_rand = np.random.random_integers(1,high=2147483398)
-      ))
-  ft.write(pe_port.substitute(
-    Xis=x,
-    Yis=y,
-    Zis=z,
-    N = flit_size*cf,
-    vc_num=vc_xy[z]))
-  ft.close()

@@ -3,61 +3,63 @@ import glob
 import subprocess
 import itertools
 import string
-import noc_heter.func as nocHeter
-import noc_heter_high_throughput.func as nocHeterHighThroughput
+import noc_hetero as nocHeter
+import noc_heter_high_throughput as nocHeterHighThroughput
 import numpy as np
+import helper
 from string import Template
 
 class NoCWriter():
+
     def __init__(self, config):
         self.config = config
 
         #########################################################################################
         # 	Network size
         #########################################################################################
-        self.noc_x=4
-        self.noc_y=4
-        self.noc_z=3
+        self.noc_x = 4
+        self.noc_y = 4
+        self.noc_z = 3
         #########################################################################################
         # 	Virtual Channel Number
         #########################################################################################
-        self.vc_num=2
-        self.vc_xy=[4, 4, 4]    # Horizontal Ports VC numbers (array size = noc_z)
-        self.depth_xy=[4, 4, 4] # Horizontal Ports buffer depth (array size = noc_z)
-        self.vc_z =[4, 4]       # Up and Down ports VC numbers (array size = noc_z-1)
-        self.depth_z=[8, 8]     # Up and Down ports buffer depth (array size = noc_z-1)
+        self.vc_num = 2
+        self.vc_xy = [4, 4, 4]    # Horizontal Ports VC numbers (array size = noc_z)
+        self.depth_xy = [4, 4, 4] # Horizontal Ports buffer depth (array size = noc_z)
+        self.vc_z = [4, 4]       # Up and Down ports VC numbers (array size = noc_z-1)
+        self.depth_z= [8, 8]     # Up and Down ports buffer depth (array size = noc_z-1)
         #########################################################################################
         # 	Routing Algorithm (character " is known as \")
         #########################################################################################
-        self.flit_size= 32
-        self.max_vc_num=4
-        self.max_vc_num_out=4
-        self.max_x_dim=4
-        self.max_y_dim=4
-        self.max_z_dim=4
-        self.max_packet_len=31
-        self.max_port_num=7
-        self.rst_lvl=0
-        self.max_buffer_depth=8
-        self.cf=4
-        self.vc_depth_array = nocHeter.ret_2D_int_array(self.max_port_num, self.max_vc_num, self.max_buffer_depth)
-        self.vc_depth_array_minus= nocHeter.ret_2D_int_array(self.max_port_num-1, self.max_vc_num, self.max_buffer_depth)
-        self.vc_depth_out_array = nocHeter.ret_2D_int_array(self.max_port_num, self.max_vc_num_out, self.max_buffer_depth)
-        self.vc_depth_out_array_minus=nocHeter.ret_2D_int_array(self.max_port_num-1, self.max_vc_num_out, self.max_buffer_depth)
+        self.flit_size = 32
+        self.max_vc_num = 4
+        self.max_vc_num_out = 4
+        self.max_x_dim = 4
+        self.max_y_dim = 4
+        self.max_z_dim = 4
+        self.max_packet_len = 31
+        self.max_port_num = 7
+        self.rst_lvl = 0
+        self.max_buffer_depth = 8
+        self.cf = 4
+        self.vc_depth_array = helper.ret_2D_int_array(self.max_port_num, self.max_vc_num, self.max_buffer_depth)
+        self.vc_depth_array_minus= helper.ret_2D_int_array(self.max_port_num-1, self.max_vc_num, self.max_buffer_depth)
+        self.vc_depth_out_array = helper.ret_2D_int_array(self.max_port_num, self.max_vc_num_out, self.max_buffer_depth)
+        self.vc_depth_out_array_minus = helper.ret_2D_int_array(self.max_port_num-1, self.max_vc_num_out, self.max_buffer_depth)
         self.max_port_exist = "(0, 1, 2, 3, 4, 5, 6)"
-        self.port_exist_wo_down="(0, 1, 2, 3, 4, 5)"
-        self.port_exist_wo_up="(0, 1, 2, 3, 4, 6)"
-        self.max_vc_num_vec=nocHeter.ret_int_array(self.max_port_num, self.max_vc_num)
-        self.max_vc_num_out_vec=nocHeter.ret_int_array(self.max_port_num, self.max_vc_num_out)
-        self.vc_num_vec_minus=nocHeter.ret_int_array(self.max_port_num-1, self.max_vc_num)
-        self.vc_num_out_vec_minus=nocHeter.ret_int_array(self.max_port_num-1, self.max_vc_num_out)
-        self.max_vc_depth=nocHeter.ret_int_array(self.max_vc_num, self.max_buffer_depth)
-        self.rout_algo="\"DXYU\""
-        self.cf_vec=(1, 2, 4)
+        self.port_exist_wo_down = "(0, 1, 2, 3, 4, 5)"
+        self.port_exist_wo_up = "(0, 1, 2, 3, 4, 6)"
+        self.max_vc_num_vec = helper.ret_int_array(self.max_port_num, self.max_vc_num)
+        self.max_vc_num_out_vec = helper.ret_int_array(self.max_port_num, self.max_vc_num_out)
+        self.vc_num_vec_minus = helper.ret_int_array(self.max_port_num-1, self.max_vc_num)
+        self.vc_num_out_vec_minus = helper.ret_int_array(self.max_port_num-1, self.max_vc_num_out)
+        self.max_vc_depth = helper.ret_int_array(self.max_vc_num, self.max_buffer_depth)
+        self.rout_algo = "\"DXYU\""
+        self.cf_vec = (1, 2, 4)
         #########################################################################################
         # 	MAKE VHDL FILES FROM TXT FILES 
         #########################################################################################
-        self.subs={ 'flit_size': self.flit_size, 'max_vc_num': self.max_vc_num,'max_vc_num_out': self.max_vc_num_out,
+        self.subs = { 'flit_size': self.flit_size, 'max_vc_num': self.max_vc_num,'max_vc_num_out': self.max_vc_num_out,
                'max_x_dim': self.max_x_dim, 'max_y_dim': self.max_y_dim, 'max_z_dim': self.max_z_dim,
                'max_packet_len': self.max_packet_len, 'max_port_num': self.max_port_num, 'rst_lvl': self.rst_lvl,
                'max_buffer_depth': self.max_buffer_depth, 'cf': self.cf, 'vc_depth_array': self.vc_depth_array,
@@ -127,8 +129,8 @@ class NoCWriter():
               if (z == 0):
                 port_num -= 1
               ft.write(nocHeter.data_in_tmp.substitute(x=str(x),y=str(y),z=str(z),port_num=str(port_num)))
-              vc_num_vec=nocHeter.ret_sum_vc(z=z, vc_xy=self.vc_xy, vc_z=self.vc_z, noc_z=self.noc_z, port_num=port_num)
-              vc_num_out_vec=nocHeter.ret_sum_vc(z=z, vc_xy=self.vc_xy, vc_z=self.vc_z, noc_z=self.noc_z, port_num=port_num)
+              vc_num_vec=helper.ret_sum_vc(z=z, vc_xy=self.vc_xy, vc_z=self.vc_z, noc_z=self.noc_z, port_num=port_num)
+              vc_num_out_vec=helper.ret_sum_vc(z=z, vc_xy=self.vc_xy, vc_z=self.vc_z, noc_z=self.noc_z, port_num=port_num)
               ft.write(nocHeter.vc_write_rx_vec_tmp.substitute(x=str(x),y=str(y),z=str(z),sum_vc=vc_num_vec))
               ft.write(nocHeter.incr_rx_vec_tmp.substitute(x=str(x),y=str(y),z=str(z),sum_vc=vc_num_out_vec))
               ft.write(nocHeter.vc_write_tx_pl_vec_tmp.substitute(x=str(x),y=str(y),z=str(z),sum_vc=vc_num_out_vec))
