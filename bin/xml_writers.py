@@ -480,7 +480,7 @@ class NetworkWriter(Writer):
 ###############################################################################
 
 
-class ConfigkWriter(Writer):
+class ConfigWriter(Writer):
     """ The Config writer class """
 
     def __init__(self, config):

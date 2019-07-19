@@ -98,7 +98,7 @@ class Configuration:
 def main():
     config = Configuration('config.ini')
 
-    writer = writers.ConfigkWriter(config)
+    writer = writers.ConfigWriter(config)
     writer.write_config('config.xml')
 
     writer = writers.NetworkWriter(config)
