@@ -1,3 +1,14 @@
+hardware/*/*/arbiter/
+hardware/*/*/crossbar/
+hardware/*/*/input_buffer/
+hardware/*/*/*.vhd
+hardware/*/*/output_register/
+hardware/*/*/packages/
+hardware/*/*/packet_injector/
+hardware/*/*/router/
+hardware/*/*/routing_algos/
+
+
 source_me.sh
 simulator/sim.cbp
 simulator/somefile
