@@ -8,6 +8,7 @@ hardware/*/*/packet_injector/
 hardware/*/*/router/
 hardware/*/*/routing_algos/
 
+simulator/cmake-build-debug/
 
 source_me.sh
 simulator/sim.cbp
