@@ -99,7 +99,7 @@ def main():
 
     writer = writers.NoCWriter(config)
     writer.write_noc_hetero()
-
+    writer.write_noc_hetero_high_throughput()
 ###############################################################################
 
 
