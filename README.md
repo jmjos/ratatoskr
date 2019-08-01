@@ -7,14 +7,27 @@
 # Ratatoskr NoC simulator
 
 
-Welcome to the project website of ratatoskr, a framework to design NoCs for heterogeneous 3D SoCs. It includes:
+Welcome to the project website of ratatoskr, an in-depth PPA framework to design NoCs for heterogeneous 3D SoCs. It includes:
 
-- A NoC simulator with support for heterogeneous 3D SoCs. In includes a high-level model of the router.
-- A lightweight and efficient implementation of a 3D NoC router.
-- Percise power models for links and routers.
-- Integrated design tools.
+- Power estimation:
+  - Static and dynamic power estimation of routers and links on a cycle-accurate level. 
+  - Accuracy of dynamic link energy is within 1\% of bit-level accurate simulations.
+- Performance models:
+  - Network performance for millions of clock cycles on a cycle-accurate (CA) level using the NoC simulator.  
+  - Network performance for thousands of clock cycles on a register-transfer level (RTL). 
+  - Timing of routers from synthesis on the gate level.
+- Area analysis: NoC area from synthesis on gate-level for any standard cell technology.
+- Verification: Gate-level model of NoC enables verification on gate-level against design rule checks (DRCs).
+- Benchmarks:
+   - Support for realistic application model on transaction-level. 
+   - Conventional synthetic traffic patterns.
+- Heterogeneous 3D Integration:
+   - Heterogeneity yields non-purely synchronous systems, since the same circuit in mixed-signal and digital achieve different maximum clock speeds. Therefore, the NoC simulation and router hardware model implement a pseudo-mesochronous router (cf. \cite{Joseph.2018b}).
+   - Heterogeneity yields different number of routers per layers, since (identical) circuits in mixed-signal and digital have different area. Therefore, the NoC simulation allows for any non-regular network topology via XML configuration files.
+- Usability: Single point-of-entry to set design parameters. The design parameters allow for rapid testing of different designs.
+- Reporting: Automatic generation of detailed reports from network-scale performance to buffer utilization.
 
-It is developed at the University in Magdeburg, Germany and Bremen, Germany. The simulator is using C++14 and SystemCand is under MIT license terms. If you use the simulator in your research, we would appreciate the following citation in any publications to which it has contributed:
+Ratatoskr  is developed at the University in Magdeburg, Germany and University of Bremen, Germany. It is under MIT license terms. If you use the simulator in your research, we would appreciate the following citation in any publications to which it has contributed:
 
 ---
 
@@ -22,7 +35,7 @@ Jan Moritz Joseph, Sven Wrieden, Christopher Blochwitz, Alberto Garc&iacute;a-Or
 
 ---
 
-You can download the resources via this repo using a recursive git clone git clone --recursive https://github.com/jmjos/ratatorkr or directly on the individual repositories (VHDL router model and power models are shipped individually).
+You can download the resources via this repo using ```git clone https://github.com/jmjos/ratatorkr``` or directly on the individual repositories.
 
 ## Getting started
 
@@ -34,7 +47,7 @@ Let's start simple. You can a virtualbox image from [here](https://drive.google.
 cd ~/ratatoskr
 ```
 
-In this demo system, we already installed all packages and got ratatoskr, so you are ready to go. Let's first get the newest version:
+In this demo system, we already installed all packages and ratatoskr, so you are ready to go. Let's first get the newest version:
 
 ```bash
 git pull
@@ -83,7 +96,7 @@ cd ~/ratatoskr/bin/demo
 
 ## Different traffic patterns
 
-In this part, we'll run uniform random traffic pattern and hotspot traffic pattern and visualize the differences with out GUI. We'll use simple homogeneous networks for comparability to conventional NoC simulators. Copy the correct configuration files. In the `config` folder, you'll find the configuration of the simulator (`config_homogeneous.xml`) and the network, a 4 * 4 * 3 - NoC (`network.xml`). They are already set up for the uniform random traffic pattern. The simulation is set to 1.5M clock cycles, which will take a while. But that's enough to observe the behavior of the NoC in the GUI! Let's to that:
+In this part, we'll run uniform random traffic pattern and hotspot traffic pattern and visualize the differences with our GUI. We'll use simple homogeneous networks for comparability to conventional NoCs. Copy the correct configuration files. In the `config` folder, you'll find the configuration of the simulator (`config_homogeneous.xml`) and the network, a 4 * 4 * 3 - NoC (`network.xml`). They are already set up for the uniform random traffic pattern. The simulation is set to 1.5M clock cycles, which will take a while. But that's enough to observe the behavior of the NoC in the GUI! Let's to that:
 
 ```bash
 cp config/config_homogeneous.xml config/config.xml #for simulator
@@ -103,7 +116,7 @@ Average packet latency: 46.64 ns.
 Average network latency: 46.64 ns.
 ```
 
-Next, let's use hotspot traffic pattern. Therefore, we configure the simulator. Close the gui by pressing `q` in the window or using `Crtl-C` in the terminal. Change line 26 of the `config/config.xml` file from
+Next, let's use hotspot traffic pattern. Therefore, we configure the simulator. Close the GUI by pressing `q` in the window or using `Crtl-C` in the terminal. Change line 26 of the `config/config.xml` file from
 
 ```xml
 <phase name="run">
@@ -123,7 +136,7 @@ Rerun the simulation by executing `python ../plot_network_client.py` in the firs
 
 ## Different routing algorithms
 
-Let's use the heterogeneous XYZ routing, which puts more load to lower layers, instead of conventional XYZ. Therefore, we reconfigure the `config/network.xml` by changing the router properties in lines 12, 19, and 26 from
+Let's use the heterogeneous XYZ routing, which puts more load to lower layers. This differs from conventional XYZ routing. Therefore, we reconfigure the `config/network.xml` by changing the router properties in lines 12, 19, and 26 from
 
 ```xml
 <nodeType id="0">
@@ -150,7 +163,7 @@ Finally, you'll receive the following:
 
 ![Uniform Random Traffic Heterogeneous XYZ](bin/demo/uniform_hetero.gif)
 
-Thanks for making the tutorial. For further instructions, please use our [documentation](TOC.md). There, we also provide instrucions how to compile the simulator.
+For further instructions, please use our [documentation](TOC.md). There, we also provide instrucions how to compile the simulator.
 
 ## Contributing
 If you wish to contribute, please contact me at my univeristy email address jan.joseph@ovgu.de. We offer student development jobs for students from Magdeburg.
