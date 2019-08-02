@@ -22,7 +22,7 @@ Welcome to the project website of ratatoskr, an in-depth PPA framework to design
    - Support for realistic application model on transaction-level. 
    - Conventional synthetic traffic patterns.
 - Heterogeneous 3D Integration:
-   - Heterogeneity yields non-purely synchronous systems, since the same circuit in mixed-signal and digital achieve different maximum clock speeds. Therefore, the NoC simulation and router hardware model implement a pseudo-mesochronous router (cf. \cite{Joseph.2018b}).
+   - Heterogeneity yields non-purely synchronous systems, since the same circuit in mixed-signal and digital achieve different maximum clock speeds. Therefore, the NoC simulation and router hardware model implement a pseudo-mesochronous router (cf. Joseph et al. 2018).
    - Heterogeneity yields different number of routers per layers, since (identical) circuits in mixed-signal and digital have different area. Therefore, the NoC simulation allows for any non-regular network topology via XML configuration files.
 - Usability: Single point-of-entry to set design parameters. The design parameters allow for rapid testing of different designs.
 - Reporting: Automatic generation of detailed reports from network-scale performance to buffer utilization.
