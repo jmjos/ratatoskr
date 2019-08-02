@@ -11,7 +11,7 @@ Welcome to the project website of ratatoskr, an in-depth PPA framework to design
 
 - Power estimation:
   - Static and dynamic power estimation of routers and links on a cycle-accurate level. 
-  - Accuracy of dynamic link energy is within 1\% of bit-level accurate simulations.
+  - Accuracy of dynamic link energy is within 1% of bit-level accurate simulations.
 - Performance models:
   - Network performance for millions of clock cycles on a cycle-accurate (CA) level using the NoC simulator.  
   - Network performance for thousands of clock cycles on a register-transfer level (RTL). 
