@@ -35,8 +35,6 @@ Jan Moritz Joseph, Sven Wrieden, Christopher Blochwitz, Alberto Garc&iacute;a-Or
 
 ---
 
-You can download the resources via this repo using ```git clone https://github.com/jmjos/ratatorkr``` or directly on the individual repositories.
-
 ## Getting started
 
 Here, we provide a quick tutorial. For in-depth instructions, please visit the [documentation](docs/TOC.md).
