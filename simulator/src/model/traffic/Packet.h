@@ -36,7 +36,7 @@ struct Packet {
 	long long dbid;
 	Node src;
 	Node dst;
-	int size;
+	int size; //used to determine the number of flits for this packet
 	double generationTime;
 	dataTypeID_t dataType; // type identifier for link matrices
 	int pkgclass;	// tag for adaptive routing
