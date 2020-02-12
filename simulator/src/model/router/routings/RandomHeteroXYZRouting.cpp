@@ -57,4 +57,5 @@ int RandomHeteroXYZRouting::route(int src_node_id, int dst_node_id)
             possible_conPositions.push_back(z_axis);
         return possible_conPositions.at(globalResources.getRandomIntBetween(0, possible_conPositions.size()-1));
     }
+    return -1;
 }

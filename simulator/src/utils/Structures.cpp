@@ -169,6 +169,7 @@ connID_t Node::getConnWithNode(const Node& connectedNode)
                 return conn1;
         }
     }
+    return -1;
 }
 
 Connection::Connection(connID_t id, const std::vector<nodeID_t>& nodes, const std::vector<int>& vcsCount,
