@@ -159,7 +159,6 @@ void NetworkInterfaceVC::receiveFlitFromRouter()
         double time = sc_time_stamp().to_double();
         // generate packet statistics. in case of synthetic traffic only for run phase
         if ((float) globalResources.synthetic_start_measurement_time<=(time/1000)) {
-            cout << received_flit->generationTime << " " << received_flit->injectionTime << endl;
             globalReport.latencyFlit.sample((float)(time-received_flit->injectionTime)); // evil line of code
             if (received_flit->type==TAIL) {
                 globalReport.latencyPacket.sample((float) (time-received_flit->headFlit->generationTime));
