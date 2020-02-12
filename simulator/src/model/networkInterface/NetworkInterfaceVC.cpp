@@ -157,15 +157,19 @@ void NetworkInterfaceVC::receiveFlitFromRouter()
         Flit* received_flit = flitPortContainer->portDataIn.read();
         Packet* p = received_flit->packet;
         double time = sc_time_stamp().to_double();
-
         // generate packet statistics. in case of synthetic traffic only for run phase
         if ((float) globalResources.synthetic_start_measurement_time<=(time/1000)) {
-            globalReport.latencyFlit.sample((float)(time-received_flit->injectionTime));
+            cout << received_flit->generationTime << " " << received_flit->injectionTime << endl;
+            cout << "Here2" << endl;
+            cout << "dort" << endl;
+            globalReport.latencyFlit.sample((float)(time-received_flit->injectionTime)); // evil line of code
+            cout << "Here3" << endl;
             if (received_flit->type==TAIL) {
                 globalReport.latencyPacket.sample((float) (time-received_flit->headFlit->generationTime));
                 globalReport.latencyNetwork.sample((float) (time-received_flit->headFlit->injectionTime));
             }
         }
+
 
         auto position = std::find(p->inTransmit.begin(), p->inTransmit.end(), received_flit->id);
         if (position!=p->inTransmit.end())

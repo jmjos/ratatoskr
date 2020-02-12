@@ -63,6 +63,7 @@ bool Statistics::sample(float sample)
         sampleMin = sample;
     if (sampleMax>sample)
         sampleMax = sample;
+    return true;
 }
 
 void Statistics::report(ostream& stream)

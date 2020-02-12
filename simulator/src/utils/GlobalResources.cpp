@@ -34,7 +34,7 @@ GlobalResources::GlobalResources()
 {
     rand = new std::mt19937_64();
     auto seed = std::random_device{}();
-    rand->seed(seed);
+    rand->seed(10);
     rd_seed = seed;
 }
 
