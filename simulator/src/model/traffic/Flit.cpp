@@ -39,7 +39,7 @@ Flit::Flit(FlitType type, long long seq_nb, Packet* p)
     rep.reportAttribute(dbid, "flit_packet", std::to_string(p->id));
     rep.reportAttribute(dbid, "flit_type", std::to_string(type));
     rep.reportAttribute(dbid, "flit_seq", std::to_string(seq_nb));
-    if (type==FlitType::HEAD)
+    if (type==FlitType::HEAD || type==FlitType::SINGLE)
         this->headFlit = this;
     else
         this->headFlit = p->flits.at(0);
@@ -66,6 +66,9 @@ ostream& operator<<(ostream& os, const Flit& flit)
         break;
     case TAIL:
         os << "T";
+        break;
+    case SINGLE:
+        os << "S";
         break;
     }
     os << "_" << flit.id << ": " << flit.packet->src.id%processingElementsSize << "-->"

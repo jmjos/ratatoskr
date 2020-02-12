@@ -157,7 +157,7 @@ void RouterVC::receive()
                     //rep.reportEvent(buf->dbid, "buffer_enqueue_flit", std::to_string(flit->id));
                     globalReport.increaseBufferPush(this->id);
                     lastReceivedFlitsID.at(in) = flit->id;
-                    if (flit->type==HEAD) {
+                    if (flit->type==HEAD  || flit->type==SINGLE) {
                         LOG(globalReport.verbose_router_receive_head_flit,
                                 "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(conPos)) << vc
                                          << "]\t- Receive Flit " << *flit);
@@ -224,7 +224,7 @@ std::map<int, std::vector<Channel>> RouterVC::VCAllocation_generateRequests()
             Flit* flit = buf->front();
             globalReport.increaseBufferFront(id);
 
-            if (flit && flit->type==HEAD && !routingTable.count({in_conPos, in_vc})) {
+            if (flit && (flit->type==HEAD || flit->type==SINGLE) && !routingTable.count({in_conPos, in_vc})) {
                 int src_node_id = this->id;
                 int dst_node_id = flit->packet->dst.id;
                 int chosen_conPos = routingAlg->route(src_node_id, dst_node_id);
@@ -411,11 +411,11 @@ void RouterVC::send()
             Node n = globalResources.nodes.at(this->node.id);
             if (DIR::Local!=node.getDirOfConPos(out.conPos)) // NI has infinite buffers
                 creditCounter.at(out)--;
-            if (flit->type==TAIL) {
+            if (flit->type==TAIL || flit->type==SINGLE) {
                 routingTable.erase(in);
             }
             LOG(
-                    (globalReport.verbose_router_send_head_flit && flit->type==HEAD) ||
+                    (globalReport.verbose_router_send_head_flit && (flit->type==HEAD || flit->type==SINGLE)) ||
                             globalReport.verbose_router_send_flit,
                     "Router" << this->id << "[" << DIR::toString(node.getDirOfConPos(out.conPos)) << out.vc
                              << "]\t- Send Flit "
