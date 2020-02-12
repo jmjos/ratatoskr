@@ -81,7 +81,7 @@ void NetworkInterfaceVC::receivePacketFromPE()
 
 void NetworkInterfaceVC::generateFlitsForPacket(Packet* p)
 {
-    int flitsPerPacket = globalResources.flitsPerPacket;
+    int flitsPerPacket = p->size;
     for (int i = 0; i<flitsPerPacket; ++i) {
         FlitType flitType;
         if (i%flitsPerPacket==0)

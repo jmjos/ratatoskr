@@ -72,7 +72,7 @@ void ProcessingElementVC::thread()
             if (pair.second<=timeStamp) {
                 Task t = globalResources.tasks.at(dest.destinationTask);
                 Node dstNode = globalResources.nodes.at(t.nodeID);
-                Packet* p = packetFactory.createPacket(this->node, dstNode, 1, sc_time_stamp().to_double(),
+                Packet* p = packetFactory.createPacket(this->node, dstNode, globalResources.flitsPerPacket, sc_time_stamp().to_double(),
                         dest.dataType);
 
                 packetPortContainer->portValidOut = true;
