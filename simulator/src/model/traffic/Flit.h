@@ -32,7 +32,7 @@ using flitID_t = long long;
 class Packet;
 
 enum FlitType {
-    HEAD = 10, BODY = 11, TAIL = 12
+    HEAD = 10, BODY = 11, TAIL = 12, SINGLE = 13,
 };
 
 class Flit {

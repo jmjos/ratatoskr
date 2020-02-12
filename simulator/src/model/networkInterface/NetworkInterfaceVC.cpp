@@ -84,7 +84,9 @@ void NetworkInterfaceVC::generateFlitsForPacket(Packet* p)
     int flitsPerPacket = p->size;
     for (int i = 0; i<flitsPerPacket; ++i) {
         FlitType flitType;
-        if (i%flitsPerPacket==0)
+        if (flitsPerPacket==1)
+            flitType = SINGLE;
+        else if (i%flitsPerPacket==0)
             flitType = HEAD;
         else if (i%flitsPerPacket==flitsPerPacket-1)
             flitType = TAIL;
