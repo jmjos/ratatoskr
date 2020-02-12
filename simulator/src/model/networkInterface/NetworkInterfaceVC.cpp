@@ -162,7 +162,7 @@ void NetworkInterfaceVC::receiveFlitFromRouter()
         // generate packet statistics. in case of synthetic traffic only for run phase
         if ((float) globalResources.synthetic_start_measurement_time<=(time/1000)) {
             globalReport.latencyFlit.sample((float)(time-received_flit->injectionTime)); // evil line of code
-            if (received_flit->type==TAIL) {
+            if (received_flit->type==TAIL || received_flit->type==SINGLE) {
                 globalReport.latencyPacket.sample((float) (time-received_flit->headFlit->generationTime));
                 globalReport.latencyNetwork.sample((float) (time-received_flit->headFlit->injectionTime));
             }
@@ -175,10 +175,10 @@ void NetworkInterfaceVC::receiveFlitFromRouter()
         p->transmitted.push_back(received_flit->id);
 
         //rep.reportEvent(dbid, "pe_receive_flit", std::to_string(received_flit->id));
-        LOG((globalReport.verbose_pe_receive_tail_flit && received_flit->type==TAIL)
+        LOG((globalReport.verbose_pe_receive_tail_flit && (received_flit->type==TAIL || received_flit->type==SINGLE))
                 || globalReport.verbose_pe_receive_flit,
                 "NI" << this->id << "(Node" << node.id << ")\t\t- Receive Flit " << *received_flit);
-        LOG(received_flit->type==TAIL && (!p->toTransmit.empty() || !p->inTransmit.empty()),
+        LOG((received_flit->type==TAIL || received_flit->type==SINGLE) && (!p->toTransmit.empty() || !p->inTransmit.empty()),
                 "NI" << this->id << "(Node" << node.id << ")\t\t- Received Tail Flit, but still missing flits! "
                      << *received_flit);
         if (p->toTransmit.empty() && p->inTransmit.empty())
