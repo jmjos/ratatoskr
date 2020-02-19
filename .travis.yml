@@ -1,4 +1,4 @@
-dist: xenial
+dist: bionic
 
 addons:
   apt:
@@ -16,9 +16,9 @@ before_install:
 
 before_script:
         - mkdir systemc
-        - wget https://accellera.org/images/downloads/standards/systemc/systemc-2.3.1a.tar.gz
-        - tar -xf systemc-2.3.1a.tar.gz
-        - cd systemc-2.3.1a
+        - wget https://accellera.org/images/downloads/standards/systemc/systemc-2.3.3.tar.gz
+        - tar -xf systemc-2.3.3.tar.gz
+        - cd systemc-2.3.3
         - mkdir objdir
         - cd objdir
         - ../configure --prefix=/usr/local/systemc-2.3.3
