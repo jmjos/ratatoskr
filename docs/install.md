@@ -27,7 +27,7 @@ build.sh
 
 ### Build Enviroment
 
-- Ubuntu 18.04 & Boost Libs & pugixml
+- Ubuntu 18.04 (tested) or 19.10 (tested) & Boost Libs & pugixml
 - CentOS 7 & boost-devel.x86_64 & pugixml-devel.x86_64
 - cmake 3.10.2
 - SystemC 2.3.3 www.accellera.org/images/downloads/standards/systemc/systemc-2.3.3.gz
