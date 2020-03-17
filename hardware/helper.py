@@ -18,6 +18,8 @@ def ret_port_num(noc_x,noc_y, noc_z, x, y, z):
 #	Number of Virtual channels for Each Port of Router
 def ret_int_array(num, val):
   int_array = "("
+  if num is 1:
+    int_array += "0 => "
   for i in range(num):
     int_array+=str(val)
     int_array+=" ,"

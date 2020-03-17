@@ -14,7 +14,7 @@ from string import Template
 class NoCWriter():
 
     def __init__(self, config):
-        self.config = config
+        #self.config = config
 
         #########################################################################################
         # 	Network size
@@ -25,11 +25,13 @@ class NoCWriter():
         #########################################################################################
         # 	Virtual Channel Number
         #########################################################################################
-        self.vc_num = 2
-        self.vc_xy = [4, 4, 4]    # Horizontal Ports VC numbers (array size = noc_z)
-        self.depth_xy = [4, 4, 4] # Horizontal Ports buffer depth (array size = noc_z)
-        self.vc_z = [4, 4]       # Up and Down ports VC numbers (array size = noc_z-1)
-        self.depth_z= [8, 8]     # Up and Down ports buffer depth (array size = noc_z-1)
+        #self.vc_num = 2
+        vc_num = 8
+        bf_depth = 1
+        self.vc_xy = [vc_num, vc_num, vc_num]    # Horizontal Ports VC numbers (array size = noc_z)
+        self.depth_xy = [bf_depth, bf_depth, bf_depth] # Horizontal Ports buffer depth (array size = noc_z)
+        self.vc_z = [vc_num, vc_num]       # Up and Down ports VC numbers (array size = noc_z-1)
+        self.depth_z= [bf_depth, bf_depth]     # Up and Down ports buffer depth (array size = noc_z-1)
         #########################################################################################
         # 	Routing Algorithm (character " is known as \")
         #########################################################################################
@@ -46,7 +48,12 @@ class NoCWriter():
         self.rst_lvl = 0
         self.max_buffer_depth = 8
         self.cf = 4
+        print(self.max_port_num)
+        print(self.max_vc_num)
+        print(self.max_buffer_depth)
         self.vc_depth_array = helper.ret_2D_int_array(self.max_port_num, self.max_vc_num, self.max_buffer_depth)
+        # Debug
+        print(self.vc_depth_array)
         self.vc_depth_array_minus= helper.ret_2D_int_array(self.max_port_num-1, self.max_vc_num, self.max_buffer_depth)
         self.vc_depth_out_array = helper.ret_2D_int_array(self.max_port_num, self.max_vc_num_out, self.max_buffer_depth)
         self.vc_depth_out_array_minus = helper.ret_2D_int_array(self.max_port_num-1, self.max_vc_num_out, self.max_buffer_depth)
@@ -67,7 +74,7 @@ class NoCWriter():
                                                                #layers for nodes in each layer
         self.credit_num = helper.ret_int_array(self.max_vc_num, self.max_buffer_depth)
         #########################################################################################
-        # 	MAKE VHDL FILES FROM TXT FILES 
+        # 	MAKE VHDL FILES FROM TXT FILES
         #########################################################################################
         self.subs = { 'flit_size': self.flit_size, 'max_vc_num': self.max_vc_num,'max_vc_num_out': self.max_vc_num_out,
                'max_x_dim': self.max_x_dim, 'max_y_dim': self.max_y_dim, 'max_z_dim': self.max_z_dim,
@@ -102,7 +109,7 @@ class NoCWriter():
                     ft.close()
                     dest_file_vhd = dest_folder+"/"+os.path.basename(text_file_vhd)
                     os.rename(text_file_vhd, dest_file_vhd)
-        
+
 
     def write_noc_hetero(self):
         out_file = 'full_noc.vhd'
@@ -160,7 +167,7 @@ class NoCWriter():
         for z in range(self.noc_z):
           for y in range(self.noc_y):
             for x in range(self.noc_x):
-              nocHeter.ftwrite_router(x, y, z, self.noc_x, self.noc_y, self.noc_z, self.vc_xy, self.vc_z, self.vc_num, self.depth_xy, self.depth_z, self.rout_algo)
+              nocHeter.ftwrite_router(x, y, z, self.noc_x, self.noc_y, self.noc_z, self.vc_xy, self.vc_z, self.depth_xy, self.depth_z, self.rout_algo)
         #########################################################################################
         #       writing end of architecture
         #########################################################################################
