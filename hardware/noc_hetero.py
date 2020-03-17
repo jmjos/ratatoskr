@@ -250,7 +250,7 @@ def ftwrite_router(x,y,z,noc_x, noc_y, noc_z, vc_xy, vc_z, depth_xy, depth_z, ro
   vc_num_out_vec="("+str(vc_xy[z])
   vc_depth="("
   # this should be 2D array in vhdl
-  if vc_xy[z] is 1:
+  if (vc_xy[z] == 1):
     vc_depth += "0 => "
   for i in range(vc_xy[z]):
     if i == 0 :
@@ -262,7 +262,7 @@ def ftwrite_router(x,y,z,noc_x, noc_y, noc_z, vc_xy, vc_z, depth_xy, depth_z, ro
   vc_depth_array="("+vc_depth
 
   vc_depth_out="("
-  if vc_xy[z] is 1:
+  if (vc_xy[z] == 1):
     vc_depth_out += "0 => "
   for i in range(vc_xy[z]):
     if i == 0 :
@@ -293,7 +293,7 @@ def ftwrite_router(x,y,z,noc_x, noc_y, noc_z, vc_xy, vc_z, depth_xy, depth_z, ro
     vc_num_vec=vc_num_vec+", "+str(vc_xy[z])
     vc_num_out_vec=vc_num_out_vec+", "+str(vc_xy[z])
     vc_depth="("
-    if vc_xy[z] is 1:
+    if (vc_xy[z] == 1):
       vc_depth += "0 => "
     for i in range(vc_xy[z]):
       if i == 0 :
@@ -304,7 +304,7 @@ def ftwrite_router(x,y,z,noc_x, noc_y, noc_z, vc_xy, vc_z, depth_xy, depth_z, ro
     vc_depth_array=vc_depth_array+", "+vc_depth
 
     vc_depth_out="("
-    if vc_xy[z] is 1:
+    if (vc_xy[z] == 1):
       vc_depth_out += "0 => "
     for i in range(vc_xy[z]):
       if i == 0 :
@@ -335,7 +335,7 @@ def ftwrite_router(x,y,z,noc_x, noc_y, noc_z, vc_xy, vc_z, depth_xy, depth_z, ro
     vc_num_vec=vc_num_vec+", "+str(vc_xy[z])
     vc_num_out_vec=vc_num_out_vec+", "+str(vc_xy[z])
     vc_depth="("
-    if vc_xy[z] is 1:
+    if (vc_xy[z] == 1):
       vc_depth += "0 => "
     for i in range(vc_xy[z]):
       if i == 0 :
@@ -346,7 +346,7 @@ def ftwrite_router(x,y,z,noc_x, noc_y, noc_z, vc_xy, vc_z, depth_xy, depth_z, ro
     vc_depth_array=vc_depth_array+", "+vc_depth
 
     vc_depth_out="("
-    if vc_xy[z] is 1:
+    if (vc_xy[z] == 1):
       vc_depth_out += "0 => "
     for i in range(vc_xy[z]):
       if i == 0 :
@@ -377,7 +377,7 @@ def ftwrite_router(x,y,z,noc_x, noc_y, noc_z, vc_xy, vc_z, depth_xy, depth_z, ro
     vc_num_vec=vc_num_vec+", "+str(vc_xy[z])
     vc_num_out_vec=vc_num_out_vec+", "+str(vc_xy[z])
     vc_depth="("
-    if vc_xy[z] is 1:
+    if (vc_xy[z] == 1):
       vc_depth += "0 => "
     for i in range(vc_xy[z]):
       if i == 0 :
@@ -388,7 +388,7 @@ def ftwrite_router(x,y,z,noc_x, noc_y, noc_z, vc_xy, vc_z, depth_xy, depth_z, ro
     vc_depth_array=vc_depth_array+", "+vc_depth
 
     vc_depth_out="("
-    if vc_xy[z] is 1:
+    if (vc_xy[z] == 1):
       vc_depth_out += "0 => "
     for i in range(vc_xy[z]):
       if i == 0 :
@@ -419,7 +419,7 @@ def ftwrite_router(x,y,z,noc_x, noc_y, noc_z, vc_xy, vc_z, depth_xy, depth_z, ro
     vc_num_vec=vc_num_vec+", "+str(vc_xy[z])
     vc_num_out_vec=vc_num_out_vec+", "+str(vc_xy[z])
     vc_depth="("
-    if vc_xy[z] is 1:
+    if (vc_xy[z] == 1):
       vc_depth += "0 => "
     for i in range(vc_xy[z]):
       if i == 0 :
@@ -430,7 +430,7 @@ def ftwrite_router(x,y,z,noc_x, noc_y, noc_z, vc_xy, vc_z, depth_xy, depth_z, ro
     vc_depth_array=vc_depth_array+", "+vc_depth
 
     vc_depth_out="("
-    if vc_xy[z] is 1:
+    if (vc_xy[z] == 1):
       vc_depth_out += "0 => "
     for i in range(vc_xy[z]):
       if i == 0 :
@@ -461,7 +461,7 @@ def ftwrite_router(x,y,z,noc_x, noc_y, noc_z, vc_xy, vc_z, depth_xy, depth_z, ro
     vc_num_vec=vc_num_vec+", "+str(vc_z[z])
     vc_num_out_vec=vc_num_out_vec+", "+str(vc_z[z])
     vc_depth="("
-    if vc_xy[z] is 1:
+    if (vc_xy[z] == 1):
       vc_depth += "0 => "
     for i in range(vc_z[z]):
       if i == 0 :
@@ -472,7 +472,7 @@ def ftwrite_router(x,y,z,noc_x, noc_y, noc_z, vc_xy, vc_z, depth_xy, depth_z, ro
     vc_depth_array=vc_depth_array+", "+vc_depth
 
     vc_depth_out="("
-    if vc_xy[z] is 1:
+    if (vc_xy[z] == 1):
       vc_depth_out += "0 => "
     for i in range(vc_z[z]):
       if i == 0 :
@@ -503,7 +503,7 @@ def ftwrite_router(x,y,z,noc_x, noc_y, noc_z, vc_xy, vc_z, depth_xy, depth_z, ro
     vc_num_vec=vc_num_vec+", "+str(vc_z[z-1])
     vc_num_out_vec=vc_num_out_vec+", "+str(vc_z[z-1])
     vc_depth="("
-    if vc_xy[z-1] is 1:
+    if (vc_xy[z-1] == 1):
       vc_depth += "0 => "
     for i in range(vc_z[z-1]):
       if i == 0 :
@@ -514,7 +514,7 @@ def ftwrite_router(x,y,z,noc_x, noc_y, noc_z, vc_xy, vc_z, depth_xy, depth_z, ro
     vc_depth_array=vc_depth_array+", "+vc_depth
 
     vc_depth_out="("
-    if vc_xy[z-1] is 1:
+    if (vc_xy[z-1] == 1):
       vc_depth_out += "0 => "
     for i in range(vc_z[z-1]):
       if i == 0 :
