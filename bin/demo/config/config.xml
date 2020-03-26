@@ -1,11 +1,11 @@
 <?xml version="1.0" ?>
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <general>
-    <simulationTime value="1500000"/>
+    <simulationTime value="15000000"/>
     <outputToFile value="true">report</outputToFile>
   </general>
   <noc>
-    <nocFile>config/network_heterogeneous.xml</nocFile>
+    <nocFile>config/network.xml</nocFile>
     <flitsPerPacket value="32"/>
     <Vdd value="5"/>
   </noc>
@@ -23,7 +23,7 @@
         <hotspot value="0"/>
       </phase>
       <phase name="run">
-        <distribution value="uniform"/>
+        <distribution value="hotspot"/>
         <start max="1100" min="1100"/>
         <duration max="101100" min="15000000"/>
         <repeat max="-1" min="-1"/>
@@ -75,6 +75,6 @@
     </tasks>
   </verbose>
   <report>
-    <bufferReportRouters>5</bufferReportRouters>
+    <bufferReportRouters>5 6 9 10 21 22 25 26 37 38 41 42</bufferReportRouters>
   </report>
 </configuration>
