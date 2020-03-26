@@ -55,14 +55,14 @@ and compile:
 
 ```bash
 cd ~/ratatoskr/simulator
-./build
+./build.sh
 ```
 
 After a short time, you'll get the executable `sim`. Let's run three simple examples!
 
 ## Simulating a NoC for a heterogeneous 3D SoCs
 
-In this part, we'll simulate a NoC for a heterogeneous 3D SoC with two 30nm mixed-signal layers on top an a single 15nm digital layer on bottom. We'll use YXZY routing, as published from *Joseph et al. 2019*, and load uniform random traffic. The result will look like this:
+In this part, we'll simulate a NoC for a heterogeneous 3D SoC with two 30nm mixed-signal layers on top an a single 15nm digital layer on bottom. We'll use XYZ routing, as published from *Joseph et al. 2019*, and load uniform random traffic. The result will look like this:
 
 ![Heterogeneous Traffic](bin/demo/uniform_hetero_network.gif)
 
