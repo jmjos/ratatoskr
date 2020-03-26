@@ -1,28 +1,39 @@
-## Installation
+Quick script, also in bin/insItall.sh
 
-Quick script, also in bin/install.sh
+get Debian 9 repository
 ```bash 
 echo "deb http://download.opensuse.org/repositories/network:/messaging:/zeromq:/release-stable/Debian_9.0/ ./" | sudo tee -a /etc/apt/sources.list
 ```
+download Debian 9 key and add to keychain
 ```bash 
 wget https://download.opensuse.org/repositories/network:/messaging:/zeromq:/release-stable/Debian_9.0/Release.key -O- | sudo apt-key add
+```
+install pugxml, boost, cmake, ZeroMQ and python3
+```bash
 sudo apt install -y git libpugixml-dev libboost-all-dev cmake libzmq3-dev python3-venv
-
+```
+install Tcl/Tk, Tk for python
+```bash 
 sudo apt install -y tk-dev python-tk python3-tk
-
+```
+install systemc
+```bash 
 cd ~/Downloads
 wget www.accellera.org/images/downloads/standards/systemc/systemc-2.3.3.gz
 tar -xzf systemc-2.3.3.gz
-cd systemc-2.3.3.gz
+cd systemc-2.3.3/
 sudo mkdir -p /usr/local/systemc-2.3.3
 mkdir objdir
 cd objdir
 ../configure --prefix=/usr/local/systemc-2.3.3
 make -j3
 sudo make install
-
+```
+fork ratatoksr repository on github.com
+clone repository from your one account
+```bash 
 cd ~
-git clone https://github.com/jmjos/ratatoskr.git
+git clone https://github.com/YOUR-USERNAME/ratatoskr.git
 cd ratatoskr/simulator
 build.sh
 ```
