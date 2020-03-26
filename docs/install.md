@@ -1,4 +1,6 @@
-Quick script, also in bin/install.sh
+## Installation Guide
+
+Quick script, see in bin/install.sh
 
 get Debian 9 repository
 ```bash 
@@ -29,12 +31,12 @@ cd objdir
 make -j3
 sudo make install
 ```
-[fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) ratatoksr repository  
-clone repository from your one account
+[fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) ratatoksr repository on github.com  
+clone repository from your own account
 ```bash 
 cd ~
 git clone https://github.com/YOUR-USERNAME/ratatoskr.git
-cd ratatoskr/simulatorI
+cd ratatoskr/simulator
 ./build.sh
 ```
 
