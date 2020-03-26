@@ -2,7 +2,9 @@
 
 Quick script, also in bin/install.sh
 ```bash 
-echo "deb http://download.opensuse.org/repositories/network:/messaging:/zeromq:/release-stable/Debian_9.0/ ./" >> /etc/apt/sources.list
+echo "deb http://download.opensuse.org/repositories/network:/messaging:/zeromq:/release-stable/Debian_9.0/ ./" | sudo tee -a /etc/apt/sources.list
+```
+```bash 
 wget https://download.opensuse.org/repositories/network:/messaging:/zeromq:/release-stable/Debian_9.0/Release.key -O- | sudo apt-key add
 sudo apt install -y git libpugixml-dev libboost-all-dev cmake libzmq3-dev python3-venv
 
