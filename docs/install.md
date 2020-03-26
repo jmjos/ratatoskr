@@ -1,4 +1,4 @@
-Quick script, also in bin/insItall.sh
+Quick script, also in bin/install.sh
 
 get Debian 9 repository
 ```bash 
@@ -29,13 +29,13 @@ cd objdir
 make -j3
 sudo make install
 ```
-fork ratatoksr repository on github.com
+[fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) ratatoksr repository  
 clone repository from your one account
 ```bash 
 cd ~
 git clone https://github.com/YOUR-USERNAME/ratatoskr.git
-cd ratatoskr/simulator
-build.sh
+cd ratatoskr/simulatorI
+./build.sh
 ```
 
 ### Build Enviroment
@@ -43,40 +43,40 @@ build.sh
 - Ubuntu 18.04 (tested) or 19.10 (tested) & Boost Libs & pugixml
 - CentOS 7 & boost-devel.x86_64 & pugixml-devel.x86_64
 - cmake 3.10.2
-- SystemC 2.3.3 www.accellera.org/images/downloads/standards/systemc/systemc-2.3.3.gz
-- cmake assumes an installation of systemc to ``/usr/local/systemc-2.3.3`` If not the case, please modify simulator/CMakeLists.txt
-- installation of 0MQ, see http://zeromq.org/intro:get-the-software
+- [SystemC 2.3.3] (www.accellera.org/images/downloads/standards/systemc/systemc-2.3.3.gz)
+- cmake assumes an installation of systemc to ``/usr/local/systemc-2.3.3``. If not the case, please modify simulator/CMakeLists.txt
+- installation of ZeroMQ, see http://zeromq.org/intro:get-the-software
 
 If you are using Ubuntu 16, you must compile against SystemC 2.3.1a!
 
 #### Building with build script
 We provide a build script, which relys on cmake. It is provided run it via:
 ```
-> cd simulator
-> ./build
+cd ~/ratatoskr/simulator
+./build.sh
 ```
 
 
 #### Building with cmake
 Go into simulator folder. Simply type
 ```
-> cd simulator
-> cmake .
-> make
+cd simulator
+cmake .
+make
 ```
 
 To use a subfolder and multi-thread build:
 ```
-> mkdir build
-> cd build
-> cmake ..
-> make -j
-> cp sim ..
+mkdir build
+cd build
+cmake ..
+make -j
+cp sim ..
 ```
 
 #### Building with CLion
 
-Works out-of-the-box using "Open Existing Project" and then opening the CMakeLists.txt in the prject folder. You need to change one thing which is, the Generation path:
+Works out-of-the-box using "Open Existing Project" and then opening the CMakeLists.txt in the project folder. You need to change one thing which is, the Generation path:
 - File -> Settings -> Build, Execuation, Deployment -> CMake. Now set the Generation path to the current folder i.e. '.'.
 
 Enjoy.
