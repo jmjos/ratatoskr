@@ -1,28 +1,43 @@
-## Installation
+## Installation Guide
 
-Quick script, also in bin/install.sh
+Quick script, see in bin/install.sh
+
+get Debian 9 repository
 ```bash 
-echo "deb http://download.opensuse.org/repositories/network:/messaging:/zeromq:/release-stable/Debian_9.0/ ./" >> /etc/apt/sources.list
+echo "deb http://download.opensuse.org/repositories/network:/messaging:/zeromq:/release-stable/Debian_9.0/ ./" | sudo tee -a /etc/apt/sources.list
+```
+download Debian 9 key and add to keychain
+```bash 
 wget https://download.opensuse.org/repositories/network:/messaging:/zeromq:/release-stable/Debian_9.0/Release.key -O- | sudo apt-key add
+```
+install pugxml, boost, cmake, ZeroMQ and python3
+```bash
 sudo apt install -y git libpugixml-dev libboost-all-dev cmake libzmq3-dev python3-venv
-
+```
+install Tcl/Tk, Tk for python
+```bash 
 sudo apt install -y tk-dev python-tk python3-tk
-
+```
+install systemc
+```bash 
 cd ~/Downloads
 wget www.accellera.org/images/downloads/standards/systemc/systemc-2.3.3.gz
 tar -xzf systemc-2.3.3.gz
-cd systemc-2.3.3.gz
+cd systemc-2.3.3/
 sudo mkdir -p /usr/local/systemc-2.3.3
 mkdir objdir
 cd objdir
 ../configure --prefix=/usr/local/systemc-2.3.3
 make -j3
 sudo make install
-
+```
+[fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) ratatoksr repository on github.com  
+clone repository from your own account
+```bash 
 cd ~
-git clone https://github.com/jmjos/ratatoskr.git
+git clone https://github.com/YOUR-USERNAME/ratatoskr.git
 cd ratatoskr/simulator
-build.sh
+./build.sh
 ```
 
 ### Build Enviroment
@@ -30,40 +45,40 @@ build.sh
 - Ubuntu 18.04 (tested) or 19.10 (tested) & Boost Libs & pugixml
 - CentOS 7 & boost-devel.x86_64 & pugixml-devel.x86_64
 - cmake 3.10.2
-- SystemC 2.3.3 www.accellera.org/images/downloads/standards/systemc/systemc-2.3.3.gz
-- cmake assumes an installation of systemc to ``/usr/local/systemc-2.3.3`` If not the case, please modify simulator/CMakeLists.txt
-- installation of 0MQ, see http://zeromq.org/intro:get-the-software
+- [SystemC 2.3.3] (www.accellera.org/images/downloads/standards/systemc/systemc-2.3.3.gz)
+- cmake assumes an installation of systemc to ``/usr/local/systemc-2.3.3``. If not the case, please modify simulator/CMakeLists.txt
+- installation of ZeroMQ, see http://zeromq.org/intro:get-the-software
 
 If you are using Ubuntu 16, you must compile against SystemC 2.3.1a!
 
 #### Building with build script
 We provide a build script, which relys on cmake. It is provided run it via:
 ```
-> cd simulator
-> ./build
+cd ~/ratatoskr/simulator
+./build.sh
 ```
 
 
 #### Building with cmake
 Go into simulator folder. Simply type
 ```
-> cd simulator
-> cmake .
-> make
+cd simulator
+cmake .
+make
 ```
 
 To use a subfolder and multi-thread build:
 ```
-> mkdir build
-> cd build
-> cmake ..
-> make -j
-> cp sim ..
+mkdir build
+cd build
+cmake ..
+make -j
+cp sim ..
 ```
 
 #### Building with CLion
 
-Works out-of-the-box using "Open Existing Project" and then opening the CMakeLists.txt in the prject folder. You need to change one thing which is, the Generation path:
+Works out-of-the-box using "Open Existing Project" and then opening the CMakeLists.txt in the project folder. You need to change one thing which is, the Generation path:
 - File -> Settings -> Build, Execuation, Deployment -> CMake. Now set the Generation path to the current folder i.e. '.'.
 
 Enjoy.
