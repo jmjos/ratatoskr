@@ -35,6 +35,8 @@ Jan Moritz Joseph, Sven Wrieden, Christopher Blochwitz, Alberto Garc&iacute;a-Or
 
 ---
 
+A few words on the name: Ratatoskr is a squirrel in nordic mythodology that is running up and down a tree to transmit messages between a dragon and a eagle. Just as a 3D NoC...! 
+
 ## Getting started
 
 Here, we provide a quick tutorial. For in-depth instructions, please visit the [documentation](docs/TOC.md).
