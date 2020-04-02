@@ -24,7 +24,9 @@
 #include "NoC.h"
 
 NoC::NoC(sc_module_name nm):context(1), socket(context, ZMQ_REP){
+#ifdef ENABLE_GUI
     socket.bind ("tcp://*:5555");
+#endif
     dbid = rep.registerElement("NoC", 0);
     networkParticipants.resize(globalResources.nodes.size());
     flitSignalContainers.resize(globalResources.connections.size() * 2);
@@ -56,6 +58,7 @@ void NoC::createClocks() {
 
 void NoC::createTrafficPool() {
     unsigned long numOfPEs = globalResources.nodes.size() / 2;
+#ifndef ENABLE_NETRACE
     if (globalResources.benchmark == "task") {
         tp = std::make_unique<TaskPool>();
     } else if (globalResources.benchmark == "synthetic") {
@@ -63,6 +66,10 @@ void NoC::createTrafficPool() {
     } else {
         FATAL("Please specify correct benchmark type");
     }
+#endif
+//#ifdef ENABLE_NETRACE
+    tp = std::make_unique<NetracePool>();
+//#endif
     tp->processingElements.resize(numOfPEs);
 }
 

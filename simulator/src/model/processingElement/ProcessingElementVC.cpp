@@ -43,6 +43,7 @@ void ProcessingElementVC::initialize()
 void ProcessingElementVC::thread()
 {
     for (;;) {
+#ifndef ENABLE_NETRACE
         int timeStamp = static_cast<int>(sc_time_stamp().value()/1000);
 
         std::vector<DataDestination> removeList;
@@ -146,6 +147,21 @@ void ProcessingElementVC::thread()
         }
 
         wait(event);
+#endif
+//#ifdef ENABLE_NETRACE
+        //definition of the netrace mode, in which the PE forwards packets to the NIs. Packets are generated in the central NetracePool.
+        if (globalResources.netraceNodeToTask.find(this->node.id) != globalResources.netraceNodeToTask.end()){
+            //cout << "PE "<< id <<" running in nettrace mode at timestamp" << sc_time_stamp() << endl;
+            //TODO here we can add code to run netrace.
+            auto clockDelay = this->node.type->clockDelay;
+            event.notify(clockDelay, SC_NS);
+            wait(event);
+        } else{
+            //cout << "Node with id" << node.id << " does not have a netrace task so can sleep quite some time @ " << sc_time_stamp()  << endl;
+            event.notify(1000, SC_SEC);
+            wait(event);
+        }
+//#endif
     }
 }
 

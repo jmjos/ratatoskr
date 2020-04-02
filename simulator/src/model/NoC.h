@@ -52,6 +52,7 @@
 
 #include "model/traffic/synthetic/SyntheticPool.h"
 #include "model/traffic/task/TaskPool.h"
+#include "model/traffic/netrace/NetracePool.h"
 
 class NoC : public sc_module {
 public:
