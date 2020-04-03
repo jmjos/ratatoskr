@@ -26,34 +26,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef QUEUE_H_
-#define QUEUE_H_
+/*
+ * Modified by Jan Moritz Joseph (c) 2020
+ */
 
-#include <stdio.h>
-#include <stdlib.h>
 
-typedef struct node node_t;
-typedef struct queue queue_t;
+#pragma once
 
-struct node {
-	node_t* prev;
-	node_t* next;
-	unsigned long long int prio;
-	void* elem;
+
+#include "stdio.h"
+#include "stdlib.h"
+
+typedef struct ntNode node_t;
+typedef struct ntQueue queue_t;
+
+struct ntNode {
+    node_t* prev;
+    node_t* next;
+    unsigned long long int prio;
+    void* elem;
 };
 
-struct queue {
-	node_t* head;
-	node_t* tail;
+class ntQueue {
+    node_t* head;
+    node_t* tail;
+
+    queue_t*	queue_new( void );
+    void		queue_delete( queue_t* );
+    int			queue_empty( queue_t* );
+    void		queue_push_back( queue_t*, void* );
+    void		queue_push( queue_t*, void*, unsigned long long int );
+    void*		queue_peek_front( queue_t* );
+    void*		queue_pop_front( queue_t* );
+    void		queue_remove( queue_t*, void* );
 };
 
-queue_t*	queue_new( void );
-void		queue_delete( queue_t* );
-int			queue_empty( queue_t* );
-void		queue_push_back( queue_t*, void* );
-void		queue_push( queue_t*, void*, unsigned long long int );
-void*		queue_peek_front( queue_t* );
-void*		queue_pop_front( queue_t* );
-void		queue_remove( queue_t*, void* );
-
-#endif /*QUEUE_H_*/

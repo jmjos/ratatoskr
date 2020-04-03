@@ -34,8 +34,44 @@ NetracePool::~NetracePool()
 }
 
 void NetracePool::thread() {
+    ntNetrace ntnetrace;
+    //TODO read parameters from xml?
+    int i;
+    int ignore_dependencies = 0;
+    int start_region = 0;
+    int reader_throttling = 0;
+    char* tracefile = "src/model/traffic/netrace/testraces/example.tra.bz2";
+
+    int packets_left = 0;
+    cycle = 0;
+    nt_packet_t* trace_packet = NULL;
+    nt_packet_t* packet = NULL;
+    ntnetrace.nt_open_trfile( tracefile );
+    if( ignore_dependencies ) {
+        ntnetrace.nt_disable_dependencies();
+    }
+    ntnetrace.nt_print_trheader();
+    header = ntnetrace.nt_get_trheader();
+    ntnetrace.nt_seek_region( &header->regions[start_region] );
+    for( i = 0; i < start_region; i++ ) {
+        cycle += header->regions[i].num_cycles;
+    }
+
+    x_nodes = sqrt( header->num_nodes );
+    y_nodes = header->num_nodes / x_nodes;
+
+    ntQueue waiting[header->num_nodes];
+    ntQueue inject[header->num_nodes];
+    ntQueue traverse[header->num_nodes];
+
+    if( !reader_throttling ) {
+        trace_packet = ntnetrace.nt_read_packet();
+    } else if( !ignore_dependencies ) {
+        ntnetrace.nt_init_self_throttling();
+    }
+
     for(;;){
-        cout << "Netrace Pool is running!" << endl;
+        //cout << "Netrace Pool is running!" << endl;
         //TODO read files from netrace, use update from anna
 
         //TODO set correct delay

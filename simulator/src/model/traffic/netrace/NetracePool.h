@@ -27,9 +27,26 @@
 #include "utils/Report.h"
 #include "utils/Structures.h"
 #include "model/traffic/TrafficPool.h"
+#include "model/traffic/netrace/ntNetrace.h"
+#include "model/traffic/netrace/ntQueue.h"
+
+#define L2_LATENCY 8
+
+typedef struct queue_node queue_node_t;
+struct queue_node {
+    nt_packet_t* packet;
+    unsigned long long int cycle;
+};
 
 class NetracePool : public TrafficPool, sc_module {
 public:
+    unsigned long long int calc_packet_timing( nt_packet_t* );
+
+    nt_header_t* header;
+    int x_nodes, y_nodes;
+    unsigned long long int cycle;
+
+
     SC_HAS_PROCESS(NetracePool);
 
     sc_event event;
