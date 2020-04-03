@@ -24,6 +24,7 @@ import numpy as np
 import pickle
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
+plt.rcParams.update({'figure.max_open_warning': 0})
 from PyPDF2 import PdfFileMerger
 import glob as glob
 import os
@@ -55,10 +56,14 @@ def plot_latencies(results):
     fig = plt.figure()
     plt.ylabel('Latencies in ns', fontsize=11)
     plt.xlabel('Injection Rate', fontsize=11)
-    plt.xlim([0, 1])
+    plt.xlim([0, 0.1])
     linestyle = {'linestyle': '--', 'linewidth': 1, 'markeredgewidth': 1,
                  'elinewidth': 1, 'capsize': 10}
-    plt.errorbar(injectionRates, meanLatenciesFlit, yerr=stdLatenciesFlit,
+    print('latFlit: ', latenciesFlit)
+    print('latNet: ', latenciesNetwork)
+    print('latPack: ', latenciesPacket)
+    input('press key')
+    plt.errorbar(injectionRates[0], meanLatenciesFlit,
                  color='r', **linestyle, marker='*')
     plt.errorbar(injectionRates, meanLatenciesNetwork,
                  yerr=stdLatenciesNetwork, color='b', **linestyle,

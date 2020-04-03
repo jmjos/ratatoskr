@@ -6,7 +6,7 @@
   </general>
   <noc>
     <nocFile>config/network.xml</nocFile>
-    <flitsPerPacket value="10"/>
+    <flitsPerPacket value="32"/>
     <Vdd value="5"/>
   </noc>
   <application>
@@ -75,6 +75,6 @@
     </tasks>
   </verbose>
   <report>
-    <bufferReportRouters>1 2 3 4</bufferReportRouters>
+    <bufferReportRouters>5 6 9 10 21 22 25 26 37 38 41 42</bufferReportRouters>
   </report>
 </configuration>

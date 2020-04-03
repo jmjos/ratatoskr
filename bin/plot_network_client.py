@@ -283,7 +283,7 @@ def main():
     """
     Main Execution Point
     """
-    network_file = '../simulator/config/network.xml'
+    network_file = '/home/tzschoppe/ratatoskr/simulator/config/network.xml'
     try:
         network_file = sys.argv[1]
     except IndexError:

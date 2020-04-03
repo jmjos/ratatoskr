@@ -213,6 +213,9 @@ def begin_all_sims(config):
     latenciesFlit = -np.ones((len(injectionRates), config.restarts))
     latenciesPacket = -np.ones((len(injectionRates), config.restarts))
     latenciesNetwork = -np.ones((len(injectionRates), config.restarts))
+    
+    print('latFlit', latenciesFlit, '\nlatNet', latenciesNetwork, '\nlatPack', latenciesPacket)
+    input('press key')
 
     # Run the full simulation (for all injection rates).
     injIter = 0
@@ -232,6 +235,9 @@ def begin_all_sims(config):
             latenciesFlit[injIter, restart] = lat[0]
             latenciesPacket[injIter, restart] = lat[1]
             latenciesNetwork[injIter, restart] = lat[2]
+            
+            print('restart: ', restart)
+            print('lat: ', lat)
             VCUsage_run = combine_VC_hists(currentSimdir + '/VCUsage')
             if VCUsage_run is not None:
                 for ix, layer_df in enumerate(VCUsage_run):
@@ -242,8 +248,8 @@ def begin_all_sims(config):
                     for d in BuffUsage_inj[l]:
                         BuffUsage_inj[l][d] = BuffUsage_inj[l][d].add(
                                 BuffUsage_run[l][d], fill_value=0)
-            # input('press any key')
-            shutil.rmtree(currentSimdir)
+            input('press any key')
+            # shutil.rmtree(currentSimdir)
 
         # Calculate the average and std for VC usage.
         VCUsage_temp = []
