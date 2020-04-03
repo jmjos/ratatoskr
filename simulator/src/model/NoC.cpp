@@ -24,7 +24,9 @@
 #include "NoC.h"
 
 NoC::NoC(sc_module_name nm):context(1), socket(context, ZMQ_REP){
+#ifdef ENABLE_GUI
     socket.bind ("tcp://*:5555");
+#endif
     dbid = rep.registerElement("NoC", 0);
     networkParticipants.resize(globalResources.nodes.size());
     flitSignalContainers.resize(globalResources.connections.size() * 2);
