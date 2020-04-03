@@ -40,7 +40,7 @@ void NetracePool::thread() {
     int ignore_dependencies = 0;
     int start_region = 0;
     int reader_throttling = 0;
-    char* tracefile = "src/model/traffic/netrace/testraces/example.tra.bz2";
+    char* tracefile = "src/del/traffic/netrace/testraces/example.tra.bz2";
 
     int packets_left = 0;
     cycle = 0;
