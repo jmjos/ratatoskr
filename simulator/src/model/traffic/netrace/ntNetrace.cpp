@@ -39,13 +39,13 @@ ntNetrace::ntNetrace(){
 }
 
 
-void ntNetrace::nt_open_trfile( const char* trfilename ) {
+void ntNetrace::nt_open_trfile( const std::string trfilename ) {
     nt_close_trfile();
     int i;
     int length = 20;
     for( i = 0; trfilename[i] != 0; i++, length++ );
     nt_input_popencmd = (char*) malloc( length * sizeof(char) );
-    sprintf( nt_input_popencmd, "bzip2 -dc %s", trfilename );
+    std::cout << nt_input_popencmd << "bzip2 -dc " << trfilename << std::endl;
     nt_input_tracefile = popen( nt_input_popencmd, "r" );
     if( nt_input_tracefile == NULL ) {
         std::cout << "failed to open pipe to trace file" << std::endl;

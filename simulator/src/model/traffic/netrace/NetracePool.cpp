@@ -22,7 +22,7 @@
 
 #include "NetracePool.h"
 
-NetracePool::NetracePool() : sc_module("NetracePool")
+NetracePool::NetracePool(sc_module_name nm)
 {
     cout << endl;
     cout << "Netrace Benchmark" << endl;
@@ -40,7 +40,7 @@ void NetracePool::thread() {
     int ignore_dependencies = 0;
     int start_region = 0;
     int reader_throttling = 0;
-    char* tracefile = "src/del/traffic/netrace/testraces/example.tra.bz2";
+    std::string tracefile = "src/model/traffic/netrace/testraces/example.tra.bz2";
 
     int packets_left = 0;
     cycle = 0;
@@ -69,6 +69,8 @@ void NetracePool::thread() {
     } else if( !ignore_dependencies ) {
         ntnetrace.nt_init_self_throttling();
     }
+
+    cout << "cycle " << cycle << std::endl;
 
     for(;;){
         //cout << "Netrace Pool is running!" << endl;

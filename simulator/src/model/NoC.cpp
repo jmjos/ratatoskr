@@ -68,7 +68,7 @@ void NoC::createTrafficPool() {
     }
 #endif
 //#ifdef ENABLE_NETRACE
-    tp = std::make_unique<NetracePool>();
+    tp = std::make_unique<NetracePool>("NetracePool");
 //#endif
     tp->processingElements.resize(numOfPEs);
 }

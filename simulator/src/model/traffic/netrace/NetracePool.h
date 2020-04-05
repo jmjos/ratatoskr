@@ -51,7 +51,7 @@ public:
 
     sc_event event;
 
-    NetracePool();//sc_module_name nm);
+    NetracePool(sc_module_name);//sc_module_name nm);
 
     ~NetracePool();
 
