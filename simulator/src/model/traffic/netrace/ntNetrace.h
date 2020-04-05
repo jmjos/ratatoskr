@@ -144,7 +144,7 @@ public:
                                                      "L2 Cache", "Memory Controller", "Invalid Node Type" };
 
 // Interface Functions
-    void nt_open_trfile( const std::string );
+    void nt_open_trfile( const char* );
     void nt_disable_dependencies( void );
     void nt_seek_region( nt_regionhead_t* );
     nt_packet_t*    nt_read_packet( void );
