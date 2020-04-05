@@ -602,7 +602,7 @@ void ntNetrace::nt_packet_free( nt_packet_t* packet ) {
 void ntNetrace::nt_print_packet( nt_packet_t* packet ) {
     int i;
     if( packet != NULL ) {
-        std::cout << "  ID:" << packet->id << "CYC: " << packet->cycle << " SRC: " << packet->src << "DST: " << packet->dst << "ADR: " << packet->addr << "TYP: " << nt_packet_type_to_string( packet ) << " NDEP: "<< packet->num_deps << std::endl;
+        std::cout << "  ID:" << packet->id << " CYC: " << packet->cycle << " SRC: " << packet->src << " DST: " << packet->dst << "ADR: " << packet->addr << "TYP: " << nt_packet_type_to_string( packet ) << " NDEP: "<< packet->num_deps << std::endl;
         for( i = 0; i < packet->num_deps; i++ ) {
             printf( " %d", packet->deps[i] );
         }

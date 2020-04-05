@@ -30,6 +30,7 @@
  * Modified by Jan Moritz Joseph (c) 2020
  */
 
+#include <iostream>
 #include "ntQueue.h"
 
 

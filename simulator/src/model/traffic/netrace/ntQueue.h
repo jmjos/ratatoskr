@@ -30,6 +30,8 @@
  * Modified by Jan Moritz Joseph (c) 2020
  */
 
+// basically this is a std queue with std::pair<queue_node_type, unsigned long long int>(elem, prio)
+
 
 #pragma once
 
@@ -48,6 +50,7 @@ struct ntNode {
 };
 
 class ntQueue {
+public:
     node_t* head;
     node_t* tail;
 

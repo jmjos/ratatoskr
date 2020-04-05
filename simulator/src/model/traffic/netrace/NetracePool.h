@@ -29,6 +29,7 @@
 #include "model/traffic/TrafficPool.h"
 #include "model/traffic/netrace/ntNetrace.h"
 #include "model/traffic/netrace/ntQueue.h"
+#include "model/processingElement/ProcessingElementVC.h"
 
 #define L2_LATENCY 8
 

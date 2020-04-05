@@ -20,6 +20,7 @@
  * SOFTWARE.
  ******************************************************************************/
 
+#include <model/processingElement/ProcessingElementVC.h>
 #include "NetracePool.h"
 
 NetracePool::NetracePool(sc_module_name nm)
@@ -40,7 +41,7 @@ void NetracePool::thread() {
     int ignore_dependencies = 0;
     int start_region = 0;
     int reader_throttling = 0;
-    const char* tracefile = "/home/joseph/Documents/git/ratatoskr/simulator/src/model/traffic/netrace/testraces/example.tra.bz2";
+    const char* tracefile = "src/model/traffic/netrace/testraces/example.tra.bz2";
 
     int packets_left = 0;
     cycle = 0;
@@ -60,19 +61,68 @@ void NetracePool::thread() {
     x_nodes = sqrt( header->num_nodes );
     y_nodes = header->num_nodes / x_nodes;
 
-    ntQueue waiting[header->num_nodes];
-    ntQueue inject[header->num_nodes];
-    ntQueue traverse[header->num_nodes];
+    ntQueue* waiting[header->num_nodes];
+    ntQueue* inject[header->num_nodes];
+    ntQueue* traverse[header->num_nodes];
 
     if( !reader_throttling ) {
         trace_packet = ntnetrace.nt_read_packet();
+        ntnetrace.nt_print_packet(trace_packet);
     } else if( !ignore_dependencies ) {
         ntnetrace.nt_init_self_throttling();
     }
 
-    cout << "cycle " << cycle << std::endl;
 
     for(;;){
+
+        // Reset packets remaining check
+        packets_left = 0;
+
+        // Get packets for this cycle
+        if( reader_throttling ) {
+            nt_packet_list_t* list;
+            for( list = ntnetrace.nt_get_cleared_packets_list(); list != NULL; list = list->next ) {
+                if( list->node_packet != NULL ) {
+                    trace_packet = list->node_packet;
+                    queue_node_t* new_node = (queue_node_t*) malloc( sizeof(queue_node_t) );
+                    new_node->packet = trace_packet;
+                    new_node->cycle = (trace_packet->cycle > cycle) ? trace_packet->cycle : cycle;
+                    inject[trace_packet->src]->queue_push( inject[trace_packet->src], new_node, new_node->cycle );
+                } else {
+                    printf( "Malformed packet list" );
+                    exit(-1);
+                }
+            }
+            ntnetrace.nt_empty_cleared_packets_list();
+        } else {
+            while( (trace_packet != NULL) && (trace_packet->cycle == cycle) ) {
+                // Place in appropriate queue
+                queue_node_t* new_node = (queue_node_t*) malloc( sizeof(queue_node_t) );
+                new_node->packet = trace_packet;
+                new_node->cycle = (trace_packet->cycle > cycle) ? trace_packet->cycle : cycle;
+                if( ignore_dependencies || ntnetrace.nt_dependencies_cleared( trace_packet ) ) {
+                    // Add to inject queue
+                    std::cout << "HERE5a" << std::endl;
+                    ntnetrace.nt_print_packet(new_node->packet);
+                    ProcessingElementVC* pe = (ProcessingElementVC*) processingElements.at(trace_packet->src);
+                    pe->ntInject.push(std::make_pair(*new_node, new_node->cycle));
+                } else {
+                    // Add to waiting queue
+                    ProcessingElementVC* pe = (ProcessingElementVC*) processingElements.at(trace_packet->src);
+                    pe->ntWaiting.push(std::make_pair(*new_node, new_node->cycle));
+                }
+                // Get another packet from trace
+                std::cout << "HERE 6" << std::endl;
+                trace_packet = ntnetrace.nt_read_packet();
+            }
+            if( (trace_packet != NULL) && (trace_packet->cycle < cycle) ) {
+                // Error check: Crash and burn
+                printf( "Invalid trace_packet cycle time: %llu, current cycle: %llu\n", trace_packet->cycle, cycle );
+                exit(-1);
+            }
+        }
+
+
         //cout << "Netrace Pool is running!" << endl;
         //TODO read files from netrace, use update from anna
 
