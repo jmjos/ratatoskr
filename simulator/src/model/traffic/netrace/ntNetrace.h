@@ -164,7 +164,7 @@ public:
     int nt_get_src_type( nt_packet_t* );
     int nt_get_dst_type( nt_packet_t* );
     const std::string    nt_node_type_to_string( int );
-    const std::string    nt_packet_type_to_string( nt_packet_t* );
+    const char*   nt_packet_type_to_string( nt_packet_t* );
     int nt_get_packet_size( nt_packet_t* );
 
 // Netrace Internal Helper Functions

@@ -38,7 +38,7 @@ void NetracePool::thread() {
     ntNetrace ntnetrace;
     //TODO read parameters from xml?
     int i;
-    int ignore_dependencies = 0;
+    int ignore_dependencies = 1;
     int start_region = 0;
     int reader_throttling = 0;
     const char* tracefile = "src/model/traffic/netrace/testraces/example.tra.bz2";
@@ -67,11 +67,13 @@ void NetracePool::thread() {
 
     if( !reader_throttling ) {
         trace_packet = ntnetrace.nt_read_packet();
-        ntnetrace.nt_print_packet(trace_packet);
     } else if( !ignore_dependencies ) {
         ntnetrace.nt_init_self_throttling();
     }
 
+    //initial delay after which the simulation starts
+    event.notify(10, SC_NS);
+    wait(event);
 
     for(;;){
 
@@ -95,6 +97,9 @@ void NetracePool::thread() {
             }
             ntnetrace.nt_empty_cleared_packets_list();
         } else {
+            //std::cout << "here 8 @ " << sc_time_stamp() << std::endl;
+            //ntnetrace.nt_print_packet(trace_packet);
+            //std::cout << "trace_packet->cycle " << trace_packet->cycle << std::endl;
             while( (trace_packet != NULL) && (trace_packet->cycle == cycle) ) {
                 // Place in appropriate queue
                 queue_node_t* new_node = (queue_node_t*) malloc( sizeof(queue_node_t) );
@@ -102,17 +107,16 @@ void NetracePool::thread() {
                 new_node->cycle = (trace_packet->cycle > cycle) ? trace_packet->cycle : cycle;
                 if( ignore_dependencies || ntnetrace.nt_dependencies_cleared( trace_packet ) ) {
                     // Add to inject queue
-                    std::cout << "HERE5a" << std::endl;
-                    ntnetrace.nt_print_packet(new_node->packet);
-                    ProcessingElementVC* pe = (ProcessingElementVC*) processingElements.at(trace_packet->src);
+                    //cout << "@ " << sc_time_stamp();
+                    //ntnetrace.nt_print_packet(new_node->packet);
+                    ProcessingElementVC* pe = (ProcessingElementVC*) processingElements.at(trace_packet->src%48);
                     pe->ntInject.push(std::make_pair(*new_node, new_node->cycle));
                 } else {
                     // Add to waiting queue
-                    ProcessingElementVC* pe = (ProcessingElementVC*) processingElements.at(trace_packet->src);
+                    ProcessingElementVC* pe = (ProcessingElementVC*) processingElements.at(trace_packet->src%48);
                     pe->ntWaiting.push(std::make_pair(*new_node, new_node->cycle));
                 }
                 // Get another packet from trace
-                std::cout << "HERE 6" << std::endl;
                 trace_packet = ntnetrace.nt_read_packet();
             }
             if( (trace_packet != NULL) && (trace_packet->cycle < cycle) ) {
@@ -122,13 +126,11 @@ void NetracePool::thread() {
             }
         }
 
-
-        //cout << "Netrace Pool is running!" << endl;
-        //TODO read files from netrace, use update from anna
-
-        //TODO set correct delay
-        auto clockDelay = 1;
-        event.notify(clockDelay, SC_NS);
+        cycle++;
+        // shortens the ration at which the CPU is overclocked vs the network
+        // 100 = 10x vs 1GHz
+        auto clockDelay = 100;
+        event.notify(clockDelay, SC_PS);
         wait(event);
     }
 }

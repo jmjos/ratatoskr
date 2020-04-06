@@ -53,9 +53,9 @@
     <router>
       <function_calls value="false"/>
       <send_flit value="false"/>
-      <send_head_flit value="true"/>
+      <send_head_flit value="false"/>
       <receive_flit value="false"/>
-      <receive_tail_flit value="true"/>
+      <receive_tail_flit value="false"/>
       <throttle value="false"/>
       <reset value="false"/>
       <assign_channel value="false"/>

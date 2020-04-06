@@ -160,6 +160,7 @@ void NetworkInterfaceVC::receiveFlitFromRouter()
         Packet* p = received_flit->packet;
         double time = sc_time_stamp().to_double();
         // generate packet statistics. in case of synthetic traffic only for run phase
+#ifndef ENABLE_NETRACE
         if ((float) globalResources.synthetic_start_measurement_time<=(time/1000)) {
             globalReport.latencyFlit.sample((float)(time-received_flit->injectionTime)); // evil line of code
             if (received_flit->type==TAIL || received_flit->type==SINGLE) {
@@ -167,6 +168,15 @@ void NetworkInterfaceVC::receiveFlitFromRouter()
                 globalReport.latencyNetwork.sample((float) (time-received_flit->headFlit->injectionTime));
             }
         }
+#endif
+#ifdef ENABLE_NETRACE
+        globalReport.latencyFlit.sample((float)(time-received_flit->injectionTime)); // evil line of code
+        if (received_flit->type==TAIL || received_flit->type==SINGLE) {
+            globalReport.latencyPacket.sample((float) (time-received_flit->headFlit->generationTime));
+            globalReport.latencyNetwork.sample((float) (time-received_flit->headFlit->injectionTime));
+        }
+#endif
+
 
 
         auto position = std::find(p->inTransmit.begin(), p->inTransmit.end(), received_flit->id);

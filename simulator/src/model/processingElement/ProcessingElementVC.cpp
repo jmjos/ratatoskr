@@ -153,14 +153,26 @@ void ProcessingElementVC::thread()
         if (globalResources.netraceNodeToTask.find(this->node.id) != globalResources.netraceNodeToTask.end()){
             //cout << "PE "<< id <<" running in nettrace mode at timestamp" << sc_time_stamp() << endl;
             //TODO here we can add code to run netrace.
-            auto clockDelay = this->node.type->clockDelay;
-            event.notify(clockDelay, SC_NS);
-            wait(event);
-        } else{
-            //cout << "Node with id" << node.id << " does not have a netrace task so can sleep quite some time @ " << sc_time_stamp()  << endl;
-            event.notify(1000, SC_SEC);
-            wait(event);
+            // check injection queue
+            if(!ntInject.empty()){
+                ntNetrace ntnetrace;
+                nt_packet_t trace_packet = *ntInject.front().first.packet;
+                ntInject.pop();
+                //cout << "PE " << this->id << " inject queue @ " << sc_time_stamp() << " has ";
+                //ntnetrace.nt_print_packet(&trace_packet);
+                //cout << endl;
+                Node dstNode = globalResources.nodes.at(trace_packet.dst);
+                Packet* p = packetFactory.createPacket(this->node, dstNode, globalResources.flitsPerPacket, sc_time_stamp().to_double(),1);
+                packetPortContainer->portValidOut = true;
+                packetPortContainer->portDataOut = p;
+            }
+            wait(SC_ZERO_TIME);
+            packetPortContainer->portValidOut = false;
         }
+        auto clockDelay = this->node.type->clockDelay;
+        event.notify(clockDelay, SC_NS);
+        wait(event);
+
 //#endif
     }
 }

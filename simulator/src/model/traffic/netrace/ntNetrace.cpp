@@ -206,8 +206,8 @@ nt_packet_t* ntNetrace::nt_read_packet( void ) {
     if( nt_input_tracefile != NULL ) {
         to_return = nt_packet_malloc();
         if( (err = fread( to_return, 1, sizeof(struct nt_packet_pack), nt_input_tracefile )) < 0 ) {
-            sprintf( strerr, "failed to read packet: err = %d", err );
-            std::cout <<  strerr << std::endl;
+            sprintf(strerr, "failed to read packet: err = %d", err);
+            std::cout << strerr << std::endl;
         }
         if( err > 0 && err < sizeof(struct nt_packet_pack) ) {
             // Bad packet - end of file
@@ -569,11 +569,11 @@ int ntNetrace::nt_get_packet_size( nt_packet_t* packet ) {
     }
 }
 
-const std::string ntNetrace::nt_packet_type_to_string( nt_packet_t* packet ) {
+const char* ntNetrace::nt_packet_type_to_string( nt_packet_t* packet ) {
     if( packet->type < NT_NUM_PACKET_TYPES ) {
-        return nt_packet_types[packet->type];
+        return nt_packet_types[packet->type].c_str();
     } else {
-        return nt_packet_types[0];
+        return nt_packet_types[0].c_str();
     }
 }
 
@@ -602,7 +602,10 @@ void ntNetrace::nt_packet_free( nt_packet_t* packet ) {
 void ntNetrace::nt_print_packet( nt_packet_t* packet ) {
     int i;
     if( packet != NULL ) {
-        std::cout << "  ID:" << packet->id << " CYC: " << packet->cycle << " SRC: " << packet->src << " DST: " << packet->dst << "ADR: " << packet->addr << "TYP: " << nt_packet_type_to_string( packet ) << " NDEP: "<< packet->num_deps << std::endl;
+        printf( "  ID:%u CYC:%llu SRC:%u DST:%u ADR:0x%08x TYP:%s NDEP:%u",
+                packet->id, packet->cycle, packet->src,
+                packet->dst, packet->addr, nt_packet_type_to_string( packet ),
+                packet->num_deps );
         for( i = 0; i < packet->num_deps; i++ ) {
             printf( " %d", packet->deps[i] );
         }
