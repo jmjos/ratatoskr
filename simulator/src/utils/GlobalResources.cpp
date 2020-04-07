@@ -155,6 +155,7 @@ void GlobalResources::readConfigFile(const std::string& configPath)
     pugi::xml_node noc_node = doc.child("configuration").child("noc");
     noc_file = noc_node.child_value("nocFile");
     flitsPerPacket = noc_node.child("flitsPerPacket").attribute("value").as_int();
+    bitWidth = noc_node.child("bitWidth").attribute("value").as_int();
     routingVerticalThreshold = noc_node.child("routingVerticalThreshold").attribute("value").as_float();
     Vdd = noc_node.child("Vdd").attribute("value").as_float();
 

@@ -42,6 +42,7 @@ public:
     std::string outputFileName;
     std::string noc_file;
     int flitsPerPacket = 0;
+    int bitWidth = 32;
     float routingVerticalThreshold = 1.0f;
     float Vdd = 1.0f;
     std::string bufferDepthType;
