@@ -38,8 +38,8 @@ GlobalResources::GlobalResources()
     rd_seed = seed;
 #ifdef ENABLE_NETRACE
     for (int i = 0; i < 64; ++i) {
-        netraceNodeToTask.insert(std::pair<nodeID_t, int>(i%48+48, i%48));
-        netraceTaskToNode.insert(std::pair<int, nodeID_t>(i%48, i%48+48));;
+        netraceNodeToTask.insert(std::pair<nodeID_t, int>(i%64+64, i%64));
+        netraceTaskToNode.insert(std::pair<int, nodeID_t>(i%64, i%64+64));;
     }
 #endif
 }
