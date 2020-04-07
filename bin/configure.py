@@ -39,6 +39,7 @@ class Configuration:
             raise
         self.simulationTime = int(config['Config']['simulationTime'])
         self.flitsPerPacket = int(config['Config']['flitsPerPacket'])
+        self.bitWidth = int(config['Config']['bitWidth'])
         self.benchmark = config['Config']['benchmark']
         self.libDir = config['Config']['libDir']
 

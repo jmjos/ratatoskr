@@ -43,6 +43,7 @@ void ProcessingElementVC::initialize()
 void ProcessingElementVC::thread()
 {
     for (;;) {
+#ifndef ENABLE_NETRACE
         int timeStamp = static_cast<int>(sc_time_stamp().value()/1000);
 
         std::vector<DataDestination> removeList;
@@ -146,6 +147,46 @@ void ProcessingElementVC::thread()
         }
 
         wait(event);
+#endif
+#ifdef ENABLE_NETRACE
+        ntNetrace ntnetrace;
+        int packetsLeft = 0;
+        nt_packet_t trace_packet;
+        Node dstNode;
+        //definition of the netrace mode, in which the PE forwards packets to the NIs. Packets are generated in the central NetracePool.
+        if (globalResources.netraceNodeToTask.find(this->node.id) != globalResources.netraceNodeToTask.end()){
+            //cout << "PE "<< id <<" running in nettrace mode at timestamp" << sc_time_stamp() << endl;
+            //TODO here we can add code to run netrace.
+            // check injection queue
+            if (packetsLeft > 0){
+                Packet* p = packetFactory.createPacket(this->node, dstNode, globalResources.flitsPerPacket, sc_time_stamp().to_double(),1);
+                packetPortContainer->portValidOut = true;
+                packetPortContainer->portDataOut = p;
+                packetsLeft--;
+            } else if(!ntInject.empty()){
+                trace_packet = *ntInject.front().first.packet;
+                ntInject.pop();
+                float packetSizeInByte = (float) ntnetrace.nt_packet_sizes[trace_packet.type];
+                float bytesPerPacket = ((float) globalResources.flitsPerPacket - 1.0f) * (float) globalResources.bitWidth / 8.0f;
+                packetsLeft = (int) ceil(packetSizeInByte/bytesPerPacket);
+                //cout << "ASDF packetSize " << packetSizeInByte << "B results in bytes per packet " << bytesPerPacket << "B and " << packetsLeft << "packets" << endl;
+                //cout << "PE " << this->id << " inject queue @ " << sc_time_stamp() << " has ";
+                //ntnetrace.nt_print_packet(&trace_packet);
+                //cout << endl;
+                dstNode = globalResources.nodes.at(trace_packet.dst);
+                Packet* p = packetFactory.createPacket(this->node, dstNode, globalResources.flitsPerPacket, sc_time_stamp().to_double(),1);
+                packetPortContainer->portValidOut = true;
+                packetPortContainer->portDataOut = p;
+                packetsLeft--;
+            }
+            wait(SC_ZERO_TIME);
+            packetPortContainer->portValidOut = false;
+        }
+        auto clockDelay = this->node.type->clockDelay;
+        event.notify(clockDelay, SC_NS);
+        wait(event);
+
+#endif
     }
 }
 

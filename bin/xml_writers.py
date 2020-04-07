@@ -501,6 +501,8 @@ class ConfigWriter(Writer):
         nocFile_node.text = 'config/network.xml'
         flitsPerPacket_node = ET.SubElement(noc_node, 'flitsPerPacket')
         flitsPerPacket_node.set('value', str(self.config.flitsPerPacket))
+        bitWidth_node = ET.SubElement(noc_node, 'bitWidth')
+        bitWidth_node.set('value', str(self.config.bitWidth))
         Vdd_node = ET.SubElement(noc_node, 'Vdd')
         Vdd_node.set('value', '5')
 
