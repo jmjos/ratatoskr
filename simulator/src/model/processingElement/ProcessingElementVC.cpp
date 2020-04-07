@@ -148,7 +148,7 @@ void ProcessingElementVC::thread()
 
         wait(event);
 #endif
-//#ifdef ENABLE_NETRACE
+#ifdef ENABLE_NETRACE
         //definition of the netrace mode, in which the PE forwards packets to the NIs. Packets are generated in the central NetracePool.
         if (globalResources.netraceNodeToTask.find(this->node.id) != globalResources.netraceNodeToTask.end()){
             //cout << "PE "<< id <<" running in nettrace mode at timestamp" << sc_time_stamp() << endl;
@@ -173,7 +173,7 @@ void ProcessingElementVC::thread()
         event.notify(clockDelay, SC_NS);
         wait(event);
 
-//#endif
+#endif
     }
 }
 

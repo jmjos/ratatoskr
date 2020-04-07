@@ -67,9 +67,9 @@ void NoC::createTrafficPool() {
         FATAL("Please specify correct benchmark type");
     }
 #endif
-//#ifdef ENABLE_NETRACE
+#ifdef ENABLE_NETRACE
     tp = std::make_unique<NetracePool>("NetracePool");
-//#endif
+#endif
     tp->processingElements.resize(numOfPEs);
 }
 

@@ -36,12 +36,12 @@ GlobalResources::GlobalResources()
     auto seed = std::random_device{}();
     rand->seed(seed);
     rd_seed = seed;
-//#ifdef ENABLE_NETRACE
+#ifdef ENABLE_NETRACE
     for (int i = 0; i < 64; ++i) {
         netraceNodeToTask.insert(std::pair<nodeID_t, int>(i%48+48, i%48));
         netraceTaskToNode.insert(std::pair<int, nodeID_t>(i%48, i%48+48));;
     }
-//#endif
+#endif
 }
 
 GlobalResources& GlobalResources::getInstance()

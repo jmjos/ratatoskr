@@ -26,7 +26,9 @@
 NetracePool::NetracePool(sc_module_name nm)
 {
     cout << endl;
-    cout << "Netrace Benchmark" << endl;
+    cout << "Running in Netrace Benchmark mode." << endl;
+    cout << "  This mode has limited functionality. It can only be run with a 8x4x2 NoC or on a single layer of a 8x8x2 NoC" << endl;
+    cout << "  The mapping is changed in GlobalsResources.cpp, varibles netraceNodeToTask and netraceTaskToNode" << endl;
     SC_THREAD(thread);
 }
 
@@ -36,6 +38,7 @@ NetracePool::~NetracePool()
 
 void NetracePool::thread() {
     ntNetrace ntnetrace;
+#ifdef ENABLE_NETRACE
     //TODO read parameters from xml?
     int i;
     int ignore_dependencies = 1;
@@ -133,6 +136,7 @@ void NetracePool::thread() {
         event.notify(clockDelay, SC_PS);
         wait(event);
     }
+#endif
 }
 
 void NetracePool::clear(Task*)
