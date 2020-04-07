@@ -35,7 +35,7 @@
     </synthetic>
     <simulationFile>traffic/pipelinePerformance_2D/PipelineResetTB.xml</simulationFile>
     <mappingFile>traffic/pipelinePerformance_2D/PipelineResetTBMapping.xml</mappingFile>
-    <netraceFile>traffic/netrace/example.tra.bz2</netraceFile>
+    <netraceFile>src/model/traffic/netrace/testraces/example.tra.bz2</netraceFile>
     <netraceStartRegion value="0"/>
     <isUniform value="false"/>
     <numberOfTrafficTypes value="5"/>

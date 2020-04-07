@@ -44,7 +44,7 @@ void NetracePool::thread() {
     int ignore_dependencies = 1;
     int start_region = 0;
     int reader_throttling = 0;
-    const char* tracefile = "src/model/traffic/netrace/testraces/example.tra.bz2";
+    const char* tracefile = globalResources.netraceFile.c_str();
 
     int packets_left = 0;
     cycle = 0;
