@@ -95,3 +95,8 @@ Project Settings:
 > Includes: -I /usr/local/systemc/include   -I ./src
 > Libraries: -l systemc, -L /usr/local/systemc/lib-linux64  
 ```
+## Compile Flags
+
+- `ENABLE_GUI` enables the zmq forwarding from simulator to gui. Please disable for parallel execution of multiple instances of the simulator, as they block the same port and fail.
+- `ENABLE_BUFFER_VC_STATS` enables detailed buffer stats per VC in form of a histogram. Large performance penalty, so disable if not required.
+- `ENABLE_NETRACE` enables netrace mode. Separate mode, requires recompilation for many settings. Only works with config/nt*.xml configuration files. 

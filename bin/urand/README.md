@@ -7,6 +7,8 @@ The python script requires python3. Please check if it's installed on your machi
 
 If it is not installed, please go to the offcial <a href="https://www.python.org/downloads/" > website</a> and follow the instructions.
 
+Also, you'll need the non-gui version of ratatoskr (do not use -D ENABLE_GUI). Otherwise, you'll get a E574 error in systemc.
+
 # What is in this folder?
 
 ## Makefile:
