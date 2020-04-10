@@ -48,7 +48,12 @@ int sc_main(int arg_num, char* arg_vec[])
         globalResources.readConfigFile(arg_vec[1]);
     }
     else {
+#ifndef ENABLE_NETRACE
         std::string config_path = "config/config.xml";
+#endif
+#ifdef ENABLE_NETRACE
+        std::string config_path = "config/ntConfig.xml";
+#endif
         globalResources.readConfigFile(config_path);
         globalReport.readConfigFile(config_path);
     }

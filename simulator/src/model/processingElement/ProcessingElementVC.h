@@ -33,7 +33,9 @@
 #include "utils/Report.h"
 #include "utils/Structures.h"
 #include <model/container/PacketContainer.h>
-
+#ifdef ENABLE_NETRACE
+#include <model/traffic/netrace/NetracePool.h>
+#endif
 #include "ProcessingElement.h"
 
 class ProcessingElementVC : public ProcessingElement {
@@ -51,6 +53,11 @@ public:
     std::map<Task, int> taskTerminationTime;
     std::map<DataDestination, int> countLeft;
     std::map<DataDestination, int> destWait;
+
+#ifdef ENABLE_NETRACE
+    std::queue<std::pair<queue_node_t, unsigned long long int>> ntInject;
+    std::queue<std::pair<queue_node_t, unsigned long long int>> ntWaiting;
+#endif
 
     SC_HAS_PROCESS(ProcessingElementVC);
 

@@ -36,6 +36,12 @@ GlobalResources::GlobalResources()
     auto seed = std::random_device{}();
     rand->seed(seed);
     rd_seed = seed;
+#ifdef ENABLE_NETRACE
+    for (int i = 0; i < 64; ++i) {
+        netraceNodeToTask.insert(std::pair<nodeID_t, int>(i%64+64, i%64));
+        netraceTaskToNode.insert(std::pair<int, nodeID_t>(i%64, i%64+64));;
+    }
+#endif
 }
 
 GlobalResources& GlobalResources::getInstance()
@@ -149,6 +155,7 @@ void GlobalResources::readConfigFile(const std::string& configPath)
     pugi::xml_node noc_node = doc.child("configuration").child("noc");
     noc_file = noc_node.child_value("nocFile");
     flitsPerPacket = noc_node.child("flitsPerPacket").attribute("value").as_int();
+    bitWidth = noc_node.child("bitWidth").attribute("value").as_int();
     routingVerticalThreshold = noc_node.child("routingVerticalThreshold").attribute("value").as_float();
     Vdd = noc_node.child("Vdd").attribute("value").as_float();
 

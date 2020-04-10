@@ -1,39 +1,17 @@
 <?xml version="1.0" ?>
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <general>
-    <simulationTime value="1500"/>
+    <simulationTime value="100000"/>
     <outputToFile value="true">report</outputToFile>
   </general>
   <noc>
     <nocFile>config/network.xml</nocFile>
-    <flitsPerPacket value="1"/>
+    <flitsPerPacket value="4"/>
     <bitWidth value="32"/>
     <Vdd value="5"/>
   </noc>
   <application>
-    <benchmark>synthetic</benchmark>
-    <synthetic>
-      <phase name="warmup">
-        <distribution value="uniform"/>
-        <start max="100" min="100"/>
-        <duration max="1090" min="1090"/>
-        <repeat max="-1" min="-1"/>
-        <delay max="0" min="0"/>
-        <injectionRate value="0.002"/>
-        <count max="1" min="1"/>
-        <hotspot value="0"/>
-      </phase>
-      <phase name="run">
-        <distribution value="uniform"/>
-        <start max="1100" min="1100"/>
-        <duration max="101100" min="1500000"/>
-        <repeat max="-1" min="-1"/>
-        <delay max="0" min="0"/>
-        <injectionRate value="0.002"/>
-        <count max="1" min="1"/>
-        <hotspot value="0"/>
-      </phase>
-    </synthetic>
+    <benchmark>netrace</benchmark>
     <simulationFile>traffic/pipelinePerformance_2D/PipelineResetTB.xml</simulationFile>
     <mappingFile>traffic/pipelinePerformance_2D/PipelineResetTBMapping.xml</mappingFile>
     <netraceFile>src/model/traffic/netrace/testraces/example.tra.bz2</netraceFile>
@@ -54,9 +32,9 @@
     <router>
       <function_calls value="false"/>
       <send_flit value="false"/>
-      <send_head_flit value="false"/>
+      <send_head_flit value="true"/>
       <receive_flit value="false"/>
-      <receive_tail_flit value="false"/>
+      <receive_tail_flit value="true"/>
       <throttle value="false"/>
       <reset value="false"/>
       <assign_channel value="false"/>

@@ -58,6 +58,7 @@ void NoC::createClocks() {
 
 void NoC::createTrafficPool() {
     unsigned long numOfPEs = globalResources.nodes.size() / 2;
+#ifndef ENABLE_NETRACE
     if (globalResources.benchmark == "task") {
         tp = std::make_unique<TaskPool>();
     } else if (globalResources.benchmark == "synthetic") {
@@ -65,6 +66,10 @@ void NoC::createTrafficPool() {
     } else {
         FATAL("Please specify correct benchmark type");
     }
+#endif
+#ifdef ENABLE_NETRACE
+    tp = std::make_unique<NetracePool>("NetracePool");
+#endif
     tp->processingElements.resize(numOfPEs);
 }
 
