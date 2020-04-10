@@ -56,14 +56,10 @@ def plot_latencies(results):
     fig = plt.figure()
     plt.ylabel('Latencies in ns', fontsize=11)
     plt.xlabel('Injection Rate', fontsize=11)
-    plt.xlim([0, 0.1])
+    plt.xlim([0, 0.85])
     linestyle = {'linestyle': '--', 'linewidth': 1, 'markeredgewidth': 1,
                  'elinewidth': 1, 'capsize': 10}
-    print('latFlit: ', latenciesFlit)
-    print('latNet: ', latenciesNetwork)
-    print('latPack: ', latenciesPacket)
-    input('press key')
-    plt.errorbar(injectionRates[0], meanLatenciesFlit,
+    plt.errorbar(injectionRates, meanLatenciesFlit,
                  color='r', **linestyle, marker='*')
     plt.errorbar(injectionRates, meanLatenciesNetwork,
                  yerr=stdLatenciesNetwork, color='b', **linestyle,
