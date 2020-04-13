@@ -1,12 +1,13 @@
 <?xml version="1.0" ?>
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <general>
-    <simulationTime value="50000"/>
+    <simulationTime value="100000"/>
     <outputToFile value="true">report</outputToFile>
   </general>
   <noc>
     <nocFile>config/network.xml</nocFile>
-    <flitsPerPacket value="8"/>
+    <flitsPerPacket value="12"/>
+    <bitWidth value="8"/>
     <Vdd value="5"/>
   </noc>
   <application>
