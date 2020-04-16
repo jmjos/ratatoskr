@@ -9,14 +9,14 @@
   <nodeTypes>
     <nodeType id="0">
       <model value="RouterVC"/>
-      <routing value="XYZ"/>
+      <routing value="ZXYZ"/>
       <selection value="1stFreeVC"/>
       <clockDelay value="1"/>
       <arbiterType value="fair"/>
     </nodeType>
     <nodeType id="1">
       <model value="RouterVC"/>
-      <routing value="XYZ"/>
+      <routing value="ZXYZ"/>
       <selection value="1stFreeVC"/>
       <clockDelay value="1"/>
       <arbiterType value="fair"/>
