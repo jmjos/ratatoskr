@@ -265,8 +265,10 @@ class NetworkWriter(Writer):
         for y in self.config.y:
             self.y_step.append(1/(y - 1))
             self.y_range.append(np.arange(0, 1+self.y_step[-1], self.y_step[-1]))
-        self.bufferDepth_layer = bufferDepth_layer
-        self.bufferDepth_layer = np.zeros(1, self.config.z)
+        #self.bufferDepth_layer = []
+        #self.bufferDepth_layer.append(np.zeros(1, self.config.z))
+
+        bufferDepth_layer = np.zeros((1,self.config.z)) #empty array 
 
     def write_header(self):
         bufferDepthType_node = ET.SubElement(self.root_node, 'bufferDepthType')
@@ -345,7 +347,7 @@ class NetworkWriter(Writer):
                             a = np.zeros((1,self.config.z))
                             a[0,j] = node_id
                             #print(a)
-                            self.buffeDepth_layer = np.concatenate((self.BufferDepth_layer,a), axis=0)
+                            self.buffeDepth_layer = np.concatenate((self.bufferDepth_layer,a), axis=0)
                     node_id += 1
                     idType += 1
             z += 1
