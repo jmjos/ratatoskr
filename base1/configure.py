@@ -86,16 +86,17 @@ class Configuration:
         except Exception:
                 raise
         self.bufferDepthType = config['Hardware']['bufferDepthType']
-        self.bufferDepth = int(config['Hardware']['bufferDepth'])
+        #self.bufferDepth = int(config['Hardware']['bufferDepth'])
+        self.bufferDepth = config['Hardware']['bufferDepth']
+        self.bufferDepth = self.bufferDepth[1:len(self.bufferDepth)-1]
+        self.bufferDepth = self.bufferDepth.split(',')
+
         self.buffersDepths = config['Hardware']['buffersDepths']
         self.buffersDepths = self.buffersDepths[1:len(self.buffersDepths)-1]
         self.vcCount = int(config['Hardware']['vcCount'])
         self.topologyFile = config['Hardware']['topologyFile']
         self.flitSize = int(config['Hardware']['flitSize'])
         self.portNum = int(config['Hardware']['portNum'])
-        
-        #self.bufferDepth_layer = b_layer
-        #self.bufferDepth_layer = self.bufferDepth_layer[1:len(self.bufferDepth_layer)-1]
 ###############################################################################
 
 
