@@ -94,7 +94,7 @@ class Configuration:
         self.flitSize = int(config['Hardware']['flitSize'])
         self.portNum = int(config['Hardware']['portNum'])
         
-        self.bufferDepth_layer = b_layer
+        #self.bufferDepth_layer = b_layer
         #self.bufferDepth_layer = self.bufferDepth_layer[1:len(self.bufferDepth_layer)-1]
 ###############################################################################
 

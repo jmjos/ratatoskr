@@ -265,10 +265,8 @@ class NetworkWriter(Writer):
         for y in self.config.y:
             self.y_step.append(1/(y - 1))
             self.y_range.append(np.arange(0, 1+self.y_step[-1], self.y_step[-1]))
-        #self.bufferDepth_layer = []
-        #self.bufferDepth_layer.append(np.zeros(1, self.config.z))
 
-        bufferDepth_layer = np.zeros((1,self.config.z)) #empty array 
+        self.buffer_layer = []
 
     def write_header(self):
         bufferDepthType_node = ET.SubElement(self.root_node, 'bufferDepthType')
@@ -317,7 +315,6 @@ class NetworkWriter(Writer):
             node_id = sum(nodecounts)
         nodeType_id = 0
 
-        #layer = np.zeros((1,self.config.z)) #empty array 
         print("number of layers: ", self.config.z)
 
         z = 0
@@ -344,23 +341,30 @@ class NetworkWriter(Writer):
                     layer_node.set('value', str(int(zi*(self.config.z-1))))
                     for j in range(0, self.config.z):
                         if j == int(zi*(self.config.z-1)):
-                            a = np.zeros((1,self.config.z))
-                            a[0,j] = node_id
+                            a = [0] * self.config.z
+                            a[j] = node_id
                             #print(a)
-                            self.buffeDepth_layer = np.concatenate((self.bufferDepth_layer,a), axis=0)
+                            self.buffer_layer.append(a)
                     node_id += 1
                     idType += 1
             z += 1
             nodeType_id += 1
-        print(self.BufferDepth_layer)
+        #print(self.buffer_layer)
 
     def make_port(self, ports_node, port_id, node_id):
         port_node = ET.SubElement(ports_node, 'port')
         port_node.set('id', str(port_id))
         node_node = ET.SubElement(port_node, 'node')
         node_node.set('value', str(node_id))
+
+        print(self.buffer_layer)
+        for items in self.buffer_layer:
+            a = self.buffer_layer.index(node_id)
+            print(a)
         bufferDepth_node = ET.SubElement(port_node, 'bufferDepth')
         bufferDepth_node.set('value', str(self.config.bufferDepth))
+        print("node_id: ", node_id)
+        print("port_node: ", port_node)
         buffersDepths_node = ET.SubElement(port_node, 'buffersDepths')
         buffersDepths_node.set('value', str(self.config.buffersDepths))
         vcCount_node = ET.SubElement(port_node, 'vcCount')
