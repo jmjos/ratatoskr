@@ -213,7 +213,7 @@ def begin_all_sims(config):
     latenciesFlit = -np.ones((len(injectionRates), config.restarts))
     latenciesPacket = -np.ones((len(injectionRates), config.restarts))
     latenciesNetwork = -np.ones((len(injectionRates), config.restarts))
-    
+
     # Run the full simulation (for all injection rates).
     injIter = 0
     VCUsage = []
@@ -232,7 +232,6 @@ def begin_all_sims(config):
             latenciesFlit[injIter, restart] = lat[0]
             latenciesPacket[injIter, restart] = lat[1]
             latenciesNetwork[injIter, restart] = lat[2]
-            
             VCUsage_run = combine_VC_hists(currentSimdir + '/VCUsage')
             if VCUsage_run is not None:
                 for ix, layer_df in enumerate(VCUsage_run):
