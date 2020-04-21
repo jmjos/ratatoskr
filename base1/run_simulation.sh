@@ -11,10 +11,29 @@
 		# cp ~/ratatoskr/simulation/sim ~/'simualtion_folder'
 	
 # add path to simulation folder
-SIM="/home/tzschoppe/base2"
+echo "add path to simulation folder: "
+read SIMDIR
+SIM="/home/tzschoppe/$SIMDIR"
+VAR=true
+while [[ $VAR ]]
+do
+	echo -e "is the path '$SIM' correct? (y/n)"
+	read -n1 answer
+	if [[ $answer == n || $answer == N ]]
+	then
+		echo -e "\nreenter path to simulation folder: "
+		read SIMDIR
+		SIM="/home/tzschoppe/$SIMDIR"
+	else
+		VAR=false
+		break
+	fi
+done
+
+#SIM="/home/tzschoppe/base2"
 
 SIM1="${SIM##*/}"
-echo "run simulation $SIM1"
+echo -e "\n\nrun simulation $SIM1"
 echo "add correct configuration in config.ini? (y/n)"
 read -n1 answer
 
@@ -23,9 +42,17 @@ then
 	vim $SIM/config.ini
 fi
 
-echo -e "\n\nsource source_me.sh"
+echo -e "\nstart simulation? (y/n)"
+read -n1 answer
+if [[ $answer == n || $answer == N ]]
+then
+	echo ""
+	exit 0	
+fi
+
+#echo -e "\n\nsource source_me.sh"
 cd $SIM/
-source source_me.sh &
+#source source_me.sh &
 
 echo -e "\nrun configure.py"
 python configure.py
