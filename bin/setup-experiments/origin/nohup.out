@@ -1,0 +1,931 @@
+Generating urand simulation with injection rate from 0.01 to 0.1 steps 0.01
+Starting Sims with 12 processes
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+Traceback (most recent call last):
+  File "run_urand.py", line 292, in <module>
+    main()
+  File "run_urand.py", line 45, in main
+    results = begin_all_sims(config)
+  File "run_urand.py", line 223, in begin_all_sims
+    (config, restart, injectionRates, injIter) for restart in range(config.restarts))
+  File "/home/joseph/CloudStation/NOCS2020/ratatoskr/bin/urand/virtualenv/lib/python3.7/site-packages/joblib/parallel.py", line 1017, in __call__
+    self.retrieve()
+  File "/home/joseph/CloudStation/NOCS2020/ratatoskr/bin/urand/virtualenv/lib/python3.7/site-packages/joblib/parallel.py", line 909, in retrieve
+    self._output.extend(job.get(timeout=self.timeout))
+  File "/home/joseph/CloudStation/NOCS2020/ratatoskr/bin/urand/virtualenv/lib/python3.7/site-packages/joblib/_parallel_backends.py", line 562, in wrap_future_result
+    return future.result(timeout=timeout)
+  File "/usr/lib/python3.7/concurrent/futures/_base.py", line 430, in result
+    self._condition.wait(timeout)
+  File "/usr/lib/python3.7/threading.py", line 296, in wait
+    waiter.acquire()
+KeyboardInterrupt
+Generating urand simulation with injection rate from 0.01 to 0.1 steps 0.01
+Starting Sims with 12 processes
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        
+SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+                SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17Copyright (c) 1996-2018 by all Contributors,
+
+                Copyright (c) 1996-2018 by all Contributors,ALL RIGHTS RESERVED
+
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+
+        Copyright (c) 1996-2018 by all Contributors,
+                SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17ALL RIGHTS RESERVED
+
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+
+                SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+
+                Copyright (c) 1996-2018 by all Contributors,Copyright (c) 1996-2018 by all Contributors,
+
+                ALL RIGHTS RESERVEDALL RIGHTS RESERVED
+
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17        
+Copyright (c) 1996-2018 by all Contributors,
+                Copyright (c) 1996-2018 by all Contributors,ALL RIGHTS RESERVED
+
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+Starting Sims with 12 processes
+Starting Sims with 12 processes
+Starting Sims with 12 processes
+Starting Sims with 12 processes
+Starting Sims with 12 processes
+Starting Sims with 12 processes
+Starting Sims with 12 processes
+Starting Sims with 12 processes
+Executed all sims of all injection rates.
+Simulation with injection rate: 0.02 restart 1
+Simulation with injection rate: 0.03 restart 8
+Simulation with injection rate: 0.04 restart 5
+Simulation with injection rate: 0.05 restart 7
+Simulation with injection rate: 0.06 restart 3
+Simulation with injection rate: 0.08 restart 0
+Simulation with injection rate: 0.01 restart 8
+Simulation with injection rate: 0.02 restart 5
+Simulation with injection rate: 0.03 restart 4
+Simulation with injection rate: 0.04 restart 9
+Simulation with injection rate: 0.06 restart 0
+Simulation with injection rate: 0.08 restart 1
+Simulation with injection rate: 0.01 restart 7
+Simulation with injection rate: 0.03 restart 0
+Simulation with injection rate: 0.04 restart 2
+Simulation with injection rate: 0.05 restart 3
+Simulation with injection rate: 0.06 restart 9
+Simulation with injection rate: 0.07 restart 9
+Simulation with injection rate: 0.08 restart 9
+Simulation with injection rate: 0.09 restart 6
+Simulation with injection rate: 0.01 restart 5
+Simulation with injection rate: 0.02 restart 9
+Simulation with injection rate: 0.04 restart 1
+Simulation with injection rate: 0.05 restart 2
+Simulation with injection rate: 0.06 restart 7
+Simulation with injection rate: 0.07 restart 3
+Simulation with injection rate: 0.09 restart 0
+Simulation with injection rate: 0.01 restart 1
+Simulation with injection rate: 0.02 restart 6
+Simulation with injection rate: 0.03 restart 6
+Simulation with injection rate: 0.04 restart 7
+Simulation with injection rate: 0.05 restart 6
+Simulation with injection rate: 0.06 restart 5
+Simulation with injection rate: 0.07 restart 2
+Simulation with injection rate: 0.08 restart 5
+Simulation with injection rate: 0.09 restart 8
+Simulation with injection rate: 0.01 restart 0
+Simulation with injection rate: 0.02 restart 2
+Simulation with injection rate: 0.03 restart 3
+Simulation with injection rate: 0.04 restart 8
+Simulation with injection rate: 0.05 restart 8
+Simulation with injection rate: 0.07 restart 1
+Simulation with injection rate: 0.09 restart 1
+Simulation with injection rate: 0.01 restart 9
+Simulation with injection rate: 0.03 restart 1
+Simulation with injection rate: 0.05 restart 0
+Simulation with injection rate: 0.06 restart 2
+Simulation with injection rate: 0.07 restart 5
+Simulation with injection rate: 0.08 restart 3
+Simulation with injection rate: 0.09 restart 2
+Simulation with injection rate: 0.01 restart 3
+Simulation with injection rate: 0.02 restart 8
+Simulation with injection rate: 0.04 restart 0
+Simulation with injection rate: 0.05 restart 4
+Simulation with injection rate: 0.06 restart 8
+Simulation with injection rate: 0.07 restart 7
+Simulation with injection rate: 0.08 restart 8
+Simulation with injection rate: 0.09 restart 9
+Simulation with injection rate: 0.01 restart 4
+Simulation with injection rate: 0.02 restart 7
+Simulation with injection rate: 0.03 restart 9
+Simulation with injection rate: 0.04 restart 6
+Simulation with injection rate: 0.06 restart 1
+Simulation with injection rate: 0.07 restart 8
+Simulation with injection rate: 0.08 restart 2
+Simulation with injection rate: 0.09 restart 5
+Simulation with injection rate: 0.02 restart 0
+Simulation with injection rate: 0.03 restart 7
+Simulation with injection rate: 0.04 restart 3
+Simulation with injection rate: 0.05 restart 9
+Simulation with injection rate: 0.06 restart 6
+Simulation with injection rate: 0.07 restart 6
+Simulation with injection rate: 0.08 restart 7
+Simulation with injection rate: 0.09 restart 4
+Simulation with injection rate: 0.01 restart 2
+Simulation with injection rate: 0.02 restart 4
+Simulation with injection rate: 0.03 restart 5
+Simulation with injection rate: 0.05 restart 1
+Simulation with injection rate: 0.06 restart 4
+Simulation with injection rate: 0.07 restart 4
+Simulation with injection rate: 0.08 restart 6
+Simulation with injection rate: 0.09 restart 7
+Simulation with injection rate: 0.01 restart 6
+Simulation with injection rate: 0.02 restart 3
+Simulation with injection rate: 0.03 restart 2
+Simulation with injection rate: 0.04 restart 4
+Simulation with injection rate: 0.05 restart 5
+Simulation with injection rate: 0.07 restart 0
+Simulation with injection rate: 0.08 restart 4
+Simulation with injection rate: 0.09 restart 3
+Generating urand simulation with injection rate from 0.005 to 0.04 steps 0.005
+Starting Sims with 12 processes
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+
+                SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+
+                Copyright (c) 1996-2018 by all Contributors,Copyright (c) 1996-2018 by all Contributors,
+
+                ALL RIGHTS RESERVEDALL RIGHTS RESERVED
+
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+
+                SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+
+        Copyright (c) 1996-2018 by all Contributors,        
+Copyright (c) 1996-2018 by all Contributors,        
+ALL RIGHTS RESERVED        
+ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+
+                SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+
+        Copyright (c) 1996-2018 by all Contributors,        
+Copyright (c) 1996-2018 by all Contributors,        
+ALL RIGHTS RESERVED        
+ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+
+                SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+
+        Copyright (c) 1996-2018 by all Contributors,        
+Copyright (c) 1996-2018 by all Contributors,        
+ALL RIGHTS RESERVED        
+ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17        
+SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,        
+Copyright (c) 1996-2018 by all Contributors,        
+ALL RIGHTS RESERVED        
+ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+
+                SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+
+                Copyright (c) 1996-2018 by all Contributors,Copyright (c) 1996-2018 by all Contributors,
+
+                ALL RIGHTS RESERVEDALL RIGHTS RESERVED
+
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+
+        SystemC 2.3.3-Accellera --- Apr  1 2020 17:33:17
+        Copyright (c) 1996-2018 by all Contributors,
+        ALL RIGHTS RESERVED
+Starting Sims with 12 processes
+Starting Sims with 12 processes
+Starting Sims with 12 processes
+Starting Sims with 12 processes
+Starting Sims with 12 processes
+Starting Sims with 12 processes
+Starting Sims with 12 processes
+Executed all sims of all injection rates.
+Simulation with injection rate: 0.01 restart 0
+Simulation with injection rate: 0.02 restart 1
+Simulation with injection rate: 0.03 restart 0
+Simulation with injection rate: 0.035 restart 5
+Simulation with injection rate: 0.005 restart 8
+Simulation with injection rate: 0.01 restart 6
+Simulation with injection rate: 0.015 restart 9
+Simulation with injection rate: 0.025 restart 1
+Simulation with injection rate: 0.03 restart 2
+Simulation with injection rate: 0.035 restart 4
+Simulation with injection rate: 0.01 restart 1
+Simulation with injection rate: 0.015 restart 3
+Simulation with injection rate: 0.02 restart 6
+Simulation with injection rate: 0.025 restart 6
+Simulation with injection rate: 0.03 restart 8
+Simulation with injection rate: 0.035 restart 9
+Simulation with injection rate: 0.04 restart 5
+Simulation with injection rate: 0.005 restart 5
+Simulation with injection rate: 0.01 restart 2
+Simulation with injection rate: 0.015 restart 4
+Simulation with injection rate: 0.02 restart 9
+Simulation with injection rate: 0.025 restart 7
+Simulation with injection rate: 0.03 restart 5
+Simulation with injection rate: 0.035 restart 6
+Simulation with injection rate: 0.04 restart 6
+Simulation with injection rate: 0.005 restart 1
+Simulation with injection rate: 0.015 restart 0
+Simulation with injection rate: 0.02 restart 4
+Simulation with injection rate: 0.025 restart 2
+Simulation with injection rate: 0.03 restart 9
+Simulation with injection rate: 0.035 restart 7
+Simulation with injection rate: 0.04 restart 2
+Simulation with injection rate: 0.005 restart 9
+Simulation with injection rate: 0.01 restart 8
+Simulation with injection rate: 0.02 restart 0
+Simulation with injection rate: 0.025 restart 8
+Simulation with injection rate: 0.03 restart 3
+Simulation with injection rate: 0.04 restart 1
+Simulation with injection rate: 0.005 restart 6
+Simulation with injection rate: 0.01 restart 4
+Simulation with injection rate: 0.015 restart 5
+Simulation with injection rate: 0.02 restart 3
+Simulation with injection rate: 0.025 restart 4
+Simulation with injection rate: 0.035 restart 0
+Simulation with injection rate: 0.04 restart 3
+Simulation with injection rate: 0.005 restart 7
+Simulation with injection rate: 0.015 restart 1
+Simulation with injection rate: 0.025 restart 0
+Simulation with injection rate: 0.03 restart 4
+Simulation with injection rate: 0.035 restart 2
+Simulation with injection rate: 0.04 restart 9
+Simulation with injection rate: 0.005 restart 2
+Simulation with injection rate: 0.01 restart 7
+Simulation with injection rate: 0.015 restart 2
+Simulation with injection rate: 0.02 restart 7
+Simulation with injection rate: 0.025 restart 3
+Simulation with injection rate: 0.03 restart 6
+Simulation with injection rate: 0.035 restart 8
+Simulation with injection rate: 0.04 restart 8
+Simulation with injection rate: 0.005 restart 4
+Simulation with injection rate: 0.01 restart 3
+Simulation with injection rate: 0.015 restart 8
+Simulation with injection rate: 0.02 restart 8
+Simulation with injection rate: 0.025 restart 9
+Simulation with injection rate: 0.03 restart 7
+Simulation with injection rate: 0.035 restart 3
+Simulation with injection rate: 0.04 restart 4
+Simulation with injection rate: 0.005 restart 0
+Simulation with injection rate: 0.01 restart 9
+Simulation with injection rate: 0.015 restart 7
+Simulation with injection rate: 0.02 restart 5
+Simulation with injection rate: 0.03 restart 1
+Simulation with injection rate: 0.04 restart 0
+Simulation with injection rate: 0.005 restart 3
+Simulation with injection rate: 0.01 restart 5
+Simulation with injection rate: 0.015 restart 6
+Simulation with injection rate: 0.02 restart 2
+Simulation with injection rate: 0.025 restart 5
+Simulation with injection rate: 0.035 restart 1
+Simulation with injection rate: 0.04 restart 7
