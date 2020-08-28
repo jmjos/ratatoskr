@@ -38,6 +38,10 @@ Packet* PacketFactory::createPacket(Node& src, Node& dst, int size, double gener
 void PacketFactory::deletePacket(Packet* p)
 {
     auto it = std::find(packets.begin(), packets.end(), p);
-    delete(*it);
-    packets.erase(it);
+    if (it != packets.end()) {
+      delete (*it);
+      packets.erase(it);
+    } else {
+      cerr << "payload not in packet vector" << endl;
+    }
 }
