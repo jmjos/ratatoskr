@@ -37,6 +37,12 @@ Jan Moritz Joseph, Sven Wrieden, Christopher Blochwitz, Alberto Garc&iacute;a-Or
 
 A few words on the name: Ratatoskr is a squirrel in nordic mythodology that is running up and down a tree to transmit messages between a dragon and a eagle. Just as a 3D NoC...! 
 
+<img align="right" width="120" src="https://upload.wikimedia.org/wikipedia/commons/b/ba/AM_738_4to_Ratatoskr.png">
+
+## Trivia on the framework's name
+
+The name of the framework Ratatoskr is based on the squirrel with the same name from Nordic methodically. In the mythological text, the squirrel runs up and down a large tree called Yggdrasil to transport message from an eagle sitting on top of the tree to the dragon Nidhögg lying under the tree. The eagle and the dragon are quite talkative because they are in conflict. Thus, the squirrel is rather busy with its task. The inspiration of the name of our framework comes directly from the squirrels task: Just as a NoC in a heterogeneous 3D SoC, it transmits messages vertically to different senders and receivers. 
+
 ## Getting started
 
 Here, we provide a quick tutorial. For in-depth instructions, please visit the [documentation](docs/TOC.md).
