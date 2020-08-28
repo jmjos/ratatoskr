@@ -31,4 +31,9 @@ public:
     static PacketFactory& getInstance();
     Packet* createPacket(Node& src, Node& dst, int size, double generationTime, dataTypeID_t dataType);
     void deletePacket(Packet* p);
+    PacketFactory(PacketFactory const&) = delete;
+    void operator=(PacketFactory const&) = delete;
+
+private:
+    PacketFactory() {}
 };
