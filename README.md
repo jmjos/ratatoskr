@@ -41,7 +41,7 @@ A few words on the name: Ratatoskr is a squirrel in nordic mythodology that is r
 
 ## Trivia on the framework's name
 
-The name of the framework Ratatoskr is based on the squirrel with the same name from Nordic methodically. In the mythological text, the squirrel runs up and down a large tree called Yggdrasil to transport message from an eagle sitting on top of the tree to the dragon Nidhögg lying under the tree. The eagle and the dragon are quite talkative because they are in conflict. Thus, the squirrel is rather busy with its task. The inspiration of the name of our framework comes directly from the squirrels task: Just as a NoC in a heterogeneous 3D SoC, it transmits messages vertically to different senders and receivers. 
+The name of the framework Ratatoskr is based on a squirrel from Nordic mythology. In the mythological text, the squirrel runs up and down a large tree called Yggdrasil to transport message from an eagle sitting on top of the tree to the dragon Nidhögg lying under the tree. The eagle and the dragon are quite talkative because they are in conflict. Thus, the squirrel is rather busy with its task. The inspiration of the name of our framework comes directly from the squirrels task: Just as a NoC in a heterogeneous 3D SoC, it transmits messages vertically to different senders and receivers. 
 
 ## Getting started
 
