@@ -2,7 +2,7 @@
 
 Quick script, see in bin/install.sh
 
-get Debian 9 repository
+Installation of zmq from 3rd party repo not required since Ubuntu 20.01. Otherwise, get Debian 9 repository
 ```bash 
 echo "deb http://download.opensuse.org/repositories/network:/messaging:/zeromq:/release-stable/Debian_9.0/ ./" | sudo tee -a /etc/apt/sources.list
 ```
@@ -10,7 +10,7 @@ download Debian 9 key and add to keychain
 ```bash 
 wget https://download.opensuse.org/repositories/network:/messaging:/zeromq:/release-stable/Debian_9.0/Release.key -O- | sudo apt-key add
 ```
-install pugxml, boost, cmake, ZeroMQ and python3
+With Ubuntu 20.01 and all other OSs, install pugxml, boost, cmake, ZeroMQ and python3
 ```bash
 sudo apt install -y git libpugixml-dev libboost-all-dev cmake libzmq3-dev python3-venv
 ```
