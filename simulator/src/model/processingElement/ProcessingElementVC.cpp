@@ -75,6 +75,7 @@ void ProcessingElementVC::thread()
                 Node dstNode = globalResources.nodes.at(t.nodeID);
                 Packet* p = packetFactory.createPacket(this->node, dstNode, globalResources.flitsPerPacket, sc_time_stamp().to_double(),
                         dest.dataType);
+                globalReport.undeliveredPackages++;
 
                 packetPortContainer->portValidOut = true;
                 packetPortContainer->portDataOut = p;

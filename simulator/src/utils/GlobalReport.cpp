@@ -87,9 +87,13 @@ void GlobalReport::reportPerformance(ostream& stream)
     float avgFlitLat = latencyFlit.average()/(float) 1000;
     float avgPacketLat = latencyPacket.average()/(float) 1000;
     float avgNetworkLat = latencyNetwork.average()/(float) 1000;
+    if (undeliveredPackages < globalResources.nodes.size())
+        undeliveredPackages = 0;
+    float undeliveredPacketsLatency = undeliveredPackages * globalResources.simulation_time;
+    float actualNetworkLat = avgNetworkLat + undeliveredPacketsLatency;
     stream << boost::format("Average flit latency: %3.2f ns.\n")%avgFlitLat;
     stream << boost::format("Average packet latency: %3.2f ns.\n")%avgPacketLat;
-    stream << boost::format("Average network latency: %3.2f ns.\n")%avgNetworkLat;
+    stream << boost::format("Average network latency: %3.2f ns.\n")%actualNetworkLat;
 }
 
 void GlobalReport::reportPerformanceCSV(ostream& stream)

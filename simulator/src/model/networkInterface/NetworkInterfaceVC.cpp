@@ -166,6 +166,7 @@ void NetworkInterfaceVC::receiveFlitFromRouter()
             if (received_flit->type==TAIL || received_flit->type==SINGLE) {
                 globalReport.latencyPacket.sample((float) (time-received_flit->headFlit->generationTime));
                 globalReport.latencyNetwork.sample((float) (time-received_flit->headFlit->injectionTime));
+                globalReport.undeliveredPackages--;
             }
         }
 #endif

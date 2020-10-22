@@ -47,6 +47,7 @@ public:
     double averageNetworkLatencySystemLevel = -1;
     int averageNetworkLatencySystemLevelInstances = 0;
     double maxNetworkLatency = 0;
+    long long undeliveredPackages = 0;
 
     int numRouters;
     /* 1st dimension is all routers.
