@@ -167,6 +167,7 @@ void NetworkInterfaceVC::receiveFlitFromRouter()
                 globalReport.latencyPacket.sample((float) (time-received_flit->headFlit->generationTime));
                 globalReport.latencyNetwork.sample((float) (time-received_flit->headFlit->injectionTime));
                 globalReport.undeliveredPackages--;
+		cout << " -- undel packages " << globalReport.undeliveredPackages << endl;
             }
         }
 #endif

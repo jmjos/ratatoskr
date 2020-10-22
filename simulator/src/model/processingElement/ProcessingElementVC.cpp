@@ -75,7 +75,11 @@ void ProcessingElementVC::thread()
                 Node dstNode = globalResources.nodes.at(t.nodeID);
                 Packet* p = packetFactory.createPacket(this->node, dstNode, globalResources.flitsPerPacket, sc_time_stamp().to_double(),
                         dest.dataType);
-                globalReport.undeliveredPackages++;
+		double time = sc_time_stamp().to_double();
+		if ((float) globalResources.synthetic_start_measurement_time<=(time/1000)){
+                	globalReport.undeliveredPackages++;
+			cout << "undel pack " << globalReport.undeliveredPackages << endl;
+		}
 
                 packetPortContainer->portValidOut = true;
                 packetPortContainer->portDataOut = p;
