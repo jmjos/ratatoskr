@@ -35,12 +35,11 @@ int sc_main(int arg_num, char* arg_vec[])
     GlobalReport& globalReport = GlobalReport::getInstance();
     Report& rep = Report::getInstance();  // database report
     sleep(1);  // wait for the systemC branding
-    cout << endl << "A-3D-NoC Simulator Copyright(C) 2014-2019" << endl;
-    cout << "   Jan Moritz Joseph (jan.joseph@ovgu.de) " << endl;
+    cout << endl << "Ratatoskr 3D-NoC Simulator Copyright(C) 2014-2021" << endl;
+    cout << "   Dr. Jan Moritz Joseph (joseph@ice.rwth-aachen.de) " << endl;
     cout << "This program comes with ABSOLUTELY NO WARRANTY;" << endl;
     cout << "This is free software, and you are welcome to redistribute it" << endl;
     cout << "under certain conditions. For details see README file." << endl << endl;
-    cout << "Welcome to the A-3D-NoC Simulator!" << endl;
     sc_report_handler::set_verbosity_level(SC_DEBUG);
     sc_report_handler::set_actions(SC_ID_INSTANCE_EXISTS_, SC_DO_NOTHING); //disable renaming warnings
 
