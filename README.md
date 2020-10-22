@@ -27,7 +27,7 @@ Welcome to the project website of ratatoskr, an in-depth PPA framework to design
 - Usability: Single point-of-entry to set design parameters. The design parameters allow for rapid testing of different designs.
 - Reporting: Automatic generation of detailed reports from network-scale performance to buffer utilization.
 
-Ratatoskr  is developed at the University in Magdeburg, Germany and University of Bremen, Germany. It is under MIT license terms. If you use the simulator in your research, we would appreciate the following citation in any publications to which it has contributed:
+Ratatoskr  is developed at the RWTH Aachen University, Germany, OVG University Magdeburg, Germany and University of Bremen, Germany. It is under MIT license terms. If you use the simulator in your research, we would appreciate the following citation in any publications to which it has contributed:
 
 ---
 
@@ -176,8 +176,8 @@ If you wish to contribute, please contact me at my univeristy email address jan.
 
 ## People
 The following people participated:
-- [Lennart Bamberg](github.com/lennartjanis): Physical models, hardware implementation and optimization
-- [Jan Moritz Joseph](https://github.com/jmjos): Simulation tools and design optimization
+- [Jan Moritz Joseph](http://scholar.google.de/citations?user=gUiBw4gAAAAJ&hl=de): Simulation tools and design optimization
+- [Lennart Bamberg](https://scholar.google.de/citations?user=2y9phW4AAAAJ&hl=de&oi=ao): Physical models, hardware implementation and optimization
 - [Prof. Dr.-Ing. Alberto García-Ortiz](www.ids.uni-bremen.de/agarcia.html): PI
 - [Prof. Dr.-Ing. Thilo Pionteck](http://www.iikt.ovgu.de/pionteck.html): PI
 - [Imad Hajjar](https://github.com/imadhajjar): Implementation of the simulator
@@ -187,7 +187,7 @@ The following people participated:
 
 ## Acknolegdements
 
-This work is funded by the German Research Foundation (DFG) project GA 763/7-1 and PI 477/8-1.
+This work is partly funded by the German Research Foundation (DFG) project GA 763/7-1 and PI 477/8-1.
 
 We are very grateful for the help of [Prof. Dr. Volker Kaibel](https://www.math.uni-magdeburg.de/~kaibel/).
 
@@ -195,7 +195,7 @@ We are very grateful for the help of [Prof. Dr. Volker Kaibel](https://www.math.
 
 This simulator is available to anybody free of charge, under the terms of MIT License:
 
-Copyright (c) 2018 Jan Moritz Joseph
+Copyright (c) 2014-2021 Jan Moritz Joseph (joseph@ice.rwth-aachen.de)
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
