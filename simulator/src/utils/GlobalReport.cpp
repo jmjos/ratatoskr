@@ -107,7 +107,7 @@ void GlobalReport::reportPerformanceCSV(ostream& stream)
     float actualNetworkLat = avgNetworkLat + undeliveredPacketsLatency;
     stream << boost::format("avgFlitLat, %2.3f\n")%avgFlitLat;
     stream << boost::format("avgPacketLat, %2.3f\n")%avgPacketLat;
-    stream << boost::format("avgNetworkLat, %2.3f\n")%avgNetworkLat;
+    stream << boost::format("avgNetworkLat, %2.3f\n")%actualNetworkLat;
 }
 
 void GlobalReport::issueRoutingCalculation(int id)
