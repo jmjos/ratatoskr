@@ -101,6 +101,10 @@ void GlobalReport::reportPerformanceCSV(ostream& stream)
     float avgFlitLat = latencyFlit.average()/(float) 1000;
     float avgPacketLat = latencyPacket.average()/(float) 1000;
     float avgNetworkLat = latencyNetwork.average()/(float) 1000;
+    if (undeliveredPackages < globalResources.nodes.size())
+        undeliveredPackages = 0;
+    float undeliveredPacketsLatency = undeliveredPackages * globalResources.simulation_time;
+    float actualNetworkLat = avgNetworkLat + undeliveredPacketsLatency;
     stream << boost::format("avgFlitLat, %2.3f\n")%avgFlitLat;
     stream << boost::format("avgPacketLat, %2.3f\n")%avgPacketLat;
     stream << boost::format("avgNetworkLat, %2.3f\n")%avgNetworkLat;
