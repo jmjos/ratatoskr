@@ -21,6 +21,8 @@
  ******************************************************************************/
 
 #include "GlobalResources.h"
+#include <iostream>
+#include <iomanip>
 
 GlobalResources::GlobalResources()
         :
@@ -36,17 +38,12 @@ GlobalResources::GlobalResources()
     auto seed = std::random_device{}();
     rand->seed(seed);
     rd_seed = seed;
-#ifdef ENABLE_NETRACE
-    for (int i = 0; i < 64; ++i) {
-        netraceNodeToTask.insert(std::pair<nodeID_t, int>(i%64+64, i%64));
-        netraceTaskToNode.insert(std::pair<int, nodeID_t>(i%64, i%64+64));;
-    }
-#endif
 }
 
 GlobalResources& GlobalResources::getInstance()
 {
     static GlobalResources instance;
+    //std::cout<<"\n\n\nInstance created\n\n\n"<<std::endl;
     return instance;
 }
 
@@ -137,10 +134,46 @@ std::vector<int> GlobalResources::strs_to_ints(const std::vector<std::string>& s
     return ints;
 }
 
+void GlobalResources::createRoutingTable()
+{
+    std::string filename;
+    filename = RoutingTable_file;
+
+    std::ifstream infile(filename);
+    std::string line;
+
+    int cpt_line = 0;
+
+    while (std::getline(infile, line))
+    {
+        std::istringstream iss(line);
+        std::string word;
+        int DIR;
+        std::vector<int> v;
+        while(iss >> word) {
+            DIR = std::stoi(word);
+            v.push_back(DIR);
+        }
+        
+        RoutingTable.push_back(v);
+        cpt_line += 1;
+    }
+    std::cout<<"Routing Table :"<< std::endl;
+
+    for(auto vec : RoutingTable)
+    {
+        for(auto x : vec)
+            std::cout<<x<<" , ";
+        std::cout << std::endl;
+    }
+}
+
+
+
 void GlobalResources::readConfigFile(const std::string& configPath)
 {
     pugi::xml_document doc;
-
+    //std::cout<<"\n\n\nInstance created\n\n\n"<<std::endl;
     std::cout << "Reading simulator config: " << configPath << endl;
     pugi::xml_parse_result result = doc.load_file(configPath.c_str());
     assert(result && "Failed to read simulator config file!");
@@ -151,11 +184,22 @@ void GlobalResources::readConfigFile(const std::string& configPath)
     outputToFile = gen_node.child("outputToFile").attribute("value").as_bool();
     outputFileName = gen_node.child("outputToFile").child_value();
 
+    //ROUTING TABLE
+    pugi::xml_node Routing_node = doc.child("configuration").child("verbose").child("router");
+    RoutingTable_mode = Routing_node.child("routingTable_mode").attribute("value").as_bool();
+    
+    std::cout<<"Routing table mode: "<<RoutingTable_mode<<std::endl;
+    
+    if (RoutingTable_mode){
+        pugi::xml_node RTFile_node = Routing_node.child("routingTable_path");
+        RoutingTable_file = readRequiredStringAttribute(RTFile_node, "value");
+        createRoutingTable();
+    }
+
     //NOC
     pugi::xml_node noc_node = doc.child("configuration").child("noc");
     noc_file = noc_node.child_value("nocFile");
     flitsPerPacket = noc_node.child("flitsPerPacket").attribute("value").as_int();
-    bitWidth = noc_node.child("bitWidth").attribute("value").as_int();
     routingVerticalThreshold = noc_node.child("routingVerticalThreshold").attribute("value").as_float();
     Vdd = noc_node.child("Vdd").attribute("value").as_float();
 
@@ -264,7 +308,7 @@ void GlobalResources::sortNodesPositions()
     sort(zPositions.begin(), zPositions.end());
     zPositions.erase(unique(zPositions.begin(), zPositions.end()), zPositions.end());
 }
-
+/*
 void GlobalResources::fillDirInfoOfNodeConn()
 {
     for (Node& node : nodes) {
@@ -300,9 +344,449 @@ void GlobalResources::fillDirInfoOfNodeConn()
             }
             node.setConPosOfDir(dir, matching_conn);
             node.setDirOfConn(matching_conn, dir);
+            std::cout << "Router " << node.id << " to " << matching_conn << ": Dir = " << dir << "\n";
         }
     }
 }
+*/
+float computeAngle(Vec3D<float> distance)
+{
+	float hypo;
+	float dx, dy, angle, adx;
+	dx = distance.x;
+	dy = distance.y;
+	adx = abs(dx);
+	hypo = sqrt(pow(dx, 2)+pow(dy, 2));
+	float pi = (float)M_PI;
+   
+	if (dx>=0){
+		if (dy>=0){
+			angle = asin(adx/hypo);
+		}
+		else {
+			angle = pi - asin(adx/hypo);
+		}
+	}
+	else {
+		if (dy>=0){
+			angle = 2*pi - asin(adx/hypo);
+		}
+		else {
+			angle = pi + asin(adx/hypo);
+		}
+	}
+
+	return angle;
+}
+
+bool comp(float a, float b) 
+{ 
+    return (a < b); 
+} 
+
+float my_min(std::list<float> l)
+{
+    int size;
+    size = l.size();
+    int i;
+    int id_min;
+    std::list<float>::iterator it_a;
+    float mini;
+
+    it_a = l.begin();
+    mini = *it_a;
+
+    for (it_a = l.begin(); it_a != l.end(); ++it_a){
+        mini = std::min(mini, *it_a, comp);
+    }
+
+    return mini;
+}
+
+// My function 1.0
+/*
+void GlobalResources::fillDirInfoOfNodeConn()
+{
+    std::cout << "Start filling direction of nodes \n";
+    
+    float pi = (float)M_PI;
+    for (Node& node : nodes) {
+        //std::cout << "check 1 \n";
+        //check for common directions
+        Vec3D<float> distance{};
+        std::list<DIR> usedDir = {};
+        std::list<float> angles = {};
+        std::list<int> connectedNodesIDs = {};
+        int nbConn = node.connectedNodes.size();
+        nbConn = nbConn - 1; // delete the local connection
+	float angle;
+
+        for (int connectedNodeID : node.connectedNodes) {
+            //std::cout << "check 2 \n";
+            Node connectedNode = nodes.at(connectedNodeID);
+            distance = connectedNode.pos - node.pos; // old: node.pos-connectedNode.pos
+            connID_t matching_conn = node.getConnWithNode(connectedNode);
+            DIR::TYPE dir{};
+            if (distance.isZero()) { //no axis differs
+                dir = DIR::Local;
+                node.setConPosOfDir(dir, matching_conn);
+                node.setDirOfConn(matching_conn, dir);
+                std::cout << "Router " << node.id << " to " << connectedNodeID << ": Dir = " << dir << "\n";
+            }
+            else { //axis differs --> get connections angles
+                std::list<float>::iterator it_a;
+                std::list<connID_t>::iterator it_c;
+
+                it_a = angles.begin();
+                it_c = connectedNodesIDs.begin();
+                angle = computeAngle(distance);
+                angles.insert(it_a,angle);
+                connectedNodesIDs.insert(it_c, connectedNodeID);
+            }
+        }
+        //std::cout << "Router " << node.id << "\n";
+        //std::cout << "Angles: " << "\n";
+        //for (float a : angles){
+        //    std::cout << a << ", ";
+        //}
+        //std::cout << "\n";
+        //std::cout << "Connected to: \n";
+        //for (int c : connectedNodesIDs){
+        //    std::cout << c << ", ";
+        //}
+        //std::cout << "\n";
+        //std::cout << "check 3 \n";
+        // Order the angles
+        std::list<float> angles_tmp = angles;
+        std::list<float> angles_ordered = {};
+        std::list<int> connectedNodesIDs_tmp = connectedNodesIDs;
+        std::list<int> connectedNodesIDs_ordered = {};
+        //std::cout << "angles tmp: " << "\n";
+        //for (float a : angles){
+        //    std::cout << a << ", ";
+        //}
+        //std::cout << "\n";
+        //std::cout << "check 4 \n";
+        for (int i=0;i<nbConn;i++){
+            // 1. find the min value in the tmp list
+            float angle_min = my_min(angles_tmp);
+            //std::cout << "angle min = " << angle_min << "\n";
+            // 2. find the corresponding idx in both angles and connIDs
+            int idx;
+            std::list<float>::iterator it_a = angles_tmp.begin();
+            std::list<int>::iterator it_c = connectedNodesIDs_tmp.begin();
+	    int j;
+            for (j=0; j<nbConn; j++){
+                if(*it_a == angle_min){
+                    idx = *it_c;
+                    break;
+                }
+                else{
+                    std::advance(it_a, 1);
+                    std::advance(it_c, 1);
+                }
+            }
+            //std::list<float>::iterator my_it = angles_tmp.begin();
+            //advance(my_it, j);
+            // 3. place the corresponding angle and ID in last position of the ordered lists
+            angles_ordered.push_back(angle_min);
+            connectedNodesIDs_ordered.push_back(idx);
+            //std::cout << "check 6.. \n";
+            // 4. delete element from the tmp lists
+            //auto tmpIter = it_a;
+            //std::cout << "check 8 \n";
+            *it_a = 3*pi;
+            //std::cout << "check 7 \n";
+            //connIDs_tmp.erase(it_c);
+        }
+        //std::cout << "connectedNodesIDs_ordered : \n";
+        //for (int c : connectedNodesIDs_ordered){
+        //    std::cout << c << ", ";
+        //}
+        //std::cout << "\n";
+        //std::cout << "angles_ordered : \n";
+        //for (float a : angles_ordered){
+        //    std::cout << a << ", ";
+        //}
+        std::cout << "\n";
+        //std::cout << "check 5 \n";
+        DIR::TYPE dir{};
+        DIR::TYPE dir_prev{};
+        // if number of connection > 0, continue
+        if (nbConn > 0) {
+            if (nbConn == 4) { // N,E,S,W
+                std::cout << "nbconn = 4 --> " << nbConn << "\n";
+                std::list<int>::iterator it = connectedNodesIDs_ordered.begin();
+                for (int i=0;i<nbConn;i++){
+                    int connectedNodeID = *it;
+                    if (i==0){
+                        dir = DIR::North;
+                    }
+                    else if (i==1){
+                        dir = DIR::East;
+                    }
+                    else if (i==2){
+                        dir = DIR::South;
+                    }
+                    else {
+                        dir = DIR::West;
+                    }
+                    Node connectedNode = nodes.at(connectedNodeID);
+                    connID_t matching_conn = node.getConnWithNode(connectedNode);
+                    node.setConPosOfDir(dir, matching_conn);
+                    node.setDirOfConn(matching_conn, dir);
+                    std::cout << "Router " << node.id << " to " << connectedNode.id << ": Dir = " << dir << "\n";
+                    std::advance(it, 1);
+                }
+            }
+            else if (nbConn == 3) {
+                std::cout << "nbconn = 3 --> " << nbConn << "\n";
+                // min angle get its closer direction, then rotate N,E,S,W,N,E,...
+                std::list<int>::iterator it = connectedNodesIDs_ordered.begin();
+                std::list<float>::iterator it_a = angles_ordered.begin();
+
+                int connectedNodeID = *it;
+                float min_a = *it_a;
+                float dN, dE, dS, dW;
+                dN = min_a;
+                dE = abs(min_a - pi/2);
+                dS = abs(min_a - pi);
+                dW = abs(min_a - 3*pi/2);
+                
+                float dmin = std::min({dN,dE,dS,dW}, comp);
+                if (dN == dmin){
+                    dir = DIR::North;
+
+                }else if (dE == dmin){
+                    dir = DIR::East;
+
+                }else if (dS == dmin){
+                    dir = DIR::South;
+
+                }else{
+                    dir = DIR::West;
+                }
+                dir_prev = dir;
+
+                Node connectedNode = nodes.at(connectedNodeID);
+                connID_t matching_conn = node.getConnWithNode(connectedNode);
+                node.setConPosOfDir(dir, matching_conn);
+                node.setDirOfConn(matching_conn, dir);
+                std::cout << "Router " << node.id << " to " << connectedNode.id << ": Dir = " << dir << "\n";
+                std::advance(it, 1); 
+
+                for (int i=0; i<2; i++){
+                    int connectedNodeID = *it;
+                    if (dir_prev == DIR::North){
+                        dir = DIR::East;
+                    }
+                    else if (dir_prev == DIR::East){
+                        dir = DIR::South;
+                    }
+                    else if (dir_prev == DIR::South){
+                        dir = DIR::West;
+                    }
+                    else {
+                        dir = DIR::North;
+                    }
+                    dir_prev = dir;
+
+                    Node connectedNode = nodes.at(connectedNodeID);
+                    connID_t matching_conn = node.getConnWithNode(connectedNode);
+                    node.setConPosOfDir(dir, matching_conn);
+                    node.setDirOfConn(matching_conn, dir);
+                    std::cout << "Router " << node.id << " to " << connectedNode.id << ": Dir = " << dir << "\n";
+                    std::advance(it, 1);
+                }
+            }
+            else {
+                std::cout << "nbconn <= 2 --> " << nbConn << "\n";
+                // each connection gets its closer direction among the available one 
+                int n,e,s,w;
+                n=0; e=0; s=0; w=0;
+                std::list<int>::iterator it = connectedNodesIDs_ordered.begin();
+                std::list<float>::iterator it_a = angles_ordered.begin();
+                for (int i=0;i<nbConn;i++){
+                    int connectedNodeID = *it;
+                    //std::cout << "connectedNodeID: " << connectedNodeID << "\n";
+                    float min_a = *it_a;
+                    int dN, dE, dS, dW;
+                    dN = min_a*100000;
+                    dE = abs(min_a - pi/2)*100000;
+                    dS = abs(min_a - pi)*100000;
+                    dW = abs(min_a - 3*pi/2)*100000;
+                    std::cout << "dN = " << dN << ", dE = " << dE << ", dS = " << std::setprecision(8) << dS << ", dW = " << std::setprecision(8) << dW << "\n";
+                    bool test = (dS == dW);
+                    std::cout << test;
+                    float dmin = std::min({dN,dE,dS,dW}, comp);
+                    if (dN == dmin){
+                        if (n == 1){
+                            dmin = std::min({dE,dS,dW}, comp);
+                            if (dE == dmin){
+                                dir = DIR::East;
+                            }else if (dS == dmin){
+                                dir = DIR::South;
+                            }else{
+                                dir = DIR::West;
+                            }
+                        }
+                        else{
+                            dir = DIR::North;
+                            n = 1;
+                        }
+                    }else if (dE == dmin){
+                        if (e == 1){
+                            dmin = std::min({dN,dS,dW}, comp);
+                            if (dN == dmin){
+                                dir = DIR::North;
+                            }else if (dS == dmin){
+                                dir = DIR::South;
+                            }else{
+                                dir = DIR::West;
+                            }
+                        }else{
+                            dir = DIR::East;
+                            e = 1;
+                        }
+                    }else if (dS == dmin){
+                        if (s == 1){
+                            dmin = std::min({dE,dN,dW}, comp);
+                            if (dE == dmin){
+                                dir = DIR::East;
+                            }else if (dN == dmin){
+                                dir = DIR::North;
+                            }else{
+                                dir = DIR::West;
+                            }
+                        }else{
+                            dir = DIR::South;
+                            s = 1;
+                        }
+                    }else{
+                        if (w == 1){
+                            dmin = std::min({dE,dS,dN}, comp);
+                            if (dE == dmin){
+                                dir = DIR::East;
+                            }else if (dS == dmin){
+                                dir = DIR::South;
+                            }else{
+                                dir = DIR::North;
+                            }
+                        }else{
+                            dir = DIR::West;
+                            w = 1;
+                        }
+                    }
+                    dir_prev = dir;
+                    //std::cout << "check 6";
+                    Node connectedNode = nodes.at(connectedNodeID);
+                    connID_t matching_conn = node.getConnWithNode(connectedNode);
+                    node.setConPosOfDir(dir, matching_conn);
+                    node.setDirOfConn(matching_conn, dir);
+                    std::cout << "Router " << node.id << " to " << connectedNode.id << ": Dir = " << dir << "\n";
+                    std::advance(it, 1);
+                    std::advance(it_a, 1);
+                    
+                }
+            }
+            // print connection by connection
+        }
+    }
+}
+*/
+
+// My function 2.0
+
+void GlobalResources::fillDirInfoOfNodeConn()
+{
+    std::cout << "Start filling direction of nodes \n";
+
+    std::string filename;
+    filename = "/home/demo/ratagan/Ratatoskr/bin/Direction_Mat.txt";
+    std::vector<std::vector<int>> directions_mat ;
+    std::ifstream infile(filename);
+    std::string line;
+
+    int cpt_line = 0;
+
+    while (std::getline(infile, line))
+    {
+        std::istringstream iss(line);
+        std::string word;
+        int DIR;
+        std::vector<int> v;
+        while(iss >> word) {
+            DIR = std::stoi(word);
+            v.push_back(DIR);
+        }
+        
+        directions_mat.push_back(v);
+        cpt_line += 1;
+    }
+    std::cout<<"Direction Matrix :"<< std::endl;
+
+    for(auto vec : directions_mat)
+    {
+        for(auto x : vec)
+            std::cout<<x<<" , ";
+        std::cout << std::endl;
+    }
+
+    for (Node& node : nodes) {
+        for (int connectedNodeID : node.connectedNodes) {
+            Node connectedNode = nodes.at(connectedNodeID);
+            Vec3D<float> distance{};
+            distance = node.pos-connectedNode.pos;
+            connID_t matching_conn = node.getConnWithNode(connectedNode);
+            DIR::TYPE dir{};
+            int d;
+            if (distance.isZero()) { //no axis differs
+                dir = DIR::Local;
+            }
+            else { 
+                d = directions_mat[node.id][connectedNode.id];
+                if (d == -1){
+                    std::cout << "error, no direction found \n";
+                }
+                else{
+                    if (d==1){
+                        dir = DIR::East;
+                    }
+                    else{
+                        if (d==2){
+                            dir = DIR::West;
+                        }
+                        else{
+                            if (d==3){
+                                dir = DIR::North;
+                            }
+                            else{
+                                if (d==4){
+                                    dir = DIR::South;
+                                }
+                                else{
+                                    if (d==5){ 
+                                        dir = DIR::Up;
+                                    }
+                                    else{
+                                        if (d==6){
+                                            dir = DIR::Down;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }                      
+            }
+            node.setConPosOfDir(dir, matching_conn);
+            node.setDirOfConn(matching_conn, dir);
+            std::cout << "Router " << node.id << " to " << connectedNode.id << ": Dir = " << dir << "\n";
+        }
+    }
+
+}
+
 
 void GlobalResources::readConnections(const pugi::xml_node& noc_node)
 {
@@ -337,7 +821,7 @@ void GlobalResources::readConnections(const pugi::xml_node& noc_node)
 
         Connection con = Connection(connID, nodesOfConnection, vcsCount, buffersDepth, buffersDepths, length, width,
                 depth);
-
+        //cout << " con = " << con.id << con.nodes[0] << con.nodes[1] << endl;
         int nodesSize = nodesOfConnection.size();
         con.bufferUtilization.resize(nodesSize);
         for (nodeID_t nID : con.nodes) {
