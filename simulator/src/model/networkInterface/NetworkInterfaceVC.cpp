@@ -94,7 +94,6 @@ void NetworkInterfaceVC::generateFlitsForPacket(Packet* p)
             flitType = BODY;
         int seqNum = i%flitsPerPacket;
         Flit* current_flit = new Flit(flitType, seqNum, p, p->dataType, sc_time_stamp().to_double());
-        trafficTracer.traceFlit(current_flit);
         p->toTransmit.push_back(current_flit->id);
         p->flits.push_back(current_flit);
     }
@@ -124,6 +123,7 @@ void NetworkInterfaceVC::thread()
                 flitPortContainer->portValidOut.write(true);
                 flitPortContainer->portDataOut.write(current_flit);
                 flitPortContainer->portVcOut.write(0);
+                trafficTracer.traceFlit(current_flit);
                 creditCounter--;
                 LOG((globalReport.verbose_pe_send_head_flit && current_flit->type==HEAD)
                         || globalReport.verbose_pe_send_flit,
