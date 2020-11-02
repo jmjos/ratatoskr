@@ -151,6 +151,7 @@ void GlobalResources::readConfigFile(const std::string& configPath)
     simulation_time = gen_node.child("simulationTime").attribute("value").as_int();
     outputToFile = gen_node.child("outputToFile").attribute("value").as_bool();
     outputFileName = gen_node.child("outputToFile").child_value();
+    activateFlitTracing = gen_node.child("flitTracing").attribute("value").as_bool();
 
     //NOC
     pugi::xml_node noc_node = doc.child("configuration").child("noc");
