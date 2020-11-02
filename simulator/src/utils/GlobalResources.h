@@ -39,6 +39,7 @@ public:
     //General
     int simulation_time;
     bool outputToFile;
+    bool activateFlitTracing;
     std::string outputFileName;
     std::string noc_file;
     int flitsPerPacket = 0;

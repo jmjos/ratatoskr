@@ -94,6 +94,7 @@ void NetworkInterfaceVC::generateFlitsForPacket(Packet* p)
             flitType = BODY;
         int seqNum = i%flitsPerPacket;
         Flit* current_flit = new Flit(flitType, seqNum, p, p->dataType, sc_time_stamp().to_double());
+        trafficTracer.traceFlit(current_flit);
         p->toTransmit.push_back(current_flit->id);
         p->flits.push_back(current_flit);
     }
@@ -167,7 +168,6 @@ void NetworkInterfaceVC::receiveFlitFromRouter()
                 globalReport.latencyPacket.sample((float) (time-received_flit->headFlit->generationTime));
                 globalReport.latencyNetwork.sample((float) (time-received_flit->headFlit->injectionTime));
                 globalReport.undeliveredPackages--;
-		cout << " -- undel packages " << globalReport.undeliveredPackages << endl;
             }
         }
 #endif

@@ -26,6 +26,7 @@ GlobalResources::GlobalResources()
         :
         simulation_time(0),
         outputToFile(false),
+        activateFlitTracing(false),
         routingVerticalThreshold(1.0),
         Vdd(1.0),
         isUniform(false),

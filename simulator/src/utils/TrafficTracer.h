@@ -1,16 +1,16 @@
 /*******************************************************************************
- * Copyright (C) 2018 joseph
- * 
+ * Copyright (C) 2018 Jan Moritz Joseph
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,47 +22,25 @@
 #pragma once
 
 #include "systemc.h"
-#include <queue>
-#include <algorithm>
+#include <boost/format.hpp>
 
-#include "utils/Structures.h"
-#include "model/traffic/Flit.h"
-#include <model/container/FlitContainer.h>
-#include <model/container/PacketContainer.h>
-#include <utils/GlobalReport.h>
-#include <utils/TrafficTracer.h>
+#include "GlobalResources.h"
+#include <model/traffic/Packet.h>
 
-#include "NetworkInterface.h"
-
-class NetworkInterfaceVC : public NetworkInterface {
+class TrafficTracer{
 public:
-    std::queue<Packet*> packet_send_queue;
-    std::queue<Packet*> packet_recv_queue;
-    sc_in<bool> clk;
-    FlitPortContainer* flitPortContainer;
-    PacketPortContainer* packetPortContainer;
-    int creditCounter;
-    int lastReceivedCreditID;
-    TrafficTracer& trafficTracer = TrafficTracer::getInstance();
+    static TrafficTracer& getInstance()
+    {
+        static TrafficTracer instance;
+        return instance;
+    }
 
-    SC_HAS_PROCESS(NetworkInterfaceVC);
+    void traceFlit(Flit *flit);
 
-    NetworkInterfaceVC(sc_module_name nm, Node& node);
+private:
+    GlobalResources& globalResources = GlobalResources::getInstance();
 
-    ~NetworkInterfaceVC() override;
+    TrafficTracer();
 
-    void initialize() override;
-
-    void bind(Connection*, SignalContainer*, SignalContainer*) override;
-
-    void thread() override;
-
-    void receivePacketFromPE() override;
-
-    void receiveFlitFromRouter() override;
-
-    void generateFlitsForPacket(Packet *p) override;
-
-    void receiveFlowControlCreditFromRouter();
+    ofstream tracefile;
 };
-
