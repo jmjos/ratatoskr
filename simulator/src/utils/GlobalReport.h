@@ -31,189 +31,189 @@
 
 class GlobalReport {
 public:
-	int droppedCounter = 0;             // number of dropped flits.
+    int droppedCounter = 0;             // number of dropped flits.
 
-	Statistics latencyNetwork;
-	Statistics latencyFlit;
-	Statistics latencyPacket;
+    Statistics latencyNetwork;
+    Statistics latencyFlit;
+    Statistics latencyPacket;
 
-	//Link state transmission matrixes
-	std::map<int, std::vector<long> > linkTransmissionMatrices;
-	int linkTransmissionsMatrixNumberOfStates;
+    //Link state transmission matrixes
+    std::map<int, std::vector<long> > linkTransmissionMatrices;
+    int linkTransmissionsMatrixNumberOfStates;
 
-	//Router state vectors and matrices
-	std::map<int, int> routingCalculations;
+    //Router state vectors and matrices
+    std::map<int, int> routingCalculations;
 
-	double averageNetworkLatencySystemLevel = -1;
-	int averageNetworkLatencySystemLevelInstances = 0;
-	double maxNetworkLatency = 0;
-	long long undeliveredPackages = 0;
+    double averageNetworkLatencySystemLevel = -1;
+    int averageNetworkLatencySystemLevelInstances = 0;
+    double maxNetworkLatency = 0;
+    long long undeliveredPackages = 0;
 
-	int numRouters;
-	/* 1st dimension is all routers.
-	* 2nd dimension is all ports (directions) of a router.
-	* 3rd dimension is all possible number of active VCs.
-	*/
-	std::vector<std::vector<std::vector<long>>> VCsUsageHist;
-	/* 1st dimension is all routers.
-	* 2nd dimension is all ports (directions) of a router.
-	* 3rd dimension is all possible number of VCs.
-	* 4th dimension is all buffer positions of a VC.
-	*/
-	std::vector<std::vector<std::vector<std::vector<long>>>> bufferUsagePerVCHist;
+    int numRouters;
+    /* 1st dimension is all routers.
+    * 2nd dimension is all ports (directions) of a router.
+    * 3rd dimension is all possible number of active VCs.
+    */
+    std::vector<std::vector<std::vector<long>>> VCsUsageHist;
+    /* 1st dimension is all routers.
+    * 2nd dimension is all ports (directions) of a router.
+    * 3rd dimension is all possible number of VCs.
+    * 4th dimension is all buffer positions of a VC.
+    */
+    std::vector<std::vector<std::vector<std::vector<long>>>> bufferUsagePerVCHist;
 
-	void readConfigFile(const std::string& config_path);
+    void readConfigFile(const std::string& config_path);
 
-	/// VERBOSE ///
-	//processing elements
-	bool verbose_pe_function_calls = false;
-	bool verbose_pe_send_flit = false;
-	bool verbose_pe_send_head_flit = false;
-	bool verbose_pe_receive_flit = false;
-	bool verbose_pe_receive_tail_flit = false;
-	bool verbose_pe_throttle = false;
-	bool verbose_pe_reset = false;
+    /// VERBOSE ///
+    //processing elements
+    bool verbose_pe_function_calls = false;
+    bool verbose_pe_send_flit = false;
+    bool verbose_pe_send_head_flit = false;
+    bool verbose_pe_receive_flit = false;
+    bool verbose_pe_receive_tail_flit = false;
+    bool verbose_pe_throttle = false;
+    bool verbose_pe_reset = false;
 
-	//router
-	bool verbose_router_function_calls = false;
-	bool verbose_router_send_flit = false;
-	bool verbose_router_send_head_flit = false;
-	bool verbose_router_receive_flit = false;
-	bool verbose_router_receive_head_flit = false;
-	bool verbose_router_assign_channel = false;
-	bool verbose_router_throttle = false;
-	bool verbose_router_buffer_overflow = false;
-	bool verbose_router_reset = false;
+    //router
+    bool verbose_router_function_calls = false;
+    bool verbose_router_send_flit = false;
+    bool verbose_router_send_head_flit = false;
+    bool verbose_router_receive_flit = false;
+    bool verbose_router_receive_head_flit = false;
+    bool verbose_router_assign_channel = false;
+    bool verbose_router_throttle = false;
+    bool verbose_router_buffer_overflow = false;
+    bool verbose_router_reset = false;
 
-	//netrace
-	bool verbose_netrace_inject = false;
-	bool verbose_netrace_eject = false;
-	bool verbose_netrace_router_receive = false;
+    //netrace
+    bool verbose_netrace_inject = false;
+    bool verbose_netrace_eject = false;
+    bool verbose_netrace_router_receive = false;
 
-	//tasks
-	bool verbose_task_function_calls = false;
-	bool verbose_task_xml_parse = false;
-	bool verbose_task_data_receive = true;
-	bool verbose_task_data_send = true;
-	bool verbose_task_source_execute = true;
+    //tasks
+    bool verbose_task_function_calls = false;
+    bool verbose_task_xml_parse = false;
+    bool verbose_task_data_receive = true;
+    bool verbose_task_data_send = true;
+    bool verbose_task_source_execute = true;
 
-	static GlobalReport& getInstance()
-	{
-		static GlobalReport instance;
-		return instance;
-	}
+    static GlobalReport& getInstance()
+    {
+        static GlobalReport instance;
+        return instance;
+    }
 
-	void reportComplete(const std::string& filename);
+    void reportComplete(const std::string& filename);
 
-	void reportPerformance(ostream& stream);
+    void reportPerformance(ostream& stream);
 
-	void reportPerformanceCSV(ostream& stream);
+    void reportPerformanceCSV(ostream& stream);
 
-	// Link state transmission matrixes
-	void issueLinkMatrixUpdate(int id, int currentTransmissionState, int lastTransmissionState);
+    // Link state transmission matrixes
+    void issueLinkMatrixUpdate(int id, int currentTransmissionState, int lastTransmissionState);
 
-	void reportLinkMatrix(int id, ostream& stream);
+    void reportLinkMatrix(int id, ostream& stream);
 
-	void reportLinkMatrices(ostream& stream);
+    void reportLinkMatrices(ostream& stream);
 
-	void reportLinkMatricesCSV(ostream& stream);
+    void reportLinkMatricesCSV(ostream& stream);
 
-	// Router status vectors and matrices
-	void issueRoutingCalculation(int id);
+    // Router status vectors and matrices
+    void issueRoutingCalculation(int id);
 
-	void reportRoutingCalculations(ostream& stream);
+    void reportRoutingCalculations(ostream& stream);
 
-	void updateAverageNetworkLatencySystemLevel(double newLatency);
+    void updateAverageNetworkLatencySystemLevel(double newLatency);
 
-	void reportAverageNetworkLatencySystemLevel();
+    void reportAverageNetworkLatencySystemLevel();
 
-	void updateMaxNetworkLatencySystemLevel(double newLatency);
+    void updateMaxNetworkLatencySystemLevel(double newLatency);
 
-	void reportMaxNetworkLatencySystemLevel();
+    void reportMaxNetworkLatencySystemLevel();
 
-	void updateVCUsageHist(int routerId, int dir, int numOfActiveVCs);
+    void updateVCUsageHist(int routerId, int dir, int numOfActiveVCs);
 
-	void reportVCUsageHist(std::string& csvFileName, int routerId);
+    void reportVCUsageHist(std::string& csvFileName, int routerId);
 
-	void updateBuffUsagePerVCHist(int routerId, int dir, int vc, int bufferOccupation);
+    void updateBuffUsagePerVCHist(int routerId, int dir, int vc, int bufferOccupation);
 
-	void reportBuffPerVCUsageHist(std::string& csvFileName, int routerId, int dir);
+    void reportBuffPerVCUsageHist(std::string& csvFileName, int routerId, int dir);
 
-	void reportAllRoutersUsageHist();
+    void reportAllRoutersUsageHist();
 
-	void resizeMatrices();
+    void resizeMatrices();
 
-	void increaseClockCount(int layer);
+    void increaseClockCount(int layer);
 
-	void reportClockCount(ostream& stream);
+    void reportClockCount(ostream& stream);
 
-	void increaseBufferPush(int router_id);
+    void increaseBufferPush(int router_id);
 
-	void increaseBufferPop(int router_id);
+    void increaseBufferPop(int router_id);
 
-	void increaseBufferFront(int router_id);
+    void increaseBufferFront(int router_id);
 
-	void increaseRouting(int router_id);
+    void increaseRouting(int router_id);
 
-	void increaseCrossbar(int router_id);
+    void increaseCrossbar(int router_id);
 
-	void reportRoutersPowerCSV(ostream& csvfile);
+    void reportRoutersPowerCSV(ostream& csvfile);
 
-	std::vector<int> bufferReportRouters;
+    std::vector<int> bufferReportRouters;
 
-	void increase_power_stats(int router_id, int dir);
+    void increase_power_stats(int router_id, int dir);
 
-	void report_power_stats(std::string& csvFileName, int router_id);
+    void report_power_stats(std::string& csvFileName, int router_id);
 
-	//Bandwidth
-	void issueNoCInputDataAmount(sc_time time, int dataAmount);
+    //Bandwidth
+    void issueNoCInputDataAmount(sc_time time, int dataAmount);
 
     void issueNoCOutputDataAmount(sc_time time, int dataAmount);
 
-	void reportNoCBandwidthInput(ostream& csvfile);
+    void reportNoCBandwidthInput(ostream& csvfile);
 
-	void reportNoCBandwidthOutput(ostream& csvfile);
+    void reportNoCBandwidthOutput(ostream& csvfile);
 private:
-	GlobalResources& globalResources = GlobalResources::getInstance();
+    GlobalResources& globalResources = GlobalResources::getInstance();
 
-	double total_power_s;               //unused
+    double total_power_s;               //unused
 
-	//Buffer consumption (power per event is determined by a LUT of buffer depth and flit size)
-	std::vector<double> buffer_router_push_pwr_d;    // per flit pushed on buffer
-	std::vector<double> buffer_router_pop_pwr_d;     // per flit popped of buffer (not for lookup)
-	std::vector<double> buffer_router_front_pwr_d;   // per flit data received from buffer (only count if flit exists)
-	std::vector<double> buffer_router_pwr_s;         // leakage per router cycle per buffer
+    //Buffer consumption (power per event is determined by a LUT of buffer depth and flit size)
+    std::vector<double> buffer_router_push_pwr_d;    // per flit pushed on buffer
+    std::vector<double> buffer_router_pop_pwr_d;     // per flit popped of buffer (not for lookup)
+    std::vector<double> buffer_router_front_pwr_d;   // per flit data received from buffer (only count if flit exists)
+    std::vector<double> buffer_router_pwr_s;         // leakage per router cycle per buffer
 
-	//Power consumption of routing Algorithm (determined by routing algorithm)
-	std::vector<double> routing_pwr_d;                //per routing function called
-	std::vector<double> routing_pwr_s;                //Leakage per Router Cycle
+    //Power consumption of routing Algorithm (determined by routing algorithm)
+    std::vector<double> routing_pwr_d;                //per routing function called
+    std::vector<double> routing_pwr_s;                //Leakage per Router Cycle
 
-	//Routing function gives vector of possible directions/VCs
-	//Selection function selects direction/VC
-	//Power Consumption of selection Function (determined by selection function)
-	//double selection_pwr_d;			//per selection function called
-	//double selection_pwr_s; 			//Leakage per Router Cycle
-	// not implemented!
+    //Routing function gives vector of possible directions/VCs
+    //Selection function selects direction/VC
+    //Power Consumption of selection Function (determined by selection function)
+    //double selection_pwr_d;			//per selection function called
+    //double selection_pwr_s; 			//Leakage per Router Cycle
+    // not implemented!
 
-	//Power consumption of Crossbar (determined by IOs (5) and Flit size)
-	std::vector<double> crossbar_pwr_d;              // per sent flit
-	std::vector<double> crossbar_pwr_s;              // Leakage per Router Cycle
+    //Power consumption of Crossbar (determined by IOs (5) and Flit size)
+    std::vector<double> crossbar_pwr_d;              // per sent flit
+    std::vector<double> crossbar_pwr_s;              // Leakage per Router Cycle
 
-	//Power consumption of Network Interface (determined by flit size)
-	std::vector<double> ni_pwr_d;                    // per local flit sent or received
-	std::vector<double> ni_pwr_s;                    // Leakage per Router Cycle
+    //Power consumption of Network Interface (determined by flit size)
+    std::vector<double> ni_pwr_d;                    // per local flit sent or received
+    std::vector<double> ni_pwr_s;                    // Leakage per Router Cycle
 
-	// Used to create the buffer axes in the histogram of buffer usage
-	const int MAX_BUFFER_DEPTH = 50;
-	// Generate VC and buffer histograms for only these routers
+    // Used to create the buffer axes in the histogram of buffer usage
+    const int MAX_BUFFER_DEPTH = 50;
+    // Generate VC and buffer histograms for only these routers
 
-	std::vector<long long> clockCounts;
+    std::vector<long long> clockCounts;
 
-	//Bandwidth measurement
-	std::map<sc_time, int> noCInputDataAmount;
-	std::map<sc_time, int> noCOutputDataAmount;
+    //Bandwidth measurement
+    std::map<sc_time, int> noCInputDataAmount;
+    std::map<sc_time, int> noCOutputDataAmount;
 
 
-	GlobalReport();
+    GlobalReport();
 };
 
