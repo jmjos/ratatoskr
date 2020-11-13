@@ -173,6 +173,7 @@ public:
     void reportNoCBandwidthInput(ostream& csvfile);
 
     void reportNoCBandwidthOutput(ostream& csvfile);
+    
 private:
     GlobalResources& globalResources = GlobalResources::getInstance();
 
