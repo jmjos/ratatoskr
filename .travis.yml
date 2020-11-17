@@ -34,4 +34,12 @@ before_script:
 
 script: 
         - make
+        - cd ..
+        - mkdir test_runner
+        - cd test_runner
+        - cp ../build/sim .
+        - mkdir config
+        - cp ../tests/2D-8x8/config.xml config
+        - cp ../tests/2D-8x8/network.xml config
+        - ./sim
           #- ./sim
