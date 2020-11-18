@@ -42,4 +42,6 @@ script:
         - cp ../tests/2D-8x8/config.xml config
         - cp ../tests/2D-8x8/network.xml config
         - ./sim
+        - cd ../netrace
+        - ./run.sh
           #- ./sim
