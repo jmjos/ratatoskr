@@ -205,6 +205,7 @@ void GlobalResources::readConfigFile(const std::string& configPath)
 void GlobalResources::readNoCLayout(const std::string& nocPath)
 {
     std::cout << "Reading NoC layout: " << nocPath << endl;
+    assert(access(nocPath.c_str(), F_OK) != -1);
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(nocPath.c_str());
     assert(result && "Failed to read NoC file!");

@@ -5,7 +5,7 @@
     <outputToFile value="true">report</outputToFile>
   </general>
   <noc>
-    <nocFile>config/network.xml</nocFile>
+    <nocFile>config/ntNetwork8x4x2.xml</nocFile>
     <flitsPerPacket value="4"/>
     <bitWidth value="32"/>
     <Vdd value="5"/>
