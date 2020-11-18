@@ -1,7 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 PROJECT(sim)
 
-SET(CMAKE_PREFIX_PATH /scratch/joseph/tools/systemc-2.3.3/)
+SET(CMAKE_PREFIX_PATH /usr/local/systemc-2.3.3/include/systemc.h)
 
 set(CMAKE_CXX_STANDARD 17)
 
