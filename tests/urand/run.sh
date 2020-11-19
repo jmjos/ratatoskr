@@ -1,5 +1,11 @@
 #!/bin/bash
 
+pwd
+ls 
+ls ..
+ls ../..
+ls ../../..
+
 mkdir test_runner_8x8
 cd  test_runner_8x8
 cp ../../../simulator/build/sim .
