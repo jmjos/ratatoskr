@@ -113,7 +113,9 @@ void NetracePool::thread() {
                     cout << "@ " << sc_time_stamp();
                     ntnetrace.nt_print_packet(new_node->packet);
                     int src = static_cast<int>(trace_packet->src);
-                    ProcessingElementVC* pe = (ProcessingElementVC*) processingElements.at(src%48);
+                    if (!globalResources.netrace2Dor3Dmode && src >= 32)
+                        src += 32; // bring to 2nd layer
+                    ProcessingElementVC* pe = (ProcessingElementVC*) processingElements.at(src);
                     pe->ntInject.push(std::make_pair(*new_node, new_node->cycle));
                 } else {
                     // Add to waiting queue
