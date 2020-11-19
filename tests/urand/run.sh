@@ -1,10 +1,7 @@
 #!/bin/bash
 
-pwd
-ls 
-ls ..
-ls ../..
-ls ../../..
+ls ../../simulator
+ls ../../simulator/build
 
 mkdir test_runner_8x8
 cd  test_runner_8x8
