@@ -31,8 +31,12 @@ before_script:
 script:
         - cd simulator
         - ./build.sh
-        - cd ..
-        - cd tests/urand
+        - cd ../tests/urand
+        - pwd
+        - ls 
+        - ls ..
+        - ls ../..
+        - ls ../../..
         - ./run.sh
         - cd ../..
         - cd ../tests/netrace
