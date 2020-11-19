@@ -33,6 +33,5 @@ script:
         - ./build.sh
         - cd ../tests/urand
         - ./run.sh
-        - cd ../..
         - cd ../tests/netrace
         - ./run.sh
