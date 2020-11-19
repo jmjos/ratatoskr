@@ -2,8 +2,8 @@
 
 mkdir build
 cd build
-cmake ../../.. -DDEFINE_ENABLE_NETRACE=ON
-make -j
+cmake ../../../simulator -DDEFINE_ENABLE_NETRACE=ON
+make
 cd ..
 cp build/sim .
 wget https://www.cs.utexas.edu/~netrace/download/netrace-1.0.tar.bz2

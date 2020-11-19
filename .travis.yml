@@ -27,21 +27,13 @@ before_script:
         - sudo make install
         - sudo sed -i '/using std::gets;/d' /usr/local/systemc-2.3.3/include/systemc.h
         - cd ../..
-        - cd simulator
-        - mkdir build
-        - cd build
-        - cmake ..
 
-script: 
-        - make
+script:
+        - cd simulator
+        - ./build
         - cd ..
-        - mkdir test_runner
-        - cd test_runner
-        - cp ../build/sim .
-        - mkdir config
-        - cp ../tests/2D-8x8/config.xml config
-        - cp ../tests/2D-8x8/network.xml config
-        - ./sim
+        - cd tests/urand
+        - ./run.sh
+        - cd ../..
         - cd ../tests/netrace
         - ./run.sh
-          #- ./sim
