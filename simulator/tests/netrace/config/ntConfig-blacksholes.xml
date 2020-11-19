@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <general>
-    <simulationTime value="100000"/>
+    <simulationTime value="30000"/>
     <outputToFile value="true">report</outputToFile>
   </general>
   <noc>
@@ -22,10 +22,10 @@
   <verbose>
     <processingElements>
       <function_calls value="false"/>
-      <send_flit value="true"/>
+      <send_flit value="false"/>
       <send_head_flit value="false"/>
       <receive_flit value="false"/>
-      <receive_tail_flit value="true"/>
+      <receive_tail_flit value="false"/>
       <throttle value="false"/>
       <reset value="false"/>
     </processingElements>
