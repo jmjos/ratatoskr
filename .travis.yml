@@ -29,6 +29,7 @@ before_script:
         - cd ../..
 
 script:
+        - export SYSTEMC_DISABLE_COPYRIGHT_MESSAGE=1
         - cd simulator
         - ./build.sh
         - cd ../tests/urand
