@@ -30,7 +30,7 @@ before_script:
 
 script:
         - cd simulator
-        - ./build
+        - ./build.sh
         - cd ..
         - cd tests/urand
         - ./run.sh
