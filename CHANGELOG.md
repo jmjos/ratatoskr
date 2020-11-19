@@ -138,3 +138,17 @@ All notable changes to this project will be documented in this file.
 
 ### Known Issues
 - all of version 2.0
+
+## [v2020-1] - Oct 2020
+
+New naming convention as we applied rolling updates.
+
+### New Features
+- Netrace mode
+- Test envionment
+- Bandwidth measurements
+- Trace file generator for synthetic mode
+
+### Known issues
+- all from v2.0.1 removed.
+- small bugs see open issues
