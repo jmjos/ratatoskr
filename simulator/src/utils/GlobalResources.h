@@ -58,6 +58,7 @@ public:
 #ifdef ENABLE_NETRACE
     std::map<nodeID_t, int> netraceNodeToTask;
     std::map<int, nodeID_t> netraceTaskToNode;
+    bool netrace2Dor3Dmode = true; // true == 2D
 #endif
     bool isUniform;
     int numberOfTrafficTypes;

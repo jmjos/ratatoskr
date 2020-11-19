@@ -39,8 +39,18 @@ GlobalResources::GlobalResources()
     rd_seed = seed;
 #ifdef ENABLE_NETRACE
     for (int i = 0; i < 64; ++i) {
-        netraceNodeToTask.insert(std::pair<nodeID_t, int>(i%64+64, i%64));
-        netraceTaskToNode.insert(std::pair<int, nodeID_t>(i%64, i%64+64));;
+        if (netrace2Dor3Dmode){
+            netraceNodeToTask.insert(std::pair<nodeID_t, int>(i+128, i));
+            netraceTaskToNode.insert(std::pair<int, nodeID_t>(i, i+128));
+        } else{
+            if (i<32){
+                netraceNodeToTask.insert(std::pair<nodeID_t, int>(i+128, i));
+                netraceTaskToNode.insert(std::pair<int, nodeID_t>(i, i+128));
+            } else {
+                netraceNodeToTask.insert(std::pair<nodeID_t, int>(i+128+64, i));
+                netraceTaskToNode.insert(std::pair<int, nodeID_t>(i, i+128+64));
+            }
+        }
     }
 #endif
 }
