@@ -3,3 +3,5 @@ build/
 config/example.tra.bz2
 netrace-1.0/
 netrace-1.0.tar.bz2
+report.txt
+rundir/
