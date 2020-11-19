@@ -5,7 +5,7 @@
     <outputToFile value="true">report</outputToFile>
   </general>
   <noc>
-    <nocFile>config/ntNetwork8x4x2.xml</nocFile>
+    <nocFile>config/network.xml</nocFile>
     <flitsPerPacket value="4"/>
     <bitWidth value="32"/>
     <Vdd value="5"/>
@@ -22,7 +22,7 @@
   <verbose>
     <processingElements>
       <function_calls value="false"/>
-      <send_flit value="false"/>
+      <send_flit value="true"/>
       <send_head_flit value="true"/>
       <receive_flit value="false"/>
       <receive_tail_flit value="true"/>
@@ -31,9 +31,9 @@
     </processingElements>
     <router>
       <function_calls value="false"/>
-      <send_flit value="false"/>
+      <send_flit value="true"/>
       <send_head_flit value="true"/>
-      <receive_flit value="false"/>
+      <receive_flit value="true"/>
       <receive_tail_flit value="true"/>
       <throttle value="false"/>
       <reset value="false"/>
