@@ -1,0 +1,59 @@
+<?xml version="1.0" ?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <general>
+    <simulationTime value="100000"/>
+    <outputToFile value="true">report</outputToFile>
+  </general>
+  <noc>
+    <nocFile>config/network.xml</nocFile>
+    <flitsPerPacket value="4"/>
+    <bitWidth value="32"/>
+    <Vdd value="5"/>
+  </noc>
+  <application>
+    <benchmark>netrace</benchmark>
+    <simulationFile>traffic/pipelinePerformance_2D/PipelineResetTB.xml</simulationFile>
+    <mappingFile>traffic/pipelinePerformance_2D/PipelineResetTBMapping.xml</mappingFile>
+    <netraceFile>blackscholes_64c_simsmall.tra.bz2</netraceFile>
+    <netraceStartRegion value="0"/>
+    <isUniform value="false"/>
+    <numberOfTrafficTypes value="5"/>
+  </application>
+  <verbose>
+    <processingElements>
+      <function_calls value="false"/>
+      <send_flit value="true"/>
+      <send_head_flit value="false"/>
+      <receive_flit value="false"/>
+      <receive_tail_flit value="true"/>
+      <throttle value="false"/>
+      <reset value="false"/>
+    </processingElements>
+    <router>
+      <function_calls value="false"/>
+      <send_flit value="false"/>
+      <send_head_flit value="false"/>
+      <receive_flit value="false"/>
+      <receive_tail_flit value="false"/>
+      <throttle value="false"/>
+      <reset value="false"/>
+      <assign_channel value="false"/>
+      <buffer_overflow value="true"/>
+    </router>
+    <netrace>
+      <inject value="true"/>
+      <eject value="true"/>
+      <router_receive value="true"/>
+    </netrace>
+    <tasks>
+      <function_calls value="true"/>
+      <xml_parse value="false"/>
+      <data_receive value="true"/>
+      <data_send value="true"/>
+      <source_execute value="false"/>
+    </tasks>
+  </verbose>
+  <report>
+    <bufferReportRouters>5 6 9 10 21 22 25 26 37 38 41 42</bufferReportRouters>
+  </report>
+</configuration>
