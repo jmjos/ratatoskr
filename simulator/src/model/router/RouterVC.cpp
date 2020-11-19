@@ -229,8 +229,13 @@ std::map<int, std::vector<Channel>> RouterVC::VCAllocation_generateRequests()
                 int dst_node_id = flit->packet->dst.id;
                 int chosen_conPos = routingAlg->route(src_node_id, dst_node_id);
                 globalReport.increaseRouting(this->id);
-                if (chosen_conPos==-1)
-                    std::cerr << "Bad routing" << std::endl;
+                if (chosen_conPos==-1){
+                    std::cerr << "Bad routing in router "<< id << " from "<<src_node_id << " to " << dst_node_id
+                    << std::endl;
+                    globalResources.routingDebugMode = true;
+                    chosen_conPos = routingAlg->route(src_node_id, dst_node_id);
+                    globalResources.routingDebugMode = false;
+                }
                 Channel in{in_conPos, in_vc};
                 insert_request(chosen_conPos, in, requests);
             }

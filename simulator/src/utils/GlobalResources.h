@@ -73,6 +73,9 @@ public:
     long long rd_seed;
     std::mt19937_64* rand;
 
+    //debug
+    bool routingDebugMode = false;
+
     static GlobalResources& getInstance();
 
     int getRandomIntBetween(int, int);
