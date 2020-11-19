@@ -14,5 +14,5 @@ cp config/ntConfig.xml config/config.xml
 
 #black sholes mode
 wget https://www.cs.utexas.edu/~netrace/download/blackscholes_64c_simsmall.tra.bz2
-mv config/ntConfig-blacksholes.xml config/config.xml
+mv config/ntConfig-blacksholes.xml config/ntConfig.xml
 ./sim
