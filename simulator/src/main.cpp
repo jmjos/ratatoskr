@@ -114,7 +114,6 @@ int sc_main(int arg_num, char* arg_vec[])
     cout << "Random seed " << globalResources.rd_seed << endl;
 
     auto ms = std::chrono::high_resolution_clock::now()-t1;
-
     auto secs = std::chrono::duration_cast<std::chrono::seconds>(ms);
     ms -= std::chrono::duration_cast<std::chrono::milliseconds>(secs);
     auto mins = std::chrono::duration_cast<std::chrono::minutes>(secs);
@@ -122,6 +121,7 @@ int sc_main(int arg_num, char* arg_vec[])
     auto hours = std::chrono::duration_cast<std::chrono::hours>(mins);
     mins -= std::chrono::duration_cast<std::chrono::minutes>(hours);
     cout << "Execution time: " << hours.count() << "h " << mins.count() << " min and " << secs.count() << " seconds" << std::endl;
+
     rep.close();
 
     return 0;
