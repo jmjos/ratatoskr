@@ -128,7 +128,7 @@ int sc_main(int arg_num, char* arg_vec[])
     globalReport.reportPerformance(cout);
     cout << "Random seed " << globalResources.rd_seed << endl;
 
-    auto ms = std::chrono::high_resolution_clock::now()-t1;
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now()-t1);
     auto secs = std::chrono::duration_cast<std::chrono::seconds>(ms);
     ms -= std::chrono::duration_cast<std::chrono::milliseconds>(secs);
     auto mins = std::chrono::duration_cast<std::chrono::minutes>(secs);
