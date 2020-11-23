@@ -103,12 +103,12 @@ int sc_main(int arg_num, char* arg_vec[])
     else
         cout << "Netrace ROI false value; defaulted to ROI" << endl;
     std::string netraceVerbosity = vm["netraceVerbosity"].as<std::string>();
-    if (netraceVerbosity == "all")
-        globalResources.netraceVerbosity = 3;
-    else if (netraceVerbosity == "base")
+    if (netraceVerbosity.compare("all"))
         globalResources.netraceVerbosity = 2;
-    else
+    else if (netraceVerbosity.compare("base"))
         globalResources.netraceVerbosity = 1;
+    else
+        globalResources.netraceVerbosity = 0;
 
     std::string config_path = "config/ntConfig.xml";
 #endif
