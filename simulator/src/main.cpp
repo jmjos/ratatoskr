@@ -101,10 +101,11 @@ int sc_main(int arg_num, char* arg_vec[])
     if (vm["netraceRegion"].as<int>() <=5 && vm["netraceRegion"].as<int>() >= 0)
         globalResources.netraceStartRegion = vm["netraceRegion"].as<int>();
     else
-    std::string netraceVerbosity = vm["netraceVerbosity"].as<std::string>();
-    if (netraceVerbosity.compare("all") == 0)
+        globalResources.netraceStartRegion = 2;
+    std::string netraceVerbosityInput = vm["netraceVerbosity"].as<std::string>();
+    if (netraceVerbosityInput.compare("all") == 0)
         globalResources.netraceVerbosity = 2;
-    else if (netraceVerbosity.compare("base") == 0)
+    else if (netraceVerbosityInput.compare("base") == 0)
         globalResources.netraceVerbosity = 1;
     else
         globalResources.netraceVerbosity = 0;
