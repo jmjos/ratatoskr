@@ -132,9 +132,8 @@ void NetracePool::thread() {
         }
 
         cycle++;
-        // shortens the ration at which the CPU is overclocked vs the network
-        // 100 = 10x vs 1GHz
-        auto clockDelay = 100;
+
+        int clockDelay = 50; // Netrace runs at 2GHz
         event.notify(clockDelay, SC_PS);
         wait(event);
     }
