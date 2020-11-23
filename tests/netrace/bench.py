@@ -23,9 +23,9 @@ def main():
 
 	traceNames = [
 		"blackscholes_64c_simsmall"
-		#,"fluidanimate_64c_simsmall"
-		#,"x264_64c_simsmall"
-		#,"bodytrack_64c_simlarge"
+		,"fluidanimate_64c_simsmall"
+		,"x264_64c_simsmall"
+		,"bodytrack_64c_simlarge"
 		#,"canneal_64c_simmedium"
 		#,"dedup_64c_simmedium"
 		#,"ferret_64c_simmedium"
@@ -33,9 +33,10 @@ def main():
 		#,"vips_64c_simmedium"
 		]
 	simTimes = [10000
-		#,10000
-		#,10000
-		]
+		,10000
+		,10000
+                ,10000
+                ]
 
 	assert 	len(traceNames) == len(simTimes)
 
