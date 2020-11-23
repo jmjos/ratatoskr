@@ -50,7 +50,7 @@ def main():
 			httpAddr = "https://www.cs.utexas.edu/~netrace/download/" + trace + ".tra.bz2"
 			call(["wget", httpAddr])
 
-		call(["./sim", "--simTime", str(time), " --netraceTraceFile ", str(trace + ".tra.bz2")])
+		call(["./sim", "--simTime", str(time), " --netraceTraceFile ", str(trace + ".tra.bz2"), " --netraceVerbosity", "base"])
 
 		bandwidth.generatePDF(trace)
 
