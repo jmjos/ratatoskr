@@ -12,7 +12,6 @@ compiler: gcc
 before_install:
         - sudo apt update
         - sudo apt -y install libpugixml-dev python3-venv libboost-program-options-dev libboost-system-dev
-          #- sudo apt -y install libboost-all-dev
 
 before_script:
         - mkdir systemc

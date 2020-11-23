@@ -3,23 +3,23 @@
 Quick script, see in bin/install.sh
 
 Installation of zmq from 3rd party repo not required since Ubuntu 20.01. Otherwise, get Debian 9 repository
-```bash 
+```bash
 echo "deb http://download.opensuse.org/repositories/network:/messaging:/zeromq:/release-stable/Debian_9.0/ ./" | sudo tee -a /etc/apt/sources.list
 ```
 download Debian 9 key and add to keychain
-```bash 
+```bash
 wget https://download.opensuse.org/repositories/network:/messaging:/zeromq:/release-stable/Debian_9.0/Release.key -O- | sudo apt-key add
 ```
 With Ubuntu 20.01 and all other OSs, install pugxml, boost, cmake, ZeroMQ and python3
 ```bash
-sudo apt install -y git libpugixml-dev libboost-all-dev cmake libzmq3-dev python3-venv
+sudo apt install -y git libpugixml-dev libboost-program-options-dev libboost-system-dev cmake libzmq3-dev python3-venv
 ```
 install Tcl/Tk, Tk for python
-```bash 
+```bash
 sudo apt install -y tk-dev python-tk python3-tk
 ```
 install systemc
-```bash 
+```bash
 cd ~/Downloads
 wget www.accellera.org/images/downloads/standards/systemc/systemc-2.3.3.gz
 tar -xzf systemc-2.3.3.gz
@@ -33,7 +33,7 @@ sudo make install
 ```
 [fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) ratatoksr repository on github.com  
 clone repository from your own account
-```bash 
+```bash
 cd ~
 git clone https://github.com/YOUR-USERNAME/ratatoskr.git
 cd ratatoskr/simulator
@@ -85,9 +85,9 @@ Enjoy.
 
 #### Building with Eclipse
 
-Open a workspace at the location "workspace"-folder. Then, create an new C++ project with the same name as the subfolder of the project you want to work on (i.e. a3dnoc-simulator). After applying the settings, you should be ready to go! 
+Open a workspace at the location "workspace"-folder. Then, create an new C++ project with the same name as the subfolder of the project you want to work on (i.e. a3dnoc-simulator). After applying the settings, you should be ready to go!
 
-Project Settings: 
+Project Settings:
 
 ```
 > Dialect: C++0x  
@@ -99,4 +99,4 @@ Project Settings:
 
 - `ENABLE_GUI` enables the zmq forwarding from simulator to gui. Please disable for parallel execution of multiple instances of the simulator, as they block the same port and fail.
 - `ENABLE_BUFFER_VC_STATS` enables detailed buffer stats per VC in form of a histogram. Large performance penalty, so disable if not required.
-- `ENABLE_NETRACE` enables netrace mode. Separate mode, requires recompilation for many settings. Only works with config/nt*.xml configuration files. 
+- `ENABLE_NETRACE` enables netrace mode. Separate mode, requires recompilation for many settings. Only works with config/nt*.xml configuration files.
