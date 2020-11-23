@@ -41,7 +41,7 @@ void NetracePool::thread() {
 #ifdef ENABLE_NETRACE
     int i;
     int ignore_dependencies = 1;
-    int start_region = 2;
+    int start_region = globalResources.netraceStartRegion;
     int reader_throttling = 0;
     const char* tracefile = globalResources.netraceFile.c_str();
 

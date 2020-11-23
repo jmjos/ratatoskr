@@ -54,11 +54,11 @@ public:
     std::string simulation_file;
     std::string mapping_file;
     std::string netraceFile;
-    int netraceStartRegion;
 #ifdef ENABLE_NETRACE
     std::map<nodeID_t, int> netraceNodeToTask;
     std::map<int, nodeID_t> netraceTaskToNode;
     bool netrace2Dor3Dmode = true; // true == 2D
+    int netraceStartRegion;
 #endif
     bool isUniform;
     int numberOfTrafficTypes;

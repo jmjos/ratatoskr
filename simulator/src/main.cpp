@@ -24,10 +24,15 @@
 #include <fstream>
 #include <string>
 #include <chrono>
+
+#include "boost/program_options.hpp"
+
 #include "utils/GlobalResources.h"
 #include "utils/GlobalReport.h"
 #include "utils/Report.h"
 #include "model/NoC.h"
+
+namespace po = boost::program_options;
 
 int sc_main(int arg_num, char* arg_vec[])
 {
@@ -64,6 +69,35 @@ int sc_main(int arg_num, char* arg_vec[])
 
     rep.connect("127.0.0.1", "10000");
     rep.startRun("name");
+
+#ifdef ENABLE_NETRACE
+    po::variables_map vm;
+    po::options_description desc("Allowed Options");
+    desc.add_options()
+            ("simTime", po::value<std::string>()->default_value(""), "Length of simulation");
+    desc.add_options()
+            ("netraceRegion", po::value<int>()->default_value(2), "Netrace: Region of the simulation, per default the PARSEC's ROI");
+    desc.add_options()
+            ("netraceTraceFile", po::value<std::string>()->default_value(""), "Netrace: Trace file");
+    try{
+        po::store(po::parse_command_line(arg_num, arg_vec, desc), vm);
+        po::notify(vm);
+    } catch (po::error& e) {
+        cerr << "ERROR: " << e.what() << endl << endl << desc << endl;
+        return 1;
+    }
+    std::string simTimeString = vm["simTime"].as<std::string>();
+    if (!simTimeString.empty()) {
+        globalResources.simulation_time = std::stoi(simTimeString);
+    }
+    std::string netraceTraceFile = vm["netraceTraceFile"].as<std::string>();
+    if (!netraceTraceFile.empty()) {
+        globalResources.netraceFile = netraceTraceFile;
+    }
+    globalResources.netraceStartRegion = vm["netraceRegion"].as<int>();
+        std::string config_path = "config/ntConfig.xml";
+#endif
+
 
     std::unique_ptr<NoC> noc = std::make_unique<NoC>("Layer");
     std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
