@@ -39,10 +39,9 @@ NetracePool::~NetracePool()
 void NetracePool::thread() {
     ntNetrace ntnetrace;
 #ifdef ENABLE_NETRACE
-    //TODO read parameters from xml?
     int i;
     int ignore_dependencies = 1;
-    int start_region = 0;
+    int start_region = 2;
     int reader_throttling = 0;
     const char* tracefile = globalResources.netraceFile.c_str();
 
