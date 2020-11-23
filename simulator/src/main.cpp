@@ -106,17 +106,22 @@ int sc_main(int arg_num, char* arg_vec[])
     sc_start(globalResources.simulation_time, SC_NS);
 
     if (globalResources.outputToFile) {
-        cout << "Generating report of the simulation run into file " << globalResources.outputFileName << " ... ";
+        cout << "Generating report of the simulation run into file " << globalResources.outputFileName << " ... " << endl << endl;
         globalReport.reportComplete(globalResources.outputFileName);
         cout << " done." << endl;
     }
     globalReport.reportPerformance(cout);
     cout << "Random seed " << globalResources.rd_seed << endl;
-    auto duration = std::chrono::duration_cast<std::chrono::seconds>(
-            std::chrono::high_resolution_clock::now()-t1).count();
-    auto durationmin = std::chrono::duration_cast<std::chrono::minutes>(
-            std::chrono::high_resolution_clock::now()-t1).count();
-    cout << "Execution time: " << durationmin << " minutes and " << duration << " seconds" << std::endl;
+
+    auto ms = std::chrono::high_resolution_clock::now()-t1;
+
+    auto secs = std::chrono::duration_cast<std::chrono::seconds>(ms);
+    ms -= std::chrono::duration_cast<std::chrono::milliseconds>(secs);
+    auto mins = std::chrono::duration_cast<std::chrono::minutes>(secs);
+    secs -= std::chrono::duration_cast<std::chrono::seconds>(mins);
+    auto hours = std::chrono::duration_cast<std::chrono::hours>(mins);
+    mins -= std::chrono::duration_cast<std::chrono::minutes>(hours);
+    cout << "Execution time: " << hours.count() << "h " << mins.count() << " min and " << secs.count() << " seconds" << std::endl;
     rep.close();
 
     return 0;
