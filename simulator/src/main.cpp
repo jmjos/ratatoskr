@@ -79,6 +79,10 @@ int sc_main(int arg_num, char* arg_vec[])
             ("netraceRegion", po::value<int>()->default_value(2), "Netrace: Region of the simulation, per default the PARSEC's ROI");
     desc.add_options()
             ("netraceTraceFile", po::value<std::string>()->default_value(""), "Netrace: Trace file");
+    desc.add_options()
+            ("netraceVerbosity", po::value<std::string>()->default_value("all"), "Netrace: Verbosity Level,"
+                                                                                 "all=info about trace file and about packet generation. "
+                                                                                 "base = info about trace file. none = no output");
     try{
         po::store(po::parse_command_line(arg_num, arg_vec, desc), vm);
         po::notify(vm);
@@ -98,6 +102,14 @@ int sc_main(int arg_num, char* arg_vec[])
         globalResources.netraceStartRegion = vm["netraceRegion"].as<int>();
     else
         cout << "Netrace ROI false value; defaulted to ROI" << endl;
+    std::string netraceVerbosity = vm["netraceVerbosity"].as<std::string>();
+    if (netraceVerbosity == "all")
+        globalResources.netraceVerbosity = 3;
+    else if (netraceVerbosity == "base")
+        globalResources.netraceVerbosity = 2;
+    else
+        globalResources.netraceVerbosity = 1;
+
     std::string config_path = "config/ntConfig.xml";
 #endif
 

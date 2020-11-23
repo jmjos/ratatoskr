@@ -53,7 +53,8 @@ void NetracePool::thread() {
     if( ignore_dependencies ) {
         ntnetrace.nt_disable_dependencies();
     }
-    ntnetrace.nt_print_trheader();
+    if (globalResources.netraceVerbosity >= 1)
+        ntnetrace.nt_print_trheader();
     header = ntnetrace.nt_get_trheader();
     ntnetrace.nt_seek_region( &header->regions[start_region] );
     for( i = 0; i < start_region; i++ ) {
@@ -109,8 +110,10 @@ void NetracePool::thread() {
                 new_node->cycle = (trace_packet->cycle > cycle) ? trace_packet->cycle : cycle;
                 if( ignore_dependencies || ntnetrace.nt_dependencies_cleared( trace_packet ) ) {
                     // Add to inject queue
-                    cout << "@ " << sc_time_stamp();
-                    ntnetrace.nt_print_packet(new_node->packet);
+                    if (globalResources.netraceVerbosity >= 2) {
+                        cout << "@ " << sc_time_stamp();
+                        ntnetrace.nt_print_packet(new_node->packet);
+                    }
                     int src = static_cast<int>(trace_packet->src);
                     if (!globalResources.netrace2Dor3Dmode && src >= 32)
                         src += 32; // bring to 2nd layer
