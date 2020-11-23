@@ -101,14 +101,14 @@ int sc_main(int arg_num, char* arg_vec[])
     if (vm["netraceRegion"].as<int>() <=5 && vm["netraceRegion"].as<int>() >= 0)
         globalResources.netraceStartRegion = vm["netraceRegion"].as<int>();
     else
-        cout << "Netrace ROI false value; defaulted to ROI" << endl;
     std::string netraceVerbosity = vm["netraceVerbosity"].as<std::string>();
-    if (netraceVerbosity.compare("all"))
+    if (netraceVerbosity.compare("all") == 0)
         globalResources.netraceVerbosity = 2;
-    else if (netraceVerbosity.compare("base"))
+    else if (netraceVerbosity.compare("base") == 0)
         globalResources.netraceVerbosity = 1;
     else
         globalResources.netraceVerbosity = 0;
+    cout << "SADFASDFASDF  " << globalResources.netraceVerbosity << endl;
 
     std::string config_path = "config/ntConfig.xml";
 #endif
