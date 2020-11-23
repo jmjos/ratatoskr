@@ -109,7 +109,6 @@ int sc_main(int arg_num, char* arg_vec[])
         globalResources.netraceVerbosity = 1;
     else
         globalResources.netraceVerbosity = 0;
-    cout << "SADFASDFASDF  " << globalResources.netraceVerbosity << endl;
 
     std::string config_path = "config/ntConfig.xml";
 #endif
