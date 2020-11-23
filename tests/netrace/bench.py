@@ -23,8 +23,8 @@ def main():
 
 	traceNames = [
 		"blackscholes_64c_simsmall"
-		,"fluidanimate_64c_simsmall"
-		,"x264_64c_simsmall"
+		#,"fluidanimate_64c_simsmall"
+		#,"x264_64c_simsmall"
 		#,"bodytrack_64c_simlarge"
 		#,"canneal_64c_simmedium"
 		#,"dedup_64c_simmedium"
@@ -33,15 +33,14 @@ def main():
 		#,"vips_64c_simmedium"
 		]
 	simTimes = [10000
-		,10000
-		,10000
+		#,10000
+		#,10000
 		]
 
 	assert 	len(traceNames) == len(simTimes)
 
 	#build program
 	call(["sh","./bench_build.sh"])
-
 
 	for trace, time in zip(traceNames, simTimes):
 		cleanDir()
@@ -50,7 +49,9 @@ def main():
 			httpAddr = "https://www.cs.utexas.edu/~netrace/download/" + trace + ".tra.bz2"
 			call(["wget", httpAddr])
 
-		call(["./sim", "--simTime", str(time), " --netraceTraceFile ", str(trace + ".tra.bz2"), " --netraceVerbosity", "base"])
+		command = "./sim --simTime " +  str(time) + " --netraceTraceFile " + str(trace + ".tra.bz2") + " --netraceVerbosity none"
+		print(command)
+		call(command, shell=True)
 
 		bandwidth.generatePDF(trace)
 
