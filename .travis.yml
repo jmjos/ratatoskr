@@ -35,4 +35,7 @@ script:
         - cd ../tests/urand
         - ./run.sh
         - cd ../netrace
-        - ./run.sh
+        - make
+        - source source_me.sh
+        - python bench.py
+        #- ./run.sh
