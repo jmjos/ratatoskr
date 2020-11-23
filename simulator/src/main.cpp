@@ -94,8 +94,11 @@ int sc_main(int arg_num, char* arg_vec[])
     if (!netraceTraceFile.empty()) {
         globalResources.netraceFile = netraceTraceFile;
     }
-    globalResources.netraceStartRegion = vm["netraceRegion"].as<int>();
-        std::string config_path = "config/ntConfig.xml";
+    if (vm["netraceRegion"].as<int>() <=5 && vm["netraceRegion"].as<int>() >= 0)
+        globalResources.netraceStartRegion = vm["netraceRegion"].as<int>();
+    else
+        cout << "Netrace ROI false value; defaulted to ROI" << endl;s
+    std::string config_path = "config/ntConfig.xml";
 #endif
 
 
