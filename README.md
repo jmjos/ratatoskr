@@ -178,7 +178,7 @@ Finally, you'll receive the following:
 For further instructions, please use our [documentation](TOC.md). There, we also provide instrucions how to compile the simulator.
 
 ## Contributing
-If you wish to contribute, please contact me at my univeristy email address jan.joseph@ovgu.de. We offer student development jobs for students from Magdeburg.
+If you wish to contribute, please contact me at my univeristy email address joseph@ice.rwth-aachen.de. We offer student development jobs for students from Aachen.
 
 ## People
 The following people participated:
