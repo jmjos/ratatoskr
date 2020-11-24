@@ -29,7 +29,17 @@ Ratatoskr  is developed at the RWTH Aachen University, Germany, OVG University M
 
 ---
 
-Jan Moritz Joseph, Sven Wrieden, Christopher Blochwitz, Alberto Garc&iacute;a-Ortiz, Thilo Pionteck: A Simulation Environment for Design Space Exploration for Asymmetric 3D-Network-on-Chip, 11th International Symposium on Reconfigurable Communication-centric Systems-on-Chip (ReCoSoC 2016), Tallinn, 2016
+```
+@INPROCEEDINGS{7533908,
+  author={J. M. {Joseph} and S. {Wrieden} and C. {Blochwitz} and A. {García-Oritz} and T. {Pionteck}},
+  booktitle={2016 11th International Symposium on Reconfigurable Communication-centric Systems-on-Chip (ReCoSoC)}, 
+  title={A simulation environment for design space exploration for asymmetric 3D-Network-on-Chip}, 
+  year={2016},
+  volume={},
+  number={},
+  pages={1-8},
+  doi={10.1109/ReCoSoC.2016.7533908}}
+```
 
 ---
 
