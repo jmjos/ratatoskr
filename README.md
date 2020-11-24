@@ -5,24 +5,23 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1c867426f3d5450a9aed9a7d56602ffe)](https://www.codacy.com/app/jmjos/ratatoskr?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jmjos/ratatoskr&amp;utm_campaign=Badge_Grade)
 
 
-Welcome to the project website of ratatoskr, an in-depth PPA framework to design NoCs for heterogeneous 3D SoCs. It includes:
+Welcome to the project website of ratatoskr, an in-depth PPA framework to design NoCs. It can model 2D, 3D and heterogeneous 3D SoCs. It ships a router hardware model and precise power models. It supports uniform random traffic patterns, netrace and task graphs. 
 
 - Power estimation:
   - Static and dynamic power estimation of routers and links on a cycle-accurate level. 
   - Accuracy of dynamic link energy is within 1% of bit-level accurate simulations.
 - Performance models:
-  - Network performance for millions of clock cycles on a cycle-accurate (CA) level using the NoC simulator.  
-  - Network performance for thousands of clock cycles on a register-transfer level (RTL). 
-  - Timing of routers from synthesis on the gate level.
-- Area analysis: NoC area from synthesis on gate-level for any standard cell technology.
-- Verification: Gate-level model of NoC enables verification on gate-level against design rule checks (DRCs).
+  - Network performance on a cycle-accurate (CA) level using the NoC simulator.  
+  - Network performance on a register-transfer level (RTL). 
+  - Timing of routers from synthesis.
+- Area analysis from synthesis on gate-level for any standard cell technology.
 - Benchmarks:
-   - Support for realistic application model on transaction-level. 
-   - Conventional synthetic traffic patterns.
+   - Netrace
+   - Realistic application model on transaction-level. 
+   - Synthetic traffic patterns.
 - Heterogeneous 3D Integration:
-   - Heterogeneity yields non-purely synchronous systems, since the same circuit in mixed-signal and digital achieve different maximum clock speeds. Therefore, the NoC simulation and router hardware model implement a pseudo-mesochronous router (cf. Joseph et al. 2018).
-   - Heterogeneity yields different number of routers per layers, since (identical) circuits in mixed-signal and digital have different area. Therefore, the NoC simulation allows for any non-regular network topology via XML configuration files.
-- Usability: Single point-of-entry to set design parameters. The design parameters allow for rapid testing of different designs.
+   - Pseudo-mesochronous routers 
+   - Heterogeneous network architectures.
 - Reporting: Automatic generation of detailed reports from network-scale performance to buffer utilization.
 
 Ratatoskr  is developed at the RWTH Aachen University, Germany, OVG University Magdeburg, Germany and University of Bremen, Germany. It is under MIT license terms. If you use the simulator in your research, we would appreciate the following citation in any publications to which it has contributed:
