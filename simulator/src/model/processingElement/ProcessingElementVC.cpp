@@ -174,8 +174,10 @@ void ProcessingElementVC::thread()
                 trace_packet = *ntInject.front().first.packet;
                 ntInject.pop();
                 float packetSizeInByte = (float) ntnetrace.nt_packet_sizes[trace_packet.type];
-                packetsLeft = (int) ceil(packetSizeInByte/bytesPerPacket);
-                int bytesLastPacket = (int)packetSizeInByte % (int)bytesPerPacket;
+                packetsLeft = (int)(packetSizeInByte/bytesPerPacket) + (bool)(packetSizeInByte%bytesPerPacket);
+                int bytesLastPacket = (int)bytesPerPacket;
+                if (0 == (int)packetSizeInByte % (int)bytesPerPacket)
+                    bytesLastPacket = (int)packetSizeInByte % (int)bytesPerPacket;
                 flitsLastPacket = (int) ceil(bytesLastPacket / bytesPerFlit) + 1; //header flit
                 dstNode = globalResources.nodes.at(trace_packet.dst);
                 Packet* p;
