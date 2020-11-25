@@ -174,7 +174,7 @@ void ProcessingElementVC::thread()
                 trace_packet = *ntInject.front().first.packet;
                 ntInject.pop();
                 float packetSizeInByte = (float) ntnetrace.nt_packet_sizes[trace_packet.type];
-                packetsLeft = (int)(packetSizeInByte/bytesPerPacket) + (bool)(packetSizeInByte%bytesPerPacket);
+                packetsLeft = (int)(packetSizeInByte/bytesPerPacket) + (int)(bool)((int)packetSizeInByte % (int)bytesPerPacket);
                 int bytesLastPacket = (int)bytesPerPacket;
                     if (0 != (int)packetSizeInByte % (int)bytesPerPacket)
                     bytesLastPacket = (int)packetSizeInByte % (int)bytesPerPacket;
