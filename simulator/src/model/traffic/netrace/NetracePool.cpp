@@ -39,10 +39,9 @@ NetracePool::~NetracePool()
 void NetracePool::thread() {
     ntNetrace ntnetrace;
 #ifdef ENABLE_NETRACE
-    //TODO read parameters from xml?
     int i;
     int ignore_dependencies = 1;
-    int start_region = 0;
+    int start_region = globalResources.netraceStartRegion;
     int reader_throttling = 0;
     const char* tracefile = globalResources.netraceFile.c_str();
 
@@ -54,7 +53,8 @@ void NetracePool::thread() {
     if( ignore_dependencies ) {
         ntnetrace.nt_disable_dependencies();
     }
-    ntnetrace.nt_print_trheader();
+    if (globalResources.netraceVerbosity >= 1)
+        ntnetrace.nt_print_trheader();
     header = ntnetrace.nt_get_trheader();
     ntnetrace.nt_seek_region( &header->regions[start_region] );
     for( i = 0; i < start_region; i++ ) {
@@ -110,9 +110,14 @@ void NetracePool::thread() {
                 new_node->cycle = (trace_packet->cycle > cycle) ? trace_packet->cycle : cycle;
                 if( ignore_dependencies || ntnetrace.nt_dependencies_cleared( trace_packet ) ) {
                     // Add to inject queue
-                    //cout << "@ " << sc_time_stamp();
-                    //ntnetrace.nt_print_packet(new_node->packet);
-                    ProcessingElementVC* pe = (ProcessingElementVC*) processingElements.at(trace_packet->src%48);
+                    if (globalResources.netraceVerbosity >= 2) {
+                        cout << "@ " << sc_time_stamp();
+                        ntnetrace.nt_print_packet(new_node->packet);
+                    }
+                    int src = static_cast<int>(trace_packet->src);
+                    if (!globalResources.netrace2Dor3Dmode && src >= 32)
+                        src += 32; // bring to 2nd layer
+                    ProcessingElementVC* pe = (ProcessingElementVC*) processingElements.at(src);
                     pe->ntInject.push(std::make_pair(*new_node, new_node->cycle));
                 } else {
                     // Add to waiting queue
@@ -130,9 +135,8 @@ void NetracePool::thread() {
         }
 
         cycle++;
-        // shortens the ration at which the CPU is overclocked vs the network
-        // 100 = 10x vs 1GHz
-        auto clockDelay = 100;
+
+        int clockDelay = 50; // Netrace runs at 2GHz
         event.notify(clockDelay, SC_PS);
         wait(event);
     }

@@ -28,6 +28,12 @@ int XYZRouting::route(int src_node_id, int dst_node_id)
     Vec3D<float> dst_pos = globalResources.nodes.at(dst_node_id).pos;
     int con_pos = -1;
 
+    if (globalResources.routingDebugMode){
+        cout << "ROUTING DEBUG src pos " << src_pos << " dst pos " << dst_pos << endl;
+        cout << "ROUTING DEBUG src position in array " << src_node_id << endl;
+        cout << "ROUTING DEBUG src id " << src_node.id << endl;
+    }
+
     if (dst_pos==src_pos) {
         con_pos = src_node.getConPosOfDir(DIR::Local);
     }

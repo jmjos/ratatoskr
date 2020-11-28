@@ -128,6 +128,7 @@ void NetworkInterfaceVC::thread()
                 LOG((globalReport.verbose_pe_send_head_flit && current_flit->type==HEAD)
                         || globalReport.verbose_pe_send_flit,
                         "NI" << this->id << "(Node" << node.id << ")\t\t- Send Flit " << *current_flit);
+                globalReport.issueNoCInputDataAmount(sc_time_stamp(),globalResources.bitWidth);
             }
             else {
                 LOG(globalReport.verbose_pe_throttle,
@@ -176,6 +177,7 @@ void NetworkInterfaceVC::receiveFlitFromRouter()
         if (received_flit->type==TAIL || received_flit->type==SINGLE) {
             globalReport.latencyPacket.sample((float) (time-received_flit->headFlit->generationTime));
             globalReport.latencyNetwork.sample((float) (time-received_flit->headFlit->injectionTime));
+            globalReport.undeliveredPackages--;
         }
 #endif
 
@@ -192,7 +194,8 @@ void NetworkInterfaceVC::receiveFlitFromRouter()
                 "NI" << this->id << "(Node" << node.id << ")\t\t- Receive Flit " << *received_flit);
         LOG((received_flit->type==TAIL || received_flit->type==SINGLE) && (!p->toTransmit.empty() || !p->inTransmit.empty()),
                 "NI" << this->id << "(Node" << node.id << ")\t\t- Received Tail Flit, but still missing flits! "
-                     << *received_flit);
+                     << *received_flit); 
+        globalReport.issueNoCOutputDataAmount(sc_time_stamp(),globalResources.bitWidth);
         if (p->toTransmit.empty() && p->inTransmit.empty())
             packet_recv_queue.push(p);
     }

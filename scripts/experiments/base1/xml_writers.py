@@ -266,7 +266,7 @@ class NetworkWriter(Writer):
             self.y_step.append(1/(y - 1))
             self.y_range.append(np.arange(0, 1+self.y_step[-1], self.y_step[-1]))
 
-        self.buffer_layer = np.full((1,self.config.z), np.nan)
+        self.nodeId_Layer = np.full((1,self.config.z), np.nan)
 
     def write_header(self):
         bufferDepthType_node = ET.SubElement(self.root_node, 'bufferDepthType')
@@ -342,7 +342,7 @@ class NetworkWriter(Writer):
                         if j == int(zi*(self.config.z-1)):
                             a = np.full((1,self.config.z), np.nan)
                             a[0,j] = node_id
-                            self.buffer_layer = np.concatenate((self.buffer_layer, a), axis=0)
+                            self.nodeId_Layer = np.concatenate((self.nodeId_Layer, a), axis=0)
 
                     node_id += 1
                     idType += 1
@@ -356,7 +356,7 @@ class NetworkWriter(Writer):
         node_node.set('value', str(node_id))
         bufferDepth_node = ET.SubElement(port_node, 'bufferDepth')
         #bufferDepth_node.set('value', str(self.config.bufferDepth))
-        for items in self.buffer_layer :
+        for items in self.nodeId_Layer :
             for pos in range(0, self.config.z) :
                 if node_id == items[pos] :
                     bufferDepth_node.set('value', str(self.config.bufferDepth[pos]).replace(" ", ""))
@@ -365,7 +365,12 @@ class NetworkWriter(Writer):
         buffersDepths_node = ET.SubElement(port_node, 'buffersDepths')
         buffersDepths_node.set('value', str(self.config.buffersDepths))
         vcCount_node = ET.SubElement(port_node, 'vcCount')
-        vcCount_node.set('value', str(self.config.vcCount))
+        #vcCount_node.set('value', str(self.config.vcCount))
+        for items in self.nodeId_Layer :
+            for pos in range(0, self.config.z) :
+                if node_id == items[pos] :
+                    vcCount_node.set('value', str(self.config.vcCount[pos]).replace(" ", ""))
+                    break
 
     def make_con(self, connections_node, con_id, src_node, dst_node):
         #print("binding " + str(src_node) + " to " + str(dst_node))

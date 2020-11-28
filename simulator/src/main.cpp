@@ -24,10 +24,15 @@
 #include <fstream>
 #include <string>
 #include <chrono>
+
+#include "boost/program_options.hpp"
+
 #include "utils/GlobalResources.h"
 #include "utils/GlobalReport.h"
 #include "utils/Report.h"
 #include "model/NoC.h"
+
+namespace po = boost::program_options;
 
 int sc_main(int arg_num, char* arg_vec[])
 {
@@ -65,6 +70,50 @@ int sc_main(int arg_num, char* arg_vec[])
     rep.connect("127.0.0.1", "10000");
     rep.startRun("name");
 
+#ifdef ENABLE_NETRACE
+    po::variables_map vm;
+    po::options_description desc("Allowed Options");
+    desc.add_options()
+            ("simTime", po::value<std::string>()->default_value(""), "Length of simulation");
+    desc.add_options()
+            ("netraceRegion", po::value<int>()->default_value(2), "Netrace: Region of the simulation, per default the PARSEC's ROI");
+    desc.add_options()
+            ("netraceTraceFile", po::value<std::string>()->default_value(""), "Netrace: Trace file");
+    desc.add_options()
+            ("netraceVerbosity", po::value<std::string>()->default_value("all"), "Netrace: Verbosity Level,"
+                                                                                 "all=info about trace file and about packet generation. "
+                                                                                 "base = info about trace file. none = no output");
+    try{
+        po::store(po::parse_command_line(arg_num, arg_vec, desc), vm);
+        po::notify(vm);
+    } catch (po::error& e) {
+        cerr << "ERROR: " << e.what() << endl << endl << desc << endl;
+        return 1;
+    }
+    std::string simTimeString = vm["simTime"].as<std::string>();
+    if (!simTimeString.empty()) {
+        globalResources.simulation_time = std::stoi(simTimeString);
+    }
+    std::string netraceTraceFile = vm["netraceTraceFile"].as<std::string>();
+    if (!netraceTraceFile.empty()) {
+        globalResources.netraceFile = netraceTraceFile;
+    }
+    if (vm["netraceRegion"].as<int>() <=5 && vm["netraceRegion"].as<int>() >= 0)
+        globalResources.netraceStartRegion = vm["netraceRegion"].as<int>();
+    else
+        globalResources.netraceStartRegion = 2;
+    std::string netraceVerbosityInput = vm["netraceVerbosity"].as<std::string>();
+    if (netraceVerbosityInput.compare("all") == 0)
+        globalResources.netraceVerbosity = 2;
+    else if (netraceVerbosityInput.compare("base") == 0)
+        globalResources.netraceVerbosity = 1;
+    else
+        globalResources.netraceVerbosity = 0;
+
+    std::string config_path = "config/ntConfig.xml";
+#endif
+
+
     std::unique_ptr<NoC> noc = std::make_unique<NoC>("Layer");
     std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
     cout << "Random seed " << globalResources.rd_seed << endl;
@@ -72,17 +121,22 @@ int sc_main(int arg_num, char* arg_vec[])
     sc_start(globalResources.simulation_time, SC_NS);
 
     if (globalResources.outputToFile) {
-        cout << "Generating report of the simulation run into file " << globalResources.outputFileName << " ... ";
+        cout << "Generating report of the simulation run into file " << globalResources.outputFileName << " ... " << endl << endl;
         globalReport.reportComplete(globalResources.outputFileName);
         cout << " done." << endl;
     }
     globalReport.reportPerformance(cout);
     cout << "Random seed " << globalResources.rd_seed << endl;
-    auto duration = std::chrono::duration_cast<std::chrono::seconds>(
-            std::chrono::high_resolution_clock::now()-t1).count();
-    auto durationmin = std::chrono::duration_cast<std::chrono::minutes>(
-            std::chrono::high_resolution_clock::now()-t1).count();
-    cout << "Execution time: " << durationmin << " minutes and " << duration << " seconds" << std::endl;
+
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now()-t1);
+    auto secs = std::chrono::duration_cast<std::chrono::seconds>(ms);
+    ms -= std::chrono::duration_cast<std::chrono::milliseconds>(secs);
+    auto mins = std::chrono::duration_cast<std::chrono::minutes>(secs);
+    secs -= std::chrono::duration_cast<std::chrono::seconds>(mins);
+    auto hours = std::chrono::duration_cast<std::chrono::hours>(mins);
+    mins -= std::chrono::duration_cast<std::chrono::minutes>(hours);
+    cout << "Execution time: " << hours.count() << "h " << mins.count() << " min and " << secs.count() << " seconds" << std::endl;
+
     rep.close();
 
     return 0;

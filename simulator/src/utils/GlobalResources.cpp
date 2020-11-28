@@ -39,8 +39,18 @@ GlobalResources::GlobalResources()
     rd_seed = seed;
 #ifdef ENABLE_NETRACE
     for (int i = 0; i < 64; ++i) {
-        netraceNodeToTask.insert(std::pair<nodeID_t, int>(i%64+64, i%64));
-        netraceTaskToNode.insert(std::pair<int, nodeID_t>(i%64, i%64+64));;
+        if (netrace2Dor3Dmode){
+            netraceNodeToTask.insert(std::pair<nodeID_t, int>(i+128, i));
+            netraceTaskToNode.insert(std::pair<int, nodeID_t>(i, i+128));
+        } else{
+            if (i<32){
+                netraceNodeToTask.insert(std::pair<nodeID_t, int>(i+128, i));
+                netraceTaskToNode.insert(std::pair<int, nodeID_t>(i, i+128));
+            } else {
+                netraceNodeToTask.insert(std::pair<nodeID_t, int>(i+128+64, i));
+                netraceTaskToNode.insert(std::pair<int, nodeID_t>(i, i+128+64));
+            }
+        }
     }
 #endif
 }
@@ -205,6 +215,7 @@ void GlobalResources::readConfigFile(const std::string& configPath)
 void GlobalResources::readNoCLayout(const std::string& nocPath)
 {
     std::cout << "Reading NoC layout: " << nocPath << endl;
+    assert(access(nocPath.c_str(), F_OK) != -1);
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(nocPath.c_str());
     assert(result && "Failed to read NoC file!");

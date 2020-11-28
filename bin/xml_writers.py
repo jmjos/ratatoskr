@@ -441,7 +441,7 @@ class NetworkWriter(Writer):
                             previous_node_count = 0
                             if (z > 1):
                                 previous_node_count = sum(nodecounts[ 0 : int(z) - 1 ])
-                            dst_id = previous_node_count + y_index * self.config.y[z - 1] + x_index
+                            dst_id = previous_node_count + y_index * self.config.x[z - 1] + x_index
                             #print("connecting " + str(node_id) + " with " + str(dst_id))
                             connection_tuple = (min(node_id, dst_id), max(node_id , dst_id))
                             if not connection_tuple in already_connected:
@@ -459,7 +459,7 @@ class NetworkWriter(Writer):
                             y_index = y_finder[0][0]
                         if (x_index != -1 and y_index != -1):
                             previous_node_count = sum(nodecounts[ 0 : int(z) + 1 ])
-                            dst_id = previous_node_count + y_index * self.config.y[z + 1] + x_index
+                            dst_id = previous_node_count + y_index * self.config.x[z + 1] + x_index
                             connection_tuple = (min(node_id, dst_id), max(node_id , dst_id))
                             if not connection_tuple in already_connected:
                                 con_id = self.make_con(connections_node, con_id, connection_tuple[1], connection_tuple[0])

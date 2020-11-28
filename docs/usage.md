@@ -1,7 +1,19 @@
+# Usage of Ratatoskr simulator
 
-## NoC Configuration
+There are two modes. For Netrace mode, please see below!
+
+## Synthetic or Task-Model Mode
+
+For this mode, please compile Ratatoskr with `cmake -D DEFINE_ENABLE_NETRACE=OFF`
+(which is default).
+
+You can generate network files and config files using `bin/configure.py`.
+
+Details for the configuration are given below:
+
+### NoC Configuration
 The main configuration file: `config.ini', contains the parameters needed for the software and hardware models (3 sets each).
- 
+
 
 ### Software model parameters:
 - [CONFIG]: it contains the general parameters and generates a template XML file named `config.xml':
@@ -33,7 +45,7 @@ The main configuration file: `config.ini', contains the parameters needed for th
    -   run_start_after_warmup: the duration between the end of the warmup phase and the start of the run phase in nano seconds.
    -   run_duration: the duration of the run phase in nano seconds.
    -   num_cores: the number of CPU cores to be used in the simulation. The default value is set to -1, which means ´use all cores'.
-	
+
 The hardware model configurations are responsible for generating the VHDL code templates. An important note here would be, the VHDL model is the same as the software one (\textit{vcCount, bufferDepth, \dots}).
 - [NOC_3D_PACKAGE]: the parameters of `NOC_3D_PACKAGE.vhd' file.
 	- flit_size: the size of the flit.
@@ -43,3 +55,31 @@ The hardware model configurations are responsible for generating the VHDL code t
 	- rout_alog: the name of the routing algorithm. It has the default value of \textit{XYZ_ref}.
 - [router_pl]: the parameters of the `router_pl.vhd' file are the same as `router.vhd', except for the routing algorithm:
     - rout_algo: the name of the routing algorithm. It has the default value of \textit{DXYU}.
+
+
+## Netrace model
+
+The netrace mode is more hard-coded, with much less configuration options.
+It can be compiled using `cmake -D DEFINE_ENABLE_NETRACE=ON`
+
+You can use a 2D or a 3D mode.
+In 2D mode, the netrace cores are mapped to a 8x8 NoC.
+In 3D mode, the cores are mapped to a 4x4x2 NoC.
+The modes can be toggled using `GlobalResources::netrace2Dor3Dmode`.
+
+Netrace relies on trace files from [here](https://www.cs.utexas.edu/~netrace/).
+
+The netrace configuration is exemplified by the folder `simulator/tests/netrace`.
+
+Both 2D and 3D mode use the same fixed (!) config file for the network.
+It is an 8x8x2 NoC.
+Mapping for both modes is different, see `GlobalResources.cpp`, lines 44ff.;
+`GlobalResources::netraceNodeToTask`.
+Do not change the config file as some parameters are hard coded.
+
+In the netrace mode, the simulator always will read the `config/ntConfig.xml` file.
+The file defines the `network.xml` used; you MUST use the same as in `simulator/tests/netrace/config/ntNetwork.xml`. It defines the aforementioned 8x8x2 NoC.
+
+You can change the benchmark trace file in `ntConfig.xml`, `<netraceFile>config/example.tra.bz2</netraceFile>
+
+Alternatively, you can use the command line arguments provided: `--simTime` for the simulation time, `--netraceStartRegion` (with an int from 0 to 5) for the start region, default is PARSEC's ROI, and `--netraceTraceFile` for the trace file destination.

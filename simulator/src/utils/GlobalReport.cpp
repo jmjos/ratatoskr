@@ -77,6 +77,17 @@ void GlobalReport::reportComplete(const std::string& filename)
     reportRoutersPowerCSV(csvfile);
     csvfile.close();
 
+    //Writing Bandwidth csvs
+    csvFilename = filename+"_Bandwidth_Input.csv";
+    csvfile.open(csvFilename);
+    reportNoCBandwidthInput(csvfile);
+    csvfile.close();
+
+    csvFilename = filename+"_Bandwidth_Output.csv";
+    csvfile.open(csvFilename);
+    reportNoCBandwidthOutput(csvfile);
+    csvfile.close();
+
 #ifdef ENABLE_BUFFER_VC_STATS
     reportAllRoutersUsageHist();
 #endif
@@ -532,4 +543,68 @@ void GlobalReport::reportRoutersPowerCSV(ostream& csvfile)
                 << crossbar_pwr_d.at(id) << "\n";
     }
 }
+
+void GlobalReport::issueNoCInputDataAmount(sc_time time, int dataAmount){
+    auto node = noCInputDataAmount.extract(time);
+    if (!node.empty()) {
+        node.mapped() = node.mapped() + dataAmount;
+        noCInputDataAmount.insert(std::move(node));
+    } else {
+        noCInputDataAmount.insert(std::move(std::make_pair(time, dataAmount)));
+    }
+};
+
+void GlobalReport::issueNoCOutputDataAmount(sc_time time, int dataAmount){
+    auto node = noCOutputDataAmount.extract(time);
+    if (!node.empty()) {
+        node.mapped() = node.mapped() + dataAmount;
+        noCOutputDataAmount.insert(std::move(node));
+    } else {
+        noCOutputDataAmount.insert(std::move(std::make_pair(time, dataAmount)));
+    }
+};
+
+void GlobalReport::reportNoCBandwidthInput(ostream& csvfile) {
+    csvfile << boost::format("time, bits\n");
+
+    double binSize = 500.0;
+    double binStart = 0.0;
+    int bitsInBin = 0;
+    Statistics averageInputBandwidth("InputBandwidth");
+    for( auto const& [key, val] : noCInputDataAmount )
+    {
+        csvfile << boost::format("%i, %i\n") % key.to_double() % val;
+        if (key.to_double()/1000.0 < binStart + binSize){
+            bitsInBin += val;
+        } else{
+            averageInputBandwidth.sample((float) bitsInBin / binSize * 1000); // bit/Nanosec to Mbit/sec
+            binStart += binSize;
+            bitsInBin = val;
+        }
+    }
+    cout << "Average Input Bandwidth  " << averageInputBandwidth.average() << " Mb/sec" << endl;
+};
+
+void GlobalReport::reportNoCBandwidthOutput(ostream& csvfile) {
+    csvfile << boost::format("time, bits\n");
+
+    double binSize = 500.0;
+    double binStart = 0.0;
+    int bitsInBin = 0;
+    Statistics averageOutputBandwidth("OutputBandwidth");
+    binStart = 0;
+    bitsInBin = 0;
+    for( auto const& [key, val] : noCOutputDataAmount )
+    {
+        csvfile << boost::format("%i, %i\n")%key.to_double()%val;
+        if (key.to_double()/1000.0 < binStart + binSize){
+            bitsInBin += val;
+        } else{
+            averageOutputBandwidth.sample((float) bitsInBin / binSize * 1000); // bit/Nanosec to Mbit/sec
+            binStart += binSize;
+            bitsInBin = val;
+        }
+    }
+    cout << "Average Output Bandwidth " << averageOutputBandwidth.average() << " Mb/sec" << endl;
+};
 

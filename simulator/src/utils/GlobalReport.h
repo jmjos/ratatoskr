@@ -51,15 +51,15 @@ public:
 
     int numRouters;
     /* 1st dimension is all routers.
-     * 2nd dimension is all ports (directions) of a router.
-     * 3rd dimension is all possible number of active VCs.
-     */
+    * 2nd dimension is all ports (directions) of a router.
+    * 3rd dimension is all possible number of active VCs.
+    */
     std::vector<std::vector<std::vector<long>>> VCsUsageHist;
     /* 1st dimension is all routers.
-     * 2nd dimension is all ports (directions) of a router.
-     * 3rd dimension is all possible number of VCs.
-     * 4th dimension is all buffer positions of a VC.
-     */
+    * 2nd dimension is all ports (directions) of a router.
+    * 3rd dimension is all possible number of VCs.
+    * 4th dimension is all buffer positions of a VC.
+    */
     std::vector<std::vector<std::vector<std::vector<long>>>> bufferUsagePerVCHist;
 
     void readConfigFile(const std::string& config_path);
@@ -165,6 +165,15 @@ public:
 
     void report_power_stats(std::string& csvFileName, int router_id);
 
+    //Bandwidth
+    void issueNoCInputDataAmount(sc_time time, int dataAmount);
+
+    void issueNoCOutputDataAmount(sc_time time, int dataAmount);
+
+    void reportNoCBandwidthInput(ostream& csvfile);
+
+    void reportNoCBandwidthOutput(ostream& csvfile);
+    
 private:
     GlobalResources& globalResources = GlobalResources::getInstance();
 
@@ -200,6 +209,11 @@ private:
     // Generate VC and buffer histograms for only these routers
 
     std::vector<long long> clockCounts;
+
+    //Bandwidth measurement
+    std::map<sc_time, int> noCInputDataAmount;
+    std::map<sc_time, int> noCOutputDataAmount;
+
 
     GlobalReport();
 };

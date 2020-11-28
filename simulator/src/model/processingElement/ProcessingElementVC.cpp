@@ -154,15 +154,19 @@ void ProcessingElementVC::thread()
 #ifdef ENABLE_NETRACE
         ntNetrace ntnetrace;
         int packetsLeft = 0;
+        int flitsLastPacket= globalResources.flitsPerPacket;
+        float bytesPerFlit = (float) globalResources.bitWidth / 8.0f;
+        float bytesPerPacket = ((float) globalResources.flitsPerPacket - 1.0f) * bytesPerFlit; // -1.0f for header flit
         nt_packet_t trace_packet;
         Node dstNode;
         //definition of the netrace mode, in which the PE forwards packets to the NIs. Packets are generated in the central NetracePool.
         if (globalResources.netraceNodeToTask.find(this->node.id) != globalResources.netraceNodeToTask.end()){
-            //cout << "PE "<< id <<" running in nettrace mode at timestamp" << sc_time_stamp() << endl;
-            //TODO here we can add code to run netrace.
-            // check injection queue
             if (packetsLeft > 0){
-                Packet* p = packetFactory.createPacket(this->node, dstNode, globalResources.flitsPerPacket, sc_time_stamp().to_double(),1);
+                Packet* p;
+                if (packetsLeft > 1)
+                    p = packetFactory.createPacket(this->node, dstNode, globalResources.flitsPerPacket, sc_time_stamp().to_double(),1);
+                else
+                    p = packetFactory.createPacket(this->node, dstNode, flitsLastPacket , sc_time_stamp().to_double(),1);
                 packetPortContainer->portValidOut = true;
                 packetPortContainer->portDataOut = p;
                 packetsLeft--;
@@ -170,14 +174,17 @@ void ProcessingElementVC::thread()
                 trace_packet = *ntInject.front().first.packet;
                 ntInject.pop();
                 float packetSizeInByte = (float) ntnetrace.nt_packet_sizes[trace_packet.type];
-                float bytesPerPacket = ((float) globalResources.flitsPerPacket - 1.0f) * (float) globalResources.bitWidth / 8.0f;
-                packetsLeft = (int) ceil(packetSizeInByte/bytesPerPacket);
-                //cout << "ASDF packetSize " << packetSizeInByte << "B results in bytes per packet " << bytesPerPacket << "B and " << packetsLeft << "packets" << endl;
-                //cout << "PE " << this->id << " inject queue @ " << sc_time_stamp() << " has ";
-                //ntnetrace.nt_print_packet(&trace_packet);
-                //cout << endl;
+                packetsLeft = (int)(packetSizeInByte/bytesPerPacket) + (int)(bool)((int)packetSizeInByte % (int)bytesPerPacket);
+                int bytesLastPacket = (int)bytesPerPacket;
+                    if (0 != (int)packetSizeInByte % (int)bytesPerPacket)
+                    bytesLastPacket = (int)packetSizeInByte % (int)bytesPerPacket;
+                flitsLastPacket = (int) ceil(bytesLastPacket / bytesPerFlit) + 1; //header flit
                 dstNode = globalResources.nodes.at(trace_packet.dst);
-                Packet* p = packetFactory.createPacket(this->node, dstNode, globalResources.flitsPerPacket, sc_time_stamp().to_double(),1);
+                Packet* p;
+                if (packetsLeft > 1)
+                    p = packetFactory.createPacket(this->node, dstNode, globalResources.flitsPerPacket, sc_time_stamp().to_double(),1);
+                else
+                    p = packetFactory.createPacket(this->node, dstNode, flitsLastPacket , sc_time_stamp().to_double(),1);
                 packetPortContainer->portValidOut = true;
                 packetPortContainer->portDataOut = p;
                 packetsLeft--;

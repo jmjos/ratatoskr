@@ -11,8 +11,7 @@ compiler: gcc
 
 before_install:
         - sudo apt update
-        - sudo apt -y install libpugixml-dev
-        - sudo apt -y install libboost-all-dev
+        - sudo apt -y install libpugixml-dev python3-venv libboost-program-options-dev libboost-system-dev
 
 before_script:
         - mkdir systemc
@@ -27,11 +26,15 @@ before_script:
         - sudo make install
         - sudo sed -i '/using std::gets;/d' /usr/local/systemc-2.3.3/include/systemc.h
         - cd ../..
-        - cd simulator
-        - mkdir build
-        - cd build
-        - cmake ..
 
-script: 
+script:
+        - export SYSTEMC_DISABLE_COPYRIGHT_MESSAGE=1
+        - cd simulator
+        - ./build.sh
+        - cd ../tests/urand
+        - ./run.sh
+        - cd ../netrace
         - make
-          #- ./sim
+        - source source_me.sh
+        - python bench.py
+        #- ./run.sh

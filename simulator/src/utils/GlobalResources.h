@@ -58,6 +58,8 @@ public:
 #ifdef ENABLE_NETRACE
     std::map<nodeID_t, int> netraceNodeToTask;
     std::map<int, nodeID_t> netraceTaskToNode;
+    bool netrace2Dor3Dmode = true; // true == 2D
+    int netraceVerbosity = 2; // 2==all, 1 == base, 0 == none
 #endif
     bool isUniform;
     int numberOfTrafficTypes;
@@ -72,6 +74,9 @@ public:
 
     long long rd_seed;
     std::mt19937_64* rand;
+
+    //debug
+    bool routingDebugMode = false;
 
     static GlobalResources& getInstance();
 
