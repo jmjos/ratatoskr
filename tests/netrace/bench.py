@@ -98,27 +98,7 @@ def main():
 
     os.environ['SYSTEMC_DISABLE_COPYRIGHT_MESSAGE'] = "1"
     run_all_sims(traceNames, simTimes)
-    #build program
 
-
-    #for trace, time in zip(traceNames, simTimes):
-        #cleanDir()
-
-        #if( not os.path.exists(trace + ".tra.bz2") ) :
-            #httpAddr = "https://www.cs.utexas.edu/~netrace/download/" + trace + ".tra.bz2"
-            #call(["wget", httpAddr])
-
-        #command = "./sim --simTime " +  str(time) + " --netraceTraceFile " + str(trace + ".tra.bz2") + " --netraceVerbosity none"
-        #print(command)
-        #call(command, shell=True)
-
-        #bandwidth.generatePDF(trace)
-
-        #os.makedirs(os.path.dirname(trace +"/"), exist_ok=True)
-        #if not("bandwidth_"+trace+".pdf" in files): files.append("bandwidth_"+trace+".pdf")
-        #for file in files:
-        #	if os.path.exists(file):
-        #		shutil.move(file, trace + "/" + file)
 
 
 if __name__ == "__main__":
