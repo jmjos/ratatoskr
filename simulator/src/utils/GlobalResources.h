@@ -30,6 +30,12 @@
 #include "Structures.h"
 #include "pugixml.hpp"
 
+// my includes
+#include <cmath>
+#include <list>
+#include <fstream>
+#include <iostream>
+
 class GlobalResources {
 
 public:
@@ -47,6 +53,9 @@ public:
     float routingVerticalThreshold = 1.0f;
     float Vdd = 1.0f;
     std::string bufferDepthType;
+    std::string RoutingTable_file;
+    bool RoutingTable_mode;
+    std::vector <std::vector<int> > RoutingTable;
     //Application
     std::string benchmark;
     std::string data_file;
@@ -130,5 +139,7 @@ private:
     float readRequiredFloatAttribute(pugi::xml_node, const char*, const char*);
 
     float readRequiredFloatAttribute(pugi::xml_node, const char*);
+    
+    void createRoutingTable();
 };
 

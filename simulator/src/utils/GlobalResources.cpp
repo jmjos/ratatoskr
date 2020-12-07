@@ -21,6 +21,8 @@
  ******************************************************************************/
 
 #include "GlobalResources.h"
+#include <iostream>
+#include <iomanip>
 
 GlobalResources::GlobalResources()
         :
@@ -371,7 +373,7 @@ void GlobalResources::fillDirInfoOfNodeConn()
     std::cout << "Start filling direction of nodes \n";
 
     std::string filename;
-    filename = "~/ratatoskr/tests/routing-table/Direction_Mat.txt";
+    filename = "/home/mmirka/ratatoskr/tests/routing-table/Direction_Mat.txt";
     std::vector<std::vector<int>> directions_mat ;
     std::ifstream infile(filename);
     std::string line;
