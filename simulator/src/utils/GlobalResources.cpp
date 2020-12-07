@@ -148,6 +148,40 @@ std::vector<int> GlobalResources::strs_to_ints(const std::vector<std::string>& s
     return ints;
 }
 
+void GlobalResources::createRoutingTable()
+{
+    std::string filename;
+    filename = RoutingTable_file;
+
+    std::ifstream infile(filename);
+    std::string line;
+
+    int cpt_line = 0;
+
+    while (std::getline(infile, line))
+    {
+        std::istringstream iss(line);
+        std::string word;
+        int DIR;
+        std::vector<int> v;
+        while(iss >> word) {
+            DIR = std::stoi(word);
+            v.push_back(DIR);
+        }
+        
+        RoutingTable.push_back(v);
+        cpt_line += 1;
+    }
+    std::cout<<"Routing Table :"<< std::endl;
+
+    for(auto vec : RoutingTable)
+    {
+        for(auto x : vec)
+            std::cout<<x<<" , ";
+        std::cout << std::endl;
+    }
+}
+
 void GlobalResources::readConfigFile(const std::string& configPath)
 {
     pugi::xml_document doc;
@@ -162,6 +196,18 @@ void GlobalResources::readConfigFile(const std::string& configPath)
     outputToFile = gen_node.child("outputToFile").attribute("value").as_bool();
     outputFileName = gen_node.child("outputToFile").child_value();
     activateFlitTracing = gen_node.child("flitTracing").attribute("value").as_bool();
+
+    //ROUTING TABLE
+    pugi::xml_node Routing_node = doc.child("configuration").child("verbose").child("router");
+    RoutingTable_mode = Routing_node.child("routingTable_mode").attribute("value").as_bool();
+    
+    std::cout<<"Routing table mode: "<<RoutingTable_mode<<std::endl;
+    
+    if (RoutingTable_mode){
+        pugi::xml_node RTFile_node = Routing_node.child("routingTable_path");
+        RoutingTable_file = readRequiredStringAttribute(RTFile_node, "value");
+        createRoutingTable();
+    }
 
     //NOC
     pugi::xml_node noc_node = doc.child("configuration").child("noc");
@@ -277,7 +323,7 @@ void GlobalResources::sortNodesPositions()
     sort(zPositions.begin(), zPositions.end());
     zPositions.erase(unique(zPositions.begin(), zPositions.end()), zPositions.end());
 }
-
+/*
 void GlobalResources::fillDirInfoOfNodeConn()
 {
     for (Node& node : nodes) {
@@ -315,6 +361,98 @@ void GlobalResources::fillDirInfoOfNodeConn()
             node.setDirOfConn(matching_conn, dir);
         }
     }
+}
+*/
+
+// My fillDirInfoOfNodeConn() function. Rely on Direction_Mat.txt file
+
+void GlobalResources::fillDirInfoOfNodeConn()
+{
+    std::cout << "Start filling direction of nodes \n";
+
+    std::string filename;
+    filename = "~/ratatoskr/tests/routing-table/Direction_Mat.txt";
+    std::vector<std::vector<int>> directions_mat ;
+    std::ifstream infile(filename);
+    std::string line;
+
+    int cpt_line = 0;
+
+    while (std::getline(infile, line))
+    {
+        std::istringstream iss(line);
+        std::string word;
+        int DIR;
+        std::vector<int> v;
+        while(iss >> word) {
+            DIR = std::stoi(word);
+            v.push_back(DIR);
+        }
+        
+        directions_mat.push_back(v);
+        cpt_line += 1;
+    }
+    std::cout<<"Direction Matrix :"<< std::endl;
+
+    for(auto vec : directions_mat)
+    {
+        for(auto x : vec)
+            std::cout<<x<<" , ";
+        std::cout << std::endl;
+    }
+
+    for (Node& node : nodes) {
+        for (int connectedNodeID : node.connectedNodes) {
+            Node connectedNode = nodes.at(connectedNodeID);
+            Vec3D<float> distance{};
+            distance = node.pos-connectedNode.pos;
+            connID_t matching_conn = node.getConnWithNode(connectedNode);
+            DIR::TYPE dir{};
+            int d;
+            if (distance.isZero()) { //no axis differs
+                dir = DIR::Local;
+            }
+            else { 
+                d = directions_mat[node.id][connectedNode.id];
+                if (d == -1){
+                    std::cout << "error, no direction found \n";
+                }
+                else{
+                    if (d==1){
+                        dir = DIR::East;
+                    }
+                    else{
+                        if (d==2){
+                            dir = DIR::West;
+                        }
+                        else{
+                            if (d==3){
+                                dir = DIR::North;
+                            }
+                            else{
+                                if (d==4){
+                                    dir = DIR::South;
+                                }
+                                else{
+                                    if (d==5){ 
+                                        dir = DIR::Up;
+                                    }
+                                    else{
+                                        if (d==6){
+                                            dir = DIR::Down;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }                      
+            }
+            node.setConPosOfDir(dir, matching_conn);
+            node.setDirOfConn(matching_conn, dir);
+        }
+    }
+
 }
 
 void GlobalResources::readConnections(const pugi::xml_node& noc_node)
