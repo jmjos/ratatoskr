@@ -1,0 +1,5 @@
+The routing table option requires 2 files:
+- RT.txt : text file containing the routing table
+- Direction_Mat.txt: text file containing the connections directions. Used in  /simulator/src/GlobalResources.cpp, in funtion "GlobalResources::fillDirInfoOfNodeConn()"
+
+To use the routing table option, set the parameter routingTable_mode = 1 in config.ini. Then specify the path to RT.txt and Direction_Mat.txt.
