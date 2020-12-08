@@ -281,7 +281,12 @@ void GlobalResources::readNoCLayout(const std::string& nocPath)
     readNodeTypes(noc_node);
     readNodes(noc_node);
     readConnections(noc_node);
-    fillDirInfoOfNodeConn();
+    if (!RoutingTable_mode){
+        fillDirInfoOfNodeConn();
+    }
+    else{
+        fillDirInfoOfNodeConn_DM();
+    }
 }
 
 void GlobalResources::readNodeTypes(const pugi::xml_node& noc_node)
@@ -329,7 +334,7 @@ void GlobalResources::sortNodesPositions()
     sort(zPositions.begin(), zPositions.end());
     zPositions.erase(unique(zPositions.begin(), zPositions.end()), zPositions.end());
 }
-/*
+
 void GlobalResources::fillDirInfoOfNodeConn()
 {
     for (Node& node : nodes) {
@@ -368,11 +373,11 @@ void GlobalResources::fillDirInfoOfNodeConn()
         }
     }
 }
-*/
+
 
 // My fillDirInfoOfNodeConn() function. Rely on Direction_Mat.txt file
 
-void GlobalResources::fillDirInfoOfNodeConn()
+void GlobalResources::fillDirInfoOfNodeConn_DM()
 {
     std::cout << "Start filling direction of nodes \n";
 

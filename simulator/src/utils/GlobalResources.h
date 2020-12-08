@@ -118,6 +118,8 @@ private:
     void sortNodesPositions();
 
     void fillDirInfoOfNodeConn();
+    
+    void fillDirInfoOfNodeConn_DM();
 
     void readConnections(const pugi::xml_node& noc_node);
 
