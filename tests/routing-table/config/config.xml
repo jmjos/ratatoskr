@@ -61,8 +61,8 @@
       <assign_channel value="false"/>
       <buffer_overflow value="true"/>
       <routingTable_mode value="true"/>
-      <routingTable_path value="/home/mmirka/my_ratatoskr/bin/RT.txt"/>
-      <directionMatrix_path value="/home/mmirka/ratatoskr/tests/routing-table/Direction_Mat.txt"/>
+      <routingTable_path value="RT.txt"/>
+      <directionMatrix_path value="Direction_Mat.txt"/>
     </router>
     <netrace>
       <inject value="true"/>

@@ -1,4 +1,4 @@
-Before running the test run "run.sh", make sure to change the following path to match your own system:
+Before running the test run "run.sh", make sure the following paths match your own system:
 
 - in config.xml: change the "routingTable_path" and "directionMatrix_path" parameters.
 
