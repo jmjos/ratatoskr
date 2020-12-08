@@ -1,4 +1,6 @@
-
+Before running the test run "run.sh", make sure to change the following path to match your own system:
+- in config.ini: change the "RoutingTable" parameter.
+- in Globalressource.cpp, in function GlobalResources::fillDirInfoOfNodeConn(), change the "filename" variable.
 
 Test the set-up by running "run.sh"
 
