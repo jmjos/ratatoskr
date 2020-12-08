@@ -210,6 +210,10 @@ void GlobalResources::readConfigFile(const std::string& configPath)
         RoutingTable_file = readRequiredStringAttribute(RTFile_node, "value");
         createRoutingTable();
     }
+    
+    // DIRECTION MATRIX
+    pugi::xml_node DMFile_node = Routing_node.child("directionMatrix_path");
+    DirectionMat_file = readRequiredStringAttribute(DMFile_node, "value");
 
     //NOC
     pugi::xml_node noc_node = doc.child("configuration").child("noc");
@@ -372,10 +376,8 @@ void GlobalResources::fillDirInfoOfNodeConn()
 {
     std::cout << "Start filling direction of nodes \n";
 
-    std::string filename;
-    filename = "/home/mmirka/ratatoskr/tests/routing-table/Direction_Mat.txt";
     std::vector<std::vector<int>> directions_mat ;
-    std::ifstream infile(filename);
+    std::ifstream infile(DirectionMat_file);
     std::string line;
 
     int cpt_line = 0;
