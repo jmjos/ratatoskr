@@ -77,6 +77,6 @@
     </tasks>
   </verbose>
   <report>
-    <bufferReportRouters>0123</bufferReportRouters>
+    <bufferReportRouters>0 1 2 3</bufferReportRouters>
   </report>
 </configuration>
