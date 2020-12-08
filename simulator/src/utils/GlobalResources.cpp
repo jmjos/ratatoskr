@@ -201,19 +201,23 @@ void GlobalResources::readConfigFile(const std::string& configPath)
 
     //ROUTING TABLE
     pugi::xml_node Routing_node = doc.child("configuration").child("verbose").child("router");
-    RoutingTable_mode = Routing_node.child("routingTable_mode").attribute("value").as_bool();
-    
+    if (Routing_node.child("routingTable_mode") != NULL){
+        RoutingTable_mode = Routing_node.child("routingTable_mode").attribute("value").as_bool();
+    }
+    else{
+        RoutingTable_mode = 0;
+    }
     std::cout<<"Routing table mode: "<<RoutingTable_mode<<std::endl;
     
-    if (RoutingTable_mode){
+    if (RoutingTable_mode == 1){
         pugi::xml_node RTFile_node = Routing_node.child("routingTable_path");
         RoutingTable_file = readRequiredStringAttribute(RTFile_node, "value");
         createRoutingTable();
+        
+        // DIRECTION MATRIX
+        pugi::xml_node DMFile_node = Routing_node.child("directionMatrix_path");
+        DirectionMat_file = readRequiredStringAttribute(DMFile_node, "value");
     }
-    
-    // DIRECTION MATRIX
-    pugi::xml_node DMFile_node = Routing_node.child("directionMatrix_path");
-    DirectionMat_file = readRequiredStringAttribute(DMFile_node, "value");
 
     //NOC
     pugi::xml_node noc_node = doc.child("configuration").child("noc");
