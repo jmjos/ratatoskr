@@ -57,7 +57,7 @@ def init_script(mesh_file):
         root = tree.getroot()
 
         config = configparser.ConfigParser()
-        config.read('config.ini')
+        config.read('config/config.ini')
 
         # Number of layers
         global num_of_layers
