@@ -1,0 +1,7 @@
+numpy
+scipy
+matplotlib
+joblib
+pandas
+pyzmq
+#multiprocessing
