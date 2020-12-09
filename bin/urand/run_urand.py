@@ -208,7 +208,10 @@ def begin_all_sims(config):
     str(config.runRateStep))
 
     # Initialze the latencies.
-    injectionRates = np.arange(config.runRateMin, config.runRateMax, config.runRateStep)
+    if config.runRateMin == config.runRateMax:
+        injectionRates = [config.runRateMin]
+    else:
+        injectionRates = np.arange(config.runRateMin, config.runRateMax, config.runRateStep)
     injectionRates = [round(elem, 4) for elem in injectionRates]
     latenciesFlit = -np.ones((len(injectionRates), config.restarts))
     latenciesPacket = -np.ones((len(injectionRates), config.restarts))
