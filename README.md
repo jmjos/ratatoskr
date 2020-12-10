@@ -5,22 +5,22 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1c867426f3d5450a9aed9a7d56602ffe)](https://www.codacy.com/app/jmjos/ratatoskr?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jmjos/ratatoskr&amp;utm_campaign=Badge_Grade)
 
 
-Welcome to the project website of ratatoskr, an in-depth PPA framework to design NoCs. It can model 2D, 3D and heterogeneous 3D SoCs. It ships a router hardware model and precise power models. It supports uniform random traffic patterns, netrace and task graphs. 
+Welcome to the project website of ratatoskr, an in-depth PPA framework to design NoCs. It can model 2D, 3D and heterogeneous 3D SoCs. It ships a router hardware model and precise power models. It supports uniform random traffic patterns, netrace and task graphs.
 
 - Power estimation:
-  - Static and dynamic power estimation of routers and links on a cycle-accurate level. 
+  - Static and dynamic power estimation of routers and links on a cycle-accurate level.
   - Accuracy of dynamic link energy is within 1% of bit-level accurate simulations.
 - Performance models:
   - Network performance on a cycle-accurate (CA) level using the NoC simulator.  
-  - Network performance on a register-transfer level (RTL). 
+  - Network performance on a register-transfer level (RTL).
   - Timing of routers from synthesis.
 - Area analysis from synthesis on gate-level for any standard cell technology.
 - Benchmarks:
    - Netrace
-   - Realistic application model on transaction-level. 
+   - Realistic application model on transaction-level.
    - Synthetic traffic patterns.
 - Heterogeneous 3D Integration:
-   - Pseudo-mesochronous routers 
+   - Pseudo-mesochronous routers
    - Heterogeneous network architectures.
 - Reporting: Automatic generation of detailed reports from network-scale performance to buffer utilization.
 
@@ -31,8 +31,8 @@ Ratatoskr  is developed at the RWTH Aachen University, Germany, OVG University M
 ```
 @INPROCEEDINGS{7533908,
   author={J. M. {Joseph} and S. {Wrieden} and C. {Blochwitz} and A. {García-Oritz} and T. {Pionteck}},
-  booktitle={2016 11th International Symposium on Reconfigurable Communication-centric Systems-on-Chip (ReCoSoC)}, 
-  title={A simulation environment for design space exploration for asymmetric 3D-Network-on-Chip}, 
+  booktitle={2016 11th International Symposium on Reconfigurable Communication-centric Systems-on-Chip (ReCoSoC)},
+  title={A simulation environment for design space exploration for asymmetric 3D-Network-on-Chip},
   year={2016},
   volume={},
   number={},
@@ -42,11 +42,27 @@ Ratatoskr  is developed at the RWTH Aachen University, Germany, OVG University M
 
 ---
 
+## Getting Started -- Ratatoskr in 30 seconds
+
+### I want to measure performance.
+
+[How do I use PARSEC / netrace?](docs/readme/netrace.md)
+
+### I want to measure area.
+
+Documentation coming soon.
+
+### I want to measure power.
+
+Documentation coming soon.
+
+---
+
 <img align="right" width="120" src="https://upload.wikimedia.org/wikipedia/commons/b/ba/AM_738_4to_Ratatoskr.png">
 
 ## Trivia on the framework's name
 
-The name of the framework Ratatoskr is based on a squirrel from Nordic mythology. In the mythological text, the squirrel runs up and down a large tree called Yggdrasil to transport message from an eagle sitting on top of the tree to the dragon Nidhögg lying under the tree. The eagle and the dragon are quite talkative because they are in conflict. Thus, the squirrel is rather busy with its task. The inspiration of the name of our framework comes directly from the squirrels task: Just as a NoC in a heterogeneous 3D SoC, it transmits messages vertically to different senders and receivers. 
+The name of the framework Ratatoskr is based on a squirrel from Nordic mythology. In the mythological text, the squirrel runs up and down a large tree called Yggdrasil to transport message from an eagle sitting on top of the tree to the dragon Nidhögg lying under the tree. The eagle and the dragon are quite talkative because they are in conflict. Thus, the squirrel is rather busy with its task. The inspiration of the name of our framework comes directly from the squirrels task: Just as a NoC in a heterogeneous 3D SoC, it transmits messages vertically to different senders and receivers.
 
 
 ## Getting started
