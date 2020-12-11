@@ -19,7 +19,7 @@ Mapping for both modes is different, see `GlobalResources.cpp`, lines 44ff.;
 Do not change the config file as some parameters are hard coded.
 
 In the netrace mode, the simulator always will read the `config/ntConfig.xml` file.
-The file defines the `network.xml` used; you MUST use the same as in `simulator/tests/netrace/config/ntNetwork.xml`. It defines the aforementioned 8x8x2 NoC.
+The file defines the `network.xml` used; you should use the same as in `simulator/tests/netrace/config/ntNetwork.xml`. It defines the aforementioned 8x8x2 NoC, which allows for flexibly map 64 cores of the netrace benchmark (e.g., to a 4x4x2 or a 8x8x1 setting). The mapping can be changed in [ll. 118-119, NetracePool.cpp](https://github.com/jmjos/ratatoskr/blob/89be71877a04b6469dbb9588e89e38911b8a4cc8/simulator/src/model/traffic/netrace/NetracePool.cpp#L119). At this stage, it maps to 4x4x2 by adding 32 to respective PE-adresses.
 
 You can change the benchmark trace file in `ntConfig.xml`, `<netraceFile>config/example.tra.bz2</netraceFile>
 
