@@ -200,7 +200,7 @@ void GlobalResources::readConfigFile(const std::string& configPath)
     activateFlitTracing = gen_node.child("flitTracing").attribute("value").as_bool();
 
     //ROUTING TABLE
-    pugi::xml_node Routing_node = doc.child("configuration").child("verbose").child("router");
+    pugi::xml_node Routing_node = doc.child("configuration").child("noc").child("routingTable");
     if (Routing_node.child("routingTable_mode") != NULL){
         RoutingTable_mode = Routing_node.child("routingTable_mode").attribute("value").as_bool();
     }

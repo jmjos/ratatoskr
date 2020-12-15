@@ -8,6 +8,11 @@
     <nocFile>config/network.xml</nocFile>
     <flitsPerPacket value="32"/>
     <Vdd value="5"/>
+    <routingTable>
+      <routingTable_mode value="true"/>
+      <routingTable_path value="RT.txt"/>
+      <directionMatrix_path value="Direction_Mat.txt"/>
+    </routingTable>
   </noc>
   <application>
     <benchmark>synthetic</benchmark>
@@ -59,10 +64,7 @@
       <throttle value="false"/>
       <reset value="false"/>
       <assign_channel value="false"/>
-      <buffer_overflow value="false"/>
-      <routingTable_mode value="true"/>
-      <routingTable_path value="RT.txt"/>
-      <directionMatrix_path value="Direction_Mat.txt"/>
+      <buffer_overflow value="true"/>
     </router>
     <netrace>
       <inject value="true"/>
