@@ -37,4 +37,5 @@ script:
         - make
         - source source_me.sh
         - python bench.py
-        #- ./run.sh
+        - cd ../routing-table
+        - ./run.sh
