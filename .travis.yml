@@ -20,11 +20,11 @@ before_script:
         - cd systemc-2.3.3
         - mkdir objdir
         - cd objdir
-        - ../configure --prefix=/usr/local/systemc-2.3.3
+        - ../configure --prefix=/usr/local/systemc-2.3.3 --enable-static CXXFLAGS="-std=c++17"
         - make -j
         - sudo mkdir /usr/local/systemc-2.3.3
         - sudo make install
-        - sudo sed -i '/using std::gets;/d' /usr/local/systemc-2.3.3/include/systemc.h
+        #- sudo sed -i '/using std::gets;/d' /usr/local/systemc-2.3.3/include/systemc.h
         - cd ../..
 
 script:
@@ -37,4 +37,5 @@ script:
         - make
         - source source_me.sh
         - python bench.py
-        #- ./run.sh
+        - cd ../routing-table
+        - ./run.sh
