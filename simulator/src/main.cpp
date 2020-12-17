@@ -111,6 +111,8 @@ int sc_main(int arg_num, char* arg_vec[])
         globalResources.netraceVerbosity = 0;
 
     std::string config_path = "config/ntConfig.xml";
+
+    globalResources.activateFlitTracing = true;
 #endif
 
 
