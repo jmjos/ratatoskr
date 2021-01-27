@@ -30,6 +30,7 @@ import multiprocessing
 
 class Configuration:
     """ The main configuration """
+
     def __init__(self, path):
         self.path = path
         config = configparser.ConfigParser()
@@ -61,30 +62,30 @@ class Configuration:
 
         self.bufferReportRouters = config['Report']['bufferReportRouters']
         try:
-                self.bufferReportRouters = self.bufferReportRouters[1:len(self.bufferReportRouters)-1]
+            self.bufferReportRouters = self.bufferReportRouters[1:len(self.bufferReportRouters)-1]
         except Exception:
-                raise
+            raise
 
         self.x = config['Hardware']['x']
         self.y = config['Hardware']['y']
         try:
-                self.x = self.x[1:len(self.x)-1]
-                self.x = self.x.split(',')
-                self.x = [ int(x) for x in self.x ]
-                self.y = self.y[1:len(self.y)-1]
-                self.y = self.y.split(',')
-                self.y = [ int(y) for y in self.y ]
+            self.x = self.x[1:len(self.x)-1]
+            self.x = self.x.split(',')
+            self.x = [int(x) for x in self.x]
+            self.y = self.y[1:len(self.y)-1]
+            self.y = self.y.split(',')
+            self.y = [int(y) for y in self.y]
         except Exception:
-                raise
+            raise
         self.z = int(config['Hardware']['z'])
         self.routing = config['Hardware']['routing']
         self.clockDelay = config['Hardware']['clockDelay']
         try:
-                self.clockDelay = self.clockDelay[1:len(self.clockDelay)-1]
-                self.clockDelay = self.clockDelay.split(',')
-                self.clockDelay = [ int(cd) for cd in self.clockDelay ]
+            self.clockDelay = self.clockDelay[1:len(self.clockDelay)-1]
+            self.clockDelay = self.clockDelay.split(',')
+            self.clockDelay = [int(cd) for cd in self.clockDelay]
         except Exception:
-                raise
+            raise
         self.bufferDepthType = config['Hardware']['bufferDepthType']
         self.bufferDepth = int(config['Hardware']['bufferDepth'])
         self.buffersDepths = config['Hardware']['buffersDepths']
@@ -93,6 +94,12 @@ class Configuration:
         self.topologyFile = config['Hardware']['topologyFile']
         self.flitSize = int(config['Hardware']['flitSize'])
         self.portNum = int(config['Hardware']['portNum'])
+
+        self.topology = config['Hardware']['topology']
+
+        assert (len(self.x) == self.z) and (len(self.y) == self.z), "Incorrect input value of z-axis, z={} len(x)={} len(y)={}".format(self.z, len(self.x), len(self.y))
+        assert (self.z == len(self.clockDelay)), "Incorrect input length of clockDelay, z={}, len(clockDelay)={}".format(self.z, len(self.clockDelay))
+
 ###############################################################################
 
 
@@ -104,7 +111,7 @@ def main():
 
     writer = writers.NetworkWriter(config)
     writer.write_network('network.xml')
-    #plot_network.main()
+    plot_network.main()
 ###############################################################################
 
 
