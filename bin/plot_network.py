@@ -20,7 +20,7 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# This script generates simple topology files for 2D or 3D meshes
+# This script generates simple topology files for mesh, torus and ring
 ###############################################################################
 import sys
 import numpy as np
@@ -37,6 +37,7 @@ points = []  # List of the nodes/points
 excluded_points = []  # Those are processing elemnts
 connections = []  # List of the connection between the points
 num_of_layers = 0  # The number of layers in the mesh
+topology = None
 # Note: a face is not a layer, but the number of faces equals the number of layers.
 # A face consists of the corner points of the layer only.
 # That means each face consists of only four points.
@@ -45,24 +46,31 @@ faces = []  # List of the faces, for drawing reasons
 ###############################################################################
 
 
-def init_script(mesh_file):
+###############################################################################
+# INIT
+###############################################################################
+def init_script(network_file, config_file):
     """
     Initialize the script by reading the mesh information from the mesh xml file
     """
     try:
-        tree = ET.parse(mesh_file)
+        tree = ET.parse(network_file)
     except FileNotFoundError:
         raise FileNotFoundError
     else:
         root = tree.getroot()
 
         config = configparser.ConfigParser()
-        config.read('config.ini')
+        config.read(config_file)
+
+        # network topology for different plot
+        global topology
+        topology = config['Hardware']['topology']
 
         # Number of layers
         global num_of_layers
-        # num_of_layers = len(root.find('layerTypes'))
         num_of_layers = int(config['Hardware']['z'])
+
         # Find the id of the ProcessingElements
         proc_elemnt_ids = []
         for nodeType in root.find('nodeTypes').iter('nodeType'):
@@ -71,7 +79,6 @@ def init_script(mesh_file):
 
         # Points is a list of tuples
         global points
-        i = 0
         for node in root.find('nodes').iter('node'):
             # don't include processing element nodes
             if int(node.find('nodeType').attrib['value']) not in proc_elemnt_ids:
@@ -80,7 +87,6 @@ def init_script(mesh_file):
                 z = float(node.find('zPos').attrib['value'])
                 layer = int(node.find('layer').attrib['value'])
                 points.append(([x, y, z], layer))
-                i = i + 1
             else:
                 global excluded_points
                 excluded_points.append(int(node.attrib['id']))
@@ -94,10 +100,11 @@ def init_script(mesh_file):
                     break
             if valid_con:
                 connection = []
-                connection.append(int(con.find('ports')[0].find('node').attrib['value']))
-                connection.append(int(con.find('ports')[1].find('node').attrib['value']))
+                connection.append(
+                    int(con.find('ports')[0].find('node').attrib['value']))
+                connection.append(
+                    int(con.find('ports')[1].find('node').attrib['value']))
                 connections.append(connection)
-###############################################################################
 
 
 def create_fig():
@@ -112,101 +119,105 @@ def create_fig():
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
+
+
 ###############################################################################
+# PLOT CONNECTIONS
+###############################################################################
+def generate_3D_half_ellipse(pt1, pt2, theta=np.pi/2, ratio=0.1, num=20):
+    """
+    Calculate the curvature line of the given 2 points
+    """
+    assert len(pt1) == 3 and len(pt2) == 3, "The given points are not in 3D dimension."
+
+    pt1 = np.array(pt1)
+    pt2 = np.array(pt2)
+
+    pt_mean = (pt1 + pt2) / 2
+    pt_diff = np.abs(pt1 - pt2)
+
+    assert sum(pt_diff != 0) == 1, "Diagonal ellipse is not supported"
+
+    tdata = np.linspace(-theta, theta, num=num)
+
+    x, y, z = pt_mean
+    xlen, ylen, zlen = pt_diff / 2
+
+    if (pt_diff[0] != 0):
+        xdata = x + xlen * np.sin(tdata)
+        ydata = y + xlen * np.cos(tdata) * ratio
+        zdata = z + np.zeros(tdata.shape)
+    elif (pt_diff[1] != 0):
+        ydata = y + ylen * np.sin(tdata)
+        xdata = x + ylen * np.cos(tdata) * ratio
+        zdata = z + np.zeros(tdata.shape)
+    elif (pt_diff[2] != 0):
+        zdata = z + zlen * np.sin(tdata)
+        xdata = x + zlen * np.cos(tdata) * ratio
+        ydata = y + np.zeros(tdata.shape)
+
+    return xdata, ydata, zdata
 
 
-def vertical_horizontal_connection(p1_ix, p2_ix):
+def vertical_horizontal_connection(p1, p2):
     """
     Draws the vertical and horizontal connection of the points
     """
-    x = [];
-    y = [];
-    z = []
-
-    x.append(points[p1_ix][0][0])
-    x.append(points[p2_ix][0][0])
-
-    y.append(points[p1_ix][0][1])
-    y.append(points[p2_ix][0][1])
-
-    z.append(points[p1_ix][0][2])
-    z.append(points[p2_ix][0][2])
-
-    ax.plot(x, y, z, marker='o', color='black')
-###############################################################################
+    assert len(p1) == 3 and len(p2) == 3
+    line = np.array([p1, p2]).T.tolist()
+    ax.plot(*line, color='black')
 
 
-def solve_diagonal_connection(p1, p2):
+def is_opposite_border(p1, p2):
     """
-    Draws the diagonal connection as vertical and horizontal one
+    Check the given 2 points (3D) are at the border of the cube and
+    one of their dimension exist at the same axis
     """
-    x = [];
-    y = [];
-    z = []
-
-    # p1 is higher than p2
-    # The drawing starts from the high point to the low point, no reason, just a choice
-    if (p1[2] > p2[2]):
-        x.append(p1[0])
-        x.append(p1[0])
-        x.append(p2[0])
-
-        y.append(p1[1])
-        y.append(p1[1])
-        y.append(p2[1])
-
-        z.append(p1[2])
-        z.append(p2[2])
-        z.append(p2[2])
-    else:
-        x.append(p2[0])
-        x.append(p2[0])
-        x.append(p1[0])
-
-        y.append(p2[1])
-        y.append(p2[1])
-        y.append(p1[1])
-
-        z.append(p2[2])
-        z.append(p1[2])
-        z.append(p1[2])
-
-    ax.plot(x, y, z, marker='o', color='black')
-###############################################################################
+    p1 = np.array(p1)
+    p2 = np.array(p2)
+    pt_diff = np.abs(p1 - p2)
+    return (np.sum(pt_diff != 0) == 1) and (1 in pt_diff)
 
 
 def plot_connections():
     """
     Plot the connections between the nodes/points
     """
-    for c in connections:
-        p1_ix = c[0]
-        p2_ix = c[1]
+    for p1_idx, p2_idx in connections:
+        p1 = points[p1_idx][0]
+        p2 = points[p2_idx][0]
 
-        p1 = points[p1_ix][0]
-        p2 = points[p2_ix][0]
-        if (p1[0] != p2[0]) and (p1[1] != p2[1]):
-            solve_diagonal_connection(p1, p2)
+        if is_opposite_border(p1, p2) and topology in set(["torus", "ring"]):
+            pts_ellipse = generate_3D_half_ellipse(p1, p2)
+            ax.plot(*pts_ellipse, color='grey')
         else:
-            vertical_horizontal_connection(p1_ix, p2_ix)
+            vertical_horizontal_connection(p1, p2)
+
 ###############################################################################
+# PLOT NODES
+###############################################################################
+
+
+def plot_nodes():
+    """
+    Plot the nodes in the figure
+    """
+    points_coordinates = np.array([*np.array(points)[:, 0]]).T.tolist()
+    ax.scatter(*points_coordinates, color='black', alpha=0.4, s=50)
 
 
 def annotate_points():
     """
     Annotating the points using their index
     """
-    points_coordinates = []
-    for p in points:
-        points_coordinates.append(p[0])
-    points_coordinates = np.array(points_coordinates)
-    i = 0
-    for x, y, z in zip(points_coordinates[:, 0], points_coordinates[:, 1], points_coordinates[:, 2]):
-        ax.text(x, y, z, i, size=12, color='red')
-        i = i + 1
+    points_coordinates = np.array([*np.array(points)[:, 0]])
+    for idx, (x, y, z) in enumerate(points_coordinates):
+        ax.text(x, y, z, idx, size=10, color='red')
+
+
 ###############################################################################
-
-
+# PLOT SURFACES
+###############################################################################
 def create_faces():
     """
     Create the faces of the mesh, each layer will become a face
@@ -214,8 +225,8 @@ def create_faces():
     # Make layers
 
     # Seperate lists of x, y and z coordinates
-    x_s = [];
-    y_s = [];
+    x_s = []
+    y_s = []
     z_s = []
 
     for i in range(0, num_of_layers):
@@ -231,14 +242,14 @@ def create_faces():
 
     # Making faces, only out of the corner points of the layer
     global faces
-    for i in range(0, num_of_layers):
+    for i in range(0, min(len(z_s), num_of_layers)):
         x_min = min(x_s)
         x_max = max(x_s)
         y_min = min(y_s)
         y_max = max(y_s)
-        face = list([(x_min, y_min, z_s[i]), (x_max, y_min, z_s[i]), (x_max, y_max, z_s[i]), (x_min, y_max, z_s[i])])
+        face = list([(x_min, y_min, z_s[i]), (x_max, y_min, z_s[i]),
+                     (x_max, y_max, z_s[i]), (x_min, y_max, z_s[i])])
         faces.append(face)
-###############################################################################
 
 
 def plot_faces():
@@ -256,28 +267,31 @@ def plot_faces():
         color = (red, green, blue)
         if color not in faces_colors:
             faces_colors.append('#%02x%02x%02x' % color)
-    poly.set_facecolors(faces_colors)
+    poly.set_facecolor(faces_colors)
     ax.add_collection3d(poly)
+
 ###############################################################################
-
-
+# MAIN
+###############################################################################
 def main():
     """
     Main Execution Point
     """
     network_file = 'network.xml'
+    config_file = 'config.ini'
     try:
         network_file = sys.argv[1]
+        config_file = sys.argv[2]
     except IndexError:
         pass
-    init_script(network_file)
+    init_script(network_file, config_file)
     create_fig()
+    plot_nodes()
     plot_connections()
     annotate_points()
     create_faces()
     plot_faces()
     plt.show()
-###############################################################################
 
 
 if __name__ == "__main__":

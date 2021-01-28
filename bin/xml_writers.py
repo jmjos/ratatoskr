@@ -249,22 +249,37 @@ class NetworkWriter(Writer):
     def __init__(self, config):
         Writer.__init__(self, 'network-on-chip')
         self.config = config
+
+        self.x_step = []
+        self.x_range = []
+        self.y_step = []
+        self.y_range = []
+        self.z_step = 0
+        self.z_range = np.array([])
+
         if self.config.z == 1:
             self.z_step = 1
             self.z_range = np.arange(0, 1, self.config.z)
         else:
             self.z_step = 1/(self.config.z - 1)
-            self.z_range = np.arange(0, 1+self.z_step, self.z_step)
-        self.x_step = []
-        self.x_range = []
-        for x in self.config.x:
-            self.x_step.append(1/(x - 1))
-            self.x_range.append(np.arange(0, 1+self.x_step[-1], self.x_step[-1]))
-        self.y_step = []
-        self.y_range = []
-        for y in self.config.y:
-            self.y_step.append(1/(y - 1))
-            self.y_range.append(np.arange(0, 1+self.y_step[-1], self.y_step[-1]))
+            self.z_range = np.arange(0, 1+self.z_step/10, self.z_step)
+
+        for itr, x in enumerate(self.config.x):
+            if x == 1:
+                self.x_step.append(1)
+                self.x_range.append(np.arange(0, 1, self.x_step[itr]))
+            else:
+                self.x_step.append(1/(x - 1))
+                self.x_range.append(np.arange(0, 1+self.x_step[itr]/10, self.x_step[itr]))
+
+        for itr, y in enumerate(self.config.y):
+            if y == 1:
+                self.y_step.append(1)
+                self.y_range.append(np.arange(0, 1, self.y_step[itr]))
+            else:
+                self.y_step.append(1/(y - 1))
+                self.y_range.append(np.arange(0, 1+self.y_step[itr]/10, self.y_step[itr]))
+
 
     def write_header(self):
         bufferDepthType_node = ET.SubElement(self.root_node, 'bufferDepthType')
@@ -384,7 +399,7 @@ class NetworkWriter(Writer):
         self.make_port(ports_node, 0, src_node)
         self.make_port(ports_node, 1, dst_node)
 
-    def write_connections(self):
+    def write_mesh_connections(self):
         connections_node = ET.SubElement(self.root_node, 'connections')
         con_id = 0
         node_id = 0
@@ -448,7 +463,7 @@ class NetworkWriter(Writer):
                                 con_id = self.make_con(connections_node, con_id, connection_tuple[1], connection_tuple[0])
                                 already_connected.add(connection_tuple)
                             #con_id = self.make_con(connections_node, con_id, node_id, dst_id)
-                    if zi < 0.95:  # create Up
+                    if (zi < 0.95) and (self.config.z > 1):  # create Up
                         x_finder = np.where(self.x_range[z + 1] == xi)
                         x_index = -1
                         y_finder = np.where(self.y_range[z + 1] == yi)
@@ -468,6 +483,81 @@ class NetworkWriter(Writer):
                     node_id += 1
             z += 1
 
+    def write_torus_connections(self):
+        assert self.config.z == 1, "Not supported 3D Torus"
+        assert self.config.y[0] > 1 and self.config.x[0] > 1, "The value of y[0] and x[0] should larger than 0 for 2D Torus"
+
+        connections_node = ET.SubElement(self.root_node, 'connections')
+        con_id = 0
+        already_connected = set()
+
+        x_len = self.config.x[0]
+        y_len = self.config.y[0]
+        nodecount = x_len * y_len
+
+        # create mapping node id and its coordinate
+        coord_to_nid = {}
+        nid_to_coord = {}
+        nid = 0
+        for y in range(y_len):
+            for x in range(x_len):
+                nid_to_coord[nid] = (x,y)
+                coord_to_nid[(x,y)] = nid
+                nid += 1
+
+        # connection of core and router
+        for nid in range (nodecount):
+            connection_tuple = (nid, nid + nodecount)
+            already_connected.add(connection_tuple)
+
+        # connection of x-axis (west and east, direction is west to east)
+        for nid in range(nodecount):
+            coord = nid_to_coord[nid]
+            x = (coord[0] + 1) % x_len
+            y = coord[1]
+            target_nid = coord_to_nid[(x,y)]
+            connection_tuple = (min(nid, target_nid), max(nid, target_nid))
+            already_connected.add(connection_tuple)
+
+        # connection of y-axis (south and north, direction is south to north)
+        for nid in range(nodecount):
+            coord = nid_to_coord[nid]
+            x = coord[0]
+            y = (coord[1] + 1) % y_len
+            target_nid = coord_to_nid[(x,y)]
+            connection_tuple = (min(nid, target_nid), max(nid, target_nid))
+            already_connected.add(connection_tuple)
+
+        # assign all calculated connection_tuple
+        for connection_tuple in already_connected:
+            con_id = self.make_con(connections_node, con_id, connection_tuple[1], connection_tuple[0])
+
+    def write_ring_connections(self):
+        assert self.config.z == 1 and self.config.y[0] == 1, "Ring topology, z and y[0] must be 1"
+        assert self.config.x[0] > 1, "Ring topology, x[0] should larger than 1"
+
+        connections_node = ET.SubElement(self.root_node, 'connections')
+        con_id = 0
+        already_connected = set()
+
+        nodecount = self.config.x[0]
+
+        # connection of core and router
+        for nid in range(nodecount):
+            connection_tuple = (nid, nid + nodecount)
+            already_connected.add(connection_tuple)
+
+        # connection of x-axis (west and east, direction is west to east)
+        for nid in range(nodecount):
+            target_nid = (nid + 1) % nodecount
+            connection_tuple = (min(nid, target_nid), max(nid, target_nid))
+            already_connected.add(connection_tuple)
+
+        # assign all calculated connection_tuple
+        for connection_tuple in already_connected:
+            con_id = self.make_con(connections_node, con_id, connection_tuple[1], connection_tuple[0])
+
+
     def write_network(self, file_name):
         self.write_header()
         self.write_layers()
@@ -475,7 +565,14 @@ class NetworkWriter(Writer):
         nodes_node = self.write_nodes_node()
         self.write_nodes(nodes_node, 'Router')
         self.write_nodes(nodes_node, 'ProcessingElement')
-        self.write_connections()
+
+        if (self.config.topology == "mesh"):
+            self.write_mesh_connections()
+        elif (self.config.topology == "torus"):
+            self.write_torus_connections()
+        elif (self.config.topology == "ring"):
+            self.write_ring_connections()
+
         self.write_file(file_name)
 ###############################################################################
 
