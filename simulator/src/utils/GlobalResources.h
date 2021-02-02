@@ -26,6 +26,7 @@
 #include <map>
 #include <unistd.h>
 #include <random>
+#include <sys/stat.h>
 
 #include "Structures.h"
 #include "pugixml.hpp"

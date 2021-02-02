@@ -189,6 +189,9 @@ void GlobalResources::readConfigFile(const std::string& configPath)
     pugi::xml_document doc;
 
     std::cout << "Reading simulator config: " << configPath << endl;
+    struct stat buffer;
+    if (!stat (configPath.c_str(), &buffer) == 0)
+        cout << endl <<"ERROR: Config file not found, program will exit with exception" << endl << endl;
     pugi::xml_parse_result result = doc.load_file(configPath.c_str());
     assert(result && "Failed to read simulator config file!");
 
