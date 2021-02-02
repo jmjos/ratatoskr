@@ -123,7 +123,8 @@ void NetworkInterfaceVC::thread()
                 flitPortContainer->portValidOut.write(true);
                 flitPortContainer->portDataOut.write(current_flit);
                 flitPortContainer->portVcOut.write(0);
-                trafficTracer.traceFlit(current_flit);
+                if (globalResources.activateFlitTracing)
+                    trafficTracer.traceFlit(current_flit);
                 creditCounter--;
                 LOG((globalReport.verbose_pe_send_head_flit && current_flit->type==HEAD)
                         || globalReport.verbose_pe_send_flit,

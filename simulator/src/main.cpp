@@ -75,6 +75,8 @@ int sc_main(int arg_num, char* arg_vec[])
 
     desc.add_options()
             ("simTime", po::value<std::string>()->default_value(""), "Length of simulation");
+    desc.add_options()
+            ("flitTrace", po::value<bool>()->default_value(false), "Activating flit trace files");
 
 #ifdef ENABLE_NETRACE
     desc.add_options()
@@ -93,10 +95,12 @@ int sc_main(int arg_num, char* arg_vec[])
         cerr << "ERROR: " << e.what() << endl << endl << desc << endl;
         return 1;
     }
+
     std::string simTimeString = vm["simTime"].as<std::string>();
     if (!simTimeString.empty()) {
         globalResources.simulation_time = std::stoi(simTimeString);
     }
+    globalResources.activateFlitTracing = vm["flitTrace"].as<bool>();
 
 #ifdef ENABLE_NETRACE
     std::string netraceTraceFile = vm["netraceTraceFile"].as<std::string>();
