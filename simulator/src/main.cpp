@@ -70,11 +70,13 @@ int sc_main(int arg_num, char* arg_vec[])
     rep.connect("127.0.0.1", "10000");
     rep.startRun("name");
 
-#ifdef ENABLE_NETRACE
     po::variables_map vm;
     po::options_description desc("Allowed Options");
+
     desc.add_options()
             ("simTime", po::value<std::string>()->default_value(""), "Length of simulation");
+
+#ifdef ENABLE_NETRACE
     desc.add_options()
             ("netraceRegion", po::value<int>()->default_value(2), "Netrace: Region of the simulation, per default the PARSEC's ROI");
     desc.add_options()
@@ -83,6 +85,7 @@ int sc_main(int arg_num, char* arg_vec[])
             ("netraceVerbosity", po::value<std::string>()->default_value("all"), "Netrace: Verbosity Level,"
                                                                                  "all=info about trace file and about packet generation. "
                                                                                  "base = info about trace file. none = no output");
+#endif
     try{
         po::store(po::parse_command_line(arg_num, arg_vec, desc), vm);
         po::notify(vm);
@@ -94,6 +97,8 @@ int sc_main(int arg_num, char* arg_vec[])
     if (!simTimeString.empty()) {
         globalResources.simulation_time = std::stoi(simTimeString);
     }
+
+#ifdef ENABLE_NETRACE
     std::string netraceTraceFile = vm["netraceTraceFile"].as<std::string>();
     if (!netraceTraceFile.empty()) {
         globalResources.netraceFile = netraceTraceFile;
