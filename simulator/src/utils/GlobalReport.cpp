@@ -335,7 +335,7 @@ void GlobalReport::reportAllRoutersUsageHist()
     int num_routers = routers_ids.size();
     for (unsigned int i = 0; i<num_routers; ++i) {
         int router_id = routers_ids[i];
-        if (router_id <= numSimulatedRouters) {
+        if (router_id < numSimulatedRouters) {
             std::string csvFileName;
 
             int isFolderCreated = system("mkdir -p ./VCUsage");
