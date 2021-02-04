@@ -498,6 +498,8 @@ void GlobalResources::readConnections(const pugi::xml_node& noc_node)
             }
         }
 
+        assert(nodesOfConnection.size() == 2); // make sure each connection only consists 2 nodes
+
         float length = xml_con.child("length").attribute("value").as_float();
         int depth = xml_con.child("depth").attribute("value").as_int();
         int width = xml_con.child("width").attribute("value").as_int();
