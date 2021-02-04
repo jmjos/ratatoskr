@@ -231,12 +231,7 @@ void GlobalResources::readConfigFile(const std::string& configPath)
     Vdd = noc_node.child("Vdd").attribute("value").as_float();
 
     topology = noc_node.child_value("topology");
-    if(topology == "torus")
-        routingCircular = true;
-    else if(topology == "ring")
-        routingCircular = true;
-    else
-        routingCircular = false; // mesh
+    routingCircular = std::set<std::string>({std::string("torus"), std::string("ring")}).count(topology);
 
     //APPLICATION
     pugi::xml_node app_node = doc.child("configuration").child("application");
