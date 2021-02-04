@@ -595,7 +595,9 @@ class ConfigWriter(Writer):
     def write_noc(self):
         noc_node = ET.SubElement(self.root_node, 'noc')
         nocFile_node = ET.SubElement(noc_node, 'nocFile')
+        noc_topology = ET.SubElement(noc_node, 'topology')
         nocFile_node.text = 'config/network.xml'
+        noc_topology.text = self.config.topology
         flitsPerPacket_node = ET.SubElement(noc_node, 'flitsPerPacket')
         flitsPerPacket_node.set('value', str(self.config.flitsPerPacket))
         bitWidth_node = ET.SubElement(noc_node, 'bitWidth')
@@ -719,7 +721,7 @@ class ConfigWriter(Writer):
     def write_report(self):
         report_node = ET.SubElement(self.root_node, 'report')
         bufferReportRouters = ET.SubElement(report_node, 'bufferReportRouters')
-        bufferReportRouters.text = str(self.config.bufferReportRouters).replace(",", "")
+        bufferReportRouters.text = " ".join(self.config.bufferReportRouters)
 
     def write_config(self, file_name):
         self.write_general()
