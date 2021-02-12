@@ -84,11 +84,6 @@ int XYZRouting::route(int src_node_id, int dst_node_id)
             con_pos = src_node.getConPosOfDir(DIR::North);
         else if ((dst_pos.y > src_pos.y) && (inner_len.y >= outer_len.y))
             con_pos = src_node.getConPosOfDir(DIR::South);
-        // z-axis, currently not required
-        // else if (dst_pos.z < src_pos.z)
-        //     con_pos = src_node.getConPosOfDir(DIR::Down);
-        // else if (dst_pos.z > src_pos.z)
-        //     con_pos = src_node.getConPosOfDir(DIR::Up);
 
     }
 
