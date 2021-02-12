@@ -65,7 +65,6 @@ class Configuration:
             self.bufferReportRouters = self.bufferReportRouters[1:len(self.bufferReportRouters)-1]
         except Exception:
             raise
-        self.bufferReportRouters = [x.strip() for x in self.bufferReportRouters.split(',')]
 
         self.x = config['Hardware']['x']
         self.y = config['Hardware']['y']
@@ -98,13 +97,8 @@ class Configuration:
 
         self.topology = config['Hardware']['topology']
 
-        # Assertion check to restrict the input value and prevent bug in the following flow
         assert (len(self.x) == self.z) and (len(self.y) == self.z), "Incorrect input value of z-axis, z={} len(x)={} len(y)={}".format(self.z, len(self.x), len(self.y))
         assert (self.z == len(self.clockDelay)), "Incorrect input length of clockDelay, z={}, len(clockDelay)={}".format(self.z, len(self.clockDelay))
-
-        routerNum = sum([x*y for x,y in zip(self.x, self.y)])
-        maxBufRouter = max([int(x) for x in self.bufferReportRouters])
-        assert (maxBufRouter < routerNum), "Value of bufferReportRouter exceeds total number of routers. #Routers = {}, max(bufferReportRouters) == {}, given max(max(bufferReportRouters)={}".format(routerNum, routerNum-1, maxBufRouter)
 
 ###############################################################################
 
