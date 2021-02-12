@@ -359,16 +359,16 @@ void GlobalResources::fillDirInfoOfNodeConn()
                 dir = DIR::Local;
             }
             else { //one axis differs
-                if (GlobalResources::getInstance().routingCircular && (node.pos.x == 0. && connectedNode.pos.x == 1. && node.pos.y == connectedNode.pos.y)){
+                if (GlobalResources::getInstance().routingCircular && GlobalResources::getInstance().xPositions.size() > 2 && (node.pos.x == 0. && connectedNode.pos.x == 1. && node.pos.y == connectedNode.pos.y)){
                     dir = DIR::West;
                 }
-                else if (GlobalResources::getInstance().routingCircular && (node.pos.x == 1. && connectedNode.pos.x == 0. && node.pos.y == connectedNode.pos.y)){
+                else if (GlobalResources::getInstance().routingCircular && GlobalResources::getInstance().xPositions.size() > 2 && (node.pos.x == 1. && connectedNode.pos.x == 0. && node.pos.y == connectedNode.pos.y)){
                     dir = DIR::East;
                 }
-                else if (GlobalResources::getInstance().routingCircular && (node.pos.y == 0. && connectedNode.pos.y == 1. && node.pos.x == connectedNode.pos.x)){
+                else if (GlobalResources::getInstance().routingCircular && GlobalResources::getInstance().yPositions.size() > 2 && (node.pos.y == 0. && connectedNode.pos.y == 1. && node.pos.x == connectedNode.pos.x)){
                     dir = DIR::South;
                 }
-                else if (GlobalResources::getInstance().routingCircular && (node.pos.y == 1. && connectedNode.pos.y == 0. && node.pos.x == connectedNode.pos.x)){
+                else if (GlobalResources::getInstance().routingCircular && GlobalResources::getInstance().yPositions.size() > 2 && (node.pos.y == 1. && connectedNode.pos.y == 0. && node.pos.x == connectedNode.pos.x)){
                     dir = DIR::North;
                 }
                 else if (distance.x>0) {
