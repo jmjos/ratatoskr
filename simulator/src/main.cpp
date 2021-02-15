@@ -79,6 +79,7 @@ int sc_main(int arg_num, char *arg_vec[])
 
     desc.add_options()("simTime", po::value<std::string>()->default_value(""), "Length of simulation");
     desc.add_options()("flitTrace", po::value<bool>()->default_value(false), "Activating flit trace files");
+    desc.add_options()("outputDir", po::value<std::string>()->default_value(""), "Output directory of the simulation");
 
 #ifdef ENABLE_NETRACE
     desc.add_options()("netraceRegion", po::value<int>()->default_value(2), "Netrace: Region of the simulation, per default the PARSEC's ROI");
@@ -106,6 +107,7 @@ int sc_main(int arg_num, char *arg_vec[])
         globalResources.simulation_time = std::stoi(simTimeString);
     }
     globalResources.activateFlitTracing = vm["flitTrace"].as<bool>();
+    globalResources.outputDirectory = vm["outputDir"].as<std::string>();
 
 #ifdef ENABLE_NETRACE
     std::string netraceTraceFile = vm["netraceTraceFile"].as<std::string>();
@@ -139,7 +141,7 @@ int sc_main(int arg_num, char *arg_vec[])
     {
         cout << "Generating report of the simulation run into file " << globalResources.outputFileName << " ... " << endl
              << endl;
-        globalReport.reportComplete(globalResources.outputFileName);
+        globalReport.reportComplete(globalResources.outputDirectory + "/" + globalResources.outputFileName);
         cout << " done." << endl;
     }
     globalReport.reportPerformance(cout);
