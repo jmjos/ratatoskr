@@ -50,37 +50,15 @@ int sc_main(int arg_num, char *arg_vec[])
     sc_report_handler::set_verbosity_level(SC_DEBUG);
     sc_report_handler::set_actions(SC_ID_INSTANCE_EXISTS_, SC_DO_NOTHING); //disable renaming warnings
 
-    if (arg_num == 2)
-    {
-        globalResources.readConfigFile(arg_vec[1]);
-    }
-    else
-    {
-#ifndef ENABLE_NETRACE
-        std::string config_path = "config/config.xml";
-#endif
-#ifdef ENABLE_NETRACE
-        std::string config_path = "config/ntConfig.xml";
-#endif
-        globalResources.readConfigFile(config_path);
-        globalReport.readConfigFile(config_path);
-    }
-    globalResources.readNoCLayout(globalResources.noc_file);
-    if (!globalResources.data_file.empty() && !globalResources.map_file.empty())
-        globalResources.readTaskAndMapFiles(globalResources.data_file, globalResources.map_file);
-
-    globalReport.resizeMatrices();
-
-    rep.connect("127.0.0.1", "10000");
-    rep.startRun("name");
-
+    // input arg options
     po::variables_map vm;
     po::options_description desc("Allowed Options");
 
+    desc.add_options()("configPath", po::value<std::string>()->default_value(""), "Input path for config.xml");
+    desc.add_options()("networkPath", po::value<std::string>()->default_value(""), "Input path for network.xml");
     desc.add_options()("simTime", po::value<std::string>()->default_value(""), "Length of simulation");
     desc.add_options()("flitTrace", po::value<bool>()->default_value(false), "Activating flit trace files");
-    desc.add_options()("outputDir", po::value<std::string>()->default_value(""), "Output directory of the simulation");
-
+    desc.add_options()("outputDir", po::value<std::string>()->default_value("."), "Output directory of the simulation");
 #ifdef ENABLE_NETRACE
     desc.add_options()("netraceRegion", po::value<int>()->default_value(2), "Netrace: Region of the simulation, per default the PARSEC's ROI");
     desc.add_options()("netraceTraceFile", po::value<std::string>()->default_value(""), "Netrace: Trace file");
@@ -88,6 +66,8 @@ int sc_main(int arg_num, char *arg_vec[])
                                                                                            "all=info about trace file and about packet generation. "
                                                                                            "base = info about trace file. none = no output");
 #endif
+
+    // catagorize the input args
     try
     {
         po::store(po::parse_command_line(arg_num, arg_vec, desc), vm);
@@ -101,24 +81,44 @@ int sc_main(int arg_num, char *arg_vec[])
         return 1;
     }
 
+    // init the simulator with input args
+    std::string config_path = vm["configPath"].as<std::string>();
+    if (config_path.empty())
+#ifndef ENABLE_NETRACE
+        config_path = "config/config.xml";
+#else
+        config_path = "config/ntConfig.xml";
+#endif
+    globalResources.readConfigFile(config_path);
+    globalReport.readConfigFile(config_path);
+
+    std::string network_path = vm["networkPath"].as<std::string>();
+    if (network_path.empty())
+        network_path = globalResources.noc_file;
+    globalResources.readNoCLayout(network_path);
+
+    if (!globalResources.data_file.empty() && !globalResources.map_file.empty())
+        globalResources.readTaskAndMapFiles(globalResources.data_file, globalResources.map_file);
+
+    globalReport.resizeMatrices();
+
     std::string simTimeString = vm["simTime"].as<std::string>();
     if (!simTimeString.empty())
-    {
         globalResources.simulation_time = std::stoi(simTimeString);
-    }
+
     globalResources.activateFlitTracing = vm["flitTrace"].as<bool>();
     globalResources.outputDirectory = vm["outputDir"].as<std::string>();
 
 #ifdef ENABLE_NETRACE
     std::string netraceTraceFile = vm["netraceTraceFile"].as<std::string>();
     if (!netraceTraceFile.empty())
-    {
         globalResources.netraceFile = netraceTraceFile;
-    }
+
     if (vm["netraceRegion"].as<int>() <= 5 && vm["netraceRegion"].as<int>() >= 0)
         globalResources.netraceStartRegion = vm["netraceRegion"].as<int>();
     else
         globalResources.netraceStartRegion = 2;
+
     std::string netraceVerbosityInput = vm["netraceVerbosity"].as<std::string>();
     if (netraceVerbosityInput.compare("all") == 0)
         globalResources.netraceVerbosity = 2;
@@ -129,6 +129,10 @@ int sc_main(int arg_num, char *arg_vec[])
 
     std::string config_path = "config/ntConfig.xml";
 #endif
+
+    // start simulation
+    rep.connect("127.0.0.1", "10000");
+    rep.startRun("name");
 
     std::unique_ptr<NoC> noc = std::make_unique<NoC>("Layer");
     std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
