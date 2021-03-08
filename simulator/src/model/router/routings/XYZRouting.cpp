@@ -28,32 +28,63 @@ int XYZRouting::route(int src_node_id, int dst_node_id)
     Vec3D<float> dst_pos = globalResources.nodes.at(dst_node_id).pos;
     int con_pos = -1;
 
-    if (globalResources.routingDebugMode){
+    if (globalResources.routingDebugMode)
+    {
         cout << "ROUTING DEBUG src pos " << src_pos << " dst pos " << dst_pos << endl;
         cout << "ROUTING DEBUG src position in array " << src_node_id << endl;
         cout << "ROUTING DEBUG src id " << src_node.id << endl;
     }
 
-    if (dst_pos==src_pos) {
-        con_pos = src_node.getConPosOfDir(DIR::Local);
+    if (globalResources.routingCircular == false)
+    {
+        if (dst_pos == src_pos)
+            con_pos = src_node.getConPosOfDir(DIR::Local);
+        else if (dst_pos.x < src_pos.x)
+            con_pos = src_node.getConPosOfDir(DIR::West);
+        else if (dst_pos.x > src_pos.x)
+            con_pos = src_node.getConPosOfDir(DIR::East);
+        else if (dst_pos.y < src_pos.y)
+            con_pos = src_node.getConPosOfDir(DIR::South);
+        else if (dst_pos.y > src_pos.y)
+            con_pos = src_node.getConPosOfDir(DIR::North);
+        else if (dst_pos.z < src_pos.z)
+            con_pos = src_node.getConPosOfDir(DIR::Down);
+        else if (dst_pos.z > src_pos.z)
+            con_pos = src_node.getConPosOfDir(DIR::Up);
     }
-    else if (dst_pos.x<src_pos.x) {
-        con_pos = src_node.getConPosOfDir(DIR::West);
-    }
-    else if (dst_pos.x>src_pos.x) {
-        con_pos = src_node.getConPosOfDir(DIR::East);
-    }
-    else if (dst_pos.y<src_pos.y) {
-        con_pos = src_node.getConPosOfDir(DIR::South);
-    }
-    else if (dst_pos.y>src_pos.y) {
-        con_pos = src_node.getConPosOfDir(DIR::North);
-    }
-    else if (dst_pos.z<src_pos.z) {
-        con_pos = src_node.getConPosOfDir(DIR::Down);
-    }
-    else if (dst_pos.z>src_pos.z) {
-        con_pos = src_node.getConPosOfDir(DIR::Up);
+    else if (globalResources.routingCircular == true)
+    {
+        // TODO: implementation for 3D mesh
+        assert(globalResources.zPositions.size() == 1); // only accept 1~2D model, need to be removed when 3D mesh is implemented
+
+        Vec3D<float> inner_len = (src_pos - dst_pos).abs();
+        Vec3D<float> outer_len;
+
+        // this kind of calculation only suitable for 2D mesh and ring, for 3D it is required to know the step value for x and y of each layer
+        outer_len.x = 1. - inner_len.x + globalResources.xPositions[1];
+        outer_len.y = 1. - inner_len.y + globalResources.yPositions[1];
+
+        if (dst_pos == src_pos)
+            con_pos = src_node.getConPosOfDir(DIR::Local);
+        // x-axis
+        else if ((dst_pos.x < src_pos.x) && (inner_len.x <= outer_len.x))
+            con_pos = src_node.getConPosOfDir(DIR::West);
+        else if ((dst_pos.x < src_pos.x) && (inner_len.x >= outer_len.x))
+            con_pos = src_node.getConPosOfDir(DIR::East);
+        else if ((dst_pos.x > src_pos.x) && (inner_len.x <= outer_len.x))
+            con_pos = src_node.getConPosOfDir(DIR::East);
+        else if ((dst_pos.x > src_pos.x) && (inner_len.x >= outer_len.x))
+            con_pos = src_node.getConPosOfDir(DIR::West);
+        // y-axis
+        else if ((dst_pos.y < src_pos.y) && (inner_len.y <= outer_len.y))
+            con_pos = src_node.getConPosOfDir(DIR::South);
+        else if ((dst_pos.y < src_pos.y) && (inner_len.y >= outer_len.y))
+            con_pos = src_node.getConPosOfDir(DIR::North);
+        else if ((dst_pos.y > src_pos.y) && (inner_len.y <= outer_len.y))
+            con_pos = src_node.getConPosOfDir(DIR::North);
+        else if ((dst_pos.y > src_pos.y) && (inner_len.y >= outer_len.y))
+            con_pos = src_node.getConPosOfDir(DIR::South);
+
     }
 
     return con_pos;

@@ -335,18 +335,18 @@ void GlobalReport::reportAllRoutersUsageHist()
     int num_routers = routers_ids.size();
     for (unsigned int i = 0; i<num_routers; ++i) {
         int router_id = routers_ids[i];
-        if (router_id <= numSimulatedRouters) {
+        if (router_id < numSimulatedRouters) {
             std::string csvFileName;
 
-            int isFolderCreated = system("mkdir -p ./VCUsage");
+            int isFolderCreated = system(std::string("mkdir -p " + globalResources.outputDirectory + "/VCUsage/").c_str());
             if (isFolderCreated!=0) {
                 std::cerr << "VCUsage folder was not created!" << std::endl;
                 std::exit(EXIT_FAILURE);
             }
-            csvFileName = "VCUsage/"+std::to_string(router_id)+".csv";
+            csvFileName = globalResources.outputDirectory + "/VCUsage/"+std::to_string(router_id)+".csv";
             reportVCUsageHist(csvFileName, router_id);
 
-            isFolderCreated = system("mkdir -p ./BuffUsage");
+            isFolderCreated = system(std::string("mkdir -p " + globalResources.outputDirectory + "/BuffUsage/").c_str());
             if (isFolderCreated!=0) {
                 std::cerr << "VCUsage folder was not created!" << std::endl;
                 std::exit(EXIT_FAILURE);
@@ -357,7 +357,7 @@ void GlobalReport::reportAllRoutersUsageHist()
                     int dir_int = globalResources.nodes[router_id].getDirOfConPos(conPos);
                     std::string dir_str = DIR::toString(globalResources.nodes[router_id].getDirOfConPos(conPos));
                     boost::trim(dir_str);
-                    csvFileName = "BuffUsage/"+std::to_string(router_id)+"_"+dir_str+".csv";
+                    csvFileName = globalResources.outputDirectory + "/BuffUsage/" + std::to_string(router_id) + "_" + dir_str + ".csv";
                     reportBuffPerVCUsageHist(csvFileName, router_id, dir_int);
                 }
             }

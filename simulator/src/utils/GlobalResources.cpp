@@ -170,7 +170,7 @@ void GlobalResources::createRoutingTable()
             DIR = std::stoi(word);
             v.push_back(DIR);
         }
-        
+
         RoutingTable.push_back(v);
         cpt_line += 1;
     }
@@ -211,12 +211,12 @@ void GlobalResources::readConfigFile(const std::string& configPath)
         RoutingTable_mode = 0;
     }
     std::cout<<"Routing table mode: "<<RoutingTable_mode<<std::endl;
-    
+
     if (RoutingTable_mode == 1){
         pugi::xml_node RTFile_node = Routing_node.child("routingTable_path");
         RoutingTable_file = readRequiredStringAttribute(RTFile_node, "value");
         createRoutingTable();
-        
+
         // DIRECTION MATRIX
         pugi::xml_node DMFile_node = Routing_node.child("directionMatrix_path");
         DirectionMat_file = readRequiredStringAttribute(DMFile_node, "value");
@@ -229,6 +229,9 @@ void GlobalResources::readConfigFile(const std::string& configPath)
     bitWidth = noc_node.child("bitWidth").attribute("value").as_int();
     routingVerticalThreshold = noc_node.child("routingVerticalThreshold").attribute("value").as_float();
     Vdd = noc_node.child("Vdd").attribute("value").as_float();
+
+    topology = noc_node.child_value("topology");
+    routingCircular = std::set<std::string>({std::string("torus"), std::string("ring")}).count(topology);
 
     //APPLICATION
     pugi::xml_node app_node = doc.child("configuration").child("application");
@@ -356,7 +359,19 @@ void GlobalResources::fillDirInfoOfNodeConn()
                 dir = DIR::Local;
             }
             else { //one axis differs
-                if (distance.x>0) {
+                if (GlobalResources::getInstance().routingCircular && GlobalResources::getInstance().xPositions.size() > 2 && (node.pos.x == 0. && connectedNode.pos.x == 1. && node.pos.y == connectedNode.pos.y)){
+                    dir = DIR::West;
+                }
+                else if (GlobalResources::getInstance().routingCircular && GlobalResources::getInstance().xPositions.size() > 2 && (node.pos.x == 1. && connectedNode.pos.x == 0. && node.pos.y == connectedNode.pos.y)){
+                    dir = DIR::East;
+                }
+                else if (GlobalResources::getInstance().routingCircular && GlobalResources::getInstance().yPositions.size() > 2 && (node.pos.y == 0. && connectedNode.pos.y == 1. && node.pos.x == connectedNode.pos.x)){
+                    dir = DIR::South;
+                }
+                else if (GlobalResources::getInstance().routingCircular && GlobalResources::getInstance().yPositions.size() > 2 && (node.pos.y == 1. && connectedNode.pos.y == 0. && node.pos.x == connectedNode.pos.x)){
+                    dir = DIR::North;
+                }
+                else if (distance.x>0) {
                     dir = DIR::West;
                 }
                 else if (distance.x<0) {
@@ -404,7 +419,7 @@ void GlobalResources::fillDirInfoOfNodeConn_DM()
             DIR = std::stoi(word);
             v.push_back(DIR);
         }
-        
+
         directions_mat.push_back(v);
         cpt_line += 1;
     }
@@ -428,7 +443,7 @@ void GlobalResources::fillDirInfoOfNodeConn_DM()
             if (distance.isZero()) { //no axis differs
                 dir = DIR::Local;
             }
-            else { 
+            else {
                 d = directions_mat[node.id][connectedNode.id];
                 if (d == -1){
                     std::cout << "error, no direction found \n";
@@ -450,7 +465,7 @@ void GlobalResources::fillDirInfoOfNodeConn_DM()
                                     dir = DIR::South;
                                 }
                                 else{
-                                    if (d==5){ 
+                                    if (d==5){
                                         dir = DIR::Up;
                                     }
                                     else{
@@ -462,7 +477,7 @@ void GlobalResources::fillDirInfoOfNodeConn_DM()
                             }
                         }
                     }
-                }                      
+                }
             }
             node.setConPosOfDir(dir, matching_conn);
             node.setDirOfConn(matching_conn, dir);
@@ -497,6 +512,8 @@ void GlobalResources::readConnections(const pugi::xml_node& noc_node)
                 buffersDepths.push_back(bd);
             }
         }
+
+        assert(nodesOfConnection.size() == 2); // make sure each connection only consists 2 nodes
 
         float length = xml_con.child("length").attribute("value").as_float();
         int depth = xml_con.child("depth").attribute("value").as_int();

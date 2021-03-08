@@ -48,7 +48,10 @@ public:
     bool outputToFile;
     bool activateFlitTracing;
     std::string outputFileName;
+    std::string outputDirectory;
     std::string noc_file;
+    std::string topology;         // store the topology of the network (mesh, torus, ring)
+    bool routingCircular = false; // decide whether the routing algorithm is routed in a circular way (for torus and ring)
     int flitsPerPacket = 0;
     int bitWidth = 32;
     float routingVerticalThreshold = 1.0f;
@@ -119,14 +122,14 @@ private:
     void sortNodesPositions();
 
     void fillDirInfoOfNodeConn();
-    
+
     void fillDirInfoOfNodeConn_DM();
 
     void readConnections(const pugi::xml_node& noc_node);
 
     void readAttributeIfExists(pugi::xml_node, const char*, const char*, int&);
 
-    void readAttributeIfExists(pugi::xml_node, const char*, int&);
+    void readAttributeIfExists(pugi::xml_node, const char *, int &);
 
     void readTaskFile(const std::string& taskFilePath, const std::map<int, int>& bindings);
 
@@ -143,7 +146,6 @@ private:
     float readRequiredFloatAttribute(pugi::xml_node, const char*, const char*);
 
     float readRequiredFloatAttribute(pugi::xml_node, const char*);
-    
+
     void createRoutingTable();
 };
-
