@@ -248,9 +248,6 @@ void GlobalResources::readConfigFile(const std::string &configPath)
     routingVerticalThreshold = noc_node.child("routingVerticalThreshold").attribute("value").as_float();
     Vdd = noc_node.child("Vdd").attribute("value").as_float();
 
-    topology = noc_node.child_value("topology");
-    routingCircular = std::set<std::string>({std::string("torus"), std::string("ring")}).count(topology);
-
     //APPLICATION
     pugi::xml_node app_node = doc.child("configuration").child("application");
     benchmark = app_node.child_value("benchmark");
@@ -308,6 +305,10 @@ void GlobalResources::readNoCLayout(const std::string &nocPath)
     {
         FATAL("The value of bufferDepthType in your network file should be either 'single' or 'perVC'!");
     }
+
+    // topology
+    topology = noc_node.child_value("topology");
+    routingCircular = std::set<std::string>({std::string("torus"), std::string("ring")}).count(topology);
 
     readNodeTypes(noc_node);
     readNodes(noc_node);

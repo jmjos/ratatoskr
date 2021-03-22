@@ -51,8 +51,6 @@ public:
     std::string outputFileName;
     std::string outputDirectory;
     std::string noc_file;
-    std::string topology;         // store the topology of the network (mesh, torus, ring)
-    bool routingCircular = false; // decide whether the routing algorithm is routed in a circular way (for torus and ring)
     int flitsPerPacket = 0;
     int bitWidth = 32;
     float routingVerticalThreshold = 1.0f;
@@ -86,6 +84,8 @@ public:
     std::vector<Task> tasks;
     std::vector<DataType> dataTypes;
     std::vector<SyntheticPhase> syntheticPhases;
+    std::string topology;         // store the topology of the network (mesh, torus, ring)
+    bool routingCircular = false; // decide whether the routing algorithm is routed in a circular way (for torus and ring)
 
     long long rd_seed;
     std::mt19937_64 *rand;
