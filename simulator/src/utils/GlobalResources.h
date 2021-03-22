@@ -22,6 +22,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <set>
 #include <map>
 #include <unistd.h>
@@ -35,6 +36,7 @@
 #include <cmath>
 #include <list>
 #include <fstream>
+#include <sstream>
 #include <iostream>
 
 class GlobalResources
@@ -71,7 +73,6 @@ public:
 #ifdef ENABLE_NETRACE
     std::map<nodeID_t, int> netraceNodeToTask;
     std::map<int, nodeID_t> netraceTaskToNode;
-    bool netrace2Dor3Dmode = true; // true == 2D
     int netraceVerbosity = 2;      // 2==all, 1 == base, 0 == none
 #endif
     bool isUniform;

@@ -38,29 +38,6 @@ GlobalResources::GlobalResources()
     auto seed = std::random_device{}();
     rand->seed(seed);
     rd_seed = seed;
-#ifdef ENABLE_NETRACE
-    for (int i = 0; i < 64; ++i)
-    {
-        if (netrace2Dor3Dmode)
-        {
-            netraceNodeToTask.insert(std::pair<nodeID_t, int>(i + 128, i));
-            netraceTaskToNode.insert(std::pair<int, nodeID_t>(i, i + 128));
-        }
-        else
-        {
-            if (i < 32)
-            {
-                netraceNodeToTask.insert(std::pair<nodeID_t, int>(i + 128, i));
-                netraceTaskToNode.insert(std::pair<int, nodeID_t>(i, i + 128));
-            }
-            else
-            {
-                netraceNodeToTask.insert(std::pair<nodeID_t, int>(i + 128 + 64, i));
-                netraceTaskToNode.insert(std::pair<int, nodeID_t>(i, i + 128 + 64));
-            }
-        }
-    }
-#endif
 }
 
 GlobalResources &GlobalResources::getInstance()
@@ -321,6 +298,33 @@ void GlobalResources::readNoCLayout(const std::string &nocPath)
     {
         fillDirInfoOfNodeConn_DM();
     }
+
+#ifdef ENABLE_NETRACE
+    int temp_z = noc_node.child("abstract").child("z").attribute("value").as_int();
+    std::vector<int> temp_xs;
+    std::vector<int> temp_ys;
+    int temp;
+    std::stringstream iss;
+    iss = std::stringstream(noc_node.child("abstract").child("y").attribute("value").as_string());
+    while (iss >> temp)
+        temp_xs.push_back(temp);
+    iss = std::stringstream(noc_node.child("abstract").child("x").attribute("value").as_string());
+    while (iss >> temp)
+        temp_ys.push_back(temp);
+    int node_count = 0;
+    for(int i = 0; i < temp_z; i++)
+        node_count += (temp_xs[i] * temp_ys[i]);
+
+    // make sure node_count always larger equal than 64, because netrace simulates 64 nodes
+    // this line is to make it compatible for old simulation (old network.xml do not have xs, ys & z values.)
+    node_count = (node_count > 64)? node_count : 64;
+
+    for (int i = 0; i < node_count; ++i)
+    {
+        netraceNodeToTask.insert(std::pair<nodeID_t, int>(i + node_count, i));
+        netraceTaskToNode.insert(std::pair<nodeID_t, int>(i, i + node_count));
+    }
+#endif
 }
 
 void GlobalResources::readNodeTypes(const pugi::xml_node &noc_node)
