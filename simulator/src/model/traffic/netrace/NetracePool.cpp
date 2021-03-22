@@ -136,7 +136,7 @@ void NetracePool::thread() {
 
         cycle++;
 
-        int clockDelay = 50; // Netrace runs at 2GHz
+        int clockDelay = 500; // Netrace runs at 2GHz
         event.notify(clockDelay, SC_PS);
         wait(event);
     }
