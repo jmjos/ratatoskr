@@ -25,39 +25,45 @@
 #include <iomanip>
 
 GlobalResources::GlobalResources()
-        :
-        simulation_time(0),
-        outputToFile(false),
-        activateFlitTracing(false),
-        routingVerticalThreshold(1.0),
-        Vdd(1.0),
-        isUniform(false),
-        numberOfTrafficTypes(0),
-        synthetic_start_measurement_time(-1)
+    : simulation_time(0),
+      outputToFile(false),
+      activateFlitTracing(false),
+      routingVerticalThreshold(1.0),
+      Vdd(1.0),
+      isUniform(false),
+      numberOfTrafficTypes(0),
+      synthetic_start_measurement_time(-1)
 {
     rand = new std::mt19937_64();
     auto seed = std::random_device{}();
     rand->seed(seed);
     rd_seed = seed;
 #ifdef ENABLE_NETRACE
-    for (int i = 0; i < 64; ++i) {
-        if (netrace2Dor3Dmode){
-            netraceNodeToTask.insert(std::pair<nodeID_t, int>(i+128, i));
-            netraceTaskToNode.insert(std::pair<int, nodeID_t>(i, i+128));
-        } else{
-            if (i<32){
-                netraceNodeToTask.insert(std::pair<nodeID_t, int>(i+128, i));
-                netraceTaskToNode.insert(std::pair<int, nodeID_t>(i, i+128));
-            } else {
-                netraceNodeToTask.insert(std::pair<nodeID_t, int>(i+128+64, i));
-                netraceTaskToNode.insert(std::pair<int, nodeID_t>(i, i+128+64));
+    for (int i = 0; i < 64; ++i)
+    {
+        if (netrace2Dor3Dmode)
+        {
+            netraceNodeToTask.insert(std::pair<nodeID_t, int>(i + 128, i));
+            netraceTaskToNode.insert(std::pair<int, nodeID_t>(i, i + 128));
+        }
+        else
+        {
+            if (i < 32)
+            {
+                netraceNodeToTask.insert(std::pair<nodeID_t, int>(i + 128, i));
+                netraceTaskToNode.insert(std::pair<int, nodeID_t>(i, i + 128));
+            }
+            else
+            {
+                netraceNodeToTask.insert(std::pair<nodeID_t, int>(i + 128 + 64, i));
+                netraceTaskToNode.insert(std::pair<int, nodeID_t>(i, i + 128 + 64));
             }
         }
     }
 #endif
 }
 
-GlobalResources& GlobalResources::getInstance()
+GlobalResources &GlobalResources::getInstance()
 {
     static GlobalResources instance;
     return instance;
@@ -75,76 +81,82 @@ float GlobalResources::getRandomFloatBetween(float min, float max)
     return dis(*rand);
 }
 
-void GlobalResources::readAttributeIfExists(pugi::xml_node node, const char* child, const char* attribute, int& var)
+void GlobalResources::readAttributeIfExists(pugi::xml_node node, const char *child, const char *attribute, int &var)
 {
     readAttributeIfExists(node.child(child), attribute, var);
 }
 
-void GlobalResources::readAttributeIfExists(pugi::xml_node node, const char* attribute, int& var)
+void GlobalResources::readAttributeIfExists(pugi::xml_node node, const char *attribute, int &var)
 {
-    if (!node.attribute(attribute).empty()) {
+    if (!node.attribute(attribute).empty())
+    {
         var = node.attribute(attribute).as_int();
     }
 }
 
-int GlobalResources::readRequiredIntAttribute(pugi::xml_node node, const char* child, const char* attribute)
+int GlobalResources::readRequiredIntAttribute(pugi::xml_node node, const char *child, const char *attribute)
 {
     return readRequiredIntAttribute(node.child(child), attribute);
 }
 
-int GlobalResources::readRequiredIntAttribute(pugi::xml_node node, const char* attribute)
+int GlobalResources::readRequiredIntAttribute(pugi::xml_node node, const char *attribute)
 {
-    if (node.attribute(attribute).empty()) {
+    if (node.attribute(attribute).empty())
+    {
         FATAL("Can not read node:" << node.path() << " " << attribute);
     }
     return node.attribute(attribute).as_int();
 }
 
-float GlobalResources::readRequiredFloatAttribute(pugi::xml_node node, const char* child, const char* attribute)
+float GlobalResources::readRequiredFloatAttribute(pugi::xml_node node, const char *child, const char *attribute)
 {
     return readRequiredFloatAttribute(node.child(child), attribute);
 }
 
-float GlobalResources::readRequiredFloatAttribute(pugi::xml_node node, const char* attribute)
+float GlobalResources::readRequiredFloatAttribute(pugi::xml_node node, const char *attribute)
 {
-    if (node.attribute(attribute).empty()) {
+    if (node.attribute(attribute).empty())
+    {
         FATAL("Can not read node:" << node.path() << " " << attribute);
     }
     return node.attribute(attribute).as_float();
 }
 
 std::string
-GlobalResources::readRequiredStringAttribute(pugi::xml_node node, const char* child, const char* attribute)
+GlobalResources::readRequiredStringAttribute(pugi::xml_node node, const char *child, const char *attribute)
 {
     return readRequiredStringAttribute(node.child(child), attribute);
 }
 
-std::string GlobalResources::readRequiredStringAttribute(pugi::xml_node node, const char* attribute)
+std::string GlobalResources::readRequiredStringAttribute(pugi::xml_node node, const char *attribute)
 {
-    if (node.attribute(attribute).empty()) {
+    if (node.attribute(attribute).empty())
+    {
         FATAL("Can not read node:" << node.path() << " " << attribute);
     }
     return node.attribute(attribute).as_string();
 }
 
-std::vector<std::string> GlobalResources::string_split(const std::string& str, const std::string& delim)
+std::vector<std::string> GlobalResources::string_split(const std::string &str, const std::string &delim)
 {
     std::vector<std::string> strings;
     auto start = 0U;
     auto end = str.find(delim);
-    while (end!=std::string::npos) {
-        strings.push_back(str.substr(start, end-start));
-        start = static_cast<unsigned int>(end+1);
+    while (end != std::string::npos)
+    {
+        strings.push_back(str.substr(start, end - start));
+        start = static_cast<unsigned int>(end + 1);
         end = str.find(delim, start);
     }
     strings.push_back(str.substr(start, end));
     return strings;
 }
 
-std::vector<int> GlobalResources::strs_to_ints(const std::vector<std::string>& strings)
+std::vector<int> GlobalResources::strs_to_ints(const std::vector<std::string> &strings)
 {
     std::vector<int> ints{};
-    for (auto& str: strings) {
+    for (auto &str : strings)
+    {
         ints.push_back(std::stoi(str));
     }
     return ints;
@@ -166,7 +178,8 @@ void GlobalResources::createRoutingTable()
         std::string word;
         int DIR;
         std::vector<int> v;
-        while(iss >> word) {
+        while (iss >> word)
+        {
             DIR = std::stoi(word);
             v.push_back(DIR);
         }
@@ -174,24 +187,26 @@ void GlobalResources::createRoutingTable()
         RoutingTable.push_back(v);
         cpt_line += 1;
     }
-    std::cout<<"Routing Table :"<< std::endl;
+    std::cout << "Routing Table :" << std::endl;
 
-    for(auto vec : RoutingTable)
+    for (auto vec : RoutingTable)
     {
-        for(auto x : vec)
-            std::cout<<x<<" , ";
+        for (auto x : vec)
+            std::cout << x << " , ";
         std::cout << std::endl;
     }
 }
 
-void GlobalResources::readConfigFile(const std::string& configPath)
+void GlobalResources::readConfigFile(const std::string &configPath)
 {
     pugi::xml_document doc;
 
     std::cout << "Reading simulator config: " << configPath << endl;
     struct stat buffer;
-    if (!stat (configPath.c_str(), &buffer) == 0)
-        cout << endl <<"ERROR: Config file not found, program will exit with exception" << endl << endl;
+    if (!stat(configPath.c_str(), &buffer) == 0)
+        cout << endl
+             << "ERROR: Config file not found, program will exit with exception" << endl
+             << endl;
     pugi::xml_parse_result result = doc.load_file(configPath.c_str());
     assert(result && "Failed to read simulator config file!");
 
@@ -204,15 +219,18 @@ void GlobalResources::readConfigFile(const std::string& configPath)
 
     //ROUTING TABLE
     pugi::xml_node Routing_node = doc.child("configuration").child("noc").child("routingTable");
-    if (Routing_node.child("routingTable_mode") != NULL){
+    if (Routing_node.child("routingTable_mode") != NULL)
+    {
         RoutingTable_mode = Routing_node.child("routingTable_mode").attribute("value").as_bool();
     }
-    else{
+    else
+    {
         RoutingTable_mode = 0;
     }
-    std::cout<<"Routing table mode: "<<RoutingTable_mode<<std::endl;
+    std::cout << "Routing table mode: " << RoutingTable_mode << std::endl;
 
-    if (RoutingTable_mode == 1){
+    if (RoutingTable_mode == 1)
+    {
         pugi::xml_node RTFile_node = Routing_node.child("routingTable_path");
         RoutingTable_file = readRequiredStringAttribute(RTFile_node, "value");
         createRoutingTable();
@@ -246,7 +264,8 @@ void GlobalResources::readConfigFile(const std::string& configPath)
     numberOfTrafficTypes = app_node.child("numberOfTrafficTypes").attribute("value").as_int();
 
     synthID_t syntheticPhaseID = 0;
-    for (pugi::xml_node phase_node : app_node.child("synthetic").children("phase")) {
+    for (pugi::xml_node phase_node : app_node.child("synthetic").children("phase"))
+    {
         std::string name = readRequiredStringAttribute(phase_node, "name");
         std::string distribution = readRequiredStringAttribute(phase_node, "distribution", "value");
         float injectionRate = readRequiredFloatAttribute(phase_node, "injectionRate", "value");
@@ -266,15 +285,16 @@ void GlobalResources::readConfigFile(const std::string& configPath)
         readAttributeIfExists(phase_node, "hotspot", "value", sp.hotspot);
 
         //set first start time after warmup to start of measurement
-        if (benchmark=="synthetic" && name!="warmup" &&
-                synthetic_start_measurement_time==-1) {
+        if (benchmark == "synthetic" && name != "warmup" &&
+            synthetic_start_measurement_time == -1)
+        {
             synthetic_start_measurement_time = sp.minStart;
         }
         syntheticPhases.push_back(sp);
     }
 }
 
-void GlobalResources::readNoCLayout(const std::string& nocPath)
+void GlobalResources::readNoCLayout(const std::string &nocPath)
 {
     std::cout << "Reading NoC layout: " << nocPath << endl;
     assert(access(nocPath.c_str(), F_OK) != -1);
@@ -284,27 +304,32 @@ void GlobalResources::readNoCLayout(const std::string& nocPath)
 
     pugi::xml_node noc_node = doc.child("network-on-chip");
     bufferDepthType = noc_node.child("bufferDepthType").attribute("value").as_string();
-    if (!bufferDepthType.empty() && (bufferDepthType!="single" && bufferDepthType!="perVC")) {
+    if (!bufferDepthType.empty() && (bufferDepthType != "single" && bufferDepthType != "perVC"))
+    {
         FATAL("The value of bufferDepthType in your network file should be either 'single' or 'perVC'!");
     }
 
     readNodeTypes(noc_node);
     readNodes(noc_node);
     readConnections(noc_node);
-    if (!RoutingTable_mode){
+    if (!RoutingTable_mode)
+    {
         fillDirInfoOfNodeConn();
     }
-    else{
+    else
+    {
         fillDirInfoOfNodeConn_DM();
     }
 }
 
-void GlobalResources::readNodeTypes(const pugi::xml_node& noc_node)
+void GlobalResources::readNodeTypes(const pugi::xml_node &noc_node)
 {
-    for (pugi::xml_node node : noc_node.child("nodeTypes").children("nodeType")) {
+    for (pugi::xml_node node : noc_node.child("nodeTypes").children("nodeType"))
+    {
         dataTypeID_t typeID = node.attribute("id").as_int();
         std::string model = node.child("model").attribute("value").as_string();
-        if (model.empty()) cout << "Model not set properly for nodeType with id " << typeID << endl;
+        if (model.empty())
+            cout << "Model not set properly for nodeType with id " << typeID << endl;
         std::string routing = node.child("routing").attribute("value").as_string();
         std::string selection = node.child("selection").attribute("value").as_string();
         int clkDelay = node.child("clockDelay").attribute("value").as_int();
@@ -314,11 +339,12 @@ void GlobalResources::readNodeTypes(const pugi::xml_node& noc_node)
     }
 }
 
-void GlobalResources::readNodes(const pugi::xml_node& noc_node)
+void GlobalResources::readNodes(const pugi::xml_node &noc_node)
 {
-    for (pugi::xml_node xmlnode : noc_node.child("nodes").children("node")) {
+    for (pugi::xml_node xmlnode : noc_node.child("nodes").children("node"))
+    {
         nodeID_t nodeID = xmlnode.attribute("id").as_int();
-        std::string name = "node_"+std::to_string(nodeID);
+        std::string name = "node_" + std::to_string(nodeID);
         float x = xmlnode.child("xPos").attribute("value").as_float();
         float y = xmlnode.child("yPos").attribute("value").as_float();
         float z = xmlnode.child("zPos").attribute("value").as_float();
@@ -347,46 +373,60 @@ void GlobalResources::sortNodesPositions()
 
 void GlobalResources::fillDirInfoOfNodeConn()
 {
-    for (Node& node : nodes) {
+    for (Node &node : nodes)
+    {
         //check for common directions
         Vec3D<float> distance{};
-        for (int connectedNodeID : node.connectedNodes) {
+        for (int connectedNodeID : node.connectedNodes)
+        {
             Node connectedNode = nodes.at(connectedNodeID);
-            distance = node.pos-connectedNode.pos;
+            distance = node.pos - connectedNode.pos;
             connID_t matching_conn = node.getConnWithNode(connectedNode);
             DIR::TYPE dir{};
-            if (distance.isZero()) { //no axis differs
+            if (distance.isZero())
+            { //no axis differs
                 dir = DIR::Local;
             }
-            else { //one axis differs
-                if (GlobalResources::getInstance().routingCircular && GlobalResources::getInstance().xPositions.size() > 2 && (node.pos.x == 0. && connectedNode.pos.x == 1. && node.pos.y == connectedNode.pos.y)){
+            else
+            { //one axis differs
+                if (GlobalResources::getInstance().routingCircular && GlobalResources::getInstance().xPositions.size() > 2 && (node.pos.x == 0. && connectedNode.pos.x == 1. && node.pos.y == connectedNode.pos.y))
+                {
                     dir = DIR::West;
                 }
-                else if (GlobalResources::getInstance().routingCircular && GlobalResources::getInstance().xPositions.size() > 2 && (node.pos.x == 1. && connectedNode.pos.x == 0. && node.pos.y == connectedNode.pos.y)){
+                else if (GlobalResources::getInstance().routingCircular && GlobalResources::getInstance().xPositions.size() > 2 && (node.pos.x == 1. && connectedNode.pos.x == 0. && node.pos.y == connectedNode.pos.y))
+                {
                     dir = DIR::East;
                 }
-                else if (GlobalResources::getInstance().routingCircular && GlobalResources::getInstance().yPositions.size() > 2 && (node.pos.y == 0. && connectedNode.pos.y == 1. && node.pos.x == connectedNode.pos.x)){
+                else if (GlobalResources::getInstance().routingCircular && GlobalResources::getInstance().yPositions.size() > 2 && (node.pos.y == 0. && connectedNode.pos.y == 1. && node.pos.x == connectedNode.pos.x))
+                {
                     dir = DIR::South;
                 }
-                else if (GlobalResources::getInstance().routingCircular && GlobalResources::getInstance().yPositions.size() > 2 && (node.pos.y == 1. && connectedNode.pos.y == 0. && node.pos.x == connectedNode.pos.x)){
+                else if (GlobalResources::getInstance().routingCircular && GlobalResources::getInstance().yPositions.size() > 2 && (node.pos.y == 1. && connectedNode.pos.y == 0. && node.pos.x == connectedNode.pos.x))
+                {
                     dir = DIR::North;
                 }
-                else if (distance.x>0) {
+                else if (distance.x > 0)
+                {
                     dir = DIR::West;
                 }
-                else if (distance.x<0) {
+                else if (distance.x < 0)
+                {
                     dir = DIR::East;
                 }
-                else if (distance.y<0) {
+                else if (distance.y < 0)
+                {
                     dir = DIR::North;
                 }
-                else if (distance.y>0) {
+                else if (distance.y > 0)
+                {
                     dir = DIR::South;
                 }
-                else if (distance.z<0) {
+                else if (distance.z < 0)
+                {
                     dir = DIR::Up;
                 }
-                else if (distance.z>0) {
+                else if (distance.z > 0)
+                {
                     dir = DIR::Down;
                 }
             }
@@ -396,14 +436,13 @@ void GlobalResources::fillDirInfoOfNodeConn()
     }
 }
 
-
 // My fillDirInfoOfNodeConn() function. Rely on Direction_Mat.txt file
 
 void GlobalResources::fillDirInfoOfNodeConn_DM()
 {
     std::cout << "Start filling direction of nodes \n";
 
-    std::vector<std::vector<int>> directions_mat ;
+    std::vector<std::vector<int>> directions_mat;
     std::ifstream infile(DirectionMat_file);
     std::string line;
 
@@ -415,7 +454,8 @@ void GlobalResources::fillDirInfoOfNodeConn_DM()
         std::string word;
         int DIR;
         std::vector<int> v;
-        while(iss >> word) {
+        while (iss >> word)
+        {
             DIR = std::stoi(word);
             v.push_back(DIR);
         }
@@ -423,53 +463,70 @@ void GlobalResources::fillDirInfoOfNodeConn_DM()
         directions_mat.push_back(v);
         cpt_line += 1;
     }
-    std::cout<<"Direction Matrix :"<< std::endl;
+    std::cout << "Direction Matrix :" << std::endl;
 
-    for(auto vec : directions_mat)
+    for (auto vec : directions_mat)
     {
-        for(auto x : vec)
-            std::cout<<x<<" , ";
+        for (auto x : vec)
+            std::cout << x << " , ";
         std::cout << std::endl;
     }
 
-    for (Node& node : nodes) {
-        for (int connectedNodeID : node.connectedNodes) {
+    for (Node &node : nodes)
+    {
+        for (int connectedNodeID : node.connectedNodes)
+        {
             Node connectedNode = nodes.at(connectedNodeID);
             Vec3D<float> distance{};
-            distance = node.pos-connectedNode.pos;
+            distance = node.pos - connectedNode.pos;
             connID_t matching_conn = node.getConnWithNode(connectedNode);
             DIR::TYPE dir{};
             int d;
-            if (distance.isZero()) { //no axis differs
+            if (distance.isZero())
+            { //no axis differs
                 dir = DIR::Local;
             }
-            else {
+            else
+            {
                 d = directions_mat[node.id][connectedNode.id];
-                if (d == -1){
+                if (d == -1)
+                {
                     std::cout << "error, no direction found \n";
                 }
-                else{
-                    if (d==1){
+                else
+                {
+                    if (d == 1)
+                    {
                         dir = DIR::East;
                     }
-                    else{
-                        if (d==2){
+                    else
+                    {
+                        if (d == 2)
+                        {
                             dir = DIR::West;
                         }
-                        else{
-                            if (d==3){
+                        else
+                        {
+                            if (d == 3)
+                            {
                                 dir = DIR::North;
                             }
-                            else{
-                                if (d==4){
+                            else
+                            {
+                                if (d == 4)
+                                {
                                     dir = DIR::South;
                                 }
-                                else{
-                                    if (d==5){
+                                else
+                                {
+                                    if (d == 5)
+                                    {
                                         dir = DIR::Up;
                                     }
-                                    else{
-                                        if (d==6){
+                                    else
+                                    {
+                                        if (d == 6)
+                                        {
                                             dir = DIR::Down;
                                         }
                                     }
@@ -483,29 +540,32 @@ void GlobalResources::fillDirInfoOfNodeConn_DM()
             node.setDirOfConn(matching_conn, dir);
         }
     }
-
 }
 
-void GlobalResources::readConnections(const pugi::xml_node& noc_node)
+void GlobalResources::readConnections(const pugi::xml_node &noc_node)
 {
-    for (pugi::xml_node xml_con : noc_node.child("connections").children("con")) {
+    for (pugi::xml_node xml_con : noc_node.child("connections").children("con"))
+    {
         connID_t connID = xml_con.attribute("id").as_int();
         std::vector<nodeID_t> nodesOfConnection{};
         std::vector<int> vcsCount{};
         std::vector<int> buffersDepth{};
         std::vector<std::vector<int>> buffersDepths{};
 
-        for (pugi::xml_node xml_port : xml_con.child("ports").children("port")) {
+        for (pugi::xml_node xml_port : xml_con.child("ports").children("port"))
+        {
             nodeID_t connectedNodeID = xml_port.child("node").attribute("value").as_int();
             nodesOfConnection.push_back(connectedNodeID);
             int vcCount = xml_port.child("vcCount").attribute("value").as_int();
             vcsCount.push_back(vcCount);
             buffersDepth.push_back(xml_port.child("bufferDepth").attribute("value").as_int());
 
-            if (bufferDepthType=="perVC") {
+            if (bufferDepthType == "perVC")
+            {
                 std::string str_vec = xml_port.child("buffersDepths").attribute("value").as_string();
                 std::vector<std::string> strings = string_split(str_vec, ",");
-                if (strings.size()!=vcCount) {
+                if (strings.size() != vcCount)
+                {
                     FATAL("The buffersDepths size is not equal to vcCount!");
                 }
                 std::vector<int> bd = strs_to_ints(strings);
@@ -520,14 +580,16 @@ void GlobalResources::readConnections(const pugi::xml_node& noc_node)
         int width = xml_con.child("width").attribute("value").as_int();
 
         Connection con = Connection(connID, nodesOfConnection, vcsCount, buffersDepth, buffersDepths, length, width,
-                depth);
+                                    depth);
 
         int nodesSize = nodesOfConnection.size();
         con.bufferUtilization.resize(nodesSize);
-        for (nodeID_t nID : con.nodes) {
+        for (nodeID_t nID : con.nodes)
+        {
             // Now that we know the nodes of each connection, we should reflect this info to the nodes themselves.
-            for (nodeID_t dstNodeID: con.nodes) {
-                if (nID!=dstNodeID)
+            for (nodeID_t dstNodeID : con.nodes)
+            {
+                if (nID != dstNodeID)
                     nodes.at(nID).connectedNodes.push_back(dstNodeID);
             }
             nodes.at(nID).connections.push_back(con.id);
@@ -537,13 +599,13 @@ void GlobalResources::readConnections(const pugi::xml_node& noc_node)
     }
 }
 
-void GlobalResources::readTaskAndMapFiles(const std::string& taskFilePath, const std::string& mappingFilePath)
+void GlobalResources::readTaskAndMapFiles(const std::string &taskFilePath, const std::string &mappingFilePath)
 {
     std::map<taskID_t, nodeID_t> bindings = readMappingFile(mappingFilePath);
     readTaskFile(taskFilePath, bindings);
 }
 
-std::map<taskID_t, nodeID_t> GlobalResources::readMappingFile(const std::string& mappingFilePath)
+std::map<taskID_t, nodeID_t> GlobalResources::readMappingFile(const std::string &mappingFilePath)
 {
     std::cout << "Reading Mapping config: " << mappingFilePath << endl;
     pugi::xml_document doc;
@@ -552,7 +614,8 @@ std::map<taskID_t, nodeID_t> GlobalResources::readMappingFile(const std::string&
 
     pugi::xml_node map_node = doc.child("map");
     std::map<taskID_t, nodeID_t> bindings;
-    for (pugi::xml_node bind_node : map_node.children("bind")) {
+    for (pugi::xml_node bind_node : map_node.children("bind"))
+    {
         int taskID = readRequiredIntAttribute(bind_node, "task", "value");
         int nodeID = readRequiredIntAttribute(bind_node, "node", "value");
         bindings.emplace(taskID, nodeID);
@@ -560,7 +623,7 @@ std::map<taskID_t, nodeID_t> GlobalResources::readMappingFile(const std::string&
     return bindings;
 }
 
-void GlobalResources::readTaskFile(const std::string& taskFilePath, const std::map<int, int>& bindings)
+void GlobalResources::readTaskFile(const std::string &taskFilePath, const std::map<int, int> &bindings)
 {
     //TODO the bindings vector was used to get the destination node and not task, of a current task.. keep it?
     std::cout << "Reading Data config: " << taskFilePath << endl;
@@ -571,13 +634,15 @@ void GlobalResources::readTaskFile(const std::string& taskFilePath, const std::m
 
     // Read Data Types
     numberOfTrafficTypes = static_cast<int>(data_node.child("dataTypes").select_nodes("dataType").size());
-    for (pugi::xml_node type_node : data_node.child("dataTypes").children("dataType")) {
+    for (pugi::xml_node type_node : data_node.child("dataTypes").children("dataType"))
+    {
         dataTypeID_t dataTypeID = readRequiredIntAttribute(type_node, "id");
         std::string name = readRequiredStringAttribute(type_node, "name", "value");
         dataTypes.emplace_back(dataTypeID, name);
     }
     // Read Tasks
-    for (pugi::xml_node task_node : data_node.child("tasks").children("task")) {
+    for (pugi::xml_node task_node : data_node.child("tasks").children("task"))
+    {
         taskID_t taskID = task_node.attribute("id").as_int();
         Task task = Task{taskID, bindings.at(taskID)};
         readAttributeIfExists(task_node, "start", "min", task.minStart);
@@ -589,7 +654,8 @@ void GlobalResources::readTaskFile(const std::string& taskFilePath, const std::m
 
         // Read Requirements
         std::vector<DataRequirement> requirements{};
-        for (pugi::xml_node requirement_node : task_node.child("requires").children("requirement")) {
+        for (pugi::xml_node requirement_node : task_node.child("requires").children("requirement"))
+        {
             dataReqID_t reqID = readRequiredIntAttribute(requirement_node, "id");
             dataTypeID_t typeID = readRequiredIntAttribute(requirement_node, "type", "value");
             DataRequirement req = DataRequirement{reqID, typeID};
@@ -601,11 +667,13 @@ void GlobalResources::readTaskFile(const std::string& taskFilePath, const std::m
 
         // Read Destinations
         std::vector<DataSendPossibility> possibilities{};
-        for (pugi::xml_node generate_node : task_node.child("generates").children("possibility")) {
+        for (pugi::xml_node generate_node : task_node.child("generates").children("possibility"))
+        {
             possID_t possID = readRequiredIntAttribute(generate_node, "id");
             float probability = readRequiredFloatAttribute(generate_node, "probability", "value");
             std::vector<DataDestination> destinations{};
-            for (pugi::xml_node destination_node : generate_node.child("destinations").children("destination")) {
+            for (pugi::xml_node destination_node : generate_node.child("destinations").children("destination"))
+            {
                 dataDestID_t dataDestID = readRequiredIntAttribute(destination_node, "id");
                 dataTypeID_t typeID = readRequiredIntAttribute(destination_node, "type", "value");
                 taskID_t destTaskID = readRequiredIntAttribute(destination_node, "task", "value");
@@ -629,11 +697,12 @@ void GlobalResources::readTaskFile(const std::string& taskFilePath, const std::m
     }
 }
 
-std::vector<Node*> GlobalResources::getNodesByPos(const Vec3D<float>& pos)
+std::vector<Node *> GlobalResources::getNodesByPos(const Vec3D<float> &pos)
 {
-    std::vector<Node*> matching_nodes{};
-    for (auto& node:nodes)
-        if (node.getNodeByPos(pos)) {
+    std::vector<Node *> matching_nodes{};
+    for (auto &node : nodes)
+        if (node.getNodeByPos(pos))
+        {
             matching_nodes.push_back(&node);
         }
     return matching_nodes;
