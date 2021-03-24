@@ -27,8 +27,7 @@ NetracePool::NetracePool(sc_module_name nm)
 {
     cout << endl;
     cout << "Running in Netrace Benchmark mode." << endl;
-    cout << "  This mode has limited functionality. It can only be run with a 8x4x2 NoC or on a single layer of a 8x8x2 NoC" << endl;
-    cout << "  The mapping is changed in GlobalsResources.cpp, varibles netraceNodeToTask and netraceTaskToNode" << endl;
+    cout << "  The minimum total node count of the NoC must be the number of netrace simulated nodes." << endl;
     SC_THREAD(thread);
 }
 
@@ -115,13 +114,11 @@ void NetracePool::thread() {
                         ntnetrace.nt_print_packet(new_node->packet);
                     }
                     int src = static_cast<int>(trace_packet->src);
-                    if (!globalResources.netrace2Dor3Dmode && src >= 32)
-                        src += 32; // bring to 2nd layer
                     ProcessingElementVC* pe = (ProcessingElementVC*) processingElements.at(src);
                     pe->ntInject.push(std::make_pair(*new_node, new_node->cycle));
                 } else {
                     // Add to waiting queue
-                    ProcessingElementVC* pe = (ProcessingElementVC*) processingElements.at(trace_packet->src%48);
+                    ProcessingElementVC* pe = (ProcessingElementVC*) processingElements.at(trace_packet->src);
                     pe->ntWaiting.push(std::make_pair(*new_node, new_node->cycle));
                 }
                 // Get another packet from trace

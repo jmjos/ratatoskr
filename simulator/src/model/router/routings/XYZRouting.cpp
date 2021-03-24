@@ -54,15 +54,13 @@ int XYZRouting::route(int src_node_id, int dst_node_id)
     }
     else if (globalResources.routingCircular == true)
     {
-        // TODO: implementation for 3D mesh
-        assert(globalResources.zPositions.size() == 1); // only accept 1~2D model, need to be removed when 3D mesh is implemented
-
+        Vec3D<int> src_coord = globalResources.norm_to_coord[src_pos];
         Vec3D<float> inner_len = (src_pos - dst_pos).abs();
         Vec3D<float> outer_len;
 
-        // this kind of calculation only suitable for 2D mesh and ring, for 3D it is required to know the step value for x and y of each layer
-        outer_len.x = 1. - inner_len.x + globalResources.xPositions[1];
-        outer_len.y = 1. - inner_len.y + globalResources.yPositions[1];
+        outer_len.x = 1. - inner_len.x + globalResources.x_step[src_coord.z];
+        outer_len.y = 1. - inner_len.y + globalResources.y_step[src_coord.z];
+        outer_len.z = 1. - inner_len.z + globalResources.z_step;
 
         if (dst_pos == src_pos)
             con_pos = src_node.getConPosOfDir(DIR::Local);
@@ -84,7 +82,15 @@ int XYZRouting::route(int src_node_id, int dst_node_id)
             con_pos = src_node.getConPosOfDir(DIR::North);
         else if ((dst_pos.y > src_pos.y) && (inner_len.y >= outer_len.y))
             con_pos = src_node.getConPosOfDir(DIR::South);
-
+        // z-axis
+        else if ((dst_pos.z < src_pos.z) && (inner_len.z <= outer_len.z))
+            con_pos = src_node.getConPosOfDir(DIR::Down);
+        else if ((dst_pos.z < src_pos.z) && (inner_len.z >= outer_len.z))
+            con_pos = src_node.getConPosOfDir(DIR::Up);
+        else if ((dst_pos.z > src_pos.z) && (inner_len.z <= outer_len.z))
+            con_pos = src_node.getConPosOfDir(DIR::Up);
+        else if ((dst_pos.z > src_pos.z) && (inner_len.z >= outer_len.z))
+            con_pos = src_node.getConPosOfDir(DIR::Down);
     }
 
     return con_pos;

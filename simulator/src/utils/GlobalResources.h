@@ -22,6 +22,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <set>
 #include <map>
 #include <unistd.h>
@@ -35,14 +36,23 @@
 #include <cmath>
 #include <list>
 #include <fstream>
+#include <sstream>
 #include <iostream>
 
-class GlobalResources {
+class GlobalResources
+{
 
 public:
     std::vector<float> xPositions;
     std::vector<float> yPositions;
     std::vector<float> zPositions;
+    float z_step;
+    std::vector<float> y_step;
+    std::vector<float> x_step;
+    std::vector<float> z_range;
+    std::vector<std::vector<float>> y_range;
+    std::vector<std::vector<float>> x_range;
+    std::map<Vec3D<float>, Vec3D<int>> norm_to_coord; // normalised coordinate to integer coorinate
     //General
     int simulation_time;
     bool outputToFile;
@@ -50,8 +60,6 @@ public:
     std::string outputFileName;
     std::string outputDirectory;
     std::string noc_file;
-    std::string topology;         // store the topology of the network (mesh, torus, ring)
-    bool routingCircular = false; // decide whether the routing algorithm is routed in a circular way (for torus and ring)
     int flitsPerPacket = 0;
     int bitWidth = 32;
     float routingVerticalThreshold = 1.0f;
@@ -59,7 +67,7 @@ public:
     std::string bufferDepthType;
     std::string RoutingTable_file;
     bool RoutingTable_mode;
-    std::vector <std::vector<int> > RoutingTable;
+    std::vector<std::vector<int>> RoutingTable;
     std::string DirectionMat_file;
     //Application
     std::string benchmark;
@@ -72,8 +80,7 @@ public:
 #ifdef ENABLE_NETRACE
     std::map<nodeID_t, int> netraceNodeToTask;
     std::map<int, nodeID_t> netraceTaskToNode;
-    bool netrace2Dor3Dmode = true; // true == 2D
-    int netraceVerbosity = 2; // 2==all, 1 == base, 0 == none
+    int netraceVerbosity = 2;      // 2==all, 1 == base, 0 == none
 #endif
     bool isUniform;
     int numberOfTrafficTypes;
@@ -85,39 +92,41 @@ public:
     std::vector<Task> tasks;
     std::vector<DataType> dataTypes;
     std::vector<SyntheticPhase> syntheticPhases;
+    std::string topology;         // store the topology of the network (mesh, torus, ring)
+    bool routingCircular = false; // decide whether the routing algorithm is routed in a circular way (for torus and ring)
 
     long long rd_seed;
-    std::mt19937_64* rand;
+    std::mt19937_64 *rand;
 
     //debug
     bool routingDebugMode = false;
 
-    static GlobalResources& getInstance();
+    static GlobalResources &getInstance();
 
     int getRandomIntBetween(int, int);
 
     float getRandomFloatBetween(float, float);
 
-    void readConfigFile(const std::string& configPath);
+    void readConfigFile(const std::string &configPath);
 
-    void readNoCLayout(const std::string& nocPath);
+    void readNoCLayout(const std::string &nocPath);
 
-    void readTaskAndMapFiles(const std::string& taskFilePath, const std::string& mappingFilePath);
+    void readTaskAndMapFiles(const std::string &taskFilePath, const std::string &mappingFilePath);
 
-    std::vector<Node*> getNodesByPos(const Vec3D<float>& pos);
+    std::vector<Node *> getNodesByPos(const Vec3D<float> &pos);
 
 private:
     GlobalResources();
 
     ~GlobalResources();
 
-    std::vector<std::string> string_split(const std::string& str, const std::string& delim);
+    std::vector<std::string> string_split(const std::string &str, const std::string &delim);
 
-    std::vector<int> strs_to_ints(const std::vector<std::string>& strings);
+    std::vector<int> strs_to_ints(const std::vector<std::string> &strings);
 
-    void readNodeTypes(const pugi::xml_node& noc_node);
+    void readNodeTypes(const pugi::xml_node &noc_node);
 
-    void readNodes(const pugi::xml_node& noc_node);
+    void readNodes(const pugi::xml_node &noc_node);
 
     void sortNodesPositions();
 
@@ -125,27 +134,27 @@ private:
 
     void fillDirInfoOfNodeConn_DM();
 
-    void readConnections(const pugi::xml_node& noc_node);
+    void readConnections(const pugi::xml_node &noc_node);
 
-    void readAttributeIfExists(pugi::xml_node, const char*, const char*, int&);
+    void readAttributeIfExists(pugi::xml_node, const char *, const char *, int &);
 
     void readAttributeIfExists(pugi::xml_node, const char *, int &);
 
-    void readTaskFile(const std::string& taskFilePath, const std::map<int, int>& bindings);
+    void readTaskFile(const std::string &taskFilePath, const std::map<int, int> &bindings);
 
-    std::map<int, int> readMappingFile(const std::string& mappingFilePath);
+    std::map<int, int> readMappingFile(const std::string &mappingFilePath);
 
-    std::string readRequiredStringAttribute(pugi::xml_node, const char*, const char*);
+    std::string readRequiredStringAttribute(pugi::xml_node, const char *, const char *);
 
-    std::string readRequiredStringAttribute(pugi::xml_node, const char*);
+    std::string readRequiredStringAttribute(pugi::xml_node, const char *);
 
-    int readRequiredIntAttribute(pugi::xml_node, const char*, const char*);
+    int readRequiredIntAttribute(pugi::xml_node, const char *, const char *);
 
-    int readRequiredIntAttribute(pugi::xml_node, const char*);
+    int readRequiredIntAttribute(pugi::xml_node, const char *);
 
-    float readRequiredFloatAttribute(pugi::xml_node, const char*, const char*);
+    float readRequiredFloatAttribute(pugi::xml_node, const char *, const char *);
 
-    float readRequiredFloatAttribute(pugi::xml_node, const char*);
+    float readRequiredFloatAttribute(pugi::xml_node, const char *);
 
     void createRoutingTable();
 };
